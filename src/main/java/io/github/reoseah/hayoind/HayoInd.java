@@ -46,7 +46,10 @@ public class HayoInd implements ModInitializer {
 
     public static class Blocks {
         public static final Block MACHINE_BLOCK = register("machine_block", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
+        public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
+        public static final Block ELECTRIC_FURNACE = register("electric_furnace", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
         public static final Block MACERATOR = register("macerator", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
+        public static final Block EXTRACTOR = register("extractor", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
 
         public static void initialize() {
         }
@@ -60,12 +63,18 @@ public class HayoInd implements ModInitializer {
 
     public static class Items {
         public static final Item MACHINE_BLOCK = registerBlock(Blocks.MACHINE_BLOCK);
+        public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
+        public static final Item ELECTRIC_FURNACE = registerBlock(Blocks.ELECTRIC_FURNACE);
         public static final Item MACERATOR = registerBlock(Blocks.MACERATOR);
+        public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
 
         public static void initialize() {
             ItemGroupEvents.modifyEntriesEvent(key(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
-                entries.prepend(MACHINE_BLOCK);
-                entries.prepend(MACERATOR);
+                entries.accept(MACHINE_BLOCK);
+                entries.accept(ADVANCED_MACHINE_BLOCK);
+                entries.accept(ELECTRIC_FURNACE);
+                entries.accept(MACERATOR);
+                entries.accept(EXTRACTOR);
             });
         }
 

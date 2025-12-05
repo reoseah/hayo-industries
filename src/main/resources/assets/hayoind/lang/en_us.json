@@ -1,5 +1,8 @@
 {
-  "itemGroup.hayoind": "Evergreen Industries",
+  "itemGroup.hayoind": "HAYO Industries",
   "block.hayoind.machine_block": "Machine Block",
-  "block.hayoind.macerator": "Macerator"
+  "block.hayoind.advanced_machine_block": "Advanced Machine Block",
+  "block.hayoind.electric_furnace": "Electric Furnace",
+  "block.hayoind.macerator": "Macerator",
+  "block.hayoind.extractor": "Extractor"
 }
