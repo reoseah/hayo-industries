@@ -1,26 +1,26 @@
 {
 	"schemaVersion": 1,
-	"id": "egind",
+	"id": "hayoind",
 	"version": "${version}",
-	"name": "Evergreen Industries Ltd.",
+	"name": "HAYO Industries Inc.",
 	"description": "",
 	"authors": [
 		"reoseah"
 	],
 	"contact": {
-		"homepage": "https://github.com/reoseah/evergreen-industries",
-		"sources": "https://github.com/reoseah/evergreen-industries"
+		"homepage": "https://github.com/reoseah/hayo-industries",
+		"sources": "https://github.com/reoseah/hayo-industries"
 	},
 	"license": "EU PL",
-	"icon": "assets/egind/icon.png",
+	"icon": "assets/hayoind/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-          "io.github.reoseah.egind.EGInd"
+          "io.github.reoseah.hayoind.HayoInd"
 		]
 	},
 	"mixins": [
-      "egind.mixin.json"
+      "hayoind.mixin.json"
     ],
 	"depends": {
 		"fabricloader": ">=0.17.3",
