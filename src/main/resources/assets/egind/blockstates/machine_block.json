@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "egind:block/machine_block"
+    }
+  }
+}

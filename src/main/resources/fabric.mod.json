@@ -1,34 +1,27 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "egind",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Evergreen Industries Ltd.",
+	"description": "",
 	"authors": [
-		"Me!"
+		"reoseah"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/reoseah/evergreen-industries",
+		"sources": "https://github.com/reoseah/evergreen-industries"
 	},
-	"license": "CC0-1.0",
-	"icon": "assets/modid/icon.png",
+	"license": "EU PL",
+	"icon": "assets/egind/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
-		],
-		"client": [
-			"com.example.ExampleModClient"
+          "io.github.reoseah.egind.EGInd"
 		]
 	},
 	"mixins": [
-		"modid.mixins.json",
-		{
-			"config": "modid.client.mixins.json",
-			"environment": "client"
-		}
-	],
+      "egind.mixin.json"
+    ],
 	"depends": {
 		"fabricloader": ">=0.17.3",
 		"minecraft": "~1.21.10",
@@ -36,6 +29,5 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
 	}
 }
