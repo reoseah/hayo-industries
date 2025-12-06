@@ -97,8 +97,18 @@ public class HayoInd {
         public static final Item NETHERITE_SCRAP_DUST = registerItem("netherite_scrap_dust");
         public static final Item ENDER_PEARL_DUST = registerItem("ender_pearl_dust");
         public static final Item SILICON_DUST = registerItem("silicon_dust");
+        public static final Item SILICON_BRONZE_DUST = registerItem("silicon_bronze_dust");
+
+        public static final Item SILICON_BRONZE_INGOT = registerItem("silicon_bronze_ingot");
+
         public static final Item QUARTZ_COAL_MIXTURE = registerItem("quartz_coal_mixture");
         public static final Item RAW_SILICON = registerItem("raw_silicon");
+
+        public static final Item SILICON_BRONZE_SWORD = registerItem("silicon_bronze_sword");
+        public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe");
+        public static final Item SILICON_BRONZE_PICKAXE = registerItem("silicon_bronze_pickaxe");
+        public static final Item SILICON_BRONZE_SHOVEL = registerItem("silicon_bronze_shovel");
+        public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe");
 
         public static void initialize() {
             ItemGroupEvents.modifyEntriesEvent(key(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
@@ -124,8 +134,18 @@ public class HayoInd {
                 entries.accept(NETHERITE_SCRAP_DUST);
                 entries.accept(ENDER_PEARL_DUST);
                 entries.accept(SILICON_DUST);
+                entries.accept(SILICON_BRONZE_DUST);
+
+                entries.accept(SILICON_BRONZE_INGOT);
+
                 entries.accept(QUARTZ_COAL_MIXTURE);
                 entries.accept(RAW_SILICON);
+
+                entries.accept(SILICON_BRONZE_SWORD);
+                entries.accept(SILICON_BRONZE_AXE);
+                entries.accept(SILICON_BRONZE_PICKAXE);
+                entries.accept(SILICON_BRONZE_SHOVEL);
+                entries.accept(SILICON_BRONZE_HOE);
             });
         }
 

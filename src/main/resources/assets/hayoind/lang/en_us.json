@@ -20,6 +20,13 @@
   "item.hayoind.netherite_scrap_dust": "Netherite Scrap Dust",
   "item.hayoind.ender_pearl_dust": "Ender Pearl Dust",
   "item.hayoind.silicon_dust": "Silicon Dust",
+  "item.hayoind.silicon_bronze_dust": "Silicon Bronze Dust",
+  "item.hayoind.silicon_bronze_ingot": "Silicon Bronze Ingot",
   "item.hayoind.quartz_coal_mixture": "Quartz-Coal Mixture",
-  "item.hayoind.raw_silicon": "Raw Silicon"
+  "item.hayoind.raw_silicon": "Raw Silicon",
+  "item.hayoind.silicon_bronze_sword": "Silicon Bronze Sword",
+  "item.hayoind.silicon_bronze_axe": "Silicon Bronze Axe",
+  "item.hayoind.silicon_bronze_pickaxe": "Silicon Bronze Pickaxe",
+  "item.hayoind.silicon_bronze_shovel": "Silicon Bronze Shovel",
+  "item.hayoind.silicon_bronze_hoe": "Silicon Bronze Hoe"
 }
