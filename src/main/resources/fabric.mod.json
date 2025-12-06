@@ -1,33 +1,36 @@
 {
-	"schemaVersion": 1,
-	"id": "hayoind",
-	"version": "${version}",
-	"name": "HAYO Industries Inc.",
-	"description": "",
-	"authors": [
-		"reoseah"
-	],
-	"contact": {
-		"homepage": "https://github.com/reoseah/hayo-industries",
-		"sources": "https://github.com/reoseah/hayo-industries"
-	},
-	"license": "EU PL",
-	"icon": "assets/hayoind/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-          "io.github.reoseah.hayoind.HayoInd"
-		]
-	},
-	"mixins": [
-      "hayoind.mixin.json"
+  "schemaVersion": 1,
+  "id": "hayoind",
+  "version": "${version}",
+  "name": "HAYO Industries Inc.",
+  "description": "",
+  "authors": [
+    "reoseah"
+  ],
+  "contact": {
+    "homepage": "https://github.com/reoseah/hayo-industries",
+    "sources": "https://github.com/reoseah/hayo-industries"
+  },
+  "license": "EU PL",
+  "icon": "assets/hayoind/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.reoseah.hayoind.HayoInd::initialize"
     ],
-	"depends": {
-		"fabricloader": ">=0.17.3",
-		"minecraft": "~1.21.10",
-		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-	}
+    "client": [
+      "io.github.reoseah.hayoind.HayoInd::initializeClient"
+    ]
+  },
+  "mixins": [
+    "hayoind.mixin.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.3",
+    "minecraft": "~1.21.10",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+  }
 }

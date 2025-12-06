@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hayoind:quartz_dust",
+    "hayoind:coal_dust"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayoind:quartz_coal_mixture"
+  }
+}

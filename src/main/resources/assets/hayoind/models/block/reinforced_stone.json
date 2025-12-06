@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "hayoind:block/reinforced_stone"
+  }
+}
