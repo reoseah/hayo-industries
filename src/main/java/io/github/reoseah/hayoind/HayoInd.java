@@ -1,5 +1,6 @@
 package io.github.reoseah.hayoind;
 
+import io.github.reoseah.hayoind.block.FerruBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +45,7 @@ public class HayoInd {
 
     @Environment(EnvType.CLIENT)
     public static void initializeClient() {
-        BlockRenderLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS);
+        BlockRenderLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.FERRU);
     }
 
 
@@ -64,6 +67,9 @@ public class HayoInd {
         public static final Block ELECTRIC_FURNACE = register("electric_furnace", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
         public static final Block MACERATOR = register("macerator", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
         public static final Block EXTRACTOR = register("extractor", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
+        public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
+
+        public static final Block FERRU = register("ferru", FerruBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
 
         public static void initialize() {
         }
@@ -85,6 +91,7 @@ public class HayoInd {
         public static final Item ELECTRIC_FURNACE = registerBlock(Blocks.ELECTRIC_FURNACE);
         public static final Item MACERATOR = registerBlock(Blocks.MACERATOR);
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
+        public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
 
         public static final Item WOOD_DUST = registerItem("wood_dust");
         public static final Item STONE_DUST = registerItem("stone_dust");
@@ -103,6 +110,7 @@ public class HayoInd {
 
         public static final Item QUARTZ_COAL_MIXTURE = registerItem("quartz_coal_mixture");
         public static final Item RAW_SILICON = registerItem("raw_silicon");
+        public static final Item COMPOSITE_PLATE = registerItem("composite_plate");
 
         public static final Item SILICON_BRONZE_SWORD = registerItem("silicon_bronze_sword");
         public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe");
@@ -122,6 +130,7 @@ public class HayoInd {
                 entries.accept(ELECTRIC_FURNACE);
                 entries.accept(MACERATOR);
                 entries.accept(EXTRACTOR);
+                entries.accept(AUTOMATED_FERTILIZER);
 
                 entries.accept(WOOD_DUST);
                 entries.accept(STONE_DUST);
@@ -140,6 +149,7 @@ public class HayoInd {
 
                 entries.accept(QUARTZ_COAL_MIXTURE);
                 entries.accept(RAW_SILICON);
+                entries.accept(COMPOSITE_PLATE);
 
                 entries.accept(SILICON_BRONZE_SWORD);
                 entries.accept(SILICON_BRONZE_AXE);
