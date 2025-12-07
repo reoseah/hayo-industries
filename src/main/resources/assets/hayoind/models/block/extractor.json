@@ -10,7 +10,7 @@
   "textures": {
     "particle": "hayoind:block/extractor_front",
     "down": "hayoind:block/machine_bottom",
-    "up": "hayoind:block/machine",
+    "up": "hayoind:block/extractor_top",
     "north": "hayoind:block/extractor_front",
     "east": "hayoind:block/machine_side",
     "south": "hayoind:block/machine_side_with_vents",
