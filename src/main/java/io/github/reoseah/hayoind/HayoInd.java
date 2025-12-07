@@ -1,6 +1,6 @@
 package io.github.reoseah.hayoind;
 
-import io.github.reoseah.hayoind.block.FerruBlock;
+import io.github.reoseah.hayoind.block.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
@@ -64,10 +64,10 @@ public class HayoInd {
         public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.STONE));
         public static final Block REINFORCED_STONE_TILES = register("reinforced_stone_tiles", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.STONE));
         public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F).noOcclusion().sound(SoundType.GLASS));
-        public static final Block ELECTRIC_FURNACE = register("electric_furnace", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
-        public static final Block MACERATOR = register("macerator", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
-        public static final Block EXTRACTOR = register("extractor", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
-        public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
+        public static final Block ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlock::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
+        public static final Block MACERATOR = register("macerator", MaceratorBlock::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
+        public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
+        public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL));
 
         public static final Block FERRU = register("ferru", FerruBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
 
