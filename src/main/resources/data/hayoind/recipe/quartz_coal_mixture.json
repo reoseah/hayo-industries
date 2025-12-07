@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "hayoind:quartz_dust",
-    "hayoind:coal_dust"
+    "#c:quartz_dusts",
+    "#c:coal_dusts"
   ],
   "result": {
     "count": 1,

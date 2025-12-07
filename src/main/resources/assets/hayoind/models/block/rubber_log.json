@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "hayoind:block/rubber_log_top",
+    "side": "hayoind:block/rubber_log"
+  }
+}
