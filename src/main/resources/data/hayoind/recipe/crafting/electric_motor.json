@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "WIW",
+    "#W#",
+    "CCC"
+  ],
+  "key": {
+    "#": "#c:plates/steel",
+    "W": "hayoind:uninsulated_copper_cable",
+    "C": "hayoind:copper_cable",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "hayoind:electric_motor",
+    "count": 2
+  }
+}

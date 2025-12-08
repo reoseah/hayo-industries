@@ -1,0 +1,41 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "hayoind:energy",
+    "scale": 1,
+    "entries": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayoind:item/energy_crystal_charge1"
+        },
+        "threshold": 5000
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayoind:item/energy_crystal_charge2"
+        },
+        "threshold": 30000
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayoind:item/energy_crystal_charge3"
+        },
+        "threshold": 70000
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayoind:item/energy_crystal_charge4"
+        },
+        "threshold": 95000
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "hayoind:item/energy_crystal"
+    }
+  }
+}

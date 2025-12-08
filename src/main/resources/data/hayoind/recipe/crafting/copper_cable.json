@@ -2,16 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": "hayoind:sticky_resin",
-    "X": "hayoind:wood_dust"
+    "#": "#c:ingots/copper",
+    "X": "hayoind:rubber"
   },
   "pattern": [
     "XXX",
-    "X#X",
+    "###",
     "XXX"
   ],
   "result": {
-    "count": 1,
-    "id": "hayoind:chipboard"
+    "count": 6,
+    "id": "hayoind:copper_cable"
   }
 }

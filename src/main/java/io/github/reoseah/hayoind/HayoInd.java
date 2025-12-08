@@ -2,6 +2,8 @@ package io.github.reoseah.hayoind;
 
 import io.github.reoseah.hayoind.block.*;
 import io.github.reoseah.hayoind.feature.RubberFoliagePlacer;
+import io.github.reoseah.hayoind.item.EnergyProperty;
+import io.github.reoseah.hayoind.item.SimpleBatteryItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -11,8 +13,10 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.Util;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -65,8 +69,8 @@ public class HayoInd {
     @Environment(EnvType.CLIENT)
     public static void initializeClient() {
         BlockRenderLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU);
-
-        ColorProviderRegistry.BLOCK.register((state, level, pos, i) -> level != null ? BiomeColors.getAverageFoliageColor(level, pos) : -12012264, Blocks.RUBBER_LEAVES);
+        ColorProviderRegistry.BLOCK.register((state, level, pos, seed) -> level != null ? BiomeColors.getAverageFoliageColor(level, pos) : -12012264, Blocks.RUBBER_LEAVES);
+        RangeSelectItemModelProperties.ID_MAPPER.put(modLocation("energy"), EnergyProperty.MAP_CODEC);
     }
 
     public static ResourceLocation modLocation(String path) {
@@ -166,10 +170,15 @@ public class HayoInd {
         public static final Item QUARTZ_COAL_MIXTURE = registerItem("quartz_coal_mixture");
         public static final Item RAW_SILICON = registerItem("raw_silicon");
         public static final Item STEEL_PLATE = registerItem("steel_plate");
-        public static final Item COMPOSITE_PLATE = registerItem("composite_plate");
+        public static final Item CIRCUIT = registerItem("circuit");
+        public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
+        public static final Item TRANSFORMER = registerItem("transformer");
+        public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
+        public static final Item BATTERY = registerItem("battery", properties -> new SimpleBatteryItem(properties, 10000, 10));
+        public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", properties -> new SimpleBatteryItem(properties, 100000, 100), new Item.Properties().rarity(Rarity.RARE));
         public static final Item WRENCH = registerItem("wrench");
 
         private static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
@@ -182,6 +191,8 @@ public class HayoInd {
         public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
 
         public static void initialize() {
+            Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modLocation("energy"), SimpleBatteryItem.ENERGY);
+
             ItemGroupEvents.modifyEntriesEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);
@@ -230,9 +241,17 @@ public class HayoInd {
                 entries.accept(QUARTZ_COAL_MIXTURE);
                 entries.accept(RAW_SILICON);
                 entries.accept(STEEL_PLATE);
+                entries.accept(CIRCUIT);
+                entries.accept(ELECTRIC_MOTOR);
+                entries.accept(TRANSFORMER);
                 entries.accept(COMPOSITE_PLATE);
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
+
+                entries.accept(BATTERY);
+                entries.accept(Util.make(new ItemStack(BATTERY), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
+                entries.accept(ENERGY_CRYSTAL);
+                entries.accept(Util.make(new ItemStack(ENERGY_CRYSTAL), stack -> stack.set(SimpleBatteryItem.ENERGY, 100000)));
 
                 entries.accept(WRENCH);
                 entries.accept(SILICON_BRONZE_SWORD);

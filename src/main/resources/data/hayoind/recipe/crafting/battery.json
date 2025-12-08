@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " C ",
+    "#R#",
+    "#D#"
+  ],
+  "key": {
+    "#": "#c:plates/steel",
+    "C": "hayoind:copper_cable",
+    "R": "minecraft:redstone",
+    "D": "#c:dusts/coal"
+  },
+  "result": {
+    "id": "hayoind:battery",
+    "count": 2
+  }
+}

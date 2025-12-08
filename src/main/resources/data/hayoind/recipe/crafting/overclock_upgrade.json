@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "X#X"
+  ],
+  "key": {
+    "#": "hayoind:circuit",
+    "X": "hayoind:copper_cable",
+    "M": "hayoind:electric_motor"
+  },
+  "result": {
+    "id": "hayoind:overclock_upgrade",
+    "count": 1
+  }
+}

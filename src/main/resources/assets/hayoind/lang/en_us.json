@@ -41,13 +41,26 @@
   "item.hayoind.quartz_coal_mixture": "Quartz-Coal Mixture",
   "item.hayoind.raw_silicon": "Raw Silicon",
   "item.hayoind.steel_plate": "Steel Plate",
+  "item.hayoind.circuit": "Circuit",
+  "item.hayoind.transformer": "Transformer",
+  "item.hayoind.electric_motor": "Electric Motor",
   "item.hayoind.composite_plate": "Composite Plate",
   "item.hayoind.overclock_upgrade": "Overclock Upgrade",
   "item.hayoind.capacitor_upgrade": "Capacitor Upgrade",
+  "item.hayoind.battery": "Rechargeable Battery",
+  "item.hayoind.energy_crystal": "Energy Crystal",
   "item.hayoind.wrench": "Wrench",
   "item.hayoind.silicon_bronze_sword": "Silicon Bronze Sword",
   "item.hayoind.silicon_bronze_axe": "Silicon Bronze Axe",
   "item.hayoind.silicon_bronze_pickaxe": "Silicon Bronze Pickaxe",
   "item.hayoind.silicon_bronze_shovel": "Silicon Bronze Shovel",
-  "item.hayoind.silicon_bronze_hoe": "Silicon Bronze Hoe"
+  "item.hayoind.silicon_bronze_hoe": "Silicon Bronze Hoe",
+
+  "hayoind.energy": "Energy",
+  "hayoind.energy.amount": "%s ε",
+  "hayoind.energy.amount_per_tick": "%s ε/t",
+  "hayoind.energy.amount_and_capacity": "%s / %s ε",
+  "hayoind.energy.amount_per_use": "%s ε per use",
+  "hayoind.energy.average_amount_per_tick": "%s avg. ε/t",
+  "hayoind.energy.amount_and_amount_per_tick": "%s ε at %s ε/t"
 }
