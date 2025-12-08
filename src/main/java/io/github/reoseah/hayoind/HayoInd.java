@@ -20,10 +20,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.grower.TreeGrower;
@@ -108,6 +107,8 @@ public class HayoInd {
         public static final Block RUBBER_SAPLING = register("rubber_sapling", properties -> new SaplingBlock(RUBBER_TREE, properties), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
 
         public static final Block FERRU = register("ferru", OreCropBlock.FerruBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
+        public static final Block UNINSULATED_COPPER_CABLE = register("uninsulated_copper_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final Block COPPER_CABLE = register("copper_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 
         public static void initialize() {
         }
@@ -142,6 +143,9 @@ public class HayoInd {
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
         public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
 
+        public static final Item UNINSULATED_COPPER_CABLE = registerBlock(Blocks.UNINSULATED_COPPER_CABLE);
+        public static final Item COPPER_CABLE = registerBlock(Blocks.COPPER_CABLE);
+
         public static final Item WOOD_DUST = registerItem("wood_dust");
         public static final Item STONE_DUST = registerItem("stone_dust");
         public static final Item COAL_DUST = registerItem("coal_dust");
@@ -158,17 +162,24 @@ public class HayoInd {
         public static final Item SILICON_BRONZE_INGOT = registerItem("silicon_bronze_ingot");
 
         public static final Item STICKY_RESIN = registerItem("sticky_resin");
+        public static final Item RUBBER = registerItem("rubber");
         public static final Item QUARTZ_COAL_MIXTURE = registerItem("quartz_coal_mixture");
         public static final Item RAW_SILICON = registerItem("raw_silicon");
+        public static final Item STEEL_PLATE = registerItem("steel_plate");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate");
-        public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade");
-        public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade");
+        public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+        public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
-        public static final Item SILICON_BRONZE_SWORD = registerItem("silicon_bronze_sword");
-        public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe");
-        public static final Item SILICON_BRONZE_PICKAXE = registerItem("silicon_bronze_pickaxe");
-        public static final Item SILICON_BRONZE_SHOVEL = registerItem("silicon_bronze_shovel");
-        public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe");
+        public static final Item WRENCH = registerItem("wrench");
+
+        private static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
+        private static final ToolMaterial SILICON_BRONZE = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, ToolMaterial.DIAMOND.durability(), 7, 2.0F, 10, SILICON_BRONZE_MATERIALS);
+
+        public static final Item SILICON_BRONZE_SWORD = registerItem("silicon_bronze_sword", new Item.Properties().sword(SILICON_BRONZE, 3.0F, -2.4F));
+        public static final Item SILICON_BRONZE_SHOVEL = registerItem("silicon_bronze_shovel", properties -> new ShovelItem(SILICON_BRONZE, 1.5F, -3.0F, properties));
+        public static final Item SILICON_BRONZE_PICKAXE = registerItem("silicon_bronze_pickaxe", new Item.Properties().pickaxe(SILICON_BRONZE, 1.0F, -2.8F));
+        public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe", properties -> new AxeItem(SILICON_BRONZE, 6.0F, -3.1F, properties));
+        public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
 
         public static void initialize() {
             ItemGroupEvents.modifyEntriesEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
@@ -196,6 +207,9 @@ public class HayoInd {
                 entries.accept(REINFORCED_STONE_SLAB);
                 entries.accept(REINFORCED_DOOR);
 
+                entries.accept(UNINSULATED_COPPER_CABLE);
+                entries.accept(COPPER_CABLE);
+
                 entries.accept(WOOD_DUST);
                 entries.accept(STONE_DUST);
                 entries.accept(COAL_DUST);
@@ -212,16 +226,19 @@ public class HayoInd {
                 entries.accept(SILICON_BRONZE_INGOT);
 
                 entries.accept(STICKY_RESIN);
+                entries.accept(RUBBER);
                 entries.accept(QUARTZ_COAL_MIXTURE);
                 entries.accept(RAW_SILICON);
+                entries.accept(STEEL_PLATE);
                 entries.accept(COMPOSITE_PLATE);
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
 
+                entries.accept(WRENCH);
                 entries.accept(SILICON_BRONZE_SWORD);
-                entries.accept(SILICON_BRONZE_AXE);
-                entries.accept(SILICON_BRONZE_PICKAXE);
                 entries.accept(SILICON_BRONZE_SHOVEL);
+                entries.accept(SILICON_BRONZE_PICKAXE);
+                entries.accept(SILICON_BRONZE_AXE);
                 entries.accept(SILICON_BRONZE_HOE);
             });
         }
