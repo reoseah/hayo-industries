@@ -161,6 +161,8 @@ public class HayoInd {
         public static final Item QUARTZ_COAL_MIXTURE = registerItem("quartz_coal_mixture");
         public static final Item RAW_SILICON = registerItem("raw_silicon");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate");
+        public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade");
+        public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade");
 
         public static final Item SILICON_BRONZE_SWORD = registerItem("silicon_bronze_sword");
         public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe");
@@ -213,6 +215,8 @@ public class HayoInd {
                 entries.accept(QUARTZ_COAL_MIXTURE);
                 entries.accept(RAW_SILICON);
                 entries.accept(COMPOSITE_PLATE);
+                entries.accept(OVERCLOCK_UPGRADE);
+                entries.accept(CAPACITOR_UPGRADE);
 
                 entries.accept(SILICON_BRONZE_SWORD);
                 entries.accept(SILICON_BRONZE_AXE);
