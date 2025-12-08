@@ -1,0 +1,15 @@
+{
+  "values": [
+    "hayoind:machine_block",
+    "hayoind:advanced_machine_block",
+    "hayoind:electric_furnace",
+    "hayoind:macerator",
+    "hayoind:extractor",
+    "hayoind:automated_fertilizer",
+    "hayoind:reinforced_stone",
+    "hayoind:reinforced_glass",
+    "hayoind:reinforced_stone_stairs",
+    "hayoind:reinforced_stone_slab",
+    "hayoind:reinforced_stone_door"
+  ]
+}

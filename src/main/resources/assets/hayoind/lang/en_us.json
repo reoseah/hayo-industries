@@ -1,5 +1,5 @@
 {
-  "itemGroup.hayoind": "HAYO Industries",
+  "itemGroup.hayoind": "HAYO Industries Inc.",
   "block.hayoind.machine_block": "Machine Block",
   "block.hayoind.advanced_machine_block": "Advanced Machine Block",
   "block.hayoind.chipboard": "Chipboard Block",
@@ -9,6 +9,7 @@
   "block.hayoind.reinforced_door": "Reinforced Door",
   "block.hayoind.reinforced_glass": "Reinforced Glass",
   "block.hayoind.rubber_log": "Rubber Tree Log",
+  "block.hayoind.resin_yielding_rubber_log": "Rubber Tree Log (Resin Yielding)",
   "block.hayoind.rubber_wood": "Rubber Tree Wood",
   "block.hayoind.stripped_rubber_log": "Stripped Rubber Tree Log",
   "block.hayoind.stripped_rubber_wood": "Stripped Rubber Tree Wood",
@@ -33,6 +34,7 @@
   "item.hayoind.silicon_dust": "Silicon Dust",
   "item.hayoind.silicon_bronze_dust": "Silicon Bronze Dust",
   "item.hayoind.silicon_bronze_ingot": "Silicon Bronze Ingot",
+  "item.hayoind.sticky_resin": "Sticky Resin",
   "item.hayoind.quartz_coal_mixture": "Quartz-Coal Mixture",
   "item.hayoind.raw_silicon": "Raw Silicon",
   "item.hayoind.composite_plate": "Composite Plate",

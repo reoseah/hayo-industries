@@ -33,7 +33,6 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import org.slf4j.Logger;
@@ -52,8 +51,6 @@ public class HayoInd {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final CreativeModeTab TAB = FabricItemGroup.builder().title(Component.translatable("itemGroup.hayoind")).icon(() -> new ItemStack(Blocks.MACERATOR)).build();
 
-    public static final ResourceKey<PlacedFeature> RUBBER_TREE_PATCH = key(Registries.PLACED_FEATURE, "rubber_tree_patch");
-
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modLocation("main"), TAB);
 
@@ -61,26 +58,23 @@ public class HayoInd {
         Items.initialize();
         FoliagePlacerTypes.initialize();
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath("hayoind", "features"))
-                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST)
-                        .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
-                        .or(BiomeSelectors.includeByKey(Biomes.SWAMP)), (selectionCtx, modificationCtx) -> {
-                    modificationCtx.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, RUBBER_TREE_PATCH);
-                });
+        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath("hayoind", "features")).add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST).or(BiomeSelectors.tag(BiomeTags.IS_TAIGA)).or(BiomeSelectors.includeByKey(Biomes.SWAMP)).or(BiomeSelectors.includeByKey(Biomes.JUNGLE)), (selectionCtx, modificationCtx) -> {
+            modificationCtx.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, modKey(Registries.PLACED_FEATURE, "rubber_tree_patch"));
+        });
     }
 
     @Environment(EnvType.CLIENT)
     public static void initializeClient() {
         BlockRenderLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU);
 
-        ColorProviderRegistry.BLOCK.register((blockState, blockAndTintGetter, blockPos, i) -> blockAndTintGetter != null ? BiomeColors.getAverageFoliageColor(blockAndTintGetter, blockPos) : -12012264, Blocks.RUBBER_LEAVES);
+        ColorProviderRegistry.BLOCK.register((state, level, pos, i) -> level != null ? BiomeColors.getAverageFoliageColor(level, pos) : -12012264, Blocks.RUBBER_LEAVES);
     }
 
     public static ResourceLocation modLocation(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
-    public static <T> ResourceKey<T> key(ResourceKey<Registry<T>> registryKey, String location) {
+    public static <T> ResourceKey<T> modKey(ResourceKey<Registry<T>> registryKey, String location) {
         return ResourceKey.create(registryKey, modLocation(location));
     }
 
@@ -103,29 +97,15 @@ public class HayoInd {
         public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
 
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
-        public static final Block RUBBER_WOOD = register("rubber_wood", RotatedPillarBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
+        public static final Block RESIN_YIELDING_RUBBER_LOG = register("resin_yielding_rubber_log", ResinYieldingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
+        public static final Block RUBBER_WOOD = register("rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block STRIPPED_RUBBER_LOG = register("stripped_rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block STRIPPED_RUBBER_WOOD = register("stripped_rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
-        public static final Block RUBBER_LEAVES = register(
-                "rubber_leaves", properties -> new TintedParticleLeavesBlock(0.01F, properties), leavesProperties(SoundType.GRASS)
-        );
+        public static final Block RUBBER_LEAVES = register("rubber_leaves", properties -> new TintedParticleLeavesBlock(0.01F, properties), leavesProperties(SoundType.GRASS));
 
         public static final Block RUBBER_PLANKS = register("rubber_planks", Block::new, BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava());
-        public static final TreeGrower RUBBER_TREE = new TreeGrower(
-                "hayoind:rubber_tree",
-                0.5F,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(key(Registries.CONFIGURED_FEATURE, "rubber_tree")),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty()
-        );
-        public static final Block RUBBER_SAPLING = register(
-                "rubber_sapling",
-                properties -> new SaplingBlock(RUBBER_TREE, properties),
-                BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY)
-        );
+        public static final TreeGrower RUBBER_TREE = new TreeGrower("hayoind:rubber_tree", 0F, Optional.empty(), Optional.empty(), Optional.of(modKey(Registries.CONFIGURED_FEATURE, "rubber_tree")), Optional.empty(), Optional.empty(), Optional.empty());
+        public static final Block RUBBER_SAPLING = register("rubber_sapling", properties -> new SaplingBlock(RUBBER_TREE, properties), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
 
         public static final Block FERRU = register("ferru", OreCropBlock.FerruBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
 
@@ -177,6 +157,7 @@ public class HayoInd {
 
         public static final Item SILICON_BRONZE_INGOT = registerItem("silicon_bronze_ingot");
 
+        public static final Item STICKY_RESIN = registerItem("sticky_resin");
         public static final Item QUARTZ_COAL_MIXTURE = registerItem("quartz_coal_mixture");
         public static final Item RAW_SILICON = registerItem("raw_silicon");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate");
@@ -188,7 +169,7 @@ public class HayoInd {
         public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe");
 
         public static void initialize() {
-            ItemGroupEvents.modifyEntriesEvent(key(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
+            ItemGroupEvents.modifyEntriesEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);
 
@@ -228,6 +209,7 @@ public class HayoInd {
 
                 entries.accept(SILICON_BRONZE_INGOT);
 
+                entries.accept(STICKY_RESIN);
                 entries.accept(QUARTZ_COAL_MIXTURE);
                 entries.accept(RAW_SILICON);
                 entries.accept(COMPOSITE_PLATE);

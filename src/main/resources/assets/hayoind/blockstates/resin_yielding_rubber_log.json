@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,has_resin=false": {
+      "model": "hayoind:block/rubber_log_with_hole"
+    },
+    "facing=east,has_resin=false": {
+      "model": "hayoind:block/rubber_log_with_hole",
+      "y": 90
+    },
+    "facing=south,has_resin=false": {
+      "model": "hayoind:block/rubber_log_with_hole",
+      "y": 180
+    },
+    "facing=west,has_resin=false": {
+      "model": "hayoind:block/rubber_log_with_hole",
+      "y": 270
+    },
+    "facing=north,has_resin=true": {
+      "model": "hayoind:block/rubber_log_with_resin"
+    },
+    "facing=east,has_resin=true": {
+      "model": "hayoind:block/rubber_log_with_resin",
+      "y": 90
+    },
+    "facing=south,has_resin=true": {
+      "model": "hayoind:block/rubber_log_with_resin",
+      "y": 180
+    },
+    "facing=west,has_resin=true": {
+      "model": "hayoind:block/rubber_log_with_resin",
+      "y": 270
+    }
+  }
+}

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "#": "minecraft:stick",
-    "X": "#c:silicon_bronze_ingots"
+    "X": "#c:ingots/silicon_bronze"
   },
   "pattern": [
     "X",
