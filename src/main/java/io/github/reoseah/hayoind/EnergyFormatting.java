@@ -11,7 +11,6 @@ public class EnergyFormatting {
     private static final String AMOUNT_AND_CAPACITY_KEY = "hayoind.energy.amount_and_capacity";
 
     private static final DecimalFormat LARGE_AMOUNTS_FORMAT;
-
     static {
         LARGE_AMOUNTS_FORMAT = (DecimalFormat) DecimalFormat.getInstance(Locale.ROOT);
         LARGE_AMOUNTS_FORMAT.setGroupingUsed(true);

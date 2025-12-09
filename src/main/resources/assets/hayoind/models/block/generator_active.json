@@ -1,0 +1,19 @@
+{
+  "parent": "block/cube",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "hayoind:block/generator_front_active",
+    "down": "hayoind:block/machine_bottom",
+    "up": "hayoind:block/machine",
+    "north": "hayoind:block/generator_front_active",
+    "east": "hayoind:block/generator_side",
+    "south": "hayoind:block/generator_side_with_vents",
+    "west": "hayoind:block/generator_side"
+  }
+}

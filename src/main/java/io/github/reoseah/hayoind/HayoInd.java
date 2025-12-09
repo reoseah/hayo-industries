@@ -1,6 +1,7 @@
 package io.github.reoseah.hayoind;
 
 import io.github.reoseah.hayoind.block.*;
+import io.github.reoseah.hayoind.block.entity.GeneratorBlockEntity;
 import io.github.reoseah.hayoind.feature.RubberFoliagePlacer;
 import io.github.reoseah.hayoind.item.EnergyProperty;
 import io.github.reoseah.hayoind.item.SimpleBatteryItem;
@@ -13,6 +14,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
@@ -29,6 +31,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -56,9 +60,11 @@ public class HayoInd {
 
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modLocation("main"), TAB);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modLocation("energy"), SimpleBatteryItem.ENERGY);
 
         Blocks.initialize();
         Items.initialize();
+        BlockEntityTypes.initialize();
         FoliagePlacerTypes.initialize();
 
         BiomeModifications.create(ResourceLocation.fromNamespaceAndPath("hayoind", "features")).add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST).or(BiomeSelectors.tag(BiomeTags.IS_TAIGA)).or(BiomeSelectors.includeByKey(Biomes.SWAMP)).or(BiomeSelectors.includeByKey(Biomes.JUNGLE)), (selectionCtx, modificationCtx) -> {
@@ -85,6 +91,7 @@ public class HayoInd {
         private static final BlockBehaviour.Properties MACHINES = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.METAL);
         public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINES);
         public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, MACHINES);
+        public static final Block GENERATOR = register("generator", GeneratorBlock::new, MACHINES);
         public static final Block ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlock::new, MACHINES);
         public static final Block MACERATOR = register("macerator", MaceratorBlock::new, MACHINES);
         public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, MACHINES);
@@ -142,6 +149,7 @@ public class HayoInd {
         public static final Item RUBBER_PLANKS = registerBlock(Blocks.RUBBER_PLANKS);
         public static final Item RUBBER_SAPLING = registerBlock(Blocks.RUBBER_SAPLING);
 
+        public static final Item GENERATOR = registerBlock(Blocks.GENERATOR);
         public static final Item ELECTRIC_FURNACE = registerBlock(Blocks.ELECTRIC_FURNACE);
         public static final Item MACERATOR = registerBlock(Blocks.MACERATOR);
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
@@ -167,13 +175,12 @@ public class HayoInd {
 
         public static final Item STICKY_RESIN = registerItem("sticky_resin");
         public static final Item RUBBER = registerItem("rubber");
-        public static final Item QUARTZ_COAL_MIXTURE = registerItem("quartz_coal_mixture");
         public static final Item RAW_SILICON = registerItem("raw_silicon");
         public static final Item STEEL_PLATE = registerItem("steel_plate");
+        public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item CIRCUIT = registerItem("circuit");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
-        public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
@@ -191,12 +198,11 @@ public class HayoInd {
         public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
 
         public static void initialize() {
-            Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modLocation("energy"), SimpleBatteryItem.ENERGY);
-
             ItemGroupEvents.modifyEntriesEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);
 
+                entries.accept(GENERATOR);
                 entries.accept(ELECTRIC_FURNACE);
                 entries.accept(MACERATOR);
                 entries.accept(EXTRACTOR);
@@ -238,13 +244,12 @@ public class HayoInd {
 
                 entries.accept(STICKY_RESIN);
                 entries.accept(RUBBER);
-                entries.accept(QUARTZ_COAL_MIXTURE);
                 entries.accept(RAW_SILICON);
                 entries.accept(STEEL_PLATE);
+                entries.accept(COMPOSITE_PLATE);
                 entries.accept(CIRCUIT);
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(TRANSFORMER);
-                entries.accept(COMPOSITE_PLATE);
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
 
@@ -291,6 +296,19 @@ public class HayoInd {
         public static Item registerItem(String name, Function<Item.Properties, Item> constructor, Item.Properties properties) {
             var key = ResourceKey.create(Registries.ITEM, modLocation(name));
             return Registry.register(BuiltInRegistries.ITEM, key, constructor.apply(properties.setId(key)));
+        }
+    }
+
+    public static class BlockEntityTypes {
+        public static final BlockEntityType<GeneratorBlockEntity> GENERATOR = register("generator", GeneratorBlockEntity::new, Blocks.GENERATOR);
+
+        public static void initialize() {
+        }
+
+        public static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<T> constructor, Block... blocks) {
+            var key = ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, modLocation(name));
+            var type = FabricBlockEntityTypeBuilder.create(constructor, blocks).build();
+            return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, key, type);
         }
     }
 

@@ -58,21 +58,25 @@ public class SimpleBatteryItem extends Item implements ElectricItem {
         if (stack.getCount() != 1) {
             return false;
         }
+
         int energy = this.getEnergy(stack);
-        return energy != 0 && energy < this.getEnergyCapacity(stack);
+        int capacity = this.getEnergyCapacity(stack);
+        return energy != 0 && energy < capacity;
     }
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return Math.round(13 * ((float) this.getEnergy(stack)) / this.getEnergyCapacity(stack));
+        return Math.round(13F * ((float) this.getEnergy(stack)) / this.getEnergyCapacity(stack));
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
         float ratio = ((float) this.getEnergy(stack)) / (float) this.getEnergyCapacity(stack);
 
-        float hue = Mth.lerp(ratio, 240F, 360F) / 360F; // from blue to red
-        float saturation = Mth.lerp(ratio, 50, 100) / 100F; // from 50% to 100% saturation, otherwise pure blue is too dark
-        return Mth.hsvToRgb(hue / 360F, saturation / 100F, 1.0F);
+        // from blue to red
+        float hue = Mth.lerp(ratio, 240F, 360F) / 360F;
+        // from 50% to 100% saturation, otherwise pure blue is too dark
+        float saturation = Mth.lerp(ratio, 0.5F, 1F);
+        return Mth.hsvToRgb(hue, saturation, 1.0F);
     }
 }

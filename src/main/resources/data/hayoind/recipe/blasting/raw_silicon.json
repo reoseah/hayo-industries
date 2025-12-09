@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.7,
+  "ingredient": "#hayoind:raw_silicon_ingredients",
+  "result": {
+    "id": "hayoind:raw_silicon"
+  }
+}
