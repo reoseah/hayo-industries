@@ -1,7 +1,7 @@
 package io.github.reoseah.hayoind.menu;
 
 import io.github.reoseah.hayoind.Hayo;
-import io.github.reoseah.hayoind.block.entity.EnergyCrystalArrayBlockEntity;
+import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,22 +12,22 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public class EnergyCrystalArrayMenu extends AbstractContainerMenu {
+public class ElectricFurnaceMenu extends AbstractContainerMenu {
     protected final ContainerData data;
 
-    public EnergyCrystalArrayMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(3), new SimpleContainerData(3), inventory);
+    public ElectricFurnaceMenu(int menuId, Inventory inventory) {
+        this(menuId, new SimpleContainer(7), new SimpleContainerData(2), inventory);
     }
 
-    public EnergyCrystalArrayMenu(int menuId, EnergyCrystalArrayBlockEntity entity, Inventory inventory) {
+    public ElectricFurnaceMenu(int menuId, ElectricFurnaceBlockEntity entity, Inventory inventory) {
         this(menuId, entity, createData(entity), inventory);
     }
 
-    protected static ContainerData createData(EnergyCrystalArrayBlockEntity entity) {
+    protected static ContainerData createData(ElectricFurnaceBlockEntity entity) {
         return new ContainerData() {
             @Override
             public int getCount() {
-                return 3;
+                return 2;
             }
 
             @Override
@@ -35,7 +35,6 @@ public class EnergyCrystalArrayMenu extends AbstractContainerMenu {
                 return switch (index) {
                     case 0 -> entity.getStoredEnergy() & 0xFFFF;
                     case 1 -> entity.getStoredEnergy() >>> 16;
-                    case 2 -> Math.round(entity.getAverageEnergyPerTick() * 10);
                     default -> 0;
                 };
             }
@@ -46,14 +45,20 @@ public class EnergyCrystalArrayMenu extends AbstractContainerMenu {
         };
     }
 
-    protected EnergyCrystalArrayMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
-        super(Hayo.MenuTypes.ENERGY_CRYSTAL_ARRAY, menuId);
+    protected ElectricFurnaceMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
+        super(Hayo.MenuTypes.ELECTRIC_FURNACE, menuId);
 
         this.data = data;
         this.addDataSlots(this.data);
 
-        this.addSlot(new Slot(container, 0, 62, 18));
-        this.addSlot(new Slot(container, 1, 62, 54));
+        this.addSlot(new Slot(container, 0, 47, 18));
+        this.addSlot(new Slot(container, 1, 47, 54));
+        this.addSlot(new Slot(container, 2, 107, 36));
+
+        this.addSlot(new Slot(container, 3, 152, 8));
+        this.addSlot(new Slot(container, 4, 152, 26));
+        this.addSlot(new Slot(container, 5, 152, 44));
+        this.addSlot(new Slot(container, 6, 152, 62));
 
         this.addStandardInventorySlots(inventory, 8, 84);
     }
@@ -70,9 +75,5 @@ public class EnergyCrystalArrayMenu extends AbstractContainerMenu {
 
     public int getStoredEnergy() {
         return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
-    }
-
-    public float getAverageEnergyPerTick() {
-        return this.data.get(2) / 10F;
     }
 }

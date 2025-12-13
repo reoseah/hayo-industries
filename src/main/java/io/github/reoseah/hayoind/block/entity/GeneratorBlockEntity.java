@@ -19,7 +19,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
-public class GeneratorBlockEntity extends HayoContainerBlockEntity {
+public class GeneratorBlockEntity extends HayoElectricBlockEntity {
     public static final int ENERGY_PER_FUEL_TICK = 5;
     public static final int FUEL_CONSUMPTION_RATE = 2;
     public static final int GENERATION_RATE = FUEL_CONSUMPTION_RATE * ENERGY_PER_FUEL_TICK;
@@ -30,8 +30,6 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity {
     protected int fuelEnergyLeft;
     @Getter
     protected int fuelEnergyTotal;
-    @Getter
-    protected int storedEnergy;
 
     public GeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.GENERATOR, pos, state);
@@ -53,19 +51,17 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput view) {
-        super.saveAdditional(view);
-        view.putInt("FuelEnergyLeft", this.fuelEnergyLeft);
-        view.putInt("FuelEnergyTotal", this.fuelEnergyTotal);
-        view.putInt("StoredEnergy", this.storedEnergy);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("FuelEnergyLeft", this.fuelEnergyLeft);
+        output.putInt("FuelEnergyTotal", this.fuelEnergyTotal);
     }
 
     @Override
-    protected void loadAdditional(ValueInput view) {
-        super.loadAdditional(view);
-        this.fuelEnergyLeft = view.getIntOr("FuelEnergyLeft", 0);
-        this.fuelEnergyTotal = view.getIntOr("FuelEnergyTotal", 0);
-        this.storedEnergy = view.getIntOr("StoredEnergy", 0);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.fuelEnergyLeft = input.getIntOr("FuelEnergyLeft", 0);
+        this.fuelEnergyTotal = input.getIntOr("FuelEnergyTotal", 0);
     }
 
     protected boolean canConsumeFuel() {

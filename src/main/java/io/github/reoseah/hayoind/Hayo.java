@@ -2,13 +2,16 @@ package io.github.reoseah.hayoind;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayoind.block.*;
+import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayoind.block.entity.EnergyCrystalArrayBlockEntity;
 import io.github.reoseah.hayoind.block.entity.GeneratorBlockEntity;
+import io.github.reoseah.hayoind.client.screen.ElectricFurnaceScreen;
 import io.github.reoseah.hayoind.client.screen.EnergyCrystalArrayScreen;
 import io.github.reoseah.hayoind.client.screen.GeneratorScreen;
 import io.github.reoseah.hayoind.feature.RubberFoliagePlacer;
 import io.github.reoseah.hayoind.item.EnergyProperty;
 import io.github.reoseah.hayoind.item.SimpleBatteryItem;
+import io.github.reoseah.hayoind.menu.ElectricFurnaceMenu;
 import io.github.reoseah.hayoind.menu.EnergyCrystalArrayMenu;
 import io.github.reoseah.hayoind.menu.GeneratorMenu;
 import net.fabricmc.api.EnvType;
@@ -96,6 +99,7 @@ public class Hayo {
         RangeSelectItemModelProperties.ID_MAPPER.put(modLocation("energy"), EnergyProperty.MAP_CODEC);
 
         MenuScreens.register(MenuTypes.GENERATOR, GeneratorScreen::new);
+        MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ElectricFurnaceScreen::new);
         MenuScreens.register(MenuTypes.ENERGY_CRYSTAL_ARRAY, EnergyCrystalArrayScreen::new);
     }
 
@@ -333,6 +337,7 @@ public class Hayo {
 
     public static class BlockEntityTypes {
         public static final BlockEntityType<GeneratorBlockEntity> GENERATOR = register("generator", GeneratorBlockEntity::new, Blocks.GENERATOR);
+        public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlockEntity::new, Blocks.ELECTRIC_FURNACE);
         public static final BlockEntityType<EnergyCrystalArrayBlockEntity> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlockEntity::new, Blocks.ENERGY_CRYSTAL_ARRAY);
 
         public static void initialize() {
@@ -348,6 +353,7 @@ public class Hayo {
 
     public static class MenuTypes {
         public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
+        public static final MenuType<ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
         public static final MenuType<EnergyCrystalArrayMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
 
         public static void initialize() {

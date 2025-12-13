@@ -15,16 +15,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
-public class EnergyCrystalArrayBlockEntity extends HayoContainerBlockEntity implements MenuProvider {
+public class EnergyCrystalArrayBlockEntity extends HayoElectricBlockEntity implements MenuProvider {
     public static final int CAPACITY = 1_000_000;
     public static final int TRANSFER_RATE = 128;
 
-    @Getter
-    protected int storedEnergy;
     @Getter
     protected int energyPerTick;
     @Getter
@@ -45,33 +41,16 @@ public class EnergyCrystalArrayBlockEntity extends HayoContainerBlockEntity impl
     }
 
     @Override
-    public Component getDisplayName() {
-        return this.getName();
-    }
-
-    @Override
     public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player player) {
         return new EnergyCrystalArrayMenu(menuId, this, playerInventory);
-    }
-
-    @Override
-    protected void saveAdditional(ValueOutput view) {
-        super.saveAdditional(view);
-        view.putInt("StoredEnergy", this.storedEnergy);
-    }
-
-    @Override
-    protected void loadAdditional(ValueInput view) {
-        super.loadAdditional(view);
-        this.storedEnergy = view.getIntOr("StoredEnergy", 0);
     }
 
     @SuppressWarnings("unused")
     public static void tickServer(Level level, BlockPos pos, BlockState state, EnergyCrystalArrayBlockEntity entity) {
         entity.energyPerTick = 0;
-        int vacant = Math.min(CAPACITY - entity.storedEnergy, TRANSFER_RATE);
-        if (vacant != 0) {
-            int charge = ElectricItems.tryDischarge(vacant, entity.getItem(0), stack -> entity.setItem(0, stack));
+        int chargeable = Math.min(CAPACITY - entity.storedEnergy, TRANSFER_RATE);
+        if (chargeable != 0) {
+            int charge = ElectricItems.tryDischarge(chargeable, entity.getItem(0), stack -> entity.setItem(0, stack));
             if (charge > 0) {
                 entity.storedEnergy += charge;
                 entity.energyPerTick += charge;
@@ -87,5 +66,4 @@ public class EnergyCrystalArrayBlockEntity extends HayoContainerBlockEntity impl
 
         entity.averageEnergyPerTick = Mth.lerp(0.05F, entity.averageEnergyPerTick, entity.energyPerTick);
     }
-
 }

@@ -28,16 +28,16 @@ public abstract class HayoContainerBlockEntity extends BlockEntity implements Co
     protected abstract NonNullList<ItemStack> createInventory();
 
     @Override
-    protected void saveAdditional(ValueOutput view) {
-        super.saveAdditional(view);
-        ContainerHelper.saveAllItems(view, this.stacks);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ContainerHelper.saveAllItems(output, this.stacks);
     }
 
     @Override
-    protected void loadAdditional(ValueInput view) {
-        super.loadAdditional(view);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         this.stacks.clear();
-        ContainerHelper.loadAllItems(view, this.stacks);
+        ContainerHelper.loadAllItems(input, this.stacks);
     }
 
     @Override

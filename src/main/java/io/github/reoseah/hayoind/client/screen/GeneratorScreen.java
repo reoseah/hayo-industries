@@ -1,6 +1,5 @@
 package io.github.reoseah.hayoind.client.screen;
 
-import io.github.reoseah.hayoind.block.entity.EnergyCrystalArrayBlockEntity;
 import io.github.reoseah.hayoind.block.entity.GeneratorBlockEntity;
 import io.github.reoseah.hayoind.menu.EnergyTexts;
 import io.github.reoseah.hayoind.menu.GeneratorMenu;
@@ -28,12 +27,6 @@ public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(graphics, mouseX, mouseY);
-    }
-
-    @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         super.renderBg(graphics, partialTick, mouseX, mouseY);
 
@@ -45,12 +38,12 @@ public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
 
         drawFuelMeter(graphics, x + 62, y + 37, this.menu.getFuelEnergyLeft(), this.menu.getFuelEnergyTotal());
 
-        drawVerticalEnergyBar(graphics, x + 88, y + 16, this.menu.getStoredEnergy(), GeneratorBlockEntity.CAPACITY);
+        drawEnergyBar(graphics, x + 88, y + 16, this.menu.getStoredEnergy(), GeneratorBlockEntity.CAPACITY);
     }
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (this.isHovering(88, 16, VERT_ENERGY_WIDTH, VERT_ENERGY_HEIGHT, mouseX, mouseY)) {
+        if (this.isHovering(88, 16, ENERGY_WIDTH, ENERGY_HEIGHT, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of( //
                     EnergyTexts.STORED_ENERGY, //
                     EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), GeneratorBlockEntity.CAPACITY).withStyle(ChatFormatting.GRAY) //
@@ -58,7 +51,7 @@ public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
             return;
         }
 
-        if (this.isHovering(62, 37, FUEL_GAUGE_SIZE, FUEL_GAUGE_SIZE, mouseX, mouseY)) {
+        if (this.isHovering(62, 37, FUEL_SIZE, FUEL_SIZE, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of( //
                     Component.translatable("hayoind.fuel"), //
                     EnergyTexts.approximateAmount(this.menu.getFuelEnergyLeft()).withStyle(ChatFormatting.GRAY) //

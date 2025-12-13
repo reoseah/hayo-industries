@@ -20,7 +20,7 @@ public class ExtractorBlock extends OrientableMachineBlock {
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return null;
     }
 }

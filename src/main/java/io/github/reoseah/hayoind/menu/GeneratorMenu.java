@@ -15,12 +15,12 @@ import net.minecraft.world.item.ItemStack;
 public class GeneratorMenu extends AbstractContainerMenu {
     protected final ContainerData data;
 
-    public GeneratorMenu(int menuId, Inventory playerInventory) {
-        this(menuId, new SimpleContainer(1), new SimpleContainerData(4), playerInventory);
+    public GeneratorMenu(int menuId, Inventory inventory) {
+        this(menuId, new SimpleContainer(1), new SimpleContainerData(4), inventory);
     }
 
-    public GeneratorMenu(int menuId, GeneratorBlockEntity generator, Inventory playerInventory) {
-        this(menuId, generator, createData(generator), playerInventory);
+    public GeneratorMenu(int menuId, GeneratorBlockEntity entity, Inventory inventory) {
+        this(menuId, entity, createData(entity), inventory);
     }
 
     protected static ContainerData createData(GeneratorBlockEntity entity) {
@@ -33,10 +33,10 @@ public class GeneratorMenu extends AbstractContainerMenu {
             @Override
             public int get(int index) {
                 return switch (index) {
-                    case 0 -> entity.getFuelEnergyLeft();
-                    case 1 -> entity.getFuelEnergyTotal();
-                    case 2 -> entity.getStoredEnergy() & 0xFFFF;
-                    case 3 -> entity.getStoredEnergy() >>> 16;
+                    case 0 -> entity.getStoredEnergy() & 0xFFFF;
+                    case 1 -> entity.getStoredEnergy() >>> 16;
+                    case 2 -> entity.getFuelEnergyLeft();
+                    case 3 -> entity.getFuelEnergyTotal();
                     default -> 0;
                 };
             }
@@ -47,14 +47,14 @@ public class GeneratorMenu extends AbstractContainerMenu {
         };
     }
 
-    protected GeneratorMenu(int menuId, Container generator, ContainerData data, Inventory playerInventory) {
+    protected GeneratorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
         super(Hayo.MenuTypes.GENERATOR, menuId);
 
         this.data = data;
         this.addDataSlots(this.data);
 
-        this.addSlot(new Slot(generator, 0, 62, 54));
-        this.addStandardInventorySlots(playerInventory, 8, 84);
+        this.addSlot(new Slot(container, 0, 62, 54));
+        this.addStandardInventorySlots(inventory, 8, 84);
     }
 
     @Override
@@ -68,14 +68,14 @@ public class GeneratorMenu extends AbstractContainerMenu {
     }
 
     public int getFuelEnergyLeft() {
-        return this.data.get(0);
+        return this.data.get(2);
     }
 
     public int getFuelEnergyTotal() {
-        return this.data.get(1);
+        return this.data.get(3);
     }
 
     public int getStoredEnergy() {
-        return (this.data.get(3) << 16) | (this.data.get(2) & 0xFFFF);
+        return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
     }
 }

@@ -1,5 +1,6 @@
 package io.github.reoseah.hayoind.item;
 
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
@@ -56,5 +57,9 @@ public class ElectricItems {
             return electricItem.discharge(stack, max, setItem);
         }
         return 0;
+    }
+
+    public static int tryDischarge(int max, Container container, int slot) {
+        return tryDischarge(max, container.getItem(slot), stack -> container.setItem(slot, stack));
     }
 }
