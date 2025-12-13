@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hayoind:item/redstone_flux_laser"
+  }
+}

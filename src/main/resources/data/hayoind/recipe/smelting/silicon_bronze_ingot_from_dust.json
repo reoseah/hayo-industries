@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.0,
+  "ingredient": "#c:dusts/silicon_bronze",
+  "result": {
+    "id": "hayoind:silicon_bronze_ingot"
+  }
+}

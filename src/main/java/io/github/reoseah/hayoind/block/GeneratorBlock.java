@@ -1,6 +1,7 @@
 package io.github.reoseah.hayoind.block;
 
 import com.mojang.serialization.MapCodec;
+import io.github.reoseah.hayoind.Hayo;
 import io.github.reoseah.hayoind.block.entity.GeneratorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,6 +12,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,5 +52,11 @@ public class GeneratorBlock extends OrientableMachineBlock {
             double dz = axis == Direction.Axis.Z ? direction.getStepZ() * 0.52 : h;
             level.addParticle(ParticleTypes.SMOKE, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
         }
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, Hayo.BlockEntityTypes.GENERATOR, world.isClientSide() ? null : GeneratorBlockEntity::tickServer);
     }
 }

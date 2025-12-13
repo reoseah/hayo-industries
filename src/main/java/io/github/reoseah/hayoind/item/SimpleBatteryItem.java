@@ -1,7 +1,7 @@
 package io.github.reoseah.hayoind.item;
 
 import com.mojang.serialization.Codec;
-import io.github.reoseah.hayoind.EnergyFormatting;
+import io.github.reoseah.hayoind.menu.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
@@ -21,7 +21,7 @@ public class SimpleBatteryItem extends Item implements ElectricItem {
     public final int energyTransferLimit;
 
     public SimpleBatteryItem(Properties properties, int energyCapacity, int energyTransferLimit) {
-        super(properties);
+        super(properties.stacksTo(1));
         this.energyCapacity = energyCapacity;
         this.energyTransferLimit = energyTransferLimit;
     }
@@ -50,7 +50,7 @@ public class SimpleBatteryItem extends Item implements ElectricItem {
     @SuppressWarnings("deprecation")
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
-        tooltipAdder.accept(EnergyFormatting.energyAndCapacity(this.getEnergy(stack), this.getEnergyCapacity(stack)).withStyle(ChatFormatting.GRAY));
+        tooltipAdder.accept(EnergyTexts.amountAndCapacity(this.getEnergy(stack), this.getEnergyCapacity(stack)).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class SimpleBatteryItem extends Item implements ElectricItem {
 
     @Override
     public int getBarColor(ItemStack stack) {
-        float ratio = ((float) this.getEnergy(stack)) / (float) this.getEnergyCapacity(stack);
+        float ratio = 1F - ((float) this.getEnergy(stack)) / (float) this.getEnergyCapacity(stack);
 
         // from blue to red
         float hue = Mth.lerp(ratio, 240F, 360F) / 360F;

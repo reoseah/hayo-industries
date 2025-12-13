@@ -7,13 +7,13 @@
     "#R#"
   ],
   "key": {
-    "#": "#c:plates/steel",
+    "#": "#c:plates/refined_iron",
     "C": "hayoind:copper_cable",
     "R": "minecraft:redstone",
     "D": "#c:dusts/coal"
   },
   "result": {
     "id": "hayoind:battery",
-    "count": 2
+    "count": 1
   }
 }

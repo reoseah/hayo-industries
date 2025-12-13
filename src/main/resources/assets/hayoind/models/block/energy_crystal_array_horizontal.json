@@ -1,0 +1,19 @@
+{
+  "parent": "block/cube",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "hayoind:block/energy_crystal_array_output",
+    "down": "hayoind:block/advanced_machine",
+    "up": "hayoind:block/advanced_machine",
+    "north": "hayoind:block/energy_crystal_array_output",
+    "east": "hayoind:block/advanced_machine",
+    "south": "hayoind:block/advanced_machine",
+    "west": "hayoind:block/advanced_machine"
+  }
+}

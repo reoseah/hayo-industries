@@ -1,6 +1,6 @@
 package io.github.reoseah.hayoind.block;
 
-import io.github.reoseah.hayoind.HayoInd;
+import io.github.reoseah.hayoind.Hayo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -64,8 +64,8 @@ public class ResinYieldingLogBlock extends Block {
             // TODO: play sound
 
             level.setBlockAndUpdate(pos, state.setValue(HAS_RESIN, false));
-            if (!player.getInventory().add(new ItemStack(HayoInd.Items.STICKY_RESIN))) {
-                player.drop(new ItemStack(HayoInd.Items.STICKY_RESIN), false);
+            if (!player.getInventory().add(new ItemStack(Hayo.Items.STICKY_RESIN))) {
+                player.drop(new ItemStack(Hayo.Items.STICKY_RESIN), false);
             }
             return InteractionResult.SUCCESS;
         }

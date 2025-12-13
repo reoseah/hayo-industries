@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.reoseah.hayoind.HayoInd::initialize"
+      "io.github.reoseah.hayoind.Hayo::initialize"
     ],
     "client": [
-      "io.github.reoseah.hayoind.HayoInd::initializeClient"
+      "io.github.reoseah.hayoind.Hayo::initializeClient"
     ]
   },
   "mixins": [

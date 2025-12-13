@@ -2,7 +2,7 @@ package io.github.reoseah.hayoind.feature;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.reoseah.hayoind.HayoInd;
+import io.github.reoseah.hayoind.Hayo;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.LevelSimulatedReader;
@@ -19,7 +19,7 @@ public class RubberFoliagePlacer extends FoliagePlacer {
 
     @Override
     protected FoliagePlacerType<?> type() {
-        return HayoInd.FoliagePlacerTypes.RUBBER;
+        return Hayo.FoliagePlacerTypes.RUBBER;
     }
 
     @Override

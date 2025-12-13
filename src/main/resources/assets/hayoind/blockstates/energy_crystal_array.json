@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "hayoind:block/energy_crystal_array",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "hayoind:block/energy_crystal_array"
+    },
+    "facing=north": {
+      "model": "hayoind:block/energy_crystal_array_horizontal"
+    },
+    "facing=east": {
+      "model": "hayoind:block/energy_crystal_array_horizontal",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hayoind:block/energy_crystal_array_horizontal",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hayoind:block/energy_crystal_array_horizontal",
+      "y": 270
+    }
+  }
+}

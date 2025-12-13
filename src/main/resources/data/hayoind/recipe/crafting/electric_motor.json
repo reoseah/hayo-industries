@@ -7,7 +7,7 @@
     "CCC"
   ],
   "key": {
-    "#": "#c:plates/steel",
+    "#": "#c:plates/refined_iron",
     "W": "hayoind:uninsulated_copper_cable",
     "C": "hayoind:copper_cable",
     "I": "minecraft:iron_ingot"

@@ -12,7 +12,7 @@ public record EnergyProperty() implements RangeSelectItemModelProperty {
 
     @Override
     public float get(ItemStack stack, @Nullable ClientLevel level, @Nullable ItemOwner owner, int seed) {
-        return ((float) ElectricItem.tryGetEnergy(stack));
+        return ((float) ElectricItems.tryGetEnergy(stack));
     }
 
     @Override

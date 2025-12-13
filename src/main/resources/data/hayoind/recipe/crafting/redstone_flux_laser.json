@@ -2,18 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    " C ",
     "#R#",
-    "#D#"
+    "CSC"
   ],
   "key": {
-    "#": "#c:plates/refined_iron",
+    "#": "#c:ingots/gold",
     "C": "hayoind:copper_cable",
     "R": "minecraft:redstone",
-    "D": "#c:dusts/coal"
+    "S": "#c:dusts/netherite_scrap"
   },
   "result": {
-    "id": "hayoind:battery",
+    "id": "hayoind:redstone_flux_laser",
     "count": 1
   }
 }
