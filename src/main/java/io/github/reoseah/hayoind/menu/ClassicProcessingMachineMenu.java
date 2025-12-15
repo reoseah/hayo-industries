@@ -4,12 +4,14 @@ import io.github.reoseah.hayoind.Hayo;
 import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayoind.block.entity.MaceratorBlockEntity;
 import io.github.reoseah.hayoind.block.entity.ProcessingMachineBlockEntity;
+import io.github.reoseah.hayoind.item.ElectricItems;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipePropertySet;
 
 public abstract class ClassicProcessingMachineMenu extends AbstractContainerMenu {
     protected final ContainerData data;
@@ -56,10 +58,56 @@ public abstract class ClassicProcessingMachineMenu extends AbstractContainerMenu
         };
     }
 
+    public static final int FIRST_PLAYER_SLOT = 3 + 4;
+
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+        ItemStack stack = slot.getItem();
+        if (stack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack previous = stack.copy();
+        if (index < FIRST_PLAYER_SLOT) {
+            if (!this.moveItemStackTo(stack, FIRST_PLAYER_SLOT, FIRST_PLAYER_SLOT + 36, true)) {
+                return ItemStack.EMPTY;
+            }
+            slot.onQuickCraft(stack, previous);
+        } else {
+            if (ElectricItems.isElectric(stack)) {
+                if (!this.moveItemStackTo(stack, 1, 2, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (this.isRecipeInput(stack)) {
+                if (!this.moveItemStackTo(stack, 0, 1, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index < FIRST_PLAYER_SLOT + 27) {
+                if (!this.moveItemStackTo(stack, FIRST_PLAYER_SLOT + 27, FIRST_PLAYER_SLOT + 36, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
+                if (!this.moveItemStackTo(stack, FIRST_PLAYER_SLOT, FIRST_PLAYER_SLOT + 27, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+        }
+
+        if (stack.isEmpty()) {
+            slot.set(ItemStack.EMPTY);
+        } else {
+            slot.setChanged();
+        }
+
+        if (stack.getCount() == previous.getCount()) {
+            return ItemStack.EMPTY;
+        }
+
+        slot.onTake(player, stack);
+        return previous;
     }
+
+    protected abstract boolean isRecipeInput(ItemStack stack);
 
     @Override
     public boolean stillValid(Player player) {
@@ -79,12 +127,25 @@ public abstract class ClassicProcessingMachineMenu extends AbstractContainerMenu
     }
 
     public static class ElectricFurnaceMenu extends ClassicProcessingMachineMenu {
+        private final RecipePropertySet acceptedInputs;
+
         public ElectricFurnaceMenu(int menuId, Inventory inventory) {
             super(Hayo.MenuTypes.ELECTRIC_FURNACE, menuId, new SimpleContainer(7), new SimpleContainerData(4), inventory);
+
+            var level = inventory.player.level();
+            this.acceptedInputs = level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT);
         }
 
         public ElectricFurnaceMenu(int menuId, ElectricFurnaceBlockEntity entity, Inventory inventory) {
             super(Hayo.MenuTypes.ELECTRIC_FURNACE, menuId, entity, createData(entity), inventory);
+
+            var level = inventory.player.level();
+            this.acceptedInputs = level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT);
+        }
+
+        @Override
+        protected boolean isRecipeInput(ItemStack stack) {
+            return this.acceptedInputs.test(stack);
         }
     }
 
@@ -95,6 +156,11 @@ public abstract class ClassicProcessingMachineMenu extends AbstractContainerMenu
 
         public MaceratorMenu(int menuId, MaceratorBlockEntity entity, Inventory inventory) {
             super(Hayo.MenuTypes.MACERATOR, menuId, entity, createData(entity), inventory);
+        }
+
+        @Override
+        protected boolean isRecipeInput(ItemStack stack) {
+            return true;
         }
     }
 }
