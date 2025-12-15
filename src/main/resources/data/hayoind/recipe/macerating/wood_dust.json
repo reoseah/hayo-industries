@@ -1,0 +1,9 @@
+{
+  "type": "hayoind:macerating",
+  "ingredient": "#minecraft:wooden_tool_materials",
+  "processing_energy": 800,
+  "result": {
+    "id": "hayoind:wood_dust",
+    "count": 2
+  }
+}

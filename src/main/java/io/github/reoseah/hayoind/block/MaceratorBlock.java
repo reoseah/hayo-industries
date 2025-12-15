@@ -1,6 +1,7 @@
 package io.github.reoseah.hayoind.block;
 
 import com.mojang.serialization.MapCodec;
+import io.github.reoseah.hayoind.Hayo;
 import io.github.reoseah.hayoind.block.entity.MaceratorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -8,6 +9,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +29,12 @@ public class MaceratorBlock extends OrientableMachineBlock {
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new MaceratorBlockEntity(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, Hayo.BlockEntityTypes.MACERATOR, world.isClientSide() ? null : MaceratorBlockEntity::tickServer);
     }
 
     @Override

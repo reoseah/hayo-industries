@@ -214,6 +214,7 @@ public class Hayo {
         public static final Item STEEL_PLATE = registerItem("steel_plate");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item CIRCUIT = registerItem("circuit");
+        public static final Item STEEL_FOIL = registerItem("steel_foil");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
         public static final Item REDSTONE_FLUX_LASER = registerItem("redstone_flux_laser", new Item.Properties().rarity(Rarity.RARE));
@@ -285,6 +286,7 @@ public class Hayo {
                 entries.accept(STEEL_PLATE);
                 entries.accept(COMPOSITE_PLATE);
                 entries.accept(CIRCUIT);
+                entries.accept(STEEL_FOIL);
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(TRANSFORMER);
                 entries.accept(REDSTONE_FLUX_LASER);

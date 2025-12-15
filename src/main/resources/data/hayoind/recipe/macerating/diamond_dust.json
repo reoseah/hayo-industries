@@ -1,8 +1,8 @@
 {
   "type": "hayoind:macerating",
-  "ingredient": "#c:ingots/copper",
+  "ingredient": "minecraft:diamond",
   "processing_energy": 400,
   "result": {
-    "id": "hayoind:copper_dust"
+    "id": "hayoind:diamond_dust"
   }
 }

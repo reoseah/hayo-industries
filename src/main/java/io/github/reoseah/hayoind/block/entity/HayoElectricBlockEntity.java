@@ -1,5 +1,6 @@
 package io.github.reoseah.hayoind.block.entity;
 
+import io.github.reoseah.hayoind.item.ElectricItems;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -25,5 +26,16 @@ public abstract class HayoElectricBlockEntity extends HayoContainerBlockEntity {
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.storedEnergy = input.getIntOr("stored_energy", 0);
+    }
+
+    public static void tickChargeFromSlot(HayoElectricBlockEntity entity, int slot, int capacity, int transferRate) {
+        int max = Math.min(capacity - entity.storedEnergy, transferRate);
+        if (max != 0) {
+            int charge = ElectricItems.tryDischarge(max, entity, slot);
+            if (charge > 0) {
+                entity.storedEnergy += charge;
+                entity.setChanged();
+            }
+        }
     }
 }
