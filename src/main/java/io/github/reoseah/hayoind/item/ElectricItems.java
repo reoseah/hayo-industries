@@ -47,6 +47,10 @@ public class ElectricItems {
         return 0;
     }
 
+    public static int tryCharge(int max, Container container, int slot) {
+        return tryCharge(max, container.getItem(slot), stack -> container.setItem(slot, stack));
+    }
+
     /**
      * Discharge an item or do nothing if the item is not electric.
      *

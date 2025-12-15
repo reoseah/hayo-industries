@@ -18,12 +18,12 @@ public abstract class HayoElectricBlockEntity extends HayoContainerBlockEntity {
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("StoredEnergy", this.storedEnergy);
+        output.putInt("stored_energy", this.storedEnergy);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.storedEnergy = input.getIntOr("StoredEnergy", 0);
+        this.storedEnergy = input.getIntOr("stored_energy", 0);
     }
 }

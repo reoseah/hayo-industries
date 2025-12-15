@@ -36,8 +36,8 @@ public class EnergyCrystalArrayBlockEntity extends HayoElectricBlockEntity imple
     }
 
     @Override
-    public Component getName() {
-        return this.customName != null ? this.customName : Component.translatable("block.hayoind.energy_crystal_array");
+    public Component getDefaultName() {
+        return Component.translatable("block.hayoind.energy_crystal_array");
     }
 
     @Override
@@ -47,17 +47,16 @@ public class EnergyCrystalArrayBlockEntity extends HayoElectricBlockEntity imple
 
     @SuppressWarnings("unused")
     public static void tickServer(Level level, BlockPos pos, BlockState state, EnergyCrystalArrayBlockEntity entity) {
-        entity.energyPerTick = 0;
         int chargeable = Math.min(CAPACITY - entity.storedEnergy, TRANSFER_RATE);
         if (chargeable != 0) {
-            int charge = ElectricItems.tryDischarge(chargeable, entity.getItem(0), stack -> entity.setItem(0, stack));
+            int charge = ElectricItems.tryDischarge(chargeable, entity, 0);
             if (charge > 0) {
                 entity.storedEnergy += charge;
                 entity.energyPerTick += charge;
                 entity.setChanged();
             }
         }
-        int discharge = ElectricItems.tryCharge(TRANSFER_RATE, entity.getItem(1), stack -> entity.setItem(1, stack));
+        int discharge = ElectricItems.tryCharge(TRANSFER_RATE, entity, 1);
         if (discharge > 0) {
             entity.storedEnergy -= discharge;
             entity.energyPerTick -= discharge;
@@ -65,5 +64,6 @@ public class EnergyCrystalArrayBlockEntity extends HayoElectricBlockEntity imple
         }
 
         entity.averageEnergyPerTick = Mth.lerp(0.05F, entity.averageEnergyPerTick, entity.energyPerTick);
+        entity.energyPerTick = 0;
     }
 }

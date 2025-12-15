@@ -5,15 +5,17 @@ import io.github.reoseah.hayoind.block.*;
 import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayoind.block.entity.EnergyCrystalArrayBlockEntity;
 import io.github.reoseah.hayoind.block.entity.GeneratorBlockEntity;
-import io.github.reoseah.hayoind.client.screen.ElectricFurnaceScreen;
+import io.github.reoseah.hayoind.block.entity.MaceratorBlockEntity;
+import io.github.reoseah.hayoind.client.screen.ClassicProcessingMachineScreen;
 import io.github.reoseah.hayoind.client.screen.EnergyCrystalArrayScreen;
 import io.github.reoseah.hayoind.client.screen.GeneratorScreen;
 import io.github.reoseah.hayoind.feature.RubberFoliagePlacer;
 import io.github.reoseah.hayoind.item.EnergyProperty;
 import io.github.reoseah.hayoind.item.SimpleBatteryItem;
-import io.github.reoseah.hayoind.menu.ElectricFurnaceMenu;
+import io.github.reoseah.hayoind.menu.ClassicProcessingMachineMenu;
 import io.github.reoseah.hayoind.menu.EnergyCrystalArrayMenu;
 import io.github.reoseah.hayoind.menu.GeneratorMenu;
+import io.github.reoseah.hayoind.recipe.MaceratingRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -42,6 +44,9 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -80,6 +85,8 @@ public class Hayo {
         BlockEntityTypes.initialize();
         MenuTypes.initialize();
         FoliagePlacerTypes.initialize();
+        RecipeTypes.initialize();
+        RecipeSerializers.initialize();
 
         BiomeModifications.create(ResourceLocation.fromNamespaceAndPath("hayoind", "features")) //
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST) //
@@ -99,7 +106,8 @@ public class Hayo {
         RangeSelectItemModelProperties.ID_MAPPER.put(modLocation("energy"), EnergyProperty.MAP_CODEC);
 
         MenuScreens.register(MenuTypes.GENERATOR, GeneratorScreen::new);
-        MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ElectricFurnaceScreen::new);
+        MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ClassicProcessingMachineScreen.ElectricFurnaceScreen::new);
+        MenuScreens.register(MenuTypes.MACERATOR, ClassicProcessingMachineScreen.MaceratorScreen::new);
         MenuScreens.register(MenuTypes.ENERGY_CRYSTAL_ARRAY, EnergyCrystalArrayScreen::new);
     }
 
@@ -338,6 +346,7 @@ public class Hayo {
     public static class BlockEntityTypes {
         public static final BlockEntityType<GeneratorBlockEntity> GENERATOR = register("generator", GeneratorBlockEntity::new, Blocks.GENERATOR);
         public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlockEntity::new, Blocks.ELECTRIC_FURNACE);
+        public static final BlockEntityType<MaceratorBlockEntity> MACERATOR = register("macerator", MaceratorBlockEntity::new, Blocks.MACERATOR);
         public static final BlockEntityType<EnergyCrystalArrayBlockEntity> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlockEntity::new, Blocks.ENERGY_CRYSTAL_ARRAY);
 
         public static void initialize() {
@@ -353,7 +362,8 @@ public class Hayo {
 
     public static class MenuTypes {
         public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
-        public static final MenuType<ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
+        public static final MenuType<ClassicProcessingMachineMenu.ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ClassicProcessingMachineMenu.ElectricFurnaceMenu::new);
+        public static final MenuType<ClassicProcessingMachineMenu.MaceratorMenu> MACERATOR = register("macerator", ClassicProcessingMachineMenu.MaceratorMenu::new);
         public static final MenuType<EnergyCrystalArrayMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
 
         public static void initialize() {
@@ -378,6 +388,35 @@ public class Hayo {
             var type = new FoliagePlacerType<>(codec);
 
             return Registry.register(BuiltInRegistries.FOLIAGE_PLACER_TYPE, key, type);
+        }
+    }
+
+    public static class RecipeTypes {
+        public static final RecipeType<MaceratingRecipe> MACERATING = register("macerating");
+
+        public static void initialize() {
+        }
+
+        private static <T extends Recipe<?>> RecipeType<T> register(String name) {
+            var type = new RecipeType<T>() {
+                @Override
+                public String toString() {
+                    return MOD_ID + ":" + name;
+                }
+            };
+
+            return Registry.register(BuiltInRegistries.RECIPE_TYPE, modLocation(name), type);
+        }
+    }
+
+    public static class RecipeSerializers {
+        public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", new MaceratingRecipe.Serializer());
+
+        public static void initialize() {
+        }
+
+        private static <T extends Recipe<?>> RecipeSerializer<T> register(String name, RecipeSerializer<T> serializer) {
+            return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, modLocation(name), serializer);
         }
     }
 }

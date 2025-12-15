@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.entity.FuelValues;
 import java.util.List;
 import java.util.Optional;
 
-public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
+public class GeneratorScreen extends HayoContainerScreen<GeneratorMenu> {
     public GeneratorScreen(GeneratorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
@@ -33,17 +33,17 @@ public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
         int x = this.leftPos;
         int y = this.topPos;
 
-        drawSlot(graphics, x + 61, y + 53);
-        blitGuiTexture(graphics, x + 79, y + 44, TINY_ARROW_X, TINY_ARROW_Y, TINY_ARROW_WIDTH, TINY_ARROW_HEIGHT);
+        HayoMachineTexture.drawSlot(graphics, x + 61, y + 53);
+        HayoMachineTexture.blit(graphics, x + 79, y + 44, HayoMachineTexture.TINY_ARROW_X, HayoMachineTexture.TINY_ARROW_Y, HayoMachineTexture.TINY_ARROW_WIDTH, HayoMachineTexture.TINY_ARROW_HEIGHT);
 
-        drawFuelMeter(graphics, x + 62, y + 37, this.menu.getFuelEnergyLeft(), this.menu.getFuelEnergyTotal());
+        HayoMachineTexture.drawFuelMeter(graphics, x + 62, y + 37, this.menu.getFuelEnergyLeft(), this.menu.getFuelEnergyTotal());
 
-        drawEnergyBar(graphics, x + 88, y + 16, this.menu.getStoredEnergy(), GeneratorBlockEntity.CAPACITY);
+        HayoMachineTexture.drawEnergyStorage(graphics, x + 88, y + 16, this.menu.getStoredEnergy(), GeneratorBlockEntity.CAPACITY);
     }
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (this.isHovering(88, 16, ENERGY_WIDTH, ENERGY_HEIGHT, mouseX, mouseY)) {
+        if (this.isHovering(88, 16, HayoMachineTexture.ENERGY_WIDTH, HayoMachineTexture.ENERGY_HEIGHT, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of( //
                     EnergyTexts.STORED_ENERGY, //
                     EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), GeneratorBlockEntity.CAPACITY).withStyle(ChatFormatting.GRAY) //
@@ -51,7 +51,7 @@ public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
             return;
         }
 
-        if (this.isHovering(62, 37, FUEL_SIZE, FUEL_SIZE, mouseX, mouseY)) {
+        if (this.isHovering(62, 37, HayoMachineTexture.FUEL_SIZE, HayoMachineTexture.FUEL_SIZE, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of( //
                     Component.translatable("hayoind.fuel"), //
                     EnergyTexts.approximateAmount(this.menu.getFuelEnergyLeft()).withStyle(ChatFormatting.GRAY) //

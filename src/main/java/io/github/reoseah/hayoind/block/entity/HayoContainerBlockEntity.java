@@ -3,6 +3,7 @@ package io.github.reoseah.hayoind.block.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
@@ -31,6 +32,7 @@ public abstract class HayoContainerBlockEntity extends BlockEntity implements Co
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         ContainerHelper.saveAllItems(output, this.stacks);
+        output.storeNullable("custom_name", ComponentSerialization.CODEC, this.customName);
     }
 
     @Override
@@ -38,6 +40,7 @@ public abstract class HayoContainerBlockEntity extends BlockEntity implements Co
         super.loadAdditional(input);
         this.stacks.clear();
         ContainerHelper.loadAllItems(input, this.stacks);
+        this.customName = parseCustomNameSafe(input, "custom_name");
     }
 
     @Override
@@ -88,15 +91,20 @@ public abstract class HayoContainerBlockEntity extends BlockEntity implements Co
         this.stacks.clear();
     }
 
-
     @Override
     public @Nullable Component getCustomName() {
         return this.customName;
     }
 
+    protected abstract Component getDefaultName();
 
     @Override
     public Component getDisplayName() {
         return this.getName();
+    }
+
+    @Override
+    public Component getName() {
+        return this.customName != null ? this.customName : this.getDefaultName();
     }
 }

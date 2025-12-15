@@ -1,6 +1,7 @@
 package io.github.reoseah.hayoind.block;
 
 import com.mojang.serialization.MapCodec;
+import io.github.reoseah.hayoind.block.entity.MaceratorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
@@ -24,7 +25,7 @@ public class MaceratorBlock extends OrientableMachineBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return null;
+        return new MaceratorBlockEntity(pos, state);
     }
 
     @Override

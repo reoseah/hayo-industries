@@ -36,8 +36,8 @@ public class GeneratorBlockEntity extends HayoElectricBlockEntity {
     }
 
     @Override
-    public Component getName() {
-        return this.customName != null ? this.customName : Component.translatable("block.hayoind.generator");
+    public Component getDefaultName() {
+        return Component.translatable("block.hayoind.generator");
     }
 
     @Override
@@ -82,7 +82,6 @@ public class GeneratorBlockEntity extends HayoElectricBlockEntity {
         this.setChanged();
     }
 
-    @SuppressWarnings("unused")
     public static void tickServer(Level level, BlockPos pos, BlockState state, GeneratorBlockEntity entity) {
         boolean wasBurning = entity.fuelEnergyLeft > 0;
 
