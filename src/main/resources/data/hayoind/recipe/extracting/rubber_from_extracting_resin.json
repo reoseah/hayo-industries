@@ -1,0 +1,11 @@
+{
+  "type": "hayoind:macerating",
+  "ingredient": "hayoind:sticky_resin",
+  "processing_energy": 480,
+  "results": [
+    {
+      "id": "hayoind:rubber",
+      "count": 2
+    }
+  ]
+}

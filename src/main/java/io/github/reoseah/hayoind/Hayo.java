@@ -15,6 +15,7 @@ import io.github.reoseah.hayoind.item.SimpleBatteryItem;
 import io.github.reoseah.hayoind.menu.ClassicProcessingMachineMenu;
 import io.github.reoseah.hayoind.menu.EnergyCrystalArrayMenu;
 import io.github.reoseah.hayoind.menu.GeneratorMenu;
+import io.github.reoseah.hayoind.recipe.ExtractingRecipe;
 import io.github.reoseah.hayoind.recipe.MaceratingRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,6 +27,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
@@ -127,11 +129,11 @@ public class Hayo {
         public static final Block ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlock::new, MACHINES);
         public static final Block MACERATOR = register("macerator", MaceratorBlock::new, MACHINES);
         public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, MACHINES);
+        public static final Block COMPRESSOR = register("compressor", CompressorBlock::new, MACHINES);
         public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD));
-
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
         public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F).noOcclusion().sound(SoundType.GLASS));
@@ -155,6 +157,8 @@ public class Hayo {
         public static final Block COPPER_CABLE = register("copper_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 
         public static void initialize() {
+            StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
+            StrippableBlockRegistry.register(RUBBER_WOOD, STRIPPED_RUBBER_WOOD);
         }
 
         private static Block register(String name, Function<BlockBehaviour.Properties, Block> constructor, BlockBehaviour.Properties properties) {
@@ -172,6 +176,7 @@ public class Hayo {
         public static final Item ELECTRIC_FURNACE = registerBlock(Blocks.ELECTRIC_FURNACE);
         public static final Item MACERATOR = registerBlock(Blocks.MACERATOR);
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
+        public static final Item COMPRESSOR = registerBlock(Blocks.COMPRESSOR);
         public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
 
@@ -243,6 +248,7 @@ public class Hayo {
                 entries.accept(ELECTRIC_FURNACE);
                 entries.accept(MACERATOR);
                 entries.accept(EXTRACTOR);
+                entries.accept(COMPRESSOR);
                 entries.accept(AUTOMATED_FERTILIZER);
                 entries.accept(ENERGY_CRYSTAL_ARRAY);
 
@@ -395,6 +401,7 @@ public class Hayo {
 
     public static class RecipeTypes {
         public static final RecipeType<MaceratingRecipe> MACERATING = register("macerating");
+        public static final RecipeType<ExtractingRecipe> EXTRACTING = register("extracting");
 
         public static void initialize() {
         }
@@ -413,6 +420,7 @@ public class Hayo {
 
     public static class RecipeSerializers {
         public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", new MaceratingRecipe.Serializer());
+        public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", new ExtractingRecipe.Serializer());
 
         public static void initialize() {
         }

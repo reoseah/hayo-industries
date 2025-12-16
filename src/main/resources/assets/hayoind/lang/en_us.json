@@ -6,6 +6,7 @@
   "block.hayoind.electric_furnace": "Electric Furnace",
   "block.hayoind.macerator": "Macerator",
   "block.hayoind.extractor": "Extractor",
+  "block.hayoind.compressor": "Compressor",
   "block.hayoind.automated_fertilizer": "Automated Fertilizer",
   "block.hayoind.energy_crystal_array": "Energy Crystal Array",
   "block.hayoind.uninsulated_copper_cable": "Uninsulated Copper Cable",
@@ -58,7 +59,6 @@
   "item.hayoind.silicon_bronze_pickaxe": "Silicon Bronze Pickaxe",
   "item.hayoind.silicon_bronze_shovel": "Silicon Bronze Shovel",
   "item.hayoind.silicon_bronze_hoe": "Silicon Bronze Hoe",
-
   "tag.item.c.wrenches": "Wrenches",
   "tag.item.c.dusts.coal": "Coal Dusts",
   "tag.item.c.dusts.copper": "Copper Dusts",
@@ -75,10 +75,11 @@
   "tag.item.c.ingots.silicon_bronze": "Silicon Bronze Ingots",
   "tag.item.c.plates": "Plates",
   "tag.item.c.plates.refined_iron": "Refined Iron Plates",
+  "tag.item.c.foils": "Foils",
+  "tag.item.c.foils.refined_iron": "Refined Iron Foils",
   "tag.item.c.raw_materials.silicon": "Raw Silicon",
   "tag.item.c.tools.wrenches": "Wrenches",
   "tag.item.hayoind.raw_silicon_ingredients": "Raw Silicon Ingredients",
-
   "hayoind.energy": "Energy",
   "hayoind.energy.stored": "Stored Energy",
   "hayoind.energy.amount": "%s ε",
