@@ -23,7 +23,7 @@ public record ExtractingRecipe(Ingredient input, //
     public static final MapCodec<ExtractingRecipe> CODEC = RecordCodecBuilder.mapCodec( //
             instance -> instance.group( //
                     Ingredient.CODEC.fieldOf("ingredient").forGetter(ExtractingRecipe::input), //
-                    ItemStack.STRICT_CODEC.listOf().fieldOf("result").forGetter(ExtractingRecipe::results), //
+                    ItemStack.STRICT_CODEC.listOf().fieldOf("results").forGetter(ExtractingRecipe::results), //
                     Codec.INT.fieldOf("processing_energy").orElse(DEFAULT_ENERGY).forGetter(ExtractingRecipe::processingEnergy) //
             ).apply(instance, ExtractingRecipe::new));
 

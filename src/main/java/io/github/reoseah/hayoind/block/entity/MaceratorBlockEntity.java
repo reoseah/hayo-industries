@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,8 +26,15 @@ public class MaceratorBlockEntity extends ProcessingMachineBlockEntity<Maceratin
     public static final int BATTERY_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
 
+    protected final RecipeManager.CachedCheck<SingleRecipeInput, MaceratingRecipe> quickCheck = RecipeManager.createCheck(Hayo.RecipeTypes.MACERATING);
+
     public MaceratorBlockEntity(BlockPos pos, BlockState state) {
-        super(Hayo.BlockEntityTypes.MACERATOR, Hayo.RecipeTypes.MACERATING, pos, state);
+        super(Hayo.BlockEntityTypes.MACERATOR, pos, state);
+    }
+
+    @Override
+    protected RecipeManager.CachedCheck<SingleRecipeInput, MaceratingRecipe> getRecipeCache() {
+        return this.quickCheck;
     }
 
     @Override

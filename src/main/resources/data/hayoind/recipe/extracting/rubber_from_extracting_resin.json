@@ -1,5 +1,5 @@
 {
-  "type": "hayoind:macerating",
+  "type": "hayoind:extracting",
   "ingredient": "hayoind:sticky_resin",
   "processing_energy": 480,
   "results": [

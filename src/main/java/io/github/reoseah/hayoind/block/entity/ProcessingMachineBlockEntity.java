@@ -15,17 +15,14 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extends RecipeInput> extends HayoElectricBlockEntity {
-    protected final RecipeManager.CachedCheck<I, R> quickCheck;
-
+public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extends RecipeInput> extends ElectricBlockEntity {
     @Getter
     protected int recipeUsedEnergy;
     @Getter
     protected int recipeTotalEnergy;
 
-    public ProcessingMachineBlockEntity(BlockEntityType<?> type, RecipeType<R> recipeType, BlockPos pos, BlockState state) {
+    public ProcessingMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        this.quickCheck = RecipeManager.createCheck(recipeType);
     }
 
     @Override
@@ -42,10 +39,12 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
         this.recipeTotalEnergy = input.getIntOr("recipe_total_energy", 0);
     }
 
+    protected abstract RecipeManager.CachedCheck<I, R> getRecipeCache();
+
     public static <R extends Recipe<I>, I extends RecipeInput> void resetRecipe(ServerLevel level, ProcessingMachineBlockEntity<R, I> entity, ProcessingBehavior<R, I> behavior) {
         var recipeInput = behavior.createRecipeInput(entity.stacks);
 
-        var recipeHolder = entity.quickCheck.getRecipeFor(recipeInput, level).orElse(null);
+        var recipeHolder = entity.getRecipeCache().getRecipeFor(recipeInput, level).orElse(null);
         if (recipeHolder != null) {
             entity.recipeTotalEnergy = behavior.getRecipeEnergy(recipeHolder);
             entity.recipeUsedEnergy = 0;
@@ -64,7 +63,7 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
                 entity.setChanged();
             }
         } else {
-            var recipeHolder = entity.quickCheck.getRecipeFor(recipeInput, level).orElse(null);
+            var recipeHolder = entity.getRecipeCache().getRecipeFor(recipeInput, level).orElse(null);
 
             boolean hasEnergy = entity.storedEnergy >= behavior.getEnergyUseRate();
             if (hasEnergy && behavior.canCraft(level.registryAccess(), recipeHolder, recipeInput, entity.stacks)) {

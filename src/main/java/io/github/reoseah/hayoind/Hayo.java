@@ -93,8 +93,8 @@ public class Hayo {
         BiomeModifications.create(ResourceLocation.fromNamespaceAndPath("hayoind", "features")) //
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST) //
                                 .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA)) //
-                                .or(BiomeSelectors.includeByKey(Biomes.SWAMP)) //
-                                .or(BiomeSelectors.tag(BiomeTags.IS_JUNGLE)), //
+                                .or(BiomeSelectors.tag(BiomeTags.IS_JUNGLE)) //
+                                .or(BiomeSelectors.includeByKey(Biomes.SWAMP)), //
                         (selectionCtx, modificationCtx) -> {
                             modificationCtx.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, modKey(Registries.PLACED_FEATURE, "rubber_tree_patch"));
                         });
@@ -133,7 +133,7 @@ public class Hayo {
         public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
 
-        public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD));
+        public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
         public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F).noOcclusion().sound(SoundType.GLASS));
@@ -225,6 +225,8 @@ public class Hayo {
         public static final Item REDSTONE_FLUX_LASER = registerItem("redstone_flux_laser", new Item.Properties().rarity(Rarity.RARE));
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+        public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+        public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item BATTERY = registerItem("battery", properties -> new SimpleBatteryItem(properties, 10000, 10));
         public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", properties -> new SimpleBatteryItem(properties, 100000, 100), new Item.Properties().rarity(Rarity.RARE));
@@ -298,6 +300,8 @@ public class Hayo {
                 entries.accept(REDSTONE_FLUX_LASER);
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
+                entries.accept(BLASTING_UPGRADE);
+                entries.accept(SMOKING_UPGRADE);
 
                 entries.accept(BATTERY);
                 entries.accept(Util.make(new ItemStack(BATTERY), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));

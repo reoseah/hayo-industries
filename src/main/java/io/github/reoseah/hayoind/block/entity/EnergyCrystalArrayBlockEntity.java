@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class EnergyCrystalArrayBlockEntity extends HayoElectricBlockEntity implements MenuProvider {
+public class EnergyCrystalArrayBlockEntity extends ElectricBlockEntity implements MenuProvider {
     public static final int CAPACITY = 1_000_000;
     public static final int TRANSFER_RATE = 128;
 

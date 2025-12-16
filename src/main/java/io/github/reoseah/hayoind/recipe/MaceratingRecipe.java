@@ -60,8 +60,13 @@ public record MaceratingRecipe(Ingredient input, //
     }
 
     @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
+    @Override
     public RecipeBookCategory recipeBookCategory() {
-        return RecipeBookCategories.CRAFTING_MISC;
+        return null;
     }
 
     public static class Serializer implements RecipeSerializer<MaceratingRecipe> {

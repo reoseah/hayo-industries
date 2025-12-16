@@ -8,11 +8,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-public abstract class HayoElectricBlockEntity extends HayoContainerBlockEntity {
+public abstract class ElectricBlockEntity extends HayoContainerBlockEntity {
     @Getter
     protected int storedEnergy;
 
-    public HayoElectricBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public ElectricBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
@@ -28,7 +28,7 @@ public abstract class HayoElectricBlockEntity extends HayoContainerBlockEntity {
         this.storedEnergy = input.getIntOr("stored_energy", 0);
     }
 
-    public static void tickChargeFromSlot(HayoElectricBlockEntity entity, int slot, int capacity, int transferRate) {
+    public static void tickChargeFromSlot(ElectricBlockEntity entity, int slot, int capacity, int transferRate) {
         int max = Math.min(capacity - entity.storedEnergy, transferRate);
         if (max != 0) {
             int charge = ElectricItems.tryDischarge(max, entity, slot);
