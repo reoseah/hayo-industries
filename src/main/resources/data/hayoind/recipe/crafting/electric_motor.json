@@ -8,9 +8,9 @@
   ],
   "key": {
     "#": "#c:foils/refined_iron",
-    "W": "hayoind:uninsulated_copper_cable",
-    "C": "hayoind:copper_cable",
-    "I": "minecraft:iron_ingot"
+    "W": "hayoind:uninsulated_cable",
+    "C": "hayoind:cable",
+    "I": "#c:ingots/refined_iron"
   },
   "result": {
     "id": "hayoind:electric_motor",

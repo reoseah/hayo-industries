@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class HayoContainerBlockEntity extends BlockEntity implements Container, Nameable, MenuProvider {
@@ -29,6 +30,7 @@ public abstract class HayoContainerBlockEntity extends BlockEntity implements Co
     protected abstract NonNullList<ItemStack> createInventory();
 
     @Override
+    @MustBeInvokedByOverriders
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         ContainerHelper.saveAllItems(output, this.stacks);
@@ -36,6 +38,7 @@ public abstract class HayoContainerBlockEntity extends BlockEntity implements Co
     }
 
     @Override
+    @MustBeInvokedByOverriders
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.stacks.clear();

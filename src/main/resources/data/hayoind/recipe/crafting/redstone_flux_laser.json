@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": "#c:ingots/gold",
-    "C": "hayoind:copper_cable",
+    "C": "hayoind:cable",
     "R": "minecraft:redstone",
     "S": "#c:dusts/netherite_scrap"
   },

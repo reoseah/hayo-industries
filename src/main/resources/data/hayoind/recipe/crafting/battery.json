@@ -8,7 +8,7 @@
   ],
   "key": {
     "#": "#c:foils/refined_iron",
-    "C": "hayoind:copper_cable",
+    "C": "hayoind:cable",
     "R": "minecraft:redstone",
     "D": "#c:dusts/coal"
   },

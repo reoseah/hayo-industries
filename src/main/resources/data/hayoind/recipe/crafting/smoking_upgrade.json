@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": "hayoind:circuit",
-    "X": "hayoind:copper_cable",
+    "X": "hayoind:cable",
     "L": "#minecraft:logs",
     "C": "#minecraft:stone_tool_materials"
   },

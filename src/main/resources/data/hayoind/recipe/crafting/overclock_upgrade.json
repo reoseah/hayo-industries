@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": "hayoind:circuit",
-    "X": "hayoind:copper_cable",
+    "X": "hayoind:cable",
     "M": "hayoind:electric_motor"
   },
   "result": {

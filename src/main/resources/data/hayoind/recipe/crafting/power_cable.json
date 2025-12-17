@@ -2,11 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "hayoind:uninsulated_copper_cable",
+    "hayoind:uninsulated_power_cable",
+    "hayoind:rubber",
     "hayoind:rubber"
   ],
   "result": {
     "count": 1,
-    "id": "hayoind:copper_cable"
+    "id": "hayoind:power_cable"
   }
 }

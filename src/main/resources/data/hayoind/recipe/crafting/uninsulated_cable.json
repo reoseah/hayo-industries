@@ -2,16 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": "#c:ingots/copper",
-    "X": "hayoind:rubber"
+    "#": "#c:ingots/copper"
   },
   "pattern": [
-    "XXX",
-    "###",
-    "XXX"
+    "###"
   ],
   "result": {
     "count": 6,
-    "id": "hayoind:copper_cable"
+    "id": "hayoind:uninsulated_cable"
   }
 }

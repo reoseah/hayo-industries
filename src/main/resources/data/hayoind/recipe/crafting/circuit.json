@@ -8,7 +8,7 @@
   ],
   "key": {
     "#": "#c:ingots/refined_iron",
-    "X": "hayoind:copper_cable",
+    "X": "hayoind:cable",
     "R": "minecraft:redstone"
   },
   "result": {

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayoind:item/copper_cable"
+    "model": "hayoind:item/uninsulated_cable"
   }
 }

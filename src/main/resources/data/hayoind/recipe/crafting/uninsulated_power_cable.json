@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hayoind:uninsulated_cable",
+    "hayoind:uninsulated_cable",
+    "hayoind:uninsulated_cable",
+    "hayoind:uninsulated_cable"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayoind:uninsulated_power_cable"
+  }
+}

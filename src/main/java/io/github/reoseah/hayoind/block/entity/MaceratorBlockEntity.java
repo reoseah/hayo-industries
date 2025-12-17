@@ -32,9 +32,29 @@ public class MaceratorBlockEntity extends ProcessingMachineBlockEntity<Maceratin
         super(Hayo.BlockEntityTypes.MACERATOR, pos, state);
     }
 
+    public static void tickServer(Level level, BlockPos pos, BlockState state, MaceratorBlockEntity entity) {
+        tickChargeFromSlot(entity, BATTERY_SLOT, CAPACITY, TRANSFER_RATE);
+        tickProcessing((ServerLevel) level, pos, state, entity, RecipeSlotsBehavior.oneInputOneOutput());
+    }
+
     @Override
     protected RecipeManager.CachedCheck<SingleRecipeInput, MaceratingRecipe> getRecipeCache() {
         return this.quickCheck;
+    }
+
+    @Override
+    public int getEnergyUseRate() {
+        return ENERGY_USE_RATE;
+    }
+
+    @Override
+    public int getRecipeEnergy(RecipeHolder<MaceratingRecipe> recipe) {
+        return recipe.value().processingEnergy();
+    }
+
+    @Override
+    public int getEnergyCapacity() {
+        return CAPACITY;
     }
 
     @Override
@@ -61,32 +81,11 @@ public class MaceratorBlockEntity extends ProcessingMachineBlockEntity<Maceratin
                 super.setItem(slot, stack);
 
                 if (!ItemStack.isSameItemSameComponents(stack, oldStack)) {
-                    resetRecipe(serverLevel, this, MaceratorBehavior.INSTANCE);
+                    resetProcessing(serverLevel, this, RecipeSlotsBehavior.oneInputOneOutput());
                 }
                 return;
             }
         }
-
         super.setItem(slot, stack);
-
-    }
-
-    public static void tickServer(Level level, BlockPos pos, BlockState state, MaceratorBlockEntity entity) {
-        tickChargeFromSlot(entity, BATTERY_SLOT, CAPACITY, TRANSFER_RATE);
-        tickProcessing((ServerLevel) level, pos, state, entity, MaceratorBehavior.INSTANCE);
-    }
-
-    public enum MaceratorBehavior implements SingleProcessingBehavior<MaceratingRecipe> {
-        INSTANCE;
-
-        @Override
-        public int getEnergyUseRate() {
-            return ENERGY_USE_RATE;
-        }
-
-        @Override
-        public int getRecipeEnergy(RecipeHolder<MaceratingRecipe> recipe) {
-            return recipe.value().processingEnergy();
-        }
     }
 }

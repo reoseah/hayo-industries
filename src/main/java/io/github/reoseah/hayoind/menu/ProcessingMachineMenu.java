@@ -43,7 +43,7 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         return new ContainerData() {
             @Override
             public int getCount() {
-                return 4;
+                return 6;
             }
 
             @Override
@@ -53,6 +53,8 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
                     case 1 -> entity.getStoredEnergy() >>> 16;
                     case 2 -> entity.getRecipeUsedEnergy();
                     case 3 -> entity.getRecipeTotalEnergy();
+                    case 4 -> entity.getEnergyCapacity() & 0xFFFF;
+                    case 5 -> entity.getEnergyCapacity() >>> 16;
                     default -> 0;
                 };
             }
@@ -146,6 +148,10 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
     }
 
+    public int getEnergyCapacity() {
+        return (this.data.get(5) << 16) | (this.data.get(4) & 0xFFFF);
+    }
+
     public int getRecipeUsedEnergy() {
         return this.data.get(2);
     }
@@ -158,7 +164,7 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         private final RecipePropertySet acceptedInputs;
 
         public ElectricFurnaceMenu(int menuId, Inventory inventory) {
-            super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(4), inventory);
+            super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(6), inventory);
 
             var level = inventory.player.level();
             this.acceptedInputs = level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT);
@@ -179,7 +185,7 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
 
     public static class MaceratorMenu extends ProcessingMachineMenu {
         public MaceratorMenu(int menuId, Inventory inventory) {
-            super(Hayo.MenuTypes.MACERATOR, Hayo.ItemTags.MACERATOR_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(4), inventory);
+            super(Hayo.MenuTypes.MACERATOR, Hayo.ItemTags.MACERATOR_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(6), inventory);
         }
 
         public MaceratorMenu(int menuId, MaceratorBlockEntity entity, Inventory inventory) {

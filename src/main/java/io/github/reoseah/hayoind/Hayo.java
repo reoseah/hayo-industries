@@ -6,15 +6,15 @@ import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayoind.block.entity.EnergyCrystalArrayBlockEntity;
 import io.github.reoseah.hayoind.block.entity.GeneratorBlockEntity;
 import io.github.reoseah.hayoind.block.entity.MaceratorBlockEntity;
-import io.github.reoseah.hayoind.client.screen.ProcessingMachineScreen;
 import io.github.reoseah.hayoind.client.screen.EnergyCrystalArrayScreen;
 import io.github.reoseah.hayoind.client.screen.GeneratorScreen;
+import io.github.reoseah.hayoind.client.screen.ProcessingMachineScreen;
 import io.github.reoseah.hayoind.feature.RubberFoliagePlacer;
 import io.github.reoseah.hayoind.item.EnergyProperty;
 import io.github.reoseah.hayoind.item.SimpleBatteryItem;
-import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
 import io.github.reoseah.hayoind.menu.EnergyCrystalArrayMenu;
 import io.github.reoseah.hayoind.menu.GeneratorMenu;
+import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
 import io.github.reoseah.hayoind.recipe.ExtractingRecipe;
 import io.github.reoseah.hayoind.recipe.MaceratingRecipe;
 import net.fabricmc.api.EnvType;
@@ -133,6 +133,9 @@ public class Hayo {
         public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
 
+        public static final Block UNINSULATED_COPPER_CABLE = register("uninsulated_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final Block COPPER_CABLE = register("cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
         public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
@@ -153,8 +156,6 @@ public class Hayo {
         public static final Block RUBBER_SAPLING = register("rubber_sapling", properties -> new SaplingBlock(RUBBER_TREE, properties), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
 
         public static final Block FERRU = register("ferru", OreCropBlock.FerruBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
-        public static final Block UNINSULATED_COPPER_CABLE = register("uninsulated_copper_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final Block COPPER_CABLE = register("copper_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 
         public static void initialize() {
             StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
@@ -169,9 +170,6 @@ public class Hayo {
     }
 
     public static class Items {
-        public static final Item MACHINE_BLOCK = registerBlock(Blocks.MACHINE_BLOCK);
-        public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
-
         public static final Item GENERATOR = registerBlock(Blocks.GENERATOR);
         public static final Item ELECTRIC_FURNACE = registerBlock(Blocks.ELECTRIC_FURNACE);
         public static final Item MACERATOR = registerBlock(Blocks.MACERATOR);
@@ -180,12 +178,10 @@ public class Hayo {
         public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item CHIPBOARD = registerBlock(Blocks.CHIPBOARD);
-        public static final Item REINFORCED_STONE = registerBlock(Blocks.REINFORCED_STONE);
-        public static final Item REINFORCED_GLASS = registerBlock(Blocks.REINFORCED_GLASS);
-        public static final Item REINFORCED_STONE_STAIRS = registerBlock(Blocks.REINFORCED_STONE_STAIRS);
-        public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
-        public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
+        public static final Item UNINSULATED_CABLE = registerBlock(Blocks.UNINSULATED_COPPER_CABLE);
+        public static final Item CABLE = registerBlock(Blocks.COPPER_CABLE);
+        public static final Item UNINSULATED_POWER_CABLE = registerItem("uninsulated_power_cable");
+        public static final Item POWER_CABLE = registerItem("power_cable");
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
         public static final Item RUBBER_WOOD = registerBlock(Blocks.RUBBER_WOOD);
@@ -195,8 +191,34 @@ public class Hayo {
         public static final Item RUBBER_PLANKS = registerBlock(Blocks.RUBBER_PLANKS);
         public static final Item RUBBER_SAPLING = registerBlock(Blocks.RUBBER_SAPLING);
 
-        public static final Item UNINSULATED_COPPER_CABLE = registerBlock(Blocks.UNINSULATED_COPPER_CABLE);
-        public static final Item COPPER_CABLE = registerBlock(Blocks.COPPER_CABLE);
+        public static final Item MACHINE_BLOCK = registerBlock(Blocks.MACHINE_BLOCK);
+        public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
+
+        public static final Item CHIPBOARD = registerBlock(Blocks.CHIPBOARD);
+        public static final Item REINFORCED_STONE = registerBlock(Blocks.REINFORCED_STONE);
+        public static final Item REINFORCED_GLASS = registerBlock(Blocks.REINFORCED_GLASS);
+        public static final Item REINFORCED_STONE_STAIRS = registerBlock(Blocks.REINFORCED_STONE_STAIRS);
+        public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
+        public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
+
+        public static final Item WRENCH = registerItem("wrench");
+
+        private static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
+        private static final ToolMaterial SILICON_BRONZE = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, ToolMaterial.DIAMOND.durability(), 7, 2.0F, 10, SILICON_BRONZE_MATERIALS);
+
+        public static final Item SILICON_BRONZE_SWORD = registerItem("silicon_bronze_sword", new Item.Properties().sword(SILICON_BRONZE, 3.0F, -2.4F));
+        public static final Item SILICON_BRONZE_SHOVEL = registerItem("silicon_bronze_shovel", properties -> new ShovelItem(SILICON_BRONZE, 1.5F, -3.0F, properties));
+        public static final Item SILICON_BRONZE_PICKAXE = registerItem("silicon_bronze_pickaxe", new Item.Properties().pickaxe(SILICON_BRONZE, 1.0F, -2.8F));
+        public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe", properties -> new AxeItem(SILICON_BRONZE, 6.0F, -3.1F, properties));
+        public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
+
+        public static final Item BATTERY = registerItem("battery", properties -> new SimpleBatteryItem(properties, 10000, 10));
+        public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", properties -> new SimpleBatteryItem(properties, 100000, 100), new Item.Properties().rarity(Rarity.RARE));
+
+        public static final Item REFINED_IRON_INGOT = registerItem("refined_iron_ingot");
+        public static final Item SILICON_BRONZE_INGOT = registerItem("silicon_bronze_ingot");
+        public static final Item REFINED_IRON_FOIL = registerItem("refined_iron_foil");
+        public static final Item RAW_SILICON = registerItem("raw_silicon");
 
         public static final Item WOOD_DUST = registerItem("wood_dust");
         public static final Item STONE_DUST = registerItem("stone_dust");
@@ -211,35 +233,18 @@ public class Hayo {
         public static final Item SILICON_DUST = registerItem("silicon_dust");
         public static final Item SILICON_BRONZE_DUST = registerItem("silicon_bronze_dust");
 
-        public static final Item SILICON_BRONZE_INGOT = registerItem("silicon_bronze_ingot");
-
         public static final Item STICKY_RESIN = registerItem("sticky_resin");
         public static final Item RUBBER = registerItem("rubber");
-        public static final Item RAW_SILICON = registerItem("raw_silicon");
-        public static final Item REFINED_IRON_INGOT = registerItem("refined_iron_ingot");
-        public static final Item REFINED_IRON_FOIL = registerItem("refined_iron_foil");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item CIRCUIT = registerItem("circuit");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
         public static final Item REDSTONE_FLUX_LASER = registerItem("redstone_flux_laser", new Item.Properties().rarity(Rarity.RARE));
+
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
-
-        public static final Item BATTERY = registerItem("battery", properties -> new SimpleBatteryItem(properties, 10000, 10));
-        public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", properties -> new SimpleBatteryItem(properties, 100000, 100), new Item.Properties().rarity(Rarity.RARE));
-        public static final Item WRENCH = registerItem("wrench");
-
-        private static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
-        private static final ToolMaterial SILICON_BRONZE = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, ToolMaterial.DIAMOND.durability(), 7, 2.0F, 10, SILICON_BRONZE_MATERIALS);
-
-        public static final Item SILICON_BRONZE_SWORD = registerItem("silicon_bronze_sword", new Item.Properties().sword(SILICON_BRONZE, 3.0F, -2.4F));
-        public static final Item SILICON_BRONZE_SHOVEL = registerItem("silicon_bronze_shovel", properties -> new ShovelItem(SILICON_BRONZE, 1.5F, -3.0F, properties));
-        public static final Item SILICON_BRONZE_PICKAXE = registerItem("silicon_bronze_pickaxe", new Item.Properties().pickaxe(SILICON_BRONZE, 1.0F, -2.8F));
-        public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe", properties -> new AxeItem(SILICON_BRONZE, 6.0F, -3.1F, properties));
-        public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
 
         public static void initialize() {
             ItemGroupEvents.modifyEntriesEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
@@ -251,8 +256,10 @@ public class Hayo {
                 entries.accept(AUTOMATED_FERTILIZER);
                 entries.accept(ENERGY_CRYSTAL_ARRAY);
 
-                entries.accept(UNINSULATED_COPPER_CABLE);
-                entries.accept(COPPER_CABLE);
+                entries.accept(UNINSULATED_CABLE);
+                entries.accept(CABLE);
+                entries.accept(UNINSULATED_POWER_CABLE);
+                entries.accept(POWER_CABLE);
 
                 entries.accept(RUBBER_LOG);
                 entries.accept(RUBBER_WOOD);
@@ -308,7 +315,6 @@ public class Hayo {
                 entries.accept(TRANSFORMER);
                 entries.accept(REDSTONE_FLUX_LASER);
                 entries.accept(COMPOSITE_PLATE);
-
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
