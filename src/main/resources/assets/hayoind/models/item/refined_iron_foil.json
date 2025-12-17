@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "hayoind:item/steel_foil"
+    "layer0": "hayoind:item/refined_iron_foil"
   }
 }

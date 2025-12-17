@@ -2,7 +2,7 @@ package io.github.reoseah.hayoind.client.screen;
 
 import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayoind.block.entity.MaceratorBlockEntity;
-import io.github.reoseah.hayoind.menu.ClassicProcessingMachineMenu;
+import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
 import io.github.reoseah.hayoind.menu.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,8 +12,8 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class ClassicProcessingMachineScreen extends HayoContainerScreen<ClassicProcessingMachineMenu> {
-    public ClassicProcessingMachineScreen(ClassicProcessingMachineMenu menu, Inventory inventory, Component title) {
+public abstract class ProcessingMachineScreen extends HayoContainerScreen<ProcessingMachineMenu> {
+    public ProcessingMachineScreen(ProcessingMachineMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
 
@@ -50,8 +50,8 @@ public abstract class ClassicProcessingMachineScreen extends HayoContainerScreen
 
     protected abstract int getEnergyCapacity();
 
-    public static class ElectricFurnaceScreen extends ClassicProcessingMachineScreen {
-        public ElectricFurnaceScreen(ClassicProcessingMachineMenu menu, Inventory inventory, Component title) {
+    public static class ElectricFurnaceScreen extends ProcessingMachineScreen {
+        public ElectricFurnaceScreen(ProcessingMachineMenu menu, Inventory inventory, Component title) {
             super(menu, inventory, title);
         }
 
@@ -66,8 +66,8 @@ public abstract class ClassicProcessingMachineScreen extends HayoContainerScreen
         }
     }
 
-    public static class MaceratorScreen extends ClassicProcessingMachineScreen {
-        public MaceratorScreen(ClassicProcessingMachineMenu menu, Inventory inventory, Component title) {
+    public static class MaceratorScreen extends ProcessingMachineScreen {
+        public MaceratorScreen(ProcessingMachineMenu menu, Inventory inventory, Component title) {
             super(menu, inventory, title);
         }
 

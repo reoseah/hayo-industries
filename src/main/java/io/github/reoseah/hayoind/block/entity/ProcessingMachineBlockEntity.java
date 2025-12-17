@@ -159,4 +159,19 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
             inputStack.shrink(1);
         }
     }
+
+
+    public enum CookingRecipeBehavior implements SingleProcessingBehavior<AbstractCookingRecipe> {
+        INSTANCE;
+
+        @Override
+        public int getEnergyUseRate() {
+            return ElectricFurnaceBlockEntity.ENERGY_USE_RATE;
+        }
+
+        @Override
+        public int getRecipeEnergy(RecipeHolder<AbstractCookingRecipe> recipe) {
+            return ElectricFurnaceBlockEntity.getEnergyCost(recipe.value().cookingTime());
+        }
+    }
 }

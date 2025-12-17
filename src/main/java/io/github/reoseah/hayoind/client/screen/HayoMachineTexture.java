@@ -80,7 +80,8 @@ public class HayoMachineTexture {
 
     public enum RecipeArrow {
         DEFAULT(166),
-        MACERATOR(182);
+        MACERATOR(182),
+        COMPRESSOR(198);
 
         public static final int X = 80, OVERLAY_X = 104, HEIGHT = 16, WIDTH = 24;
 

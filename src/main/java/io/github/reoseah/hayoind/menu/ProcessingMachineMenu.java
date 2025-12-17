@@ -5,19 +5,24 @@ import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayoind.block.entity.MaceratorBlockEntity;
 import io.github.reoseah.hayoind.block.entity.ProcessingMachineBlockEntity;
 import io.github.reoseah.hayoind.item.ElectricItems;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipePropertySet;
 
-public abstract class ClassicProcessingMachineMenu extends AbstractContainerMenu {
+public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
     protected final ContainerData data;
+    protected final TagKey<Item> validUpgrades;
 
-    protected ClassicProcessingMachineMenu(MenuType<?> type, int menuId, Container container, ContainerData data, Inventory inventory) {
+    protected ProcessingMachineMenu(MenuType<?> type, TagKey<Item> validUpgrades, int menuId, Container container, ContainerData data, Inventory inventory) {
         super(type, menuId);
+
+        this.validUpgrades = validUpgrades;
 
         this.data = data;
         this.addDataSlots(this.data);
@@ -26,10 +31,10 @@ public abstract class ClassicProcessingMachineMenu extends AbstractContainerMenu
         this.addSlot(new Slot(container, 1, 47, 54));
         this.addSlot(new Slot(container, 2, 107, 36));
 
-        this.addSlot(new Slot(container, 3, 152, 8));
-        this.addSlot(new Slot(container, 4, 152, 26));
-        this.addSlot(new Slot(container, 5, 152, 44));
-        this.addSlot(new Slot(container, 6, 152, 62));
+        this.addSlot(new UpgradeSlot(container, 3, 152, 8, validUpgrades));
+        this.addSlot(new UpgradeSlot(container, 4, 152, 26, validUpgrades));
+        this.addSlot(new UpgradeSlot(container, 5, 152, 44, validUpgrades));
+        this.addSlot(new UpgradeSlot(container, 6, 152, 62, validUpgrades));
 
         this.addStandardInventorySlots(inventory, 8, 84);
     }
@@ -58,23 +63,46 @@ public abstract class ClassicProcessingMachineMenu extends AbstractContainerMenu
         };
     }
 
+    public static class UpgradeSlot extends Slot {
+        protected final TagKey<Item> validItems;
+
+        public UpgradeSlot(Container container, int slot, int x, int y, TagKey<Item> validItems) {
+            super(container, slot, x, y);
+            this.validItems = validItems;
+        }
+
+        @Override
+        public boolean mayPlace(ItemStack stack) {
+            return stack.is(this.validItems);
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            return 1;
+        }
+    }
+
     public static final int FIRST_PLAYER_SLOT = 3 + 4;
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        Slot slot = this.slots.get(index);
-        ItemStack stack = slot.getItem();
+        var slot = this.slots.get(index);
+        var stack = slot.getItem();
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        ItemStack previous = stack.copy();
+        var previous = stack.copy();
         if (index < FIRST_PLAYER_SLOT) {
             if (!this.moveItemStackTo(stack, FIRST_PLAYER_SLOT, FIRST_PLAYER_SLOT + 36, true)) {
                 return ItemStack.EMPTY;
             }
             slot.onQuickCraft(stack, previous);
         } else {
-            if (ElectricItems.isElectric(stack)) {
+            if (stack.is(this.validUpgrades)) {
+                if (!this.moveItemStackTo(stack, 3, 7, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (ElectricItems.isElectric(stack)) {
                 if (!this.moveItemStackTo(stack, 1, 2, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -126,18 +154,18 @@ public abstract class ClassicProcessingMachineMenu extends AbstractContainerMenu
         return this.data.get(3);
     }
 
-    public static class ElectricFurnaceMenu extends ClassicProcessingMachineMenu {
+    public static class ElectricFurnaceMenu extends ProcessingMachineMenu {
         private final RecipePropertySet acceptedInputs;
 
         public ElectricFurnaceMenu(int menuId, Inventory inventory) {
-            super(Hayo.MenuTypes.ELECTRIC_FURNACE, menuId, new SimpleContainer(7), new SimpleContainerData(4), inventory);
+            super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(4), inventory);
 
             var level = inventory.player.level();
             this.acceptedInputs = level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT);
         }
 
         public ElectricFurnaceMenu(int menuId, ElectricFurnaceBlockEntity entity, Inventory inventory) {
-            super(Hayo.MenuTypes.ELECTRIC_FURNACE, menuId, entity, createData(entity), inventory);
+            super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, entity, createData(entity), inventory);
 
             var level = inventory.player.level();
             this.acceptedInputs = level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT);
@@ -149,13 +177,13 @@ public abstract class ClassicProcessingMachineMenu extends AbstractContainerMenu
         }
     }
 
-    public static class MaceratorMenu extends ClassicProcessingMachineMenu {
+    public static class MaceratorMenu extends ProcessingMachineMenu {
         public MaceratorMenu(int menuId, Inventory inventory) {
-            super(Hayo.MenuTypes.MACERATOR, menuId, new SimpleContainer(7), new SimpleContainerData(4), inventory);
+            super(Hayo.MenuTypes.MACERATOR, Hayo.ItemTags.MACERATOR_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(4), inventory);
         }
 
         public MaceratorMenu(int menuId, MaceratorBlockEntity entity, Inventory inventory) {
-            super(Hayo.MenuTypes.MACERATOR, menuId, entity, createData(entity), inventory);
+            super(Hayo.MenuTypes.MACERATOR, Hayo.ItemTags.MACERATOR_UPGRADES, menuId, entity, createData(entity), inventory);
         }
 
         @Override

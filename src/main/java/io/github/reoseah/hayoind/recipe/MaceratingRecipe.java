@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 public record MaceratingRecipe(Ingredient input, //
                                ItemStack result, //
                                int processingEnergy) //
-        implements Recipe<SingleRecipeInput> {
+        implements Recipe<SingleRecipeInput>, ElectricRecipe {
     private static final int DEFAULT_ENERGY = 10 * 2 * 20; // 15s at 2e/tick and 20 ticks in second
 
     public static final MapCodec<MaceratingRecipe> CODEC = RecordCodecBuilder.mapCodec( //

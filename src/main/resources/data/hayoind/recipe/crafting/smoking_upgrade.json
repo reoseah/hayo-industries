@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "LCL",
+    "X#X"
+  ],
+  "key": {
+    "#": "hayoind:circuit",
+    "X": "hayoind:copper_cable",
+    "L": "#minecraft:logs",
+    "C": "#minecraft:stone_tool_materials"
+  },
+  "result": {
+    "id": "hayoind:smoking_upgrade",
+    "count": 1
+  }
+}

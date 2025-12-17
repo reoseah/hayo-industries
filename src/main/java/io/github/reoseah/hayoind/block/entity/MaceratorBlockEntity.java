@@ -1,7 +1,7 @@
 package io.github.reoseah.hayoind.block.entity;
 
 import io.github.reoseah.hayoind.Hayo;
-import io.github.reoseah.hayoind.menu.ClassicProcessingMachineMenu;
+import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
 import io.github.reoseah.hayoind.recipe.MaceratingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -49,21 +49,26 @@ public class MaceratorBlockEntity extends ProcessingMachineBlockEntity<Maceratin
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory inventory, Player player) {
-        return new ClassicProcessingMachineMenu.MaceratorMenu(menuId, this, inventory);
+        return new ProcessingMachineMenu.MaceratorMenu(menuId, this, inventory);
     }
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        if (slot == INPUT_SLOT) {
-            var oldStack = this.stacks.get(slot);
+        if (this.level instanceof ServerLevel serverLevel) {
+            if (slot == INPUT_SLOT) {
+                var oldStack = this.stacks.get(slot);
 
-            super.setItem(slot, stack);
-            if (!ItemStack.isSameItemSameComponents(stack, oldStack) && this.level instanceof ServerLevel serverLevel) {
-                resetRecipe(serverLevel, this, MaceratorBehavior.INSTANCE);
+                super.setItem(slot, stack);
+
+                if (!ItemStack.isSameItemSameComponents(stack, oldStack)) {
+                    resetRecipe(serverLevel, this, MaceratorBehavior.INSTANCE);
+                }
+                return;
             }
-        } else {
-            super.setItem(slot, stack);
         }
+
+        super.setItem(slot, stack);
+
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, MaceratorBlockEntity entity) {

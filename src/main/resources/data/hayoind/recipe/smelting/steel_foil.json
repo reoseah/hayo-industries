@@ -3,8 +3,8 @@
   "category": "misc",
   "cookingtime": 200,
   "experience": 0.0,
-  "ingredient": "#c:plates/refined_iron",
+  "ingredient": "#c:ingots/refined_iron",
   "result": {
-    "id": "hayoind:steel_foil"
+    "id": "hayoind:refined_iron_foil"
   }
 }

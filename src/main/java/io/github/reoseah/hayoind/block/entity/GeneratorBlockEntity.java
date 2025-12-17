@@ -20,8 +20,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 public class GeneratorBlockEntity extends ElectricBlockEntity {
-    public static final int ENERGY_PER_FUEL_TICK = 5;
     public static final int FUEL_CONSUMPTION_RATE = 2;
+    public static final int ENERGY_PER_FUEL_TICK = 5;
     public static final int GENERATION_RATE = FUEL_CONSUMPTION_RATE * ENERGY_PER_FUEL_TICK;
     public static final int CAPACITY = 10000;
     public static final int TRANSFER_RATE = 32;

@@ -1,0 +1,13 @@
+{
+  "values": [
+    "hayoind:machine_block",
+    "hayoind:advanced_machine_block",
+    "hayoind:generator",
+    "hayoind:electric_furnace",
+    "hayoind:macerator",
+    "hayoind:extractor",
+    "hayoind:compressor",
+    "hayoind:automated_fertilizer",
+    "hayoind:energy_crystal_array"
+  ]
+}

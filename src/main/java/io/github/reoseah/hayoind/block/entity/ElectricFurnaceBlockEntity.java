@@ -1,7 +1,7 @@
 package io.github.reoseah.hayoind.block.entity;
 
 import io.github.reoseah.hayoind.Hayo;
-import io.github.reoseah.hayoind.menu.ClassicProcessingMachineMenu;
+import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -10,7 +10,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class ElectricFurnaceBlockEntity extends ProcessingMachineBlockEntity<AbstractCookingRecipe, SingleRecipeInput> {
     public static final int TRANSFER_RATE = 32;
     public static final int ENERGY_USE_RATE = 3;
-    public static final int CAPACITY = getEnergyCost(AbstractFurnaceBlockEntity.BURN_TIME_STANDARD);
+    public static final int CAPACITY = /* 450 */ getEnergyCost(AbstractFurnaceBlockEntity.BURN_TIME_STANDARD);
     public static final int INPUT_SLOT = 0;
     public static final int BATTERY_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
@@ -56,7 +59,7 @@ public class ElectricFurnaceBlockEntity extends ProcessingMachineBlockEntity<Abs
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory inventory, Player player) {
-        return new ClassicProcessingMachineMenu.ElectricFurnaceMenu(menuId, this, inventory);
+        return new ProcessingMachineMenu.ElectricFurnaceMenu(menuId, this, inventory);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class ElectricFurnaceBlockEntity extends ProcessingMachineBlockEntity<Abs
 
                 super.setItem(slot, stack);
                 if (!ItemStack.isSameItemSameComponents(stack, oldStack)) {
-                    resetRecipe(serverLevel, this, ElectricFurnaceBehavior.INSTANCE);
+                    resetRecipe(serverLevel, this, CookingRecipeBehavior.INSTANCE);
                 }
             } else if (slot >= FIRST_UPGRADE_SLOT) {
                 super.setItem(slot, stack);
@@ -83,7 +86,7 @@ public class ElectricFurnaceBlockEntity extends ProcessingMachineBlockEntity<Abs
                 if (mode != this.mode) {
                     this.mode = mode;
                     this.quickCheck = RecipeManager.createCheck(mode.recipeType);
-                    resetRecipe(serverLevel, this, ElectricFurnaceBehavior.INSTANCE);
+                    resetRecipe(serverLevel, this, CookingRecipeBehavior.INSTANCE);
                 }
             }
         }
@@ -105,21 +108,7 @@ public class ElectricFurnaceBlockEntity extends ProcessingMachineBlockEntity<Abs
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, ElectricFurnaceBlockEntity entity) {
         tickChargeFromSlot(entity, BATTERY_SLOT, CAPACITY, TRANSFER_RATE);
-        tickProcessing((ServerLevel) level, pos, state, entity, ElectricFurnaceBehavior.INSTANCE);
-    }
-
-    public enum ElectricFurnaceBehavior implements SingleProcessingBehavior<AbstractCookingRecipe> {
-        INSTANCE;
-
-        @Override
-        public int getEnergyUseRate() {
-            return ENERGY_USE_RATE;
-        }
-
-        @Override
-        public int getRecipeEnergy(RecipeHolder<AbstractCookingRecipe> recipe) {
-            return getEnergyCost(recipe.value().cookingTime());
-        }
+        tickProcessing((ServerLevel) level, pos, state, entity, CookingRecipeBehavior.INSTANCE);
     }
 
     public enum ElectricFurnaceMode {

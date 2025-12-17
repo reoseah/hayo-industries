@@ -6,13 +6,13 @@ import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayoind.block.entity.EnergyCrystalArrayBlockEntity;
 import io.github.reoseah.hayoind.block.entity.GeneratorBlockEntity;
 import io.github.reoseah.hayoind.block.entity.MaceratorBlockEntity;
-import io.github.reoseah.hayoind.client.screen.ClassicProcessingMachineScreen;
+import io.github.reoseah.hayoind.client.screen.ProcessingMachineScreen;
 import io.github.reoseah.hayoind.client.screen.EnergyCrystalArrayScreen;
 import io.github.reoseah.hayoind.client.screen.GeneratorScreen;
 import io.github.reoseah.hayoind.feature.RubberFoliagePlacer;
 import io.github.reoseah.hayoind.item.EnergyProperty;
 import io.github.reoseah.hayoind.item.SimpleBatteryItem;
-import io.github.reoseah.hayoind.menu.ClassicProcessingMachineMenu;
+import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
 import io.github.reoseah.hayoind.menu.EnergyCrystalArrayMenu;
 import io.github.reoseah.hayoind.menu.GeneratorMenu;
 import io.github.reoseah.hayoind.recipe.ExtractingRecipe;
@@ -76,7 +76,7 @@ public class Hayo {
     public static final String MOD_ID = "hayoind";
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final CreativeModeTab TAB = FabricItemGroup.builder().title(Component.translatable("itemGroup.hayoind")).icon(() -> new ItemStack(Blocks.MACERATOR)).build();
+    public static final CreativeModeTab TAB = FabricItemGroup.builder().title(Component.translatable("itemGroup.hayoind")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
 
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modLocation("main"), TAB);
@@ -108,8 +108,8 @@ public class Hayo {
         RangeSelectItemModelProperties.ID_MAPPER.put(modLocation("energy"), EnergyProperty.MAP_CODEC);
 
         MenuScreens.register(MenuTypes.GENERATOR, GeneratorScreen::new);
-        MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ClassicProcessingMachineScreen.ElectricFurnaceScreen::new);
-        MenuScreens.register(MenuTypes.MACERATOR, ClassicProcessingMachineScreen.MaceratorScreen::new);
+        MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ProcessingMachineScreen.ElectricFurnaceScreen::new);
+        MenuScreens.register(MenuTypes.MACERATOR, ProcessingMachineScreen.MaceratorScreen::new);
         MenuScreens.register(MenuTypes.ENERGY_CRYSTAL_ARRAY, EnergyCrystalArrayScreen::new);
     }
 
@@ -216,10 +216,10 @@ public class Hayo {
         public static final Item STICKY_RESIN = registerItem("sticky_resin");
         public static final Item RUBBER = registerItem("rubber");
         public static final Item RAW_SILICON = registerItem("raw_silicon");
-        public static final Item STEEL_PLATE = registerItem("steel_plate");
+        public static final Item REFINED_IRON_INGOT = registerItem("refined_iron_ingot");
+        public static final Item REFINED_IRON_FOIL = registerItem("refined_iron_foil");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item CIRCUIT = registerItem("circuit");
-        public static final Item STEEL_FOIL = registerItem("steel_foil");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
         public static final Item REDSTONE_FLUX_LASER = registerItem("redstone_flux_laser", new Item.Properties().rarity(Rarity.RARE));
@@ -243,9 +243,6 @@ public class Hayo {
 
         public static void initialize() {
             ItemGroupEvents.modifyEntriesEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
-                entries.accept(MACHINE_BLOCK);
-                entries.accept(ADVANCED_MACHINE_BLOCK);
-
                 entries.accept(GENERATOR);
                 entries.accept(ELECTRIC_FURNACE);
                 entries.accept(MACERATOR);
@@ -253,6 +250,9 @@ public class Hayo {
                 entries.accept(COMPRESSOR);
                 entries.accept(AUTOMATED_FERTILIZER);
                 entries.accept(ENERGY_CRYSTAL_ARRAY);
+
+                entries.accept(UNINSULATED_COPPER_CABLE);
+                entries.accept(COPPER_CABLE);
 
                 entries.accept(RUBBER_LOG);
                 entries.accept(RUBBER_WOOD);
@@ -262,16 +262,31 @@ public class Hayo {
                 entries.accept(RUBBER_PLANKS);
                 entries.accept(RUBBER_SAPLING);
 
+                entries.accept(MACHINE_BLOCK);
+                entries.accept(ADVANCED_MACHINE_BLOCK);
                 entries.accept(CHIPBOARD);
-
                 entries.accept(REINFORCED_STONE);
-                entries.accept(REINFORCED_GLASS);
                 entries.accept(REINFORCED_STONE_STAIRS);
                 entries.accept(REINFORCED_STONE_SLAB);
+                entries.accept(REINFORCED_GLASS);
                 entries.accept(REINFORCED_DOOR);
 
-                entries.accept(UNINSULATED_COPPER_CABLE);
-                entries.accept(COPPER_CABLE);
+                entries.accept(WRENCH);
+                entries.accept(SILICON_BRONZE_SWORD);
+                entries.accept(SILICON_BRONZE_SHOVEL);
+                entries.accept(SILICON_BRONZE_PICKAXE);
+                entries.accept(SILICON_BRONZE_AXE);
+                entries.accept(SILICON_BRONZE_HOE);
+
+                entries.accept(BATTERY);
+                entries.accept(Util.make(new ItemStack(BATTERY), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
+                entries.accept(ENERGY_CRYSTAL);
+                entries.accept(Util.make(new ItemStack(ENERGY_CRYSTAL), stack -> stack.set(SimpleBatteryItem.ENERGY, 100000)));
+
+                entries.accept(REFINED_IRON_INGOT);
+                entries.accept(SILICON_BRONZE_INGOT);
+                entries.accept(REFINED_IRON_FOIL);
+                entries.accept(RAW_SILICON);
 
                 entries.accept(WOOD_DUST);
                 entries.accept(STONE_DUST);
@@ -286,34 +301,19 @@ public class Hayo {
                 entries.accept(SILICON_DUST);
                 entries.accept(SILICON_BRONZE_DUST);
 
-                entries.accept(SILICON_BRONZE_INGOT);
-
                 entries.accept(STICKY_RESIN);
                 entries.accept(RUBBER);
-                entries.accept(RAW_SILICON);
-                entries.accept(STEEL_PLATE);
-                entries.accept(COMPOSITE_PLATE);
                 entries.accept(CIRCUIT);
-                entries.accept(STEEL_FOIL);
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(TRANSFORMER);
                 entries.accept(REDSTONE_FLUX_LASER);
+                entries.accept(COMPOSITE_PLATE);
+
+
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
-
-                entries.accept(BATTERY);
-                entries.accept(Util.make(new ItemStack(BATTERY), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
-                entries.accept(ENERGY_CRYSTAL);
-                entries.accept(Util.make(new ItemStack(ENERGY_CRYSTAL), stack -> stack.set(SimpleBatteryItem.ENERGY, 100000)));
-
-                entries.accept(WRENCH);
-                entries.accept(SILICON_BRONZE_SWORD);
-                entries.accept(SILICON_BRONZE_SHOVEL);
-                entries.accept(SILICON_BRONZE_PICKAXE);
-                entries.accept(SILICON_BRONZE_AXE);
-                entries.accept(SILICON_BRONZE_HOE);
             });
         }
 
@@ -355,6 +355,11 @@ public class Hayo {
         }
     }
 
+    public static class ItemTags {
+        public static final TagKey<Item> ELECTRIC_FURNACE_UPGRADES = TagKey.create(Registries.ITEM, modLocation("electric_furnace_upgrades"));
+        public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modLocation("macerator_upgrades"));
+    }
+
     public static class BlockEntityTypes {
         public static final BlockEntityType<GeneratorBlockEntity> GENERATOR = register("generator", GeneratorBlockEntity::new, Blocks.GENERATOR);
         public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlockEntity::new, Blocks.ELECTRIC_FURNACE);
@@ -374,8 +379,8 @@ public class Hayo {
 
     public static class MenuTypes {
         public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
-        public static final MenuType<ClassicProcessingMachineMenu.ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ClassicProcessingMachineMenu.ElectricFurnaceMenu::new);
-        public static final MenuType<ClassicProcessingMachineMenu.MaceratorMenu> MACERATOR = register("macerator", ClassicProcessingMachineMenu.MaceratorMenu::new);
+        public static final MenuType<ProcessingMachineMenu.ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ProcessingMachineMenu.ElectricFurnaceMenu::new);
+        public static final MenuType<ProcessingMachineMenu.MaceratorMenu> MACERATOR = register("macerator", ProcessingMachineMenu.MaceratorMenu::new);
         public static final MenuType<EnergyCrystalArrayMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
 
         public static void initialize() {
