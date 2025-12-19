@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "hayoind:item/uninsulated_power_cable"
-  }
-}

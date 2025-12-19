@@ -131,8 +131,9 @@ public class Hayo {
         public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
 
-        public static final Block UNINSULATED_COPPER_CABLE = register("uninsulated_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final Block COPPER_CABLE = register("cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final Block UNINSULATED_CABLE = register("uninsulated_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final Block CABLE = register("cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final Block POWER_CABLE = register("power_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
@@ -176,10 +177,9 @@ public class Hayo {
         public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item UNINSULATED_CABLE = registerBlock(Blocks.UNINSULATED_COPPER_CABLE);
-        public static final Item CABLE = registerBlock(Blocks.COPPER_CABLE);
-        public static final Item UNINSULATED_POWER_CABLE = registerItem("uninsulated_power_cable");
-        public static final Item POWER_CABLE = registerItem("power_cable");
+        public static final Item UNINSULATED_CABLE = registerBlock(Blocks.UNINSULATED_CABLE);
+        public static final Item CABLE = registerBlock(Blocks.CABLE);
+        public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE);
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
         public static final Item RUBBER_WOOD = registerBlock(Blocks.RUBBER_WOOD);
@@ -256,7 +256,6 @@ public class Hayo {
 
                 entries.accept(UNINSULATED_CABLE);
                 entries.accept(CABLE);
-                entries.accept(UNINSULATED_POWER_CABLE);
                 entries.accept(POWER_CABLE);
 
                 entries.accept(RUBBER_LOG);
