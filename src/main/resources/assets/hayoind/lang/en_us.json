@@ -103,6 +103,7 @@
   "hayoind.energy.capacity_change": "%s max. ε",
   "hayoind.energy.recipe": "%s ε at %s ε/t for %s s",
   "hayoind.energy.overclocked_recipe": "%s ε (%s%%) at %s ε/t (%s%%) for %s s (%s%%)",
+  "hayoind.energy.duration_at_amount_per_tick": "%s s at %s ε/t",
   "hayoind.fuel": "Fuel",
   "hayoind.macerating": "Macerating",
   "hayoind.compressing": "Compressing",

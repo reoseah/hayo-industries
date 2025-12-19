@@ -6,6 +6,7 @@ import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.widgets.WidgetWithBounds;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class MachineArrowWidget extends WidgetWithBounds {
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(point.x, point.y, 24, 16);
+        return new Rectangle(this.point.x, this.point.y, 24, 16);
     }
 
     @Override

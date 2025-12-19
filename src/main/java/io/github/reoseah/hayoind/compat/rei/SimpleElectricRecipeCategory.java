@@ -1,6 +1,7 @@
 package io.github.reoseah.hayoind.compat.rei;
 
 import io.github.reoseah.hayoind.client.screen.HayoMachineTexture;
+import io.github.reoseah.hayoind.menu.EnergyTexts;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -8,8 +9,11 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +69,20 @@ public class SimpleElectricRecipeCategory implements DisplayCategory<SimpleElect
                 .markOutput());
 
         widgets.add(new MachineEnergyWidget(new Point(startPoint.x + 1, startPoint.y + 20)));
-        widgets.add(new MachineArrowWidget(new Point(startPoint.x + 24, startPoint.y + 8), this.arrowType, 50 * display.processingEnergy / this.energyUseRate));
+        widgets.add(Widgets.withTooltip(new MachineArrowWidget(new Point(startPoint.x + 24, startPoint.y + 8), //
+                        this.arrowType, //
+                        50 * display.processingEnergy / this.energyUseRate), //
+                EnergyTexts.ENERGY, //
+                EnergyTexts.amount(display.processingEnergy).withStyle(ChatFormatting.GRAY), //
+                Component.translatable("hayoind.energy.duration_at_amount_per_tick", //
+                                Mth.positiveCeilDiv(display.processingEnergy, this.energyUseRate) / 20F, //
+                                this.energyUseRate) //
+                        .withStyle(ChatFormatting.GRAY)));
 
         return widgets;
+    }
+
+    public static MutableComponent duration(float seconds) {
+        return Component.translatable("hayoind.duration_in_seconds", Math.ceil(seconds * 100) / 100);
     }
 }

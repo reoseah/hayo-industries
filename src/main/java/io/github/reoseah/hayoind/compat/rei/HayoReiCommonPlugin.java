@@ -13,7 +13,7 @@ public class HayoReiCommonPlugin implements REICommonPlugin {
     public double getPriority() {
         return 1;
     }
-
+    
     @Override
     public void registerDisplaySerializer(DisplaySerializerRegistry registry) {
         registry.register(Hayo.modLocation("simple_electric_recipe"), SimpleElectricRecipeDisplay.SERIALIZER);
