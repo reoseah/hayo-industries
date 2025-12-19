@@ -1,11 +1,10 @@
 package io.github.reoseah.hayoind.menu;
 
 import io.github.reoseah.hayoind.Hayo;
-import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
-import io.github.reoseah.hayoind.block.entity.MaceratorBlockEntity;
-import io.github.reoseah.hayoind.block.entity.ProcessingMachineBlockEntity;
+import io.github.reoseah.hayoind.block.entity.*;
 import io.github.reoseah.hayoind.item.ElectricItems;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -43,7 +42,7 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         return new ContainerData() {
             @Override
             public int getCount() {
-                return 6;
+                return 7;
             }
 
             @Override
@@ -55,6 +54,7 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
                     case 3 -> entity.getRecipeTotalEnergy();
                     case 4 -> entity.getEnergyCapacity() & 0xFFFF;
                     case 5 -> entity.getEnergyCapacity() >>> 16;
+                    case 6 -> entity.getOverclockCount();
                     default -> 0;
                 };
             }
@@ -63,6 +63,10 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
             public void set(int index, int value) {
             }
         };
+    }
+
+    public float getRecipeDuration() {
+        return Mth.ceil(this.getRecipeTotalEnergy() / (float) this.getEnergyUseRate()) / 20F;
     }
 
     public static class UpgradeSlot extends Slot {
@@ -148,10 +152,6 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
     }
 
-    public int getEnergyCapacity() {
-        return (this.data.get(5) << 16) | (this.data.get(4) & 0xFFFF);
-    }
-
     public int getRecipeUsedEnergy() {
         return this.data.get(2);
     }
@@ -160,11 +160,33 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         return this.data.get(3);
     }
 
+    public int getEnergyCapacity() {
+        return (this.data.get(5) << 16) | (this.data.get(4) & 0xFFFF);
+    }
+
+    public boolean hasOverclockUpgrades() {
+        return this.data.get(6) > 0;
+    }
+
+    public int getUseRatePercentage() {
+        return 100 + 100 * this.data.get(6);
+    }
+
+    public int getRecipeEnergyPercentage() {
+        return 100 + 25 * this.data.get(6);
+    }
+
+    public int getRecipeDurationPercentage() {
+        return 100 * this.getRecipeEnergyPercentage() / this.getUseRatePercentage();
+    }
+
+    public abstract int getEnergyUseRate();
+
     public static class ElectricFurnaceMenu extends ProcessingMachineMenu {
         private final RecipePropertySet acceptedInputs;
 
         public ElectricFurnaceMenu(int menuId, Inventory inventory) {
-            super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(6), inventory);
+            super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
 
             var level = inventory.player.level();
             this.acceptedInputs = level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT);
@@ -181,11 +203,16 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         protected boolean isRecipeInput(ItemStack stack) {
             return this.acceptedInputs.test(stack);
         }
+
+        @Override
+        public int getEnergyUseRate() {
+            return ElectricFurnaceBlockEntity.ENERGY_USE_RATE * (1 + this.data.get(6));
+        }
     }
 
     public static class MaceratorMenu extends ProcessingMachineMenu {
         public MaceratorMenu(int menuId, Inventory inventory) {
-            super(Hayo.MenuTypes.MACERATOR, Hayo.ItemTags.MACERATOR_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(6), inventory);
+            super(Hayo.MenuTypes.MACERATOR, Hayo.ItemTags.MACERATOR_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
         }
 
         public MaceratorMenu(int menuId, MaceratorBlockEntity entity, Inventory inventory) {
@@ -195,6 +222,51 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         @Override
         protected boolean isRecipeInput(ItemStack stack) {
             return true;
+        }
+
+        @Override
+        public int getEnergyUseRate() {
+            return MaceratorBlockEntity.ENERGY_USE_RATE * (1 + this.data.get(6));
+        }
+    }
+
+    public static class CompressorMenu extends ProcessingMachineMenu {
+        public CompressorMenu(int menuId, Inventory inventory) {
+            super(Hayo.MenuTypes.COMPRESSOR, Hayo.ItemTags.COMPRESSOR_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
+        }
+
+        public CompressorMenu(int menuId, CompressorBlockEntity entity, Inventory inventory) {
+            super(Hayo.MenuTypes.COMPRESSOR, Hayo.ItemTags.COMPRESSOR_UPGRADES, menuId, entity, createData(entity), inventory);
+        }
+
+        @Override
+        protected boolean isRecipeInput(ItemStack stack) {
+            return true;
+        }
+
+        @Override
+        public int getEnergyUseRate() {
+            return CompressorBlockEntity.ENERGY_USE_RATE * (1 + this.data.get(6));
+        }
+    }
+
+    public static class ExtractorMenu extends ProcessingMachineMenu {
+        public ExtractorMenu(int menuId, Inventory inventory) {
+            super(Hayo.MenuTypes.EXTRACTOR, Hayo.ItemTags.EXTRACTOR_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
+        }
+
+        public ExtractorMenu(int menuId, ExtractorBlockEntity entity, Inventory inventory) {
+            super(Hayo.MenuTypes.EXTRACTOR, Hayo.ItemTags.EXTRACTOR_UPGRADES, menuId, entity, createData(entity), inventory);
+        }
+
+        @Override
+        protected boolean isRecipeInput(ItemStack stack) {
+            return true;
+        }
+
+        @Override
+        public int getEnergyUseRate() {
+            return ExtractorBlockEntity.ENERGY_USE_RATE * (1 + this.data.get(6));
         }
     }
 }

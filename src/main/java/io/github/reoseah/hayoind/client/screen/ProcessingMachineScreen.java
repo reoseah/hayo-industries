@@ -1,11 +1,13 @@
 package io.github.reoseah.hayoind.client.screen;
 
+import io.github.reoseah.hayoind.Hayo;
 import io.github.reoseah.hayoind.menu.EnergyTexts;
 import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,35 @@ public abstract class ProcessingMachineScreen extends HayoContainerScreen<Proces
         super.renderTooltip(graphics, mouseX, mouseY);
     }
 
+    @Override
+    protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
+        // TODO: show this over the arrow, split into three lines + the name of recipe type as title
+//        if (stack == this.menu.getSlot(0).getItem()) {
+//            var tooltip = super.getTooltipFromContainerItem(stack);
+//            if (this.menu.hasOverclockUpgrades()) {
+//                tooltip.add(EnergyTexts.overclockedRecipe(this.menu.getRecipeTotalEnergy(), this.menu.getRecipeEnergyPercentage(), //
+//                                this.menu.getEnergyUseRate(), this.menu.getUseRatePercentage(), //
+//                                this.menu.getRecipeDuration(), this.menu.getRecipeDurationPercentage()) //
+//                        .withStyle(ChatFormatting.DARK_AQUA));
+//            } else {
+//                tooltip.add(EnergyTexts.recipe(this.menu.getRecipeTotalEnergy(), this.menu.getEnergyUseRate(), this.menu.getRecipeDuration()).withStyle(ChatFormatting.DARK_AQUA));
+//            }
+//
+//            return tooltip;
+//        }
+        if (stack.is(Hayo.Items.OVERCLOCK_UPGRADE)) {
+            var tooltip = super.getTooltipFromContainerItem(stack);
+            tooltip.add(EnergyTexts.overclockUseRate(100).withStyle(ChatFormatting.DARK_AQUA));
+            tooltip.add(EnergyTexts.overclockTotalCost(25).withStyle(ChatFormatting.DARK_AQUA));
+            return tooltip;
+        } else if (stack.is(Hayo.Items.CAPACITOR_UPGRADE)) {
+            var tooltip = super.getTooltipFromContainerItem(stack);
+            tooltip.add(Component.translatable("hayoind.energy.capacity_change", "+10000").withStyle(ChatFormatting.DARK_AQUA));
+            return tooltip;
+        }
+        return super.getTooltipFromContainerItem(stack);
+    }
+
     protected abstract HayoMachineTexture.RecipeArrow getArrow();
 
     public static class ElectricFurnaceScreen extends ProcessingMachineScreen {
@@ -65,6 +96,28 @@ public abstract class ProcessingMachineScreen extends HayoContainerScreen<Proces
         @Override
         protected HayoMachineTexture.RecipeArrow getArrow() {
             return HayoMachineTexture.RecipeArrow.MACERATOR;
+        }
+    }
+
+    public static class CompressorScreen extends ProcessingMachineScreen {
+        public CompressorScreen(ProcessingMachineMenu menu, Inventory inventory, Component title) {
+            super(menu, inventory, title);
+        }
+
+        @Override
+        protected HayoMachineTexture.RecipeArrow getArrow() {
+            return HayoMachineTexture.RecipeArrow.COMPRESSOR;
+        }
+    }
+
+    public static class ExtractorScreen extends ProcessingMachineScreen {
+        public ExtractorScreen(ProcessingMachineMenu menu, Inventory inventory, Component title) {
+            super(menu, inventory, title);
+        }
+
+        @Override
+        protected HayoMachineTexture.RecipeArrow getArrow() {
+            return HayoMachineTexture.RecipeArrow.EXTRACTOR;
         }
     }
 }

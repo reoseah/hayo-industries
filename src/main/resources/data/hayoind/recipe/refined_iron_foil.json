@@ -1,0 +1,9 @@
+{
+  "type": "hayoind:compressing",
+  "ingredient": "#c:ingots/refined_iron",
+  "processing_energy": 480,
+  "result": {
+    "id": "hayoind:refined_iron_foil",
+    "count": 2
+  }
+}

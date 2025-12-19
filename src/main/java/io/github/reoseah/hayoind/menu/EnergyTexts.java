@@ -27,6 +27,10 @@ public class EnergyTexts {
     private static final String AMOUNT_PER_USE_KEY = "hayoind.energy.amount_per_use";
     private static final String FUEL_VALUE_KEY = "hayoind.energy.fuel_value";
     private static final String APPROXIMATE_AMOUNT_KEY = "hayoind.energy.approximate_amount";
+    private static final String OVERCLOCK_USE_RATE_KEY = "hayoind.energy.overclock_use_rate";
+    private static final String OVERCLOCK_TOTAL_COST_KEY = "hayoind.energy.overclock_total_cost";
+    private static final String RECIPE_KEY = "hayoind.energy.recipe";
+    private static final String OVERCLOCKED_RECIPE_KEY = "hayoind.energy.overclocked_recipe";
 
     /// "Energy"
     public static final Component ENERGY = Component.translatable("hayoind.energy");
@@ -76,5 +80,23 @@ public class EnergyTexts {
     /// E.g.: "≈ 1000 ε", used by basic generator screen in tooltip over the fuel gauge
     public static MutableComponent approximateAmount(long amount) {
         return Component.translatable(APPROXIMATE_AMOUNT_KEY, formatAmount(amount));
+    }
+
+    /// E.g.: "+100% ε/t", used by machines in Overclock Upgrade tooltip
+    public static MutableComponent overclockUseRate(long percentage) {
+        return Component.translatable(OVERCLOCK_USE_RATE_KEY, (percentage > 0 ? "+" : "") + percentage);
+    }
+
+    /// E.g.: "+25% ε per recipe", used by machines in Overclock Upgrade tooltip
+    public static MutableComponent overclockTotalCost(long percentage) {
+        return Component.translatable(OVERCLOCK_TOTAL_COST_KEY, (percentage > 0 ? "+" : "") + percentage);
+    }
+
+    public static MutableComponent recipe(int total, int useRate, float durationSeconds) {
+        return Component.translatable(RECIPE_KEY, total, useRate, Math.ceil(durationSeconds * 100) / 100);
+    }
+
+    public static MutableComponent overclockedRecipe(int total, int totalPercentage, int useRate, int useRatePercentage, float durationSeconds, float durationPercentage) {
+        return Component.translatable(OVERCLOCKED_RECIPE_KEY, total, totalPercentage, useRate, useRatePercentage, Math.ceil(durationSeconds * 100) / 100, Math.ceil(durationPercentage * 100) / 100);
     }
 }

@@ -20,6 +20,12 @@
     ],
     "client": [
       "io.github.reoseah.hayoind.Hayo::initializeClient"
+    ],
+    "rei_common": [
+      "io.github.reoseah.hayoind.compat.rei.HayoReiCommonPlugin"
+    ],
+    "rei_client": [
+      "io.github.reoseah.hayoind.compat.rei.HayoReiClientPlugin"
     ]
   },
   "mixins": [
@@ -32,5 +38,6 @@
     "fabric-api": "*"
   },
   "suggests": {
+    "roughlyenoughitems": "*"
   }
 }

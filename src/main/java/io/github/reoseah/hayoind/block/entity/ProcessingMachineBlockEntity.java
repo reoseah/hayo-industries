@@ -6,6 +6,7 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -19,21 +20,46 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extends RecipeInput> extends ElectricBlockEntity {
     @Getter
-    protected int recipeUsedEnergy;
+    private int recipeUsedEnergy;
     @Getter
-    protected int recipeTotalEnergy;
+    private int recipeTotalEnergy;
+    private int capacityFromUpgrades = 0;
+    @Getter
+    private int overclockCount = 0;
+
+    @Nullable
+    private ResourceKey<Recipe<?>> lastRecipe;
 
     public ProcessingMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
-    protected abstract RecipeManager.CachedCheck<I, R> getRecipeCache();
+    protected abstract RecipeType<R> getRecipeType();
 
-    protected abstract int getRecipeEnergy(RecipeHolder<R> holder);
+    protected abstract SlotHelper<R, I> getSlotHelper();
 
-    protected abstract int getEnergyUseRate();
+    protected abstract int getDefaultCapacity();
 
-    public abstract int getEnergyCapacity();
+    protected abstract int getDefaultEnergyUseRate();
+
+    protected abstract int getDefaultRecipeEnergy(RecipeHolder<R> holder);
+
+    public int getEnergyCapacity() {
+        return this.getDefaultCapacity() + this.capacityFromUpgrades;
+    }
+
+    public int getEnergyUseRate() {
+        return this.getDefaultEnergyUseRate() * (1 + this.overclockCount);
+    }
+
+    public int getRecipeTotalEnergy(RecipeHolder<R> holder) {
+        return this.getDefaultRecipeEnergy(holder) * (100 + 25 * this.overclockCount) / 100;
+    }
+
+    @Override
+    protected NonNullList<ItemStack> createInventory() {
+        return this.getSlotHelper().createInventory();
+    }
 
     @Override
     @MustBeInvokedByOverriders
@@ -49,46 +75,123 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
         super.loadAdditional(input);
         this.recipeUsedEnergy = input.getIntOr("recipe_used_energy", 0);
         this.recipeTotalEnergy = input.getIntOr("recipe_total_energy", 0);
+
+        this.updateUpgradeState();
     }
 
-    public static <R extends Recipe<I>, I extends RecipeInput> void resetProcessing(ServerLevel level, ProcessingMachineBlockEntity<R, I> entity, RecipeSlotsBehavior<R, I> behavior) {
-        var input = behavior.createRecipeInput(entity.stacks);
-        var recipeHolder = entity.getRecipeCache().getRecipeFor(input, level).orElse(null);
-        if (recipeHolder != null) {
-            entity.recipeTotalEnergy = entity.getRecipeEnergy(recipeHolder);
-            entity.recipeUsedEnergy = 0;
-        } else {
-            entity.recipeUsedEnergy = entity.recipeTotalEnergy = 0;
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        if (this.level instanceof ServerLevel serverLevel) {
+            var slotHelper = this.getSlotHelper();
+            if (slotHelper.isInputSlot(slot)) {
+                var oldStack = this.stacks.get(slot);
+
+                super.setItem(slot, stack);
+
+                if (!ItemStack.isSameItemSameComponents(stack, oldStack)) {
+                    this.resetRecipeProgress();
+                }
+                return;
+            } else if (slot >= slotHelper.getFirstUpgradeSlot() && slot <= slotHelper.getLastUpgradeSlot()) {
+                super.setItem(slot, stack);
+
+                this.updateUpgradeState();
+                return;
+            }
+        }
+        super.setItem(slot, stack);
+    }
+
+    @MustBeInvokedByOverriders
+    protected void updateUpgradeState() {
+        var slots = this.getSlotHelper();
+        int firstSlot = slots.getFirstUpgradeSlot();
+        int lastSlot = slots.getLastUpgradeSlot();
+
+        int capacityFromUpgrades = 0;
+        int overclockCount = 0;
+        for (int i = firstSlot; i <= lastSlot; i++) {
+            var stack = stacks.get(i);
+            if (stack.is(Hayo.Items.CAPACITOR_UPGRADE)) {
+                capacityFromUpgrades += 10000;
+            } else if (stack.is(Hayo.Items.OVERCLOCK_UPGRADE)) {
+                overclockCount += 1;
+            }
+        }
+
+        this.capacityFromUpgrades = capacityFromUpgrades;
+        if (this.storedEnergy > this.getDefaultCapacity()) {
+            this.storedEnergy = this.getDefaultCapacity();
+        }
+        if (overclockCount != this.overclockCount) {
+            this.overclockCount = overclockCount;
+            this.updateRecipeCost();
         }
     }
 
-    public static <R extends Recipe<I>, I extends RecipeInput> void tickProcessing(ServerLevel level, BlockPos pos, BlockState state, ProcessingMachineBlockEntity<R, I> entity, RecipeSlotsBehavior<R, I> behavior) {
+    protected void resetRecipeProgress() {
+        if (this.level instanceof ServerLevel serverLevel) {
+            var input = this.getSlotHelper().createRecipeInput(this.stacks);
+            var recipeHolder = this.findMatchingRecipe(serverLevel, input);
+            if (recipeHolder != null) {
+                this.recipeTotalEnergy = this.getRecipeTotalEnergy(recipeHolder);
+                this.recipeUsedEnergy = 0;
+            } else {
+                this.recipeUsedEnergy = this.recipeTotalEnergy = 0;
+            }
+        }
+    }
+
+    protected void updateRecipeCost() {
+        if (this.level instanceof ServerLevel serverLevel) {
+            var input = this.getSlotHelper().createRecipeInput(this.stacks);
+            var recipeHolder = this.findMatchingRecipe(serverLevel, input);
+            if (recipeHolder != null) {
+                this.recipeTotalEnergy = this.getRecipeTotalEnergy(recipeHolder);
+            } else {
+                this.recipeTotalEnergy = 0;
+            }
+        }
+    }
+
+    public @Nullable RecipeHolder<R> findMatchingRecipe(ServerLevel level, I input) {
+        var recipeManager = level.recipeAccess();
+        var optional = recipeManager.getRecipeFor(this.getRecipeType(), input, level, this.lastRecipe);
+        if (optional.isPresent()) {
+            this.lastRecipe = optional.get().id();
+        }
+        return optional.orElse(null);
+    }
+
+    public static <R extends Recipe<I>, I extends RecipeInput> void tickProcessing(ServerLevel level, BlockPos pos, BlockState state, ProcessingMachineBlockEntity<R, I> entity) {
         boolean wasProcessing = entity.recipeUsedEnergy > 0;
 
-        var input = behavior.createRecipeInput(entity.stacks);
+        var slotHelper = entity.getSlotHelper();
+        var input = slotHelper.createRecipeInput(entity.stacks);
         if (input.isEmpty()) {
             if (entity.recipeUsedEnergy > 0) {
                 entity.recipeUsedEnergy = entity.recipeTotalEnergy = 0;
                 entity.setChanged();
             }
         } else {
-            var recipeHolder = entity.getRecipeCache().getRecipeFor(input, level).orElse(null);
+            var recipeHolder = entity.findMatchingRecipe(level, input);
 
-            boolean hasEnergy = entity.storedEnergy >= entity.getEnergyUseRate();
-            if (hasEnergy && behavior.canCraft(level.registryAccess(), recipeHolder, input, entity.stacks)) {
-                int usable = Math.min(Math.min(entity.getEnergyUseRate(), entity.recipeTotalEnergy - entity.recipeUsedEnergy), entity.storedEnergy);
+            int energyUseRate = entity.getEnergyUseRate();
+            boolean hasEnergy = entity.storedEnergy >= energyUseRate;
+            if (hasEnergy && slotHelper.canCraft(level.registryAccess(), recipeHolder, input, entity.stacks)) {
+                int usable = Math.min(Math.min(energyUseRate, entity.recipeTotalEnergy - entity.recipeUsedEnergy), entity.storedEnergy);
 
                 entity.storedEnergy -= usable;
                 entity.recipeUsedEnergy += usable;
 
                 if (entity.recipeUsedEnergy >= entity.recipeTotalEnergy) {
-                    behavior.craft(level.registryAccess(), recipeHolder, input, entity.stacks);
-                    resetProcessing(level, entity, behavior);
+                    slotHelper.craft(level.registryAccess(), recipeHolder, input, entity.stacks);
+                    entity.resetRecipeProgress();
                 }
 
                 entity.setChanged();
             } else {
-                entity.recipeUsedEnergy = Mth.clamp(entity.recipeUsedEnergy - 2 * entity.getEnergyUseRate(), 0, entity.recipeTotalEnergy);
+                entity.recipeUsedEnergy = Mth.clamp(entity.recipeUsedEnergy - 2 * energyUseRate, 0, entity.recipeTotalEnergy);
                 entity.setChanged();
             }
         }
@@ -99,34 +202,44 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
         }
     }
 
-    protected static int getCapacityFromUpgrades(NonNullList<ItemStack> stacks, int firstUpgradeSlot, int upgradeSlots) {
-        int capacity = 0;
-        for (int i = firstUpgradeSlot; i < firstUpgradeSlot + upgradeSlots; i++) {
-            var stack = stacks.get(i);
-            if (stack.is(Hayo.Items.CAPACITOR_UPGRADE)) {
-                capacity += 10000;
-            }
-        }
-        return capacity;
-    }
+    public interface SlotHelper<R extends Recipe<I>, I extends RecipeInput> {
+        NonNullList<ItemStack> createInventory();
 
-    public interface RecipeSlotsBehavior<R extends Recipe<I>, I extends RecipeInput> {
+        boolean isInputSlot(int slot);
+
         I createRecipeInput(NonNullList<ItemStack> items);
 
         boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, I recipeInput, NonNullList<ItemStack> items);
 
         void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, I recipeInput, NonNullList<ItemStack> items);
 
+        int getFirstUpgradeSlot();
+
+        int getLastUpgradeSlot();
+
+        /// Returns a helper for "classic" machines with one input, one output and 4 upgrade slots.
         @SuppressWarnings("unchecked")
-        static <R extends Recipe<SingleRecipeInput>> RecipeSlotsBehavior<R, SingleRecipeInput> oneInputOneOutput() {
-            return (RecipeSlotsBehavior<R, SingleRecipeInput>) OneInputOneOutput.INSTANCE;
+        static <R extends Recipe<SingleRecipeInput>> SlotHelper<R, SingleRecipeInput> classic() {
+            return (SlotHelper<R, SingleRecipeInput>) Classic.INSTANCE;
         }
 
-        enum OneInputOneOutput implements RecipeSlotsBehavior<Recipe<SingleRecipeInput>, SingleRecipeInput> {
+        enum Classic implements SlotHelper<Recipe<SingleRecipeInput>, SingleRecipeInput> {
             INSTANCE;
 
             public static final int INPUT_SLOT = 0;
             public static final int OUTPUT_SLOT = 2;
+            public static final int FIRST_UPGRADE_SLOT = 3;
+            public static final int LAST_UPGRADE_SLOT = 6;
+
+            @Override
+            public NonNullList<ItemStack> createInventory() {
+                return NonNullList.withSize(7, ItemStack.EMPTY);
+            }
+
+            @Override
+            public boolean isInputSlot(int slot) {
+                return slot == INPUT_SLOT;
+            }
 
             @Override
             public SingleRecipeInput createRecipeInput(NonNullList<ItemStack> items) {
@@ -168,6 +281,16 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
 
                 var inputStack = items.get(INPUT_SLOT);
                 inputStack.shrink(1);
+            }
+
+            @Override
+            public int getFirstUpgradeSlot() {
+                return FIRST_UPGRADE_SLOT;
+            }
+
+            @Override
+            public int getLastUpgradeSlot() {
+                return LAST_UPGRADE_SLOT;
             }
         }
     }

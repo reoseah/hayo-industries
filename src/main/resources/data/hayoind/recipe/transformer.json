@@ -2,15 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "WWW",
+    " Q ",
     "#I#",
     "CWC"
   ],
   "key": {
     "#": "#c:foils/refined_iron",
+    "Q": "hayoind:power_cable",
     "W": "hayoind:uninsulated_cable",
     "C": "hayoind:cable",
-    "I": "minecraft:iron_ingot"
+    "I": "#c:ingots/refined_iron"
   },
   "result": {
     "id": "hayoind:transformer",

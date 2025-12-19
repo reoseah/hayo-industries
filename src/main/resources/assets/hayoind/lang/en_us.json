@@ -76,7 +76,7 @@
   "tag.item.c.dusts.silicon_bronze": "Silicon Bronze Dusts",
   "tag.item.c.dusts.stone": "Stone Dusts",
   "tag.item.c.dusts.wood": "Wood Dusts",
-  "tag.item.c.ingots.refined_iron": "Refined Iron Plates",
+  "tag.item.c.ingots.refined_iron": "Refined Iron Ingots",
   "tag.item.c.ingots.silicon_bronze": "Silicon Bronze Ingots",
   "tag.item.c.foils": "Foils",
   "tag.item.c.foils.refined_iron": "Refined Iron Foils",
@@ -86,6 +86,8 @@
   "tag.item.hayoind.processing_machine_upgrades": "Generic Upgrades",
   "tag.item.hayoind.electric_furnace_upgrades": "Electric Furnace Upgrades",
   "tag.item.hayoind.macerator_upgrades": "Macerator Upgrades",
+  "tag.item.hayoind.compressor_upgrades": "Compressor Upgrades",
+  "tag.item.hayoind.extractor_upgrades": "Extractor Upgrades",
   "hayoind.energy": "Energy",
   "hayoind.energy.stored": "Stored Energy",
   "hayoind.energy.amount": "%s ε",
@@ -96,5 +98,13 @@
   "hayoind.energy.amount_and_amount_per_tick": "%s ε at %s ε/t",
   "hayoind.energy.fuel_value": "%s ε fuel value",
   "hayoind.energy.approximate_amount": "≈ %s ε",
-  "hayoind.fuel": "Fuel"
+  "hayoind.energy.overclock_use_rate": "%s%% max. ε/t use rate",
+  "hayoind.energy.overclock_total_cost": "%s%% total ε per recipe",
+  "hayoind.energy.capacity_change": "%s max. ε",
+  "hayoind.energy.recipe": "%s ε at %s ε/t for %s s",
+  "hayoind.energy.overclocked_recipe": "%s ε (%s%%) at %s ε/t (%s%%) for %s s (%s%%)",
+  "hayoind.fuel": "Fuel",
+  "recipe_type.hayoind.macerating": "Macerating",
+  "recipe_type.hayoind.compressing": "Compressing",
+  "recipe_type.hayoind.extracting": "Extracting"
 }

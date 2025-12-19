@@ -8,7 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.Slot;
 
 public class HayoMachineTexture {
-    public static final ResourceLocation TEXTURE = Hayo.modLocation("textures/gui/container/machine.png");
+    public static final ResourceLocation LOCATION = Hayo.modLocation("textures/gui/container/machine.png");
 
     public static final int SLOT_X = 0, SLOT_Y = 192, SLOT_SIZE = 18;
     public static final int OUTPUT_SLOT_X = 0, OUTPUT_SLOT_Y = 166, OUTPUT_SLOT_SIZE = 26;
@@ -24,7 +24,7 @@ public class HayoMachineTexture {
     public static final int TINY_ARROW_LEFT_X = 9;
 
     public static void blit(GuiGraphics graphics, int x, int y, float u, float v, int width, int height) {
-        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, u, v, width, height, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, LOCATION, x, y, u, v, width, height, 256, 256);
     }
 
     public static void drawSlot(GuiGraphics graphics, int leftPos, int topPos, Slot slot) {
@@ -81,7 +81,8 @@ public class HayoMachineTexture {
     public enum RecipeArrow {
         DEFAULT(166),
         MACERATOR(182),
-        COMPRESSOR(198);
+        COMPRESSOR(198),
+        EXTRACTOR(214);
 
         public static final int X = 80, OVERLAY_X = 104, HEIGHT = 16, WIDTH = 24;
 

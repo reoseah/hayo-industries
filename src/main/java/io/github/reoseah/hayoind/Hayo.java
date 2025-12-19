@@ -2,10 +2,7 @@ package io.github.reoseah.hayoind;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayoind.block.*;
-import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
-import io.github.reoseah.hayoind.block.entity.EnergyCrystalArrayBlockEntity;
-import io.github.reoseah.hayoind.block.entity.GeneratorBlockEntity;
-import io.github.reoseah.hayoind.block.entity.MaceratorBlockEntity;
+import io.github.reoseah.hayoind.block.entity.*;
 import io.github.reoseah.hayoind.client.screen.EnergyCrystalArrayScreen;
 import io.github.reoseah.hayoind.client.screen.GeneratorScreen;
 import io.github.reoseah.hayoind.client.screen.ProcessingMachineScreen;
@@ -15,8 +12,7 @@ import io.github.reoseah.hayoind.item.SimpleBatteryItem;
 import io.github.reoseah.hayoind.menu.EnergyCrystalArrayMenu;
 import io.github.reoseah.hayoind.menu.GeneratorMenu;
 import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
-import io.github.reoseah.hayoind.recipe.ExtractingRecipe;
-import io.github.reoseah.hayoind.recipe.MaceratingRecipe;
+import io.github.reoseah.hayoind.recipe.SimpleElectricRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -110,6 +106,8 @@ public class Hayo {
         MenuScreens.register(MenuTypes.GENERATOR, GeneratorScreen::new);
         MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ProcessingMachineScreen.ElectricFurnaceScreen::new);
         MenuScreens.register(MenuTypes.MACERATOR, ProcessingMachineScreen.MaceratorScreen::new);
+        MenuScreens.register(MenuTypes.COMPRESSOR, ProcessingMachineScreen.CompressorScreen::new);
+        MenuScreens.register(MenuTypes.EXTRACTOR, ProcessingMachineScreen.ExtractorScreen::new);
         MenuScreens.register(MenuTypes.ENERGY_CRYSTAL_ARRAY, EnergyCrystalArrayScreen::new);
     }
 
@@ -128,8 +126,8 @@ public class Hayo {
         public static final Block GENERATOR = register("generator", GeneratorBlock::new, MACHINES);
         public static final Block ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlock::new, MACHINES);
         public static final Block MACERATOR = register("macerator", MaceratorBlock::new, MACHINES);
-        public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, MACHINES);
         public static final Block COMPRESSOR = register("compressor", CompressorBlock::new, MACHINES);
+        public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, MACHINES);
         public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
 
@@ -173,8 +171,8 @@ public class Hayo {
         public static final Item GENERATOR = registerBlock(Blocks.GENERATOR);
         public static final Item ELECTRIC_FURNACE = registerBlock(Blocks.ELECTRIC_FURNACE);
         public static final Item MACERATOR = registerBlock(Blocks.MACERATOR);
-        public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
         public static final Item COMPRESSOR = registerBlock(Blocks.COMPRESSOR);
+        public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
         public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
 
@@ -251,8 +249,8 @@ public class Hayo {
                 entries.accept(GENERATOR);
                 entries.accept(ELECTRIC_FURNACE);
                 entries.accept(MACERATOR);
-                entries.accept(EXTRACTOR);
                 entries.accept(COMPRESSOR);
+                entries.accept(EXTRACTOR);
                 entries.accept(AUTOMATED_FERTILIZER);
                 entries.accept(ENERGY_CRYSTAL_ARRAY);
 
@@ -364,12 +362,16 @@ public class Hayo {
     public static class ItemTags {
         public static final TagKey<Item> ELECTRIC_FURNACE_UPGRADES = TagKey.create(Registries.ITEM, modLocation("electric_furnace_upgrades"));
         public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modLocation("macerator_upgrades"));
+        public static final TagKey<Item> COMPRESSOR_UPGRADES = TagKey.create(Registries.ITEM, modLocation("compressor_upgrades"));
+        public static final TagKey<Item> EXTRACTOR_UPGRADES = TagKey.create(Registries.ITEM, modLocation("extractor_upgrades"));
     }
 
     public static class BlockEntityTypes {
         public static final BlockEntityType<GeneratorBlockEntity> GENERATOR = register("generator", GeneratorBlockEntity::new, Blocks.GENERATOR);
         public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlockEntity::new, Blocks.ELECTRIC_FURNACE);
         public static final BlockEntityType<MaceratorBlockEntity> MACERATOR = register("macerator", MaceratorBlockEntity::new, Blocks.MACERATOR);
+        public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR = register("compressor", CompressorBlockEntity::new, Blocks.COMPRESSOR);
+        public static final BlockEntityType<ExtractorBlockEntity> EXTRACTOR = register("extractor", ExtractorBlockEntity::new, Blocks.EXTRACTOR);
         public static final BlockEntityType<EnergyCrystalArrayBlockEntity> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlockEntity::new, Blocks.ENERGY_CRYSTAL_ARRAY);
 
         public static void initialize() {
@@ -386,7 +388,9 @@ public class Hayo {
     public static class MenuTypes {
         public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
         public static final MenuType<ProcessingMachineMenu.ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ProcessingMachineMenu.ElectricFurnaceMenu::new);
-        public static final MenuType<ProcessingMachineMenu.MaceratorMenu> MACERATOR = register("macerator", ProcessingMachineMenu.MaceratorMenu::new);
+        public static final MenuType<ProcessingMachineMenu> MACERATOR = register("macerator", ProcessingMachineMenu.MaceratorMenu::new);
+        public static final MenuType<ProcessingMachineMenu> COMPRESSOR = register("compressor", ProcessingMachineMenu.CompressorMenu::new);
+        public static final MenuType<ProcessingMachineMenu> EXTRACTOR = register("extractor", ProcessingMachineMenu.ExtractorMenu::new);
         public static final MenuType<EnergyCrystalArrayMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
 
         public static void initialize() {
@@ -415,8 +419,9 @@ public class Hayo {
     }
 
     public static class RecipeTypes {
-        public static final RecipeType<MaceratingRecipe> MACERATING = register("macerating");
-        public static final RecipeType<ExtractingRecipe> EXTRACTING = register("extracting");
+        public static final RecipeType<SimpleElectricRecipe> MACERATING = register("macerating");
+        public static final RecipeType<SimpleElectricRecipe> COMPRESSING = register("compressing");
+        public static final RecipeType<SimpleElectricRecipe> EXTRACTING = register("extracting");
 
         public static void initialize() {
         }
@@ -434,8 +439,9 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
-        public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", new MaceratingRecipe.Serializer());
-        public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", new ExtractingRecipe.Serializer());
+        public static final RecipeSerializer<SimpleElectricRecipe> MACERATING = register("macerating", new SimpleElectricRecipe.Serializer<>(SimpleElectricRecipe.Macerating::new, SimpleElectricRecipe.Macerating.DEFAULT_ENERGY));
+        public static final RecipeSerializer<SimpleElectricRecipe> COMPRESSING = register("compressing", new SimpleElectricRecipe.Serializer<>(SimpleElectricRecipe.Compressing::new, SimpleElectricRecipe.Compressing.DEFAULT_ENERGY));
+        public static final RecipeSerializer<SimpleElectricRecipe> EXTRACTING = register("extracting", new SimpleElectricRecipe.Serializer<>(SimpleElectricRecipe.Extracting::new, SimpleElectricRecipe.Extracting.DEFAULT_ENERGY));
 
         public static void initialize() {
         }
