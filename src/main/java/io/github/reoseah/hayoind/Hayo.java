@@ -387,7 +387,7 @@ public class Hayo {
 
     public static class MenuTypes {
         public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
-        public static final MenuType<ProcessingMachineMenu.ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ProcessingMachineMenu.ElectricFurnaceMenu::new);
+        public static final MenuType<ProcessingMachineMenu> ELECTRIC_FURNACE = register("electric_furnace", ProcessingMachineMenu.ElectricFurnaceMenu::new);
         public static final MenuType<ProcessingMachineMenu> MACERATOR = register("macerator", ProcessingMachineMenu.MaceratorMenu::new);
         public static final MenuType<ProcessingMachineMenu> COMPRESSOR = register("compressor", ProcessingMachineMenu.CompressorMenu::new);
         public static final MenuType<ProcessingMachineMenu> EXTRACTOR = register("extractor", ProcessingMachineMenu.ExtractorMenu::new);

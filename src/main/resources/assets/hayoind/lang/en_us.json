@@ -104,7 +104,10 @@
   "hayoind.energy.recipe": "%s ε at %s ε/t for %s s",
   "hayoind.energy.overclocked_recipe": "%s ε (%s%%) at %s ε/t (%s%%) for %s s (%s%%)",
   "hayoind.fuel": "Fuel",
-  "recipe_type.hayoind.macerating": "Macerating",
-  "recipe_type.hayoind.compressing": "Compressing",
-  "recipe_type.hayoind.extracting": "Extracting"
+  "hayoind.macerating": "Macerating",
+  "hayoind.compressing": "Compressing",
+  "hayoind.extracting": "Extracting",
+  "hayoind.electric_smelting": "Smelting (Electric)",
+  "hayoind.electric_blasting": "Blasting (Electric)",
+  "hayoind.electric_smoking": "Smoking (Electric)"
 }

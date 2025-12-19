@@ -2,6 +2,8 @@ package io.github.reoseah.hayoind.compat.rei;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.reoseah.hayoind.block.entity.ElectricFurnaceBlockEntity;
+import io.github.reoseah.hayoind.mixin.SingleItemRecipeAccessor;
 import io.github.reoseah.hayoind.recipe.SimpleElectricRecipe;
 import lombok.Getter;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
@@ -13,6 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,6 +70,20 @@ public class SimpleElectricRecipeDisplay implements Display {
         this.input = EntryIngredients.ofIngredient(recipe.input());
         this.result = EntryIngredients.of(recipe.result());
         this.processingEnergy = recipe.processingEnergy();
+    }
+
+    public static SimpleElectricRecipeDisplay fromCookingRecipe(RecipeHolder<AbstractCookingRecipe> holder) {
+        var location = Optional.of(holder.id().location());
+
+        var recipe = holder.value();
+        var path = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType()).getPath();
+        var category = "hayoind:electric_" + path;
+
+        var input = EntryIngredients.ofIngredient(recipe.input());
+        var result = EntryIngredients.of(((SingleItemRecipeAccessor) recipe).hayo$getResult());
+        var processingEnergy = ElectricFurnaceBlockEntity.energyCostFromCookingTime(recipe.cookingTime());
+
+        return new SimpleElectricRecipeDisplay(category, location, input, result, processingEnergy);
     }
 
     @Override

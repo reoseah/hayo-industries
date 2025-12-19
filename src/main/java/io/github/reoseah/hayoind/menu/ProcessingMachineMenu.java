@@ -28,7 +28,7 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
 
         this.addSlot(new Slot(container, 0, 47, 18));
         this.addSlot(new Slot(container, 1, 47, 54));
-        this.addSlot(new Slot(container, 2, 107, 36));
+        this.addSlot(new SimpleResultSlot(container, 2, 107, 36));
 
         this.addSlot(new UpgradeSlot(container, 3, 152, 8, validUpgrades));
         this.addSlot(new UpgradeSlot(container, 4, 152, 26, validUpgrades));

@@ -8,10 +8,8 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +20,9 @@ public class SimpleElectricRecipeCategory implements DisplayCategory<SimpleElect
     protected final HayoMachineTexture.RecipeArrow arrowType;
     protected final int energyUseRate;
 
-    public SimpleElectricRecipeCategory(ResourceLocation location, Item icon, HayoMachineTexture.RecipeArrow arrowType, int energyUseRate) {
+    public SimpleElectricRecipeCategory(ResourceLocation location, Renderer icon, HayoMachineTexture.RecipeArrow arrowType, int energyUseRate) {
         this.location = location;
-        this.icon = EntryStacks.of(icon);
+        this.icon = icon;
         this.arrowType = arrowType;
         this.energyUseRate = energyUseRate;
     }
@@ -36,7 +34,7 @@ public class SimpleElectricRecipeCategory implements DisplayCategory<SimpleElect
 
     @Override
     public Component getTitle() {
-        return Component.translatable(this.location.toLanguageKey("recipe_type"));
+        return Component.translatable(this.location.toLanguageKey());
     }
 
     @Override
