@@ -58,7 +58,7 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
 
     @Override
     protected NonNullList<ItemStack> createInventory() {
-        return this.getSlotHelper().createInventory();
+        return NonNullList.withSize(this.getSlotHelper().getSlots(), ItemStack.EMPTY);
     }
 
     @Override
@@ -203,7 +203,7 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
     }
 
     public interface SlotHelper<R extends Recipe<I>, I extends RecipeInput> {
-        NonNullList<ItemStack> createInventory();
+        int getSlots();
 
         boolean isInputSlot(int slot);
 
@@ -211,7 +211,7 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
 
         boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, I recipeInput, NonNullList<ItemStack> items);
 
-        void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, I recipeInput, NonNullList<ItemStack> items);
+        void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, I input, NonNullList<ItemStack> items);
 
         int getFirstUpgradeSlot();
 
@@ -230,10 +230,11 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
             public static final int OUTPUT_SLOT = 2;
             public static final int FIRST_UPGRADE_SLOT = 3;
             public static final int LAST_UPGRADE_SLOT = 6;
+            public static final int SLOTS = 7;
 
             @Override
-            public NonNullList<ItemStack> createInventory() {
-                return NonNullList.withSize(7, ItemStack.EMPTY);
+            public int getSlots() {
+                return SLOTS;
             }
 
             @Override
@@ -253,19 +254,69 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
                 }
 
                 var recipeOutput = recipe.value().assemble(input, registryAccess);
-                if (recipeOutput.isEmpty()) {
-                    return false;
-                }
+                return canInsertToSlot(items, recipeOutput, OUTPUT_SLOT);
+            }
 
+
+            @Override
+            public void craft(RegistryAccess registryAccess, RecipeHolder<Recipe<SingleRecipeInput>> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
+                var recipeOutput = recipe.value().assemble(input, registryAccess);
                 var outputStack = items.get(OUTPUT_SLOT);
+
                 if (outputStack.isEmpty()) {
-                    return true;
+                    items.set(OUTPUT_SLOT, recipeOutput);
+                } else {
+                    outputStack.grow(recipeOutput.getCount());
                 }
-                if (!ItemStack.isSameItemSameComponents(outputStack, recipeOutput)) {
+
+                var inputStack = items.get(INPUT_SLOT);
+                inputStack.shrink(1);
+            }
+
+            @Override
+            public int getFirstUpgradeSlot() {
+                return FIRST_UPGRADE_SLOT;
+            }
+
+            @Override
+            public int getLastUpgradeSlot() {
+                return LAST_UPGRADE_SLOT;
+            }
+        }
+
+        enum ClassicWithExtraOutput implements SlotHelper<Recipe<SingleRecipeInput>, SingleRecipeInput> {
+            INSTANCE;
+
+            public static final int SLOTS = 8;
+            public static final int INPUT_SLOT = 0;
+            public static final int OUTPUT_SLOT = 2;
+            public static final int FIRST_UPGRADE_SLOT = 4;
+            public static final int LAST_UPGRADE_SLOT = 7;
+
+            @Override
+            public int getSlots() {
+                return SLOTS;
+            }
+
+            @Override
+            public boolean isInputSlot(int slot) {
+                return slot == INPUT_SLOT;
+            }
+
+            @Override
+            public SingleRecipeInput createRecipeInput(NonNullList<ItemStack> items) {
+                return new SingleRecipeInput(items.get(INPUT_SLOT));
+            }
+
+            @Override
+            public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<Recipe<SingleRecipeInput>> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
+                if (recipe == null || input.isEmpty()) {
                     return false;
                 }
 
-                return outputStack.getCount() + recipeOutput.getCount() <= recipeOutput.getMaxStackSize();
+                var recipeOutput = recipe.value().assemble(input, registryAccess);
+                return canInsertToSlot(items, recipeOutput, OUTPUT_SLOT);
+                // TODO: check additional slot
             }
 
             @Override
@@ -293,5 +344,17 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
                 return LAST_UPGRADE_SLOT;
             }
         }
+    }
+
+    protected static boolean canInsertToSlot(NonNullList<ItemStack> items, ItemStack recipeOutput, int slot) {
+        var outputStack = items.get(slot);
+        if (outputStack.isEmpty()) {
+            return true;
+        }
+        if (!ItemStack.isSameItemSameComponents(outputStack, recipeOutput)) {
+            return false;
+        }
+
+        return outputStack.getCount() + recipeOutput.getCount() <= recipeOutput.getMaxStackSize();
     }
 }

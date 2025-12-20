@@ -14,6 +14,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipePropertySet;
 
+import java.util.Map;
+
 public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
     protected final ContainerData data;
     protected final TagKey<Item> validUpgrades;
@@ -25,17 +27,6 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
 
         this.data = data;
         this.addDataSlots(this.data);
-
-        this.addSlot(new Slot(container, 0, 47, 18));
-        this.addSlot(new Slot(container, 1, 47, 54));
-        this.addSlot(new SimpleResultSlot(container, 2, 107, 36));
-
-        this.addSlot(new UpgradeSlot(container, 3, 152, 8, validUpgrades));
-        this.addSlot(new UpgradeSlot(container, 4, 152, 26, validUpgrades));
-        this.addSlot(new UpgradeSlot(container, 5, 152, 44, validUpgrades));
-        this.addSlot(new UpgradeSlot(container, 6, 152, 62, validUpgrades));
-
-        this.addStandardInventorySlots(inventory, 8, 84);
     }
 
     public static ContainerData createData(ProcessingMachineBlockEntity<?, ?> entity) {
@@ -63,6 +54,19 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
             public void set(int index, int value) {
             }
         };
+    }
+
+    public static void addClassicSlots(ProcessingMachineMenu menu, Container container, Inventory inventory) {
+        menu.addSlot(new Slot(container, 0, 47, 18));
+        menu.addSlot(new Slot(container, 1, 47, 54));
+        menu.addSlot(new SimpleResultSlot(container, 2, 107, 36));
+
+        menu.addSlot(new UpgradeSlot(container, 3, 152, 8, menu.validUpgrades));
+        menu.addSlot(new UpgradeSlot(container, 4, 152, 26, menu.validUpgrades));
+        menu.addSlot(new UpgradeSlot(container, 5, 152, 44, menu.validUpgrades));
+        menu.addSlot(new UpgradeSlot(container, 6, 152, 62, menu.validUpgrades));
+
+        menu.addStandardInventorySlots(inventory, 8, 84);
     }
 
     public float getRecipeDuration() {
@@ -164,16 +168,20 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         return (this.data.get(5) << 16) | (this.data.get(4) & 0xFFFF);
     }
 
+    public int getOverclockCount() {
+        return this.data.get(6);
+    }
+
     public boolean hasOverclockUpgrades() {
-        return this.data.get(6) > 0;
+        return this.getOverclockCount() > 0;
     }
 
     public int getUseRatePercentage() {
-        return 100 + 100 * this.data.get(6);
+        return 100 + 100 * this.getOverclockCount();
     }
 
     public int getRecipeEnergyPercentage() {
-        return 100 + 25 * this.data.get(6);
+        return 100 + 25 * this.getOverclockCount();
     }
 
     public int getRecipeDurationPercentage() {
@@ -183,40 +191,73 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
     public abstract int getEnergyUseRate();
 
     public static class ElectricFurnaceMenu extends ProcessingMachineMenu {
-        private final RecipePropertySet acceptedInputs;
+        private final DataSlot recipeMode;
+
+        private final Map<ElectricFurnaceBlockEntity.ElectricFurnaceMode, RecipePropertySet> recipeInputs;
 
         public ElectricFurnaceMenu(int menuId, Inventory inventory) {
-            super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
-
-            var level = inventory.player.level();
-            this.acceptedInputs = level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT);
+            this(menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory, DataSlot.standalone());
         }
 
         public ElectricFurnaceMenu(int menuId, ElectricFurnaceBlockEntity entity, Inventory inventory) {
-            super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, entity, createData(entity), inventory);
+            this(menuId, entity, createData(entity), inventory, createRecipeModeData(entity));
+        }
+
+        public static DataSlot createRecipeModeData(ElectricFurnaceBlockEntity entity) {
+            return new DataSlot() {
+                @Override
+                public int get() {
+                    return entity.getMode().ordinal();
+                }
+
+                @Override
+                public void set(int value) {
+                }
+            };
+        }
+
+        protected ElectricFurnaceMenu(int menuId, Container container, ContainerData data, Inventory inventory, DataSlot recipeMode) {
+            super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, container, data, inventory);
+
+            addClassicSlots(this, container, inventory);
+
+            this.recipeMode = this.addDataSlot(recipeMode);
 
             var level = inventory.player.level();
-            this.acceptedInputs = level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT);
+            this.recipeInputs = Map.of( //
+                    ElectricFurnaceBlockEntity.ElectricFurnaceMode.NORMAL, level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT), //
+                    ElectricFurnaceBlockEntity.ElectricFurnaceMode.BLASTING, level.recipeAccess().propertySet(RecipePropertySet.BLAST_FURNACE_INPUT), //
+                    ElectricFurnaceBlockEntity.ElectricFurnaceMode.SMOKING, level.recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT));
         }
 
         @Override
         protected boolean isRecipeInput(ItemStack stack) {
-            return this.acceptedInputs.test(stack);
+            return this.recipeInputs.get(this.getRecipeMode()).test(stack);
+        }
+
+        public ElectricFurnaceBlockEntity.ElectricFurnaceMode getRecipeMode() {
+            return ElectricFurnaceBlockEntity.ElectricFurnaceMode.values()[Mth.clamp(this.recipeMode.get(), 0, 2)];
         }
 
         @Override
         public int getEnergyUseRate() {
-            return ElectricFurnaceBlockEntity.ENERGY_USE_RATE * (1 + this.data.get(6));
+            return ElectricFurnaceBlockEntity.ENERGY_USE_RATE * (1 + this.getOverclockCount());
         }
     }
 
     public static class MaceratorMenu extends ProcessingMachineMenu {
         public MaceratorMenu(int menuId, Inventory inventory) {
-            super(Hayo.MenuTypes.MACERATOR, Hayo.ItemTags.MACERATOR_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
+            this(menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
         }
 
         public MaceratorMenu(int menuId, MaceratorBlockEntity entity, Inventory inventory) {
-            super(Hayo.MenuTypes.MACERATOR, Hayo.ItemTags.MACERATOR_UPGRADES, menuId, entity, createData(entity), inventory);
+            this(menuId, entity, createData(entity), inventory);
+        }
+
+        protected MaceratorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
+            super(Hayo.MenuTypes.MACERATOR, Hayo.ItemTags.MACERATOR_UPGRADES, menuId, container, data, inventory);
+
+            addClassicSlots(this, container, inventory);
         }
 
         @Override
@@ -226,18 +267,25 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
 
         @Override
         public int getEnergyUseRate() {
-            return MaceratorBlockEntity.ENERGY_USE_RATE * (1 + this.data.get(6));
+            return MaceratorBlockEntity.ENERGY_USE_RATE * (1 + this.getOverclockCount());
         }
     }
 
     public static class CompressorMenu extends ProcessingMachineMenu {
         public CompressorMenu(int menuId, Inventory inventory) {
-            super(Hayo.MenuTypes.COMPRESSOR, Hayo.ItemTags.COMPRESSOR_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
+            this(menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
         }
 
         public CompressorMenu(int menuId, CompressorBlockEntity entity, Inventory inventory) {
-            super(Hayo.MenuTypes.COMPRESSOR, Hayo.ItemTags.COMPRESSOR_UPGRADES, menuId, entity, createData(entity), inventory);
+            this(menuId, entity, createData(entity), inventory);
         }
+
+        protected CompressorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
+            super(Hayo.MenuTypes.COMPRESSOR, Hayo.ItemTags.COMPRESSOR_UPGRADES, menuId, container, data, inventory);
+
+            addClassicSlots(this, container, inventory);
+        }
+
 
         @Override
         protected boolean isRecipeInput(ItemStack stack) {
@@ -246,17 +294,23 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
 
         @Override
         public int getEnergyUseRate() {
-            return CompressorBlockEntity.ENERGY_USE_RATE * (1 + this.data.get(6));
+            return CompressorBlockEntity.ENERGY_USE_RATE * (1 + this.getOverclockCount());
         }
     }
 
     public static class ExtractorMenu extends ProcessingMachineMenu {
         public ExtractorMenu(int menuId, Inventory inventory) {
-            super(Hayo.MenuTypes.EXTRACTOR, Hayo.ItemTags.EXTRACTOR_UPGRADES, menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
+            this(menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
         }
 
         public ExtractorMenu(int menuId, ExtractorBlockEntity entity, Inventory inventory) {
-            super(Hayo.MenuTypes.EXTRACTOR, Hayo.ItemTags.EXTRACTOR_UPGRADES, menuId, entity, createData(entity), inventory);
+            this(menuId, entity, createData(entity), inventory);
+        }
+
+        protected ExtractorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
+            super(Hayo.MenuTypes.EXTRACTOR, Hayo.ItemTags.EXTRACTOR_UPGRADES, menuId, container, data, inventory);
+
+            addClassicSlots(this, container, inventory);
         }
 
         @Override
@@ -266,7 +320,7 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
 
         @Override
         public int getEnergyUseRate() {
-            return ExtractorBlockEntity.ENERGY_USE_RATE * (1 + this.data.get(6));
+            return ExtractorBlockEntity.ENERGY_USE_RATE * (1 + this.getOverclockCount());
         }
     }
 }

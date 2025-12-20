@@ -2,6 +2,7 @@ package io.github.reoseah.hayoind.block.entity;
 
 import io.github.reoseah.hayoind.Hayo;
 import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -29,6 +30,7 @@ public class ElectricFurnaceBlockEntity extends ProcessingMachineBlockEntity<Abs
     public static final int FIRST_UPGRADE_SLOT = 3;
     public static final int UPGRADE_SLOTS = 4;
 
+    @Getter
     protected ElectricFurnaceMode mode = ElectricFurnaceMode.NORMAL;
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {

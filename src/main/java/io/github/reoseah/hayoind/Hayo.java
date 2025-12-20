@@ -244,6 +244,8 @@ public class Hayo {
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
+        public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon");
+
         public static void initialize() {
             ItemGroupEvents.modifyEntriesEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
                 entries.accept(GENERATOR);
@@ -317,6 +319,8 @@ public class Hayo {
                 entries.accept(CAPACITOR_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
+
+                entries.accept(CONDUCTIVE_CARBON);
             });
         }
 
