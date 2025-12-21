@@ -1,0 +1,19 @@
+{
+  "parent": "block/cube",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "hayo:block/macerator_front",
+    "down": "hayo:block/machine_bottom",
+    "up": "hayo:block/macerator_top",
+    "north": "hayo:block/macerator_front",
+    "east": "hayo:block/macerator_left",
+    "south": "hayo:block/machine_side",
+    "west": "hayo:block/macerator_right"
+  }
+}

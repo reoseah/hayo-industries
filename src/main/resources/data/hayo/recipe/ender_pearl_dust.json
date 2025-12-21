@@ -1,0 +1,8 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "minecraft:ender_pearl",
+  "processing_energy": 400,
+  "result": {
+    "id": "hayo:ender_pearl_dust"
+  }
+}

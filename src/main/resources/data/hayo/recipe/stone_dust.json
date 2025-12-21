@@ -1,0 +1,9 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "#minecraft:stone_tool_materials",
+  "processing_energy": 400,
+  "result": {
+    "id": "hayo:stone_dust",
+    "count": 2
+  }
+}

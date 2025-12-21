@@ -1,0 +1,8 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "minecraft:coal",
+  "processing_energy": 400,
+  "result": {
+    "id": "hayo:coal_dust"
+  }
+}

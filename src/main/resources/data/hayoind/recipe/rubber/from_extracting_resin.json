@@ -1,9 +1,0 @@
-{
-  "type": "hayoind:extracting",
-  "ingredient": "hayoind:sticky_resin",
-  "processing_energy": 480,
-  "result": {
-    "id": "hayoind:rubber",
-    "count": 2
-  }
-}

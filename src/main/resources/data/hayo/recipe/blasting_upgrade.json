@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ISI",
+    "X#X"
+  ],
+  "key": {
+    "#": "hayo:circuit",
+    "X": "hayo:cable",
+    "I": "#c:ingots/iron",
+    "S": "minecraft:smooth_stone"
+  },
+  "result": {
+    "id": "hayo:blasting_upgrade",
+    "count": 1
+  }
+}

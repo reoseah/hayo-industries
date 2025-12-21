@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "hayoind:block/rubber_planks",
-    "top": "hayoind:block/rubber_planks",
-    "side": "hayoind:block/rubber_planks"
-  }
-}

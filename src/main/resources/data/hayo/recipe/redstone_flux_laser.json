@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "#R#",
+    "CSC"
+  ],
+  "key": {
+    "#": "#c:ingots/gold",
+    "C": "hayo:cable",
+    "R": "minecraft:redstone",
+    "S": "#c:dusts/netherite_scrap"
+  },
+  "result": {
+    "id": "hayo:redstone_flux_laser",
+    "count": 1
+  }
+}

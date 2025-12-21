@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "hayo:composite_plate",
+    "X": "#c:stones"
+  },
+  "pattern": [
+    "X#X",
+    "#X#",
+    "X#X"
+  ],
+  "result": {
+    "count": 6,
+    "id": "hayo:reinforced_stone"
+  }
+}

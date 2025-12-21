@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "XXX",
+    "R#R",
+    "XXX"
+  ],
+  "key": {
+    "#": "#c:ingots/refined_iron",
+    "X": "hayo:cable",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "id": "hayo:circuit",
+    "count": 2
+  }
+}

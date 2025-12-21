@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "hayoind",
+  "id": "hayo",
   "version": "${version}",
   "name": "HAYO Industries Inc.",
   "description": "",
@@ -12,24 +12,24 @@
     "sources": "https://github.com/reoseah/hayo-industries"
   },
   "license": "EU PL",
-  "icon": "assets/hayoind/icon.png",
+  "icon": "assets/hayo/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.reoseah.hayoind.Hayo::initialize"
+      "io.github.reoseah.hayo.Hayo::initialize"
     ],
     "client": [
-      "io.github.reoseah.hayoind.Hayo::initializeClient"
+      "io.github.reoseah.hayo.Hayo::initializeClient"
     ],
     "rei_common": [
-      "io.github.reoseah.hayoind.compat.rei.HayoReiCommonPlugin"
+      "io.github.reoseah.hayo.compat.rei.HayoReiCommonPlugin"
     ],
     "rei_client": [
-      "io.github.reoseah.hayoind.compat.rei.HayoReiClientPlugin"
+      "io.github.reoseah.hayo.compat.rei.HayoReiClientPlugin"
     ]
   },
   "mixins": [
-    "hayoind.mixin.json"
+    "hayo.mixin.json"
   ],
   "depends": {
     "fabricloader": ">=0.17.3",

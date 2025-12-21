@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " B ",
+    "X#X"
+  ],
+  "key": {
+    "#": "hayo:circuit",
+    "X": "hayo:cable",
+    "B": "hayo:battery"
+  },
+  "result": {
+    "id": "hayo:capacitor_upgrade",
+    "count": 1
+  }
+}

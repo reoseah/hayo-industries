@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hayo:cable",
+    "hayo:cable",
+    "hayo:cable",
+    "hayo:cable"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:power_cable"
+  }
+}

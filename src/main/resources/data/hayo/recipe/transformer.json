@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " Q ",
+    "#I#",
+    "CWC"
+  ],
+  "key": {
+    "#": "#c:foils/refined_iron",
+    "Q": "hayo:power_cable",
+    "W": "hayo:uninsulated_cable",
+    "C": "hayo:cable",
+    "I": "#c:ingots/refined_iron"
+  },
+  "result": {
+    "id": "hayo:transformer",
+    "count": 2
+  }
+}

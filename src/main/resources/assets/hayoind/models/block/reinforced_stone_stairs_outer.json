@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/outer_stairs",
-  "textures": {
-    "bottom": "hayoind:block/reinforced_stone_tiles",
-    "top": "hayoind:block/reinforced_stone_tiles",
-    "side": "hayoind:block/reinforced_stone_tiles"
-  }
-}

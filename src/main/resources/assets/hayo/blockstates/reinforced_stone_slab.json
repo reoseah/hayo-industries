@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hayo:block/reinforced_stone_slab"
+    },
+    "type=double": {
+      "model": "hayo:block/reinforced_stone_slab_double"
+    },
+    "type=top": {
+      "model": "hayo:block/reinforced_stone_slab_top"
+    }
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "type": "hayoind:macerating",
-  "ingredient": "minecraft:diamond",
-  "processing_energy": 400,
-  "result": {
-    "id": "hayoind:diamond_dust"
-  }
-}

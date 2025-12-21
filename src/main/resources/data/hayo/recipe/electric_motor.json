@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "WIW",
+    "#W#",
+    "CCC"
+  ],
+  "key": {
+    "#": "#c:foils/refined_iron",
+    "W": "hayo:uninsulated_cable",
+    "C": "hayo:cable",
+    "I": "#c:ingots/refined_iron"
+  },
+  "result": {
+    "id": "hayo:electric_motor",
+    "count": 2
+  }
+}

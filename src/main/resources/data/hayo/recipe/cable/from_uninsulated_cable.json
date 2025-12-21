@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hayo:uninsulated_cable",
+    "hayo:rubber"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:cable"
+  }
+}

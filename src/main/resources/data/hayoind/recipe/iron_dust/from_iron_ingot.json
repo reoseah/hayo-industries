@@ -1,8 +1,0 @@
-{
-  "type": "hayoind:macerating",
-  "ingredient": "#c:ingots/iron",
-  "processing_energy": 400,
-  "result": {
-    "id": "hayoind:iron_dust"
-  }
-}

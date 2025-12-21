@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "io.github.reoseah.hayo.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "SingleItemRecipeAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

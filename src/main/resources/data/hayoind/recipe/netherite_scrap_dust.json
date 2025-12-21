@@ -1,8 +1,0 @@
-{
-  "type": "hayoind:macerating",
-  "ingredient": "minecraft:netherite_scrap",
-  "processing_energy": 400,
-  "result": {
-    "id": "hayoind:netherite_scrap_dust"
-  }
-}

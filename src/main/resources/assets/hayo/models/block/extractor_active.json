@@ -1,0 +1,19 @@
+{
+  "parent": "block/cube",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "hayo:block/extractor_front_active",
+    "down": "hayo:block/machine_bottom",
+    "up": "hayo:block/extractor_top",
+    "north": "hayo:block/extractor_front_active",
+    "east": "hayo:block/machine_side",
+    "south": "hayo:block/machine_side_with_vents",
+    "west": "hayo:block/machine_side"
+  }
+}

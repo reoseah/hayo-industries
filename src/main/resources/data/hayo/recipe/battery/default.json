@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " C ",
+    "#R#",
+    "#D#"
+  ],
+  "key": {
+    "#": "#c:foils/refined_iron",
+    "C": "hayo:cable",
+    "R": "minecraft:redstone",
+    "D": "#c:dusts/coal"
+  },
+  "result": {
+    "id": "hayo:battery",
+    "count": 1
+  }
+}

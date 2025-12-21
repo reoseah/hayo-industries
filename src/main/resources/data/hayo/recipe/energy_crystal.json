@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "#": "minecraft:redstone",
+    "X": "minecraft:diamond"
+  },
+  "result": {
+    "id": "hayo:energy_crystal",
+    "count": 1
+  }
+}

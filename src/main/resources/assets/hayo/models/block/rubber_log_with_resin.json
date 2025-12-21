@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "hayo:block/rubber_log_with_resin",
+    "side": "hayo:block/rubber_log",
+    "top": "hayo:block/rubber_log_top"
+  }
+}
