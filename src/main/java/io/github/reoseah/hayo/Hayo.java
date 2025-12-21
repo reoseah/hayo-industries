@@ -262,8 +262,10 @@ public class Hayo {
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
         public static final Item REDSTONE_FLUX_LASER = registerItem("redstone_flux_laser", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item METAL_COMPOUND = registerItem("metal_compound");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
-        public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item CARBON_COMPOUND = registerItem("carbon_compound");
+         public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
@@ -340,8 +342,10 @@ public class Hayo {
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(TRANSFORMER);
                 entries.accept(REDSTONE_FLUX_LASER);
+                entries.accept(METAL_COMPOUND);
                 entries.accept(COMPOSITE_PLATE);
-                entries.accept(CONDUCTIVE_CARBON);
+                entries.accept(CARBON_COMPOUND);
+               entries.accept(CONDUCTIVE_CARBON);
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);

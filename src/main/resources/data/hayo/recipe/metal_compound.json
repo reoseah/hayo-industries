@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "##",
+    "XX"
+  ],
+  "key": {
+    "#": "#c:ingots/refined_iron",
+    "X": "#c:ingots/silicon_bronze"
+  },
+  "result": {
+    "id": "hayo:metal_compound",
+    "count": 2
+  }
+}

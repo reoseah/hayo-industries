@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:dusts/coal",
+    "#c:dusts/coal",
+    "#c:dusts/coal",
+    "#c:dusts/coal",
+    "#c:dusts/coal",
+    "#c:dusts/coal",
+    "#c:dusts/coal",
+    "#c:dusts/redstone",
+    "hayo:sticky_resin"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:carbon_compound"
+  }
+}
