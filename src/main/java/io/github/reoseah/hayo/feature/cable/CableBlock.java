@@ -1,0 +1,132 @@
+package io.github.reoseah.hayo.feature.cable;
+
+import io.netty.util.collection.IntObjectHashMap;
+import io.netty.util.collection.IntObjectMap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+public class CableBlock extends Block {
+    public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
+    public static final BooleanProperty UP = BlockStateProperties.UP;
+    public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
+    public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
+    public static final BooleanProperty EAST = BlockStateProperties.EAST;
+    public static final BooleanProperty WEST = BlockStateProperties.WEST;
+
+    public static BooleanProperty getConnectionProperty(Direction direction) {
+        return switch (direction) {
+            case NORTH -> NORTH;
+            case SOUTH -> SOUTH;
+            case WEST -> WEST;
+            case EAST -> EAST;
+            case DOWN -> DOWN;
+            case UP -> UP;
+        };
+    }
+
+    protected static final IntObjectMap<VoxelShape[]> SHAPE_CACHE = new IntObjectHashMap<>();
+
+    public static VoxelShape[] getOrCreateShapes(int radius) {
+        return SHAPE_CACHE.computeIfAbsent(radius, (rad) -> {
+            VoxelShape[] shapes = new VoxelShape[64];
+            float min = 8 - rad;
+            float max = 8 + rad;
+            VoxelShape center = Block.box(min, min, min, max, max, max);
+            VoxelShape[] connections = { //
+                    Block.box(min, 0, min, max, max, max), //
+                    Block.box(min, min, min, max, 16, max), //
+                    Block.box(min, min, 0, max, max, max), //
+                    Block.box(min, min, min, max, max, 16), //
+                    Block.box(0, min, min, max, max, max), //
+                    Block.box(min, min, min, 16, max, max)};
+
+            for (int i = 0; i < 64; i++) {
+                VoxelShape shape = center;
+                for (int face = 0; face < 6; face++) {
+                    if ((i & 1 << face) != 0) {
+                        shape = Shapes.or(shape, connections[face]);
+                    }
+                }
+                shapes[i] = shape;
+            }
+            return shapes;
+        });
+    }
+
+    public final VoxelShape[] shapes;
+
+    public CableBlock(int radius, Properties settings) {
+        super(settings);
+        this.registerDefaultState(this.defaultBlockState() //
+                .setValue(DOWN, false) //
+                .setValue(UP, false) //
+                .setValue(NORTH, false) //
+                .setValue(SOUTH, false) //
+                .setValue(EAST, false) //
+                .setValue(WEST, false));
+
+        this.shapes = getOrCreateShapes(radius);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(DOWN, UP, NORTH, SOUTH, EAST, WEST);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.getStateForPos(ctx.getLevel(), ctx.getClickedPos());
+    }
+
+    public BlockState getStateForPos(Level level, BlockPos pos) {
+        return this.defaultBlockState() //
+                .setValue(DOWN, this.connectsTo(level, pos, Direction.DOWN)) //
+                .setValue(UP, this.connectsTo(level, pos, Direction.UP)) //
+                .setValue(WEST, this.connectsTo(level, pos, Direction.WEST)) //
+                .setValue(EAST, this.connectsTo(level, pos, Direction.EAST)) //
+                .setValue(NORTH, this.connectsTo(level, pos, Direction.NORTH)) //
+                .setValue(SOUTH, this.connectsTo(level, pos, Direction.SOUTH));
+    }
+
+
+    @Override
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        // TODO update cable paths
+        return state.setValue(getConnectionProperty(direction), this.connectsTo(level, pos, direction));
+    }
+
+    protected boolean connectsTo(LevelReader view, BlockPos pos, Direction side) {
+        BlockState neighbor = view.getBlockState(pos.relative(side));
+        Block block = neighbor.getBlock();
+        if (block instanceof CableBlock) {
+            return true;
+        }
+        // TODO return Electricity.canInteractWithCables(view, pos.relative(side), side.getOpposite());
+        return false;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        int idx = (state.getValue(DOWN) ? 1 : 0) //
+                | (state.getValue(UP) ? 2 : 0) //
+                | (state.getValue(NORTH) ? 4 : 0) //
+                | (state.getValue(SOUTH) ? 8 : 0) //
+                | (state.getValue(WEST) ? 16 : 0) //
+                | (state.getValue(EAST) ? 32 : 0);
+        return this.shapes[idx];
+    }
+}

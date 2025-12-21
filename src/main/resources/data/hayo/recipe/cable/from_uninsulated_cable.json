@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "hayo:uninsulated_cable",
+    "hayo:copper_wire",
     "hayo:rubber"
   ],
   "result": {

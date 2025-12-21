@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.base.EnergyModelProperty;
 import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
+import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlock;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlockEntity;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayMenu;
@@ -13,7 +14,8 @@ import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
-import io.github.reoseah.hayo.feature.processing_machines.*;
+import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
+import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlock;
 import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorMenu;
@@ -150,9 +152,8 @@ public class Hayo {
         public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
 
-        public static final Block UNINSULATED_CABLE = register("uninsulated_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final Block CABLE = register("cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final Block POWER_CABLE = register("power_cable", Block::new, BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final Block CABLE = register("cable", properties -> new CableBlock(2, properties), BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final Block POWER_CABLE = register("power_cable", properties -> new CableBlock(3, properties), BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
@@ -196,7 +197,6 @@ public class Hayo {
         public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item UNINSULATED_CABLE = registerBlock(Blocks.UNINSULATED_CABLE);
         public static final Item CABLE = registerBlock(Blocks.CABLE);
         public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE);
 
@@ -252,12 +252,13 @@ public class Hayo {
 
         public static final Item STICKY_RESIN = registerItem("sticky_resin");
         public static final Item RUBBER = registerItem("rubber");
-        public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
-        public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item COPPER_WIRE = registerItem("copper_wire");
         public static final Item CIRCUIT = registerItem("circuit");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
         public static final Item REDSTONE_FLUX_LASER = registerItem("redstone_flux_laser", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
@@ -275,7 +276,6 @@ public class Hayo {
                 entries.accept(AUTOMATED_FERTILIZER);
                 entries.accept(ENERGY_CRYSTAL_ARRAY);
 
-                entries.accept(UNINSULATED_CABLE);
                 entries.accept(CABLE);
                 entries.accept(POWER_CABLE);
 
@@ -328,6 +328,7 @@ public class Hayo {
 
                 entries.accept(STICKY_RESIN);
                 entries.accept(RUBBER);
+                entries.accept(COPPER_WIRE);
                 entries.accept(CIRCUIT);
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(TRANSFORMER);

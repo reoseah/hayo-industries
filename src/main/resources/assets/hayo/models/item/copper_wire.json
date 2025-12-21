@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "hayo:item/uninsulated_cable"
+    "layer0": "hayo:item/copper_wire"
   }
 }
