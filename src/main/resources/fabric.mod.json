@@ -22,10 +22,10 @@
       "io.github.reoseah.hayo.Hayo::initializeClient"
     ],
     "rei_common": [
-      "io.github.reoseah.hayo.compat.rei.HayoReiCommonPlugin"
+      "io.github.reoseah.hayo.feature.rei_support.HayoReiCommonPlugin"
     ],
     "rei_client": [
-      "io.github.reoseah.hayo.compat.rei.HayoReiClientPlugin"
+      "io.github.reoseah.hayo.feature.rei_support.HayoReiClientPlugin"
     ]
   },
   "mixins": [

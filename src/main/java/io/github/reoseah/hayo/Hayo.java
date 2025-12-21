@@ -1,19 +1,24 @@
 package io.github.reoseah.hayo;
 
 import com.mojang.serialization.MapCodec;
-import io.github.reoseah.hayo.block.*;
-import io.github.reoseah.hayo.block.entity.*;
-import io.github.reoseah.hayo.client.screen.EnergyCrystalArrayScreen;
-import io.github.reoseah.hayo.client.screen.GeneratorScreen;
-import io.github.reoseah.hayo.client.screen.ProcessingMachineScreen;
-import io.github.reoseah.hayo.feature.RubberFoliagePlacer;
-import io.github.reoseah.hayo.item.EnergyProperty;
-import io.github.reoseah.hayo.item.SimpleBatteryItem;
-import io.github.reoseah.hayo.menu.EnergyCrystalArrayMenu;
-import io.github.reoseah.hayo.menu.GeneratorMenu;
-import io.github.reoseah.hayo.menu.ProcessingMachineMenu;
-import io.github.reoseah.hayo.recipe.SecondaryOutputElectricRecipe;
-import io.github.reoseah.hayo.recipe.SimpleElectricRecipe;
+import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
+import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlock;
+import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlockEntity;
+import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayScreen;
+import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
+import io.github.reoseah.hayo.feature.processing_machines.*;
+import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
+import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
+import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
+import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
+import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
+import io.github.reoseah.hayo.base.EnergyModelProperty;
+import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
+import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayMenu;
+import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
+import io.github.reoseah.hayo.feature.processing_machines.ProcessingMachineMenu;
+import io.github.reoseah.hayo.feature.processing_machines.SecondaryOutputElectricRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.SimpleElectricRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -102,7 +107,7 @@ public class Hayo {
         BlockRenderLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU);
         ColorProviderRegistry.BLOCK.register((state, level, pos, seed) -> level != null ? BiomeColors.getAverageFoliageColor(level, pos) : -12012264, Blocks.RUBBER_LEAVES);
 
-        RangeSelectItemModelProperties.ID_MAPPER.put(modLocation("energy"), EnergyProperty.MAP_CODEC);
+        RangeSelectItemModelProperties.ID_MAPPER.put(modLocation("energy"), EnergyModelProperty.MAP_CODEC);
 
         MenuScreens.register(MenuTypes.GENERATOR, GeneratorScreen::new);
         MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ProcessingMachineScreen.ElectricFurnaceScreen::new);
@@ -155,7 +160,7 @@ public class Hayo {
         public static final TreeGrower RUBBER_TREE = new TreeGrower("hayo:rubber_tree", 0F, Optional.empty(), Optional.empty(), Optional.of(modKey(Registries.CONFIGURED_FEATURE, "rubber_tree")), Optional.empty(), Optional.empty(), Optional.empty());
         public static final Block RUBBER_SAPLING = register("rubber_sapling", properties -> new SaplingBlock(RUBBER_TREE, properties), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
 
-        public static final Block FERRU = register("ferru", OreCropBlock.FerruBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
+        public static final Block FERRU = register("ferru", FerruBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
 
         public static void initialize() {
             StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
