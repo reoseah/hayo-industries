@@ -1,7 +1,8 @@
-package io.github.reoseah.hayo.feature.processing_machines;
+package io.github.reoseah.hayo.feature.processing_machines.extractor;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -10,40 +11,27 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class ExtractorBlockEntity extends ProcessingMachineBlockEntity<SecondaryOutputElectricRecipe, SingleRecipeInput> {
+public class ExtractorBlockEntity extends ClassicMachineBlockEntity<SimpleMachineRecipe> {
     public static final int TRANSFER_RATE = 32;
     public static final int ENERGY_USE_RATE = 2;
     public static final int CAPACITY = 15 * 20 * ENERGY_USE_RATE; // 15s * 20tick/s * 2e/tick = 600e
-
-    public static final int SLOTS = SlotHelper.ClassicWithExtraOutput.SLOTS;
-    public static final int INPUT_SLOT = SlotHelper.ClassicWithExtraOutput.INPUT_SLOT;
-    public static final int BATTERY_SLOT = 1;
-    public static final int OUTPUT_SLOT = SlotHelper.ClassicWithExtraOutput.OUTPUT_SLOT;
-    public static final int FIRST_UPGRADE_SLOT = SlotHelper.ClassicWithExtraOutput.FIRST_UPGRADE_SLOT;
-    public static final int LAST_UPGRADE_SLOT = SlotHelper.ClassicWithExtraOutput.LAST_UPGRADE_SLOT;
 
     public ExtractorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.EXTRACTOR, pos, state);
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, ExtractorBlockEntity entity) {
-        ElectricBlockEntity.tickChargeFromSlot(entity, BATTERY_SLOT, CAPACITY, TRANSFER_RATE);
+        tickChargeFromSlot(entity, BATTERY_SLOT, CAPACITY, TRANSFER_RATE);
         tickProcessing((ServerLevel) level, pos, state, entity);
     }
 
     @Override
-    protected RecipeType<SecondaryOutputElectricRecipe> getRecipeType() {
+    protected RecipeType<SimpleMachineRecipe> getRecipeType() {
         return Hayo.RecipeTypes.EXTRACTING;
-    }
-
-    @Override
-    protected SlotHelper<SecondaryOutputElectricRecipe, SingleRecipeInput> getSlotHelper() {
-        return SlotHelper.classicWithExtraOutput();
     }
 
     @Override
@@ -57,7 +45,7 @@ public class ExtractorBlockEntity extends ProcessingMachineBlockEntity<Secondary
     }
 
     @Override
-    public int getDefaultRecipeEnergy(RecipeHolder<SecondaryOutputElectricRecipe> recipe) {
+    public int getDefaultRecipeEnergy(RecipeHolder<SimpleMachineRecipe> recipe) {
         return recipe.value().processingEnergy();
     }
 
@@ -68,6 +56,6 @@ public class ExtractorBlockEntity extends ProcessingMachineBlockEntity<Secondary
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory inventory, Player player) {
-        return new ProcessingMachineMenu.ExtractorMenu(menuId, this, inventory);
+        return new ExtractorMenu(menuId, this, inventory);
     }
 }

@@ -1,24 +1,37 @@
 package io.github.reoseah.hayo;
 
 import com.mojang.serialization.MapCodec;
+import io.github.reoseah.hayo.base.EnergyModelProperty;
+import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlock;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlockEntity;
+import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayMenu;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayScreen;
-import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
-import io.github.reoseah.hayo.feature.processing_machines.*;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
+import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
+import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
+import io.github.reoseah.hayo.feature.processing_machines.*;
+import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlock;
+import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorMenu;
+import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorScreen;
+import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlock;
+import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceMenu;
+import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceScreen;
+import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorBlock;
+import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorMenu;
+import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorScreen;
+import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlock;
+import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorMenu;
+import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorScreen;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
-import io.github.reoseah.hayo.base.EnergyModelProperty;
-import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
-import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayMenu;
-import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
-import io.github.reoseah.hayo.feature.processing_machines.ProcessingMachineMenu;
-import io.github.reoseah.hayo.feature.processing_machines.SecondaryOutputElectricRecipe;
-import io.github.reoseah.hayo.feature.processing_machines.SimpleElectricRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -110,10 +123,10 @@ public class Hayo {
         RangeSelectItemModelProperties.ID_MAPPER.put(modLocation("energy"), EnergyModelProperty.MAP_CODEC);
 
         MenuScreens.register(MenuTypes.GENERATOR, GeneratorScreen::new);
-        MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ProcessingMachineScreen.ElectricFurnaceScreen::new);
-        MenuScreens.register(MenuTypes.MACERATOR, ProcessingMachineScreen.MaceratorScreen::new);
-        MenuScreens.register(MenuTypes.COMPRESSOR, ProcessingMachineScreen.CompressorScreen::new);
-        MenuScreens.register(MenuTypes.EXTRACTOR, ProcessingMachineScreen.ExtractorScreen::new);
+        MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ElectricFurnaceScreen::new);
+        MenuScreens.register(MenuTypes.MACERATOR, MaceratorScreen::new);
+        MenuScreens.register(MenuTypes.COMPRESSOR, CompressorScreen::new);
+        MenuScreens.register(MenuTypes.EXTRACTOR, ExtractorScreen::new);
         MenuScreens.register(MenuTypes.ENERGY_CRYSTAL_ARRAY, EnergyCrystalArrayScreen::new);
     }
 
@@ -395,10 +408,10 @@ public class Hayo {
 
     public static class MenuTypes {
         public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
-        public static final MenuType<ProcessingMachineMenu> ELECTRIC_FURNACE = register("electric_furnace", ProcessingMachineMenu.ElectricFurnaceMenu::new);
-        public static final MenuType<ProcessingMachineMenu> MACERATOR = register("macerator", ProcessingMachineMenu.MaceratorMenu::new);
-        public static final MenuType<ProcessingMachineMenu> COMPRESSOR = register("compressor", ProcessingMachineMenu.CompressorMenu::new);
-        public static final MenuType<ProcessingMachineMenu> EXTRACTOR = register("extractor", ProcessingMachineMenu.ExtractorMenu::new);
+        public static final MenuType<MachineMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
+        public static final MenuType<MachineMenu> MACERATOR = register("macerator", MaceratorMenu::new);
+        public static final MenuType<MachineMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
+        public static final MenuType<MachineMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
         public static final MenuType<EnergyCrystalArrayMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
 
         public static void initialize() {
@@ -427,9 +440,9 @@ public class Hayo {
     }
 
     public static class RecipeTypes {
-        public static final RecipeType<SimpleElectricRecipe> MACERATING = register("macerating");
-        public static final RecipeType<SimpleElectricRecipe> COMPRESSING = register("compressing");
-        public static final RecipeType<SecondaryOutputElectricRecipe> EXTRACTING = register("extracting");
+        public static final RecipeType<SimpleMachineRecipe> MACERATING = register("macerating");
+        public static final RecipeType<SimpleMachineRecipe> COMPRESSING = register("compressing");
+        public static final RecipeType<SimpleMachineRecipe> EXTRACTING = register("extracting");
 
         public static void initialize() {
         }
@@ -447,9 +460,9 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
-        public static final RecipeSerializer<SimpleElectricRecipe> MACERATING = register("macerating", new SimpleElectricRecipe.Serializer<>(SimpleElectricRecipe.Macerating::new, SimpleElectricRecipe.Macerating.DEFAULT_ENERGY));
-        public static final RecipeSerializer<SimpleElectricRecipe> COMPRESSING = register("compressing", new SimpleElectricRecipe.Serializer<>(SimpleElectricRecipe.Compressing::new, SimpleElectricRecipe.Compressing.DEFAULT_ENERGY));
-        public static final RecipeSerializer<SecondaryOutputElectricRecipe> EXTRACTING = register("extracting", new SecondaryOutputElectricRecipe.Serializer<>(SecondaryOutputElectricRecipe.Extracting::new, SecondaryOutputElectricRecipe.Extracting.DEFAULT_ENERGY));
+        public static final RecipeSerializer<SimpleMachineRecipe> MACERATING = register("macerating", new SimpleMachineRecipe.Serializer<>(SimpleMachineRecipe.Macerating::new, SimpleMachineRecipe.Macerating.DEFAULT_ENERGY));
+        public static final RecipeSerializer<SimpleMachineRecipe> COMPRESSING = register("compressing", new SimpleMachineRecipe.Serializer<>(SimpleMachineRecipe.Compressing::new, SimpleMachineRecipe.Compressing.DEFAULT_ENERGY));
+        public static final RecipeSerializer<SimpleMachineRecipe> EXTRACTING = register("extracting", new SimpleMachineRecipe.Serializer<>(SimpleMachineRecipe.Extracting::new, SimpleMachineRecipe.Extracting.DEFAULT_ENERGY));
 
         public static void initialize() {
         }

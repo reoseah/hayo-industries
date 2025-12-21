@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.rei_support;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.processing_machines.SimpleElectricRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
 import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
 import me.shedaniel.rei.api.common.plugins.REICommonPlugin;
 import me.shedaniel.rei.api.common.registry.display.ServerDisplayRegistry;
@@ -21,7 +21,7 @@ public class HayoReiCommonPlugin implements REICommonPlugin {
 
     @Override
     public void registerDisplays(ServerDisplayRegistry registry) {
-        registry.beginRecipeFiller(SimpleElectricRecipe.class).fill(SimpleElectricRecipeDisplay::new);
+        registry.beginRecipeFiller(SimpleMachineRecipe.class).fill(SimpleElectricRecipeDisplay::new);
         registry.beginRecipeFiller(AbstractCookingRecipe.class)
                 .filterType(type -> ((RecipeType<?>) type) == RecipeType.SMELTING || ((RecipeType<?>) type) == RecipeType.BLASTING || ((RecipeType<?>) type) == RecipeType.SMOKING)
                 .fill(SimpleElectricRecipeDisplay::fromCookingRecipe);

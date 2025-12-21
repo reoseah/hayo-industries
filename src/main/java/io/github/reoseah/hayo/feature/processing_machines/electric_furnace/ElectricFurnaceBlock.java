@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.processing_machines;
+package io.github.reoseah.hayo.feature.processing_machines.electric_furnace;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;

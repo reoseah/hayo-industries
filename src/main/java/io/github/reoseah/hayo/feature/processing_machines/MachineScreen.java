@@ -2,8 +2,8 @@ package io.github.reoseah.hayo.feature.processing_machines;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.api.energy.EnergyTexts;
-import io.github.reoseah.hayo.base.client.HayoMachineTexture;
 import io.github.reoseah.hayo.base.client.HayoContainerScreen;
+import io.github.reoseah.hayo.base.client.HayoMachineTexture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -13,12 +13,12 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class ProcessingMachineScreen extends HayoContainerScreen<ProcessingMachineMenu> {
-    public ProcessingMachineScreen(ProcessingMachineMenu menu, Inventory inventory, Component title) {
+public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
+    public MachineScreen(MachineMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
 
-    protected static void drawClassicSlots(ProcessingMachineScreen screen, GuiGraphics graphics) {
+    protected static void drawClassicSlots(MachineScreen screen, GuiGraphics graphics) {
         HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(0));
         HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(1));
         HayoMachineTexture.drawOutputSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(2));
@@ -29,7 +29,7 @@ public abstract class ProcessingMachineScreen extends HayoContainerScreen<Proces
         HayoMachineTexture.drawUpgradeSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(6));
     }
 
-    protected static void drawClassicWithSecondaryOutputSlots(ProcessingMachineScreen screen, GuiGraphics graphics) {
+    protected static void drawClassicWithSecondaryOutputSlots(MachineScreen screen, GuiGraphics graphics) {
         HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(0));
         HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(1));
         HayoMachineTexture.drawOutputSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(2));
@@ -93,75 +93,4 @@ public abstract class ProcessingMachineScreen extends HayoContainerScreen<Proces
 
     protected abstract HayoMachineTexture.RecipeArrow getArrow();
 
-    public static class ElectricFurnaceScreen extends ProcessingMachineScreen {
-        public ElectricFurnaceScreen(ProcessingMachineMenu menu, Inventory inventory, Component title) {
-            super(menu, inventory, title);
-        }
-
-        @Override
-        protected HayoMachineTexture.RecipeArrow getArrow() {
-            return HayoMachineTexture.RecipeArrow.DEFAULT;
-        }
-
-        @Override
-        protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-            super.renderBg(graphics, partialTick, mouseX, mouseY);
-
-            drawClassicSlots(this, graphics);
-        }
-    }
-
-    public static class MaceratorScreen extends ProcessingMachineScreen {
-        public MaceratorScreen(ProcessingMachineMenu menu, Inventory inventory, Component title) {
-            super(menu, inventory, title);
-        }
-
-        @Override
-        protected HayoMachineTexture.RecipeArrow getArrow() {
-            return HayoMachineTexture.RecipeArrow.MACERATOR;
-        }
-
-        @Override
-        protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-            super.renderBg(graphics, partialTick, mouseX, mouseY);
-
-            drawClassicSlots(this, graphics);
-        }
-    }
-
-    public static class CompressorScreen extends ProcessingMachineScreen {
-        public CompressorScreen(ProcessingMachineMenu menu, Inventory inventory, Component title) {
-            super(menu, inventory, title);
-        }
-
-        @Override
-        protected HayoMachineTexture.RecipeArrow getArrow() {
-            return HayoMachineTexture.RecipeArrow.COMPRESSOR;
-        }
-
-        @Override
-        protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-            super.renderBg(graphics, partialTick, mouseX, mouseY);
-
-            drawClassicSlots(this, graphics);
-        }
-    }
-
-    public static class ExtractorScreen extends ProcessingMachineScreen {
-        public ExtractorScreen(ProcessingMachineMenu menu, Inventory inventory, Component title) {
-            super(menu, inventory, title);
-        }
-
-        @Override
-        protected HayoMachineTexture.RecipeArrow getArrow() {
-            return HayoMachineTexture.RecipeArrow.EXTRACTOR;
-        }
-
-        @Override
-        protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-            super.renderBg(graphics, partialTick, mouseX, mouseY);
-
-            drawClassicWithSecondaryOutputSlots(this, graphics); // FIXME: draw slots with secondary result
-        }
-    }
 }

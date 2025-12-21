@@ -2,9 +2,9 @@ package io.github.reoseah.hayo.feature.rei_support;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.reoseah.hayo.feature.processing_machines.ElectricFurnaceBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayo.mixin.SingleItemRecipeAccessor;
-import io.github.reoseah.hayo.feature.processing_machines.SimpleElectricRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
 import lombok.Getter;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
@@ -62,7 +62,7 @@ public class SimpleElectricRecipeDisplay implements Display {
         this.processingEnergy = processingEnergy;
     }
 
-    public SimpleElectricRecipeDisplay(RecipeHolder<SimpleElectricRecipe> holder) {
+    public SimpleElectricRecipeDisplay(RecipeHolder<SimpleMachineRecipe> holder) {
         this.location = Optional.of(holder.id().location());
 
         var recipe = holder.value();
