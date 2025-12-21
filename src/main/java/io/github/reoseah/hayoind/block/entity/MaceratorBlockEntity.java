@@ -22,11 +22,13 @@ public class MaceratorBlockEntity extends ProcessingMachineBlockEntity<SimpleEle
     public static final int TRANSFER_RATE = 32;
     public static final int ENERGY_USE_RATE = 2;
     public static final int CAPACITY = 10 * 20 * ENERGY_USE_RATE; // 10s * 20tick/s * 2e/tick = 400e
-    public static final int INPUT_SLOT = 0;
+
+    public static final int SLOTS = SlotHelper.Classic.SLOTS;
+    public static final int INPUT_SLOT = SlotHelper.Classic.INPUT_SLOT;
     public static final int BATTERY_SLOT = 1;
-    public static final int OUTPUT_SLOT = 2;
-    public static final int FIRST_UPGRADE_SLOT = 3;
-    public static final int UPGRADE_SLOTS = 4;
+    public static final int OUTPUT_SLOT = SlotHelper.Classic.OUTPUT_SLOT;
+    public static final int FIRST_UPGRADE_SLOT = SlotHelper.Classic.FIRST_UPGRADE_SLOT;
+    public static final int LAST_UPGRADE_SLOT = SlotHelper.Classic.LAST_UPGRADE_SLOT;
 
     public MaceratorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.MACERATOR, pos, state);

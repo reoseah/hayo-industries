@@ -2,6 +2,7 @@ package io.github.reoseah.hayoind.block.entity;
 
 import io.github.reoseah.hayoind.Hayo;
 import io.github.reoseah.hayoind.block.OrientableMachineBlock;
+import io.github.reoseah.hayoind.recipe.SecondaryOutputElectricRecipe;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -223,6 +224,11 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
             return (SlotHelper<R, SingleRecipeInput>) Classic.INSTANCE;
         }
 
+        @SuppressWarnings("unchecked")
+        static <R extends Recipe<SingleRecipeInput>> SlotHelper<R, SingleRecipeInput> classicWithExtraOutput() {
+            return (SlotHelper<R, SingleRecipeInput>) ClassicWithExtraOutput.INSTANCE;
+        }
+
         enum Classic implements SlotHelper<Recipe<SingleRecipeInput>, SingleRecipeInput> {
             INSTANCE;
 
@@ -284,12 +290,13 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
             }
         }
 
-        enum ClassicWithExtraOutput implements SlotHelper<Recipe<SingleRecipeInput>, SingleRecipeInput> {
+        enum ClassicWithExtraOutput implements SlotHelper<SecondaryOutputElectricRecipe, SingleRecipeInput> {
             INSTANCE;
 
             public static final int SLOTS = 8;
             public static final int INPUT_SLOT = 0;
             public static final int OUTPUT_SLOT = 2;
+            public static final int SECONDARY_OUTPUT_SLOT = 3;
             public static final int FIRST_UPGRADE_SLOT = 4;
             public static final int LAST_UPGRADE_SLOT = 7;
 
@@ -309,7 +316,7 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
             }
 
             @Override
-            public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<Recipe<SingleRecipeInput>> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
+            public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<SecondaryOutputElectricRecipe> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
                 if (recipe == null || input.isEmpty()) {
                     return false;
                 }
@@ -320,7 +327,7 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
             }
 
             @Override
-            public void craft(RegistryAccess registryAccess, RecipeHolder<Recipe<SingleRecipeInput>> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
+            public void craft(RegistryAccess registryAccess, RecipeHolder<SecondaryOutputElectricRecipe> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
                 var recipeOutput = recipe.value().assemble(input, registryAccess);
                 var outputStack = items.get(OUTPUT_SLOT);
 
@@ -329,6 +336,7 @@ public abstract class ProcessingMachineBlockEntity<R extends Recipe<I>, I extend
                 } else {
                     outputStack.grow(recipeOutput.getCount());
                 }
+                // TODO: insert secondary output
 
                 var inputStack = items.get(INPUT_SLOT);
                 inputStack.shrink(1);

@@ -141,23 +141,4 @@ public abstract class SimpleElectricRecipe implements Recipe<SingleRecipeInput>,
             return Hayo.RecipeTypes.COMPRESSING;
         }
     }
-
-    public static class Extracting extends SimpleElectricRecipe {
-        private static final int DEFAULT_DURATION_SECONDS = 15;
-        public static final int DEFAULT_ENERGY = DEFAULT_DURATION_SECONDS * ExtractorBlockEntity.ENERGY_USE_RATE * 20;
-
-        public Extracting(Ingredient input, ItemStack result, int processingEnergy) {
-            super(input, result, processingEnergy);
-        }
-
-        @Override
-        public RecipeSerializer<? extends Recipe<SingleRecipeInput>> getSerializer() {
-            return Hayo.RecipeSerializers.EXTRACTING;
-        }
-
-        @Override
-        public RecipeType<? extends Recipe<SingleRecipeInput>> getType() {
-            return Hayo.RecipeTypes.EXTRACTING;
-        }
-    }
 }

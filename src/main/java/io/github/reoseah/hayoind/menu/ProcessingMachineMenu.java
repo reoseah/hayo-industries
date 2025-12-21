@@ -69,6 +69,20 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         menu.addStandardInventorySlots(inventory, 8, 84);
     }
 
+    public static void addClassicWithSecondaryOutputSlots(ProcessingMachineMenu menu, Container container, Inventory inventory) {
+        menu.addSlot(new Slot(container, 0, 47, 18));
+        menu.addSlot(new Slot(container, 1, 47, 54));
+        menu.addSlot(new SimpleResultSlot(container, 2, 107, 24));
+        menu.addSlot(new SimpleResultSlot(container, 3, 107, 50));
+
+        menu.addSlot(new UpgradeSlot(container, 4, 152, 8, menu.validUpgrades));
+        menu.addSlot(new UpgradeSlot(container, 5, 152, 26, menu.validUpgrades));
+        menu.addSlot(new UpgradeSlot(container, 6, 152, 44, menu.validUpgrades));
+        menu.addSlot(new UpgradeSlot(container, 7, 152, 62, menu.validUpgrades));
+
+        menu.addStandardInventorySlots(inventory, 8, 84);
+    }
+
     public float getRecipeDuration() {
         return Mth.ceil(this.getRecipeTotalEnergy() / (float) this.getEnergyUseRate()) / 20F;
     }
@@ -92,8 +106,6 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         }
     }
 
-    public static final int FIRST_PLAYER_SLOT = 3 + 4;
-
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         var slot = this.slots.get(index);
@@ -102,8 +114,9 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
             return ItemStack.EMPTY;
         }
         var previous = stack.copy();
-        if (index < FIRST_PLAYER_SLOT) {
-            if (!this.moveItemStackTo(stack, FIRST_PLAYER_SLOT, FIRST_PLAYER_SLOT + 36, true)) {
+        int firstPlayerSlot = getFirstPlayerSlot();
+        if (index < firstPlayerSlot) {
+            if (!this.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 36, true)) {
                 return ItemStack.EMPTY;
             }
             slot.onQuickCraft(stack, previous);
@@ -120,12 +133,12 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(stack, 0, 1, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index < FIRST_PLAYER_SLOT + 27) {
-                if (!this.moveItemStackTo(stack, FIRST_PLAYER_SLOT + 27, FIRST_PLAYER_SLOT + 36, false)) {
+            } else if (index < firstPlayerSlot + 27) {
+                if (!this.moveItemStackTo(stack, firstPlayerSlot + 27, firstPlayerSlot + 36, false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (!this.moveItemStackTo(stack, FIRST_PLAYER_SLOT, FIRST_PLAYER_SLOT + 27, false)) {
+                if (!this.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 27, false)) {
                     return ItemStack.EMPTY;
                 }
             }
@@ -144,6 +157,8 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         slot.onTake(player, stack);
         return previous;
     }
+
+    protected abstract int getFirstPlayerSlot();
 
     protected abstract boolean isRecipeInput(ItemStack stack);
 
@@ -191,30 +206,19 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
     public abstract int getEnergyUseRate();
 
     public static class ElectricFurnaceMenu extends ProcessingMachineMenu {
-        private final DataSlot recipeMode;
+        public static final int SLOTS = ElectricFurnaceBlockEntity.SLOTS;
 
+        private final DataSlot recipeMode;
         private final Map<ElectricFurnaceBlockEntity.ElectricFurnaceMode, RecipePropertySet> recipeInputs;
 
         public ElectricFurnaceMenu(int menuId, Inventory inventory) {
-            this(menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory, DataSlot.standalone());
+            this(menuId, new SimpleContainer(SLOTS), new SimpleContainerData(7), inventory, DataSlot.standalone());
         }
 
         public ElectricFurnaceMenu(int menuId, ElectricFurnaceBlockEntity entity, Inventory inventory) {
             this(menuId, entity, createData(entity), inventory, createRecipeModeData(entity));
         }
 
-        public static DataSlot createRecipeModeData(ElectricFurnaceBlockEntity entity) {
-            return new DataSlot() {
-                @Override
-                public int get() {
-                    return entity.getMode().ordinal();
-                }
-
-                @Override
-                public void set(int value) {
-                }
-            };
-        }
 
         protected ElectricFurnaceMenu(int menuId, Container container, ContainerData data, Inventory inventory, DataSlot recipeMode) {
             super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, container, data, inventory);
@@ -230,13 +234,31 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
                     ElectricFurnaceBlockEntity.ElectricFurnaceMode.SMOKING, level.recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT));
         }
 
+        public static DataSlot createRecipeModeData(ElectricFurnaceBlockEntity entity) {
+            return new DataSlot() {
+                @Override
+                public int get() {
+                    return entity.getMode().ordinal();
+                }
+
+                @Override
+                public void set(int value) {
+                }
+            };
+        }
+
+        public ElectricFurnaceBlockEntity.ElectricFurnaceMode getRecipeMode() {
+            return ElectricFurnaceBlockEntity.ElectricFurnaceMode.values()[Mth.clamp(this.recipeMode.get(), 0, 2)];
+        }
+
         @Override
         protected boolean isRecipeInput(ItemStack stack) {
             return this.recipeInputs.get(this.getRecipeMode()).test(stack);
         }
 
-        public ElectricFurnaceBlockEntity.ElectricFurnaceMode getRecipeMode() {
-            return ElectricFurnaceBlockEntity.ElectricFurnaceMode.values()[Mth.clamp(this.recipeMode.get(), 0, 2)];
+        @Override
+        protected int getFirstPlayerSlot() {
+            return SLOTS;
         }
 
         @Override
@@ -246,8 +268,10 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
     }
 
     public static class MaceratorMenu extends ProcessingMachineMenu {
+        public static final int SLOTS = MaceratorBlockEntity.SLOTS;
+
         public MaceratorMenu(int menuId, Inventory inventory) {
-            this(menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
+            this(menuId, new SimpleContainer(SLOTS), new SimpleContainerData(7), inventory);
         }
 
         public MaceratorMenu(int menuId, MaceratorBlockEntity entity, Inventory inventory) {
@@ -262,7 +286,13 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
 
         @Override
         protected boolean isRecipeInput(ItemStack stack) {
+            // TODO: synchronize recipe inputs, quick move only valid inputs
             return true;
+        }
+
+        @Override
+        protected int getFirstPlayerSlot() {
+            return SLOTS;
         }
 
         @Override
@@ -272,8 +302,10 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
     }
 
     public static class CompressorMenu extends ProcessingMachineMenu {
+        public static final int SLOTS = CompressorBlockEntity.SLOTS;
+
         public CompressorMenu(int menuId, Inventory inventory) {
-            this(menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
+            this(menuId, new SimpleContainer(SLOTS), new SimpleContainerData(7), inventory);
         }
 
         public CompressorMenu(int menuId, CompressorBlockEntity entity, Inventory inventory) {
@@ -286,10 +318,15 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
             addClassicSlots(this, container, inventory);
         }
 
-
         @Override
         protected boolean isRecipeInput(ItemStack stack) {
+            // TODO: synchronize recipe inputs, quick move only valid inputs
             return true;
+        }
+
+        @Override
+        protected int getFirstPlayerSlot() {
+            return SLOTS;
         }
 
         @Override
@@ -299,8 +336,10 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
     }
 
     public static class ExtractorMenu extends ProcessingMachineMenu {
+        public static final int SLOTS = ExtractorBlockEntity.SLOTS;
+
         public ExtractorMenu(int menuId, Inventory inventory) {
-            this(menuId, new SimpleContainer(7), new SimpleContainerData(7), inventory);
+            this(menuId, new SimpleContainer(SLOTS), new SimpleContainerData(7), inventory);
         }
 
         public ExtractorMenu(int menuId, ExtractorBlockEntity entity, Inventory inventory) {
@@ -310,11 +349,17 @@ public abstract class ProcessingMachineMenu extends AbstractContainerMenu {
         protected ExtractorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
             super(Hayo.MenuTypes.EXTRACTOR, Hayo.ItemTags.EXTRACTOR_UPGRADES, menuId, container, data, inventory);
 
-            addClassicSlots(this, container, inventory);
+            addClassicWithSecondaryOutputSlots(this, container, inventory);
+        }
+
+        @Override
+        protected int getFirstPlayerSlot() {
+            return SLOTS;
         }
 
         @Override
         protected boolean isRecipeInput(ItemStack stack) {
+            // TODO: synchronize recipe inputs, quick move only valid inputs
             return true;
         }
 

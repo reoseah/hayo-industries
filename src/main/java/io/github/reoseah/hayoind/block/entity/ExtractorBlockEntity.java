@@ -2,7 +2,7 @@ package io.github.reoseah.hayoind.block.entity;
 
 import io.github.reoseah.hayoind.Hayo;
 import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
-import io.github.reoseah.hayoind.recipe.SimpleElectricRecipe;
+import io.github.reoseah.hayoind.recipe.SecondaryOutputElectricRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -16,15 +16,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class ExtractorBlockEntity extends ProcessingMachineBlockEntity<SimpleElectricRecipe, SingleRecipeInput> {
+public class ExtractorBlockEntity extends ProcessingMachineBlockEntity<SecondaryOutputElectricRecipe, SingleRecipeInput> {
     public static final int TRANSFER_RATE = 32;
     public static final int ENERGY_USE_RATE = 2;
     public static final int CAPACITY = 15 * 20 * ENERGY_USE_RATE; // 15s * 20tick/s * 2e/tick = 600e
-    public static final int INPUT_SLOT = 0;
+
+    public static final int SLOTS = SlotHelper.ClassicWithExtraOutput.SLOTS;
+    public static final int INPUT_SLOT = SlotHelper.ClassicWithExtraOutput.INPUT_SLOT;
     public static final int BATTERY_SLOT = 1;
-    public static final int OUTPUT_SLOT = 2;
-    public static final int FIRST_UPGRADE_SLOT = 3;
-    public static final int UPGRADE_SLOTS = 4;
+    public static final int OUTPUT_SLOT = SlotHelper.ClassicWithExtraOutput.OUTPUT_SLOT;
+    public static final int FIRST_UPGRADE_SLOT = SlotHelper.ClassicWithExtraOutput.FIRST_UPGRADE_SLOT;
+    public static final int LAST_UPGRADE_SLOT = SlotHelper.ClassicWithExtraOutput.LAST_UPGRADE_SLOT;
 
     public ExtractorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.EXTRACTOR, pos, state);
@@ -36,13 +38,13 @@ public class ExtractorBlockEntity extends ProcessingMachineBlockEntity<SimpleEle
     }
 
     @Override
-    protected RecipeType<SimpleElectricRecipe> getRecipeType() {
+    protected RecipeType<SecondaryOutputElectricRecipe> getRecipeType() {
         return Hayo.RecipeTypes.EXTRACTING;
     }
 
     @Override
-    protected SlotHelper<SimpleElectricRecipe, SingleRecipeInput> getSlotHelper() {
-        return SlotHelper.classic();
+    protected SlotHelper<SecondaryOutputElectricRecipe, SingleRecipeInput> getSlotHelper() {
+        return SlotHelper.classicWithExtraOutput();
     }
 
     @Override
@@ -56,7 +58,7 @@ public class ExtractorBlockEntity extends ProcessingMachineBlockEntity<SimpleEle
     }
 
     @Override
-    public int getDefaultRecipeEnergy(RecipeHolder<SimpleElectricRecipe> recipe) {
+    public int getDefaultRecipeEnergy(RecipeHolder<SecondaryOutputElectricRecipe> recipe) {
         return recipe.value().processingEnergy();
     }
 

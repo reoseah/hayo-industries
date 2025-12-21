@@ -17,17 +17,32 @@ public abstract class ProcessingMachineScreen extends HayoContainerScreen<Proces
         super(menu, inventory, title);
     }
 
+    protected static void drawClassicSlots(ProcessingMachineScreen screen, GuiGraphics graphics) {
+        HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(0));
+        HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(1));
+        HayoMachineTexture.drawOutputSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(2));
+
+        HayoMachineTexture.drawUpgradeSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(3));
+        HayoMachineTexture.drawUpgradeSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(4));
+        HayoMachineTexture.drawUpgradeSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(5));
+        HayoMachineTexture.drawUpgradeSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(6));
+    }
+
+    protected static void drawClassicWithSecondaryOutputSlots(ProcessingMachineScreen screen, GuiGraphics graphics) {
+        HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(0));
+        HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(1));
+        HayoMachineTexture.drawOutputSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(2));
+        HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(3));
+
+        HayoMachineTexture.drawUpgradeSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(4));
+        HayoMachineTexture.drawUpgradeSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(5));
+        HayoMachineTexture.drawUpgradeSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(6));
+        HayoMachineTexture.drawUpgradeSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(7));
+    }
+
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         super.renderBg(graphics, partialTick, mouseX, mouseY);
-
-        HayoMachineTexture.drawSlot(graphics, this.leftPos, this.topPos, this.menu.slots.get(0));
-        HayoMachineTexture.drawSlot(graphics, this.leftPos, this.topPos, this.menu.slots.get(1));
-        HayoMachineTexture.drawOutputSlot(graphics, this.leftPos, this.topPos, this.menu.slots.get(2));
-        HayoMachineTexture.drawUpgradeSlot(graphics, this.leftPos, this.topPos, this.menu.slots.get(3));
-        HayoMachineTexture.drawUpgradeSlot(graphics, this.leftPos, this.topPos, this.menu.slots.get(4));
-        HayoMachineTexture.drawUpgradeSlot(graphics, this.leftPos, this.topPos, this.menu.slots.get(5));
-        HayoMachineTexture.drawUpgradeSlot(graphics, this.leftPos, this.topPos, this.menu.slots.get(6));
 
         HayoMachineTexture.drawZapMeter(graphics, this.leftPos + 48, this.topPos + 37, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
         HayoMachineTexture.drawRecipeArrow(graphics, this.leftPos + 70, this.topPos + 36, this.getArrow(), this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
@@ -48,7 +63,7 @@ public abstract class ProcessingMachineScreen extends HayoContainerScreen<Proces
 
     @Override
     protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
-        // TODO: show this over the arrow, split into three lines + the name of recipe type as title
+        // TODO: show this over the arrow, split into three lines + the name of recipe type as title?
 //        if (stack == this.menu.getSlot(0).getItem()) {
 //            var tooltip = super.getTooltipFromContainerItem(stack);
 //            if (this.menu.hasOverclockUpgrades()) {
@@ -86,6 +101,13 @@ public abstract class ProcessingMachineScreen extends HayoContainerScreen<Proces
         protected HayoMachineTexture.RecipeArrow getArrow() {
             return HayoMachineTexture.RecipeArrow.DEFAULT;
         }
+
+        @Override
+        protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+            super.renderBg(graphics, partialTick, mouseX, mouseY);
+
+            drawClassicSlots(this, graphics);
+        }
     }
 
     public static class MaceratorScreen extends ProcessingMachineScreen {
@@ -96,6 +118,13 @@ public abstract class ProcessingMachineScreen extends HayoContainerScreen<Proces
         @Override
         protected HayoMachineTexture.RecipeArrow getArrow() {
             return HayoMachineTexture.RecipeArrow.MACERATOR;
+        }
+
+        @Override
+        protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+            super.renderBg(graphics, partialTick, mouseX, mouseY);
+
+            drawClassicSlots(this, graphics);
         }
     }
 
@@ -108,6 +137,13 @@ public abstract class ProcessingMachineScreen extends HayoContainerScreen<Proces
         protected HayoMachineTexture.RecipeArrow getArrow() {
             return HayoMachineTexture.RecipeArrow.COMPRESSOR;
         }
+
+        @Override
+        protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+            super.renderBg(graphics, partialTick, mouseX, mouseY);
+
+            drawClassicSlots(this, graphics);
+        }
     }
 
     public static class ExtractorScreen extends ProcessingMachineScreen {
@@ -118,6 +154,13 @@ public abstract class ProcessingMachineScreen extends HayoContainerScreen<Proces
         @Override
         protected HayoMachineTexture.RecipeArrow getArrow() {
             return HayoMachineTexture.RecipeArrow.EXTRACTOR;
+        }
+
+        @Override
+        protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+            super.renderBg(graphics, partialTick, mouseX, mouseY);
+
+            drawClassicWithSecondaryOutputSlots(this, graphics); // FIXME: draw slots with secondary result
         }
     }
 }

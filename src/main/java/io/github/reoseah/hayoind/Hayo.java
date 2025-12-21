@@ -12,6 +12,7 @@ import io.github.reoseah.hayoind.item.SimpleBatteryItem;
 import io.github.reoseah.hayoind.menu.EnergyCrystalArrayMenu;
 import io.github.reoseah.hayoind.menu.GeneratorMenu;
 import io.github.reoseah.hayoind.menu.ProcessingMachineMenu;
+import io.github.reoseah.hayoind.recipe.SecondaryOutputElectricRecipe;
 import io.github.reoseah.hayoind.recipe.SimpleElectricRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -234,6 +235,7 @@ public class Hayo {
         public static final Item STICKY_RESIN = registerItem("sticky_resin");
         public static final Item RUBBER = registerItem("rubber");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
         public static final Item CIRCUIT = registerItem("circuit");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
@@ -244,7 +246,6 @@ public class Hayo {
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
-        public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon");
 
         public static void initialize() {
             ItemGroupEvents.modifyEntriesEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
@@ -314,13 +315,12 @@ public class Hayo {
                 entries.accept(TRANSFORMER);
                 entries.accept(REDSTONE_FLUX_LASER);
                 entries.accept(COMPOSITE_PLATE);
+                entries.accept(CONDUCTIVE_CARBON);
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
-
-                entries.accept(CONDUCTIVE_CARBON);
             });
         }
 
@@ -424,7 +424,7 @@ public class Hayo {
     public static class RecipeTypes {
         public static final RecipeType<SimpleElectricRecipe> MACERATING = register("macerating");
         public static final RecipeType<SimpleElectricRecipe> COMPRESSING = register("compressing");
-        public static final RecipeType<SimpleElectricRecipe> EXTRACTING = register("extracting");
+        public static final RecipeType<SecondaryOutputElectricRecipe> EXTRACTING = register("extracting");
 
         public static void initialize() {
         }
@@ -444,7 +444,7 @@ public class Hayo {
     public static class RecipeSerializers {
         public static final RecipeSerializer<SimpleElectricRecipe> MACERATING = register("macerating", new SimpleElectricRecipe.Serializer<>(SimpleElectricRecipe.Macerating::new, SimpleElectricRecipe.Macerating.DEFAULT_ENERGY));
         public static final RecipeSerializer<SimpleElectricRecipe> COMPRESSING = register("compressing", new SimpleElectricRecipe.Serializer<>(SimpleElectricRecipe.Compressing::new, SimpleElectricRecipe.Compressing.DEFAULT_ENERGY));
-        public static final RecipeSerializer<SimpleElectricRecipe> EXTRACTING = register("extracting", new SimpleElectricRecipe.Serializer<>(SimpleElectricRecipe.Extracting::new, SimpleElectricRecipe.Extracting.DEFAULT_ENERGY));
+        public static final RecipeSerializer<SecondaryOutputElectricRecipe> EXTRACTING = register("extracting", new SecondaryOutputElectricRecipe.Serializer<>(SecondaryOutputElectricRecipe.Extracting::new, SecondaryOutputElectricRecipe.Extracting.DEFAULT_ENERGY));
 
         public static void initialize() {
         }

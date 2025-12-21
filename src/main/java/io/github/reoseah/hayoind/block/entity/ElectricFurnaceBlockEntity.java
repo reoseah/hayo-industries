@@ -24,14 +24,26 @@ public class ElectricFurnaceBlockEntity extends ProcessingMachineBlockEntity<Abs
     public static final int TRANSFER_RATE = 32;
     public static final int ENERGY_USE_RATE = 3;
     public static final int CAPACITY = energyCostFromCookingTime(AbstractFurnaceBlockEntity.BURN_TIME_STANDARD); /* 200 * 3/4 * 3 = 450 e */
-    public static final int INPUT_SLOT = 0;
+
+    public static final int SLOTS = SlotHelper.Classic.SLOTS;
+    public static final int INPUT_SLOT = SlotHelper.Classic.INPUT_SLOT;
     public static final int BATTERY_SLOT = 1;
-    public static final int OUTPUT_SLOT = 2;
-    public static final int FIRST_UPGRADE_SLOT = 3;
-    public static final int UPGRADE_SLOTS = 4;
+    public static final int OUTPUT_SLOT = SlotHelper.Classic.OUTPUT_SLOT;
+    public static final int FIRST_UPGRADE_SLOT = SlotHelper.Classic.FIRST_UPGRADE_SLOT;
+    public static final int LAST_UPGRADE_SLOT = SlotHelper.Classic.LAST_UPGRADE_SLOT;
 
     @Getter
     protected ElectricFurnaceMode mode = ElectricFurnaceMode.NORMAL;
+
+    public enum ElectricFurnaceMode {
+        NORMAL(RecipeType.SMELTING), BLASTING(RecipeType.BLASTING), SMOKING(RecipeType.SMOKING);
+
+        public final RecipeType<? extends AbstractCookingRecipe> recipeType;
+
+        ElectricFurnaceMode(RecipeType<? extends AbstractCookingRecipe> recipeType) {
+            this.recipeType = recipeType;
+        }
+    }
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.ELECTRIC_FURNACE, pos, state);
@@ -94,9 +106,9 @@ public class ElectricFurnaceBlockEntity extends ProcessingMachineBlockEntity<Abs
         }
     }
 
-    protected static ElectricFurnaceMode getRecipeMode(NonNullList<ItemStack> stacks) {
-        for (int i = FIRST_UPGRADE_SLOT; i < FIRST_UPGRADE_SLOT + UPGRADE_SLOTS; i++) {
-            var stack = stacks.get(i);
+    protected static ElectricFurnaceMode getRecipeMode(NonNullList<ItemStack> items) {
+        for (int i = FIRST_UPGRADE_SLOT; i <= LAST_UPGRADE_SLOT; i++) {
+            var stack = items.get(i);
             if (stack.is(Hayo.Items.BLASTING_UPGRADE)) {
                 return ElectricFurnaceMode.BLASTING;
             } else if (stack.is(Hayo.Items.SMOKING_UPGRADE)) {
@@ -104,16 +116,6 @@ public class ElectricFurnaceBlockEntity extends ProcessingMachineBlockEntity<Abs
             }
         }
         return ElectricFurnaceMode.NORMAL;
-    }
-
-    public enum ElectricFurnaceMode {
-        NORMAL(RecipeType.SMELTING), BLASTING(RecipeType.BLASTING), SMOKING(RecipeType.SMOKING);
-
-        public final RecipeType<? extends AbstractCookingRecipe> recipeType;
-
-        ElectricFurnaceMode(RecipeType<? extends AbstractCookingRecipe> recipeType) {
-            this.recipeType = recipeType;
-        }
     }
 }
 
