@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hayo:block/rubber_slab"
+    },
+    "type=double": {
+      "model": "hayo:block/rubber_planks"
+    },
+    "type=top": {
+      "model": "hayo:block/rubber_slab_top"
+    }
+  }
+}

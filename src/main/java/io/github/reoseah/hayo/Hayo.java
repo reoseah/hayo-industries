@@ -169,10 +169,13 @@ public class Hayo {
         public static final Block STRIPPED_RUBBER_LOG = register("stripped_rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block STRIPPED_RUBBER_WOOD = register("stripped_rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block RUBBER_LEAVES = register("rubber_leaves", properties -> new TintedParticleLeavesBlock(0.01F, properties), leavesProperties(SoundType.GRASS));
-
-        public static final Block RUBBER_PLANKS = register("rubber_planks", Block::new, BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava());
         public static final TreeGrower RUBBER_TREE = new TreeGrower("hayo:rubber_tree", 0F, Optional.empty(), Optional.empty(), Optional.of(modKey(Registries.CONFIGURED_FEATURE, "rubber_tree")), Optional.empty(), Optional.empty(), Optional.empty());
         public static final Block RUBBER_SAPLING = register("rubber_sapling", properties -> new SaplingBlock(RUBBER_TREE, properties), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
+
+        public static final BlockBehaviour.Properties RUBBER_PROPERTIES = BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava();
+        public static final Block RUBBER_PLANKS = register("rubber_planks", Block::new, RUBBER_PROPERTIES);
+        public static final Block RUBBER_STAIRS = register("rubber_stairs", props -> new StairBlock(RUBBER_PLANKS.defaultBlockState(), props), RUBBER_PROPERTIES);
+        public static final Block RUBBER_SLAB = register("rubber_slab", SlabBlock::new, RUBBER_PROPERTIES);
 
         public static final Block FERRU = register("ferru", FerruBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
 
@@ -205,8 +208,10 @@ public class Hayo {
         public static final Item STRIPPED_RUBBER_LOG = registerBlock(Blocks.STRIPPED_RUBBER_LOG);
         public static final Item STRIPPED_RUBBER_WOOD = registerBlock(Blocks.STRIPPED_RUBBER_WOOD);
         public static final Item RUBBER_LEAVES = registerBlock(Blocks.RUBBER_LEAVES);
-        public static final Item RUBBER_PLANKS = registerBlock(Blocks.RUBBER_PLANKS);
         public static final Item RUBBER_SAPLING = registerBlock(Blocks.RUBBER_SAPLING);
+        public static final Item RUBBER_PLANKS = registerBlock(Blocks.RUBBER_PLANKS);
+        public static final Item RUBBER_STAIRS = registerBlock(Blocks.RUBBER_STAIRS);
+        public static final Item RUBBER_SLAB = registerBlock(Blocks.RUBBER_SLAB);
 
         public static final Item MACHINE_BLOCK = registerBlock(Blocks.MACHINE_BLOCK);
         public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
@@ -284,8 +289,10 @@ public class Hayo {
                 entries.accept(STRIPPED_RUBBER_LOG);
                 entries.accept(STRIPPED_RUBBER_WOOD);
                 entries.accept(RUBBER_LEAVES);
-                entries.accept(RUBBER_PLANKS);
                 entries.accept(RUBBER_SAPLING);
+                entries.accept(RUBBER_PLANKS);
+                entries.accept(RUBBER_STAIRS);
+                entries.accept(RUBBER_SLAB);
 
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);

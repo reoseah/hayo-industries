@@ -29,7 +29,7 @@ public class EnergyTexts {
     private static final String APPROXIMATE_AMOUNT_KEY = "hayo.energy.approximate_amount";
     private static final String OVERCLOCK_USE_RATE_KEY = "hayo.energy.overclock_use_rate";
     private static final String OVERCLOCK_TOTAL_COST_KEY = "hayo.energy.overclock_total_cost";
-    private static final String RECIPE_KEY = "hayo.energy.recipe";
+    private static final String RECIPE_STATS_KEY = "hayo.energy.recipe_stats";
     private static final String OVERCLOCKED_RECIPE_KEY = "hayo.energy.overclocked_recipe";
 
     /// "Energy"
@@ -82,6 +82,11 @@ public class EnergyTexts {
         return Component.translatable(APPROXIMATE_AMOUNT_KEY, formatAmount(amount));
     }
 
+    /// E.g.: "400 ε at 2 ε/t for 10 s"
+    public static MutableComponent recipeStats(int total, int useRate, float durationSeconds) {
+        return Component.translatable(RECIPE_STATS_KEY, total, useRate, Math.ceil(durationSeconds * 100) / 100);
+    }
+
     /// E.g.: "+100% ε/t", used by machines in Overclock Upgrade tooltip
     public static MutableComponent overclockUseRate(long percentage) {
         return Component.translatable(OVERCLOCK_USE_RATE_KEY, (percentage > 0 ? "+" : "") + percentage);
@@ -90,10 +95,6 @@ public class EnergyTexts {
     /// E.g.: "+25% ε per recipe", used by machines in Overclock Upgrade tooltip
     public static MutableComponent overclockTotalCost(long percentage) {
         return Component.translatable(OVERCLOCK_TOTAL_COST_KEY, (percentage > 0 ? "+" : "") + percentage);
-    }
-
-    public static MutableComponent recipe(int total, int useRate, float durationSeconds) {
-        return Component.translatable(RECIPE_KEY, total, useRate, Math.ceil(durationSeconds * 100) / 100);
     }
 
     public static MutableComponent overclockedRecipe(int total, int totalPercentage, int useRate, int useRatePercentage, float durationSeconds, float durationPercentage) {

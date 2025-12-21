@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " A ",
+    "C#C",
+    " A "
+  ],
+  "key": {
+    "#": "hayo:machine_block",
+    "C": "hayo:conductive_carbon",
+    "A": "hayo:composite_plate"
+  },
+  "result": {
+    "id": "hayo:advanced_machine_block",
+    "count": 1
+  }
+}
