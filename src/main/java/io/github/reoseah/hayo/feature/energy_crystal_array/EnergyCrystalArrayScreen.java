@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.energy_crystal_array;
 
-import io.github.reoseah.hayo.base.client.HayoMachineTexture;
-import io.github.reoseah.hayo.base.client.HayoContainerScreen;
 import io.github.reoseah.hayo.api.energy.EnergyTexts;
+import io.github.reoseah.hayo.base.client.HayoContainerScreen;
+import io.github.reoseah.hayo.base.client.HayoMachineTexture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;

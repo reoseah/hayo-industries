@@ -29,7 +29,7 @@ public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
         HayoMachineTexture.drawUpgradeSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(6));
     }
 
-    protected static void drawClassicWithSecondaryOutputSlots(MachineScreen screen, GuiGraphics graphics) {
+    protected static void drawSlotsWithSecondaryOutput(MachineScreen screen, GuiGraphics graphics) {
         HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(0));
         HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(1));
         HayoMachineTexture.drawOutputSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(2));

@@ -8,50 +8,167 @@
       "when": {
         "OR": [
           {
-            "down": true
+            "AND": [
+              { "down": true },
+              {
+                "OR": [
+                  { "up": true },
+                  { "north": true },
+                  { "south": true },
+                  { "west": true },
+                  { "east": true }
+                ]
+              }
+            ]
           },
           {
-            "up": true
+            "AND": [
+              { "up": true },
+              {
+                "OR": [
+                  { "north": true },
+                  { "south": true },
+                  { "west": true },
+                  { "east": true }
+                ]
+              }
+            ]
           },
           {
-            "north": true
+            "AND": [
+              { "north": true },
+              {
+                "OR": [
+                  { "south": true },
+                  { "west": true },
+                  { "east": true }
+                ]
+              }
+            ]
           },
           {
-            "south": true
+            "AND": [
+              { "south": true },
+              {
+                "OR": [
+                  { "west": true },
+                  { "east": true }
+                ]
+              }
+            ]
           },
-          {
-            "west": true
-          },
-          {
-            "east": true
-          }
+          { "west": true , "east": true }
         ]
       },
       "apply": { "model": "hayo:block/power_cable_center" }
     },
+
     {
       "when": { "down": true },
-      "apply": { "model": "hayo:block/power_cable_connection", "uvlock": true }
+      "apply": { "model": "hayo:block/power_cable_connection" }
     },
+    {
+      "when": {
+        "AND": [
+          { "down": true },
+          { "up": false },
+          { "north": false },
+          { "south": false },
+          { "west": false },
+          { "east": false }
+        ]
+      },
+      "apply": { "model": "hayo:block/power_cable_end" }
+    },
+
     {
       "when": { "up": true },
       "apply": { "model": "hayo:block/power_cable_connection", "uvlock": true, "x": 180 }
     },
     {
+      "when": {
+        "AND": [
+          { "down": false },
+          { "up": true },
+          { "north": false },
+          { "south": false },
+          { "west": false },
+          { "east": false }
+        ]
+      },
+      "apply": { "model": "hayo:block/power_cable_end", "uvlock": true, "x": 180 }
+    },
+
+    {
       "when": { "north": true },
       "apply": { "model": "hayo:block/power_cable_connection", "uvlock": true, "x": 90, "y": 180 }
     },
+    {
+      "when": {
+        "AND": [
+          { "down": false },
+          { "up": false },
+          { "north": true },
+          { "south": false },
+          { "west": false },
+          { "east": false }
+        ]
+      },
+      "apply": { "model": "hayo:block/power_cable_end", "uvlock": true, "x": 90, "y": 180 }
+    },
+
     {
       "when": { "south": true },
       "apply": { "model": "hayo:block/power_cable_connection", "uvlock": true, "x": 90 }
     },
     {
+      "when": {
+        "AND": [
+          { "down": false },
+          { "up": false },
+          { "north": false },
+          { "south": true },
+          { "west": false },
+          { "east": false }
+        ]
+      },
+      "apply": { "model": "hayo:block/power_cable_end", "uvlock": true, "x": 90 }
+    },
+
+    {
       "when": { "west": true },
       "apply": { "model": "hayo:block/power_cable_connection", "uvlock": true, "x": 90, "y": 90 }
     },
     {
+      "when": {
+        "AND": [
+          { "down": false },
+          { "up": false },
+          { "north": false },
+          { "south": false },
+          { "west": true },
+          { "east": false }
+        ]
+      },
+      "apply": { "model": "hayo:block/power_cable_end", "uvlock": true, "x": 90, "y": 90 }
+    },
+
+    {
       "when": { "east": true },
       "apply": { "model": "hayo:block/power_cable_connection", "uvlock": true, "x": 90, "y": 270 }
+    },
+    {
+      "when": {
+        "AND": [
+          { "down": false },
+          { "up": false },
+          { "north": false },
+          { "south": false },
+          { "west": false },
+          { "east": true }
+        ]
+      },
+      "apply": { "model": "hayo:block/power_cable_end", "uvlock": true, "x": 90, "y": 270 }
     }
   ]
 }

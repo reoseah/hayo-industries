@@ -3,10 +3,6 @@ package io.github.reoseah.hayo.feature.processing_machines;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlockEntity;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -104,60 +100,4 @@ public abstract class SimpleMachineRecipe implements Recipe<SingleRecipeInput>, 
         }
     }
 
-    public static class Macerating extends SimpleMachineRecipe {
-        private static final int DEFAULT_DURATION_SECONDS = 10;
-        public static final int DEFAULT_ENERGY = DEFAULT_DURATION_SECONDS * MaceratorBlockEntity.ENERGY_USE_RATE * 20;
-
-        public Macerating(Ingredient input, ItemStack result, int processingEnergy) {
-            super(input, result, processingEnergy);
-        }
-
-        @Override
-        public RecipeSerializer<? extends Recipe<SingleRecipeInput>> getSerializer() {
-            return Hayo.RecipeSerializers.MACERATING;
-        }
-
-        @Override
-        public RecipeType<? extends Recipe<SingleRecipeInput>> getType() {
-            return Hayo.RecipeTypes.MACERATING;
-        }
-    }
-
-    public static class Compressing extends SimpleMachineRecipe {
-        private static final int DEFAULT_DURATION_SECONDS = 12;
-        public static final int DEFAULT_ENERGY = DEFAULT_DURATION_SECONDS * CompressorBlockEntity.ENERGY_USE_RATE * 20;
-
-        public Compressing(Ingredient input, ItemStack result, int processingEnergy) {
-            super(input, result, processingEnergy);
-        }
-
-        @Override
-        public RecipeSerializer<? extends Recipe<SingleRecipeInput>> getSerializer() {
-            return Hayo.RecipeSerializers.COMPRESSING;
-        }
-
-        @Override
-        public RecipeType<? extends Recipe<SingleRecipeInput>> getType() {
-            return Hayo.RecipeTypes.COMPRESSING;
-        }
-    }
-
-    public static class Extracting extends SimpleMachineRecipe {
-        private static final int DEFAULT_DURATION_SECONDS = 15;
-        public static final int DEFAULT_ENERGY = DEFAULT_DURATION_SECONDS * ExtractorBlockEntity.ENERGY_USE_RATE * 20;
-
-        public Extracting(Ingredient input, ItemStack result, int processingEnergy) {
-            super(input, result, processingEnergy);
-        }
-
-        @Override
-        public RecipeSerializer<? extends Recipe<SingleRecipeInput>> getSerializer() {
-            return Hayo.RecipeSerializers.EXTRACTING;
-        }
-
-        @Override
-        public RecipeType<? extends Recipe<SingleRecipeInput>> getType() {
-            return Hayo.RecipeTypes.EXTRACTING;
-        }
-    }
 }

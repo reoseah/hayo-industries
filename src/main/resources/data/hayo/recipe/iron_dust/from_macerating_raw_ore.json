@@ -1,0 +1,8 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "#c:raw_materials/iron",
+  "processing_energy": 400,
+  "result": {
+    "id": "hayo:iron_dust"
+  }
+}

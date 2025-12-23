@@ -11,15 +11,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends MachineBlockEntity<R, SingleRecipeInput> {
+public abstract class SimpleMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends MachineBlockEntity<R, SingleRecipeInput> {
+    public static final int SLOTS = 7;
     public static final int INPUT_SLOT = 0;
     public static final int BATTERY_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
     public static final int FIRST_UPGRADE_SLOT = 3;
     public static final int LAST_UPGRADE_SLOT = 6;
-    public static final int SLOTS = 7;
 
-    public ClassicMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public SimpleMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 

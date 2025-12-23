@@ -1,10 +1,10 @@
-package io.github.reoseah.hayo.feature.rei_support;
+package io.github.reoseah.hayo.mod_support.roughlyenoughitems;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayo.mixin.SingleItemRecipeAccessor;
-import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
 import lombok.Getter;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
@@ -22,27 +22,27 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class SimpleElectricRecipeDisplay implements Display {
-    public static final DisplaySerializer<SimpleElectricRecipeDisplay> SERIALIZER = DisplaySerializer.of( //
-            RecordCodecBuilder.<SimpleElectricRecipeDisplay>mapCodec(instance -> instance.group( //
-                    Codec.STRING.fieldOf("category").forGetter((SimpleElectricRecipeDisplay d) -> d.category.getIdentifier().toString()), //
-                    ResourceLocation.CODEC.optionalFieldOf("location").forGetter(SimpleElectricRecipeDisplay::getDisplayLocation), //
-                    EntryIngredient.codec().fieldOf("inputs").forGetter(SimpleElectricRecipeDisplay::getInput), //
-                    EntryIngredient.codec().fieldOf("outputs").forGetter(SimpleElectricRecipeDisplay::getResult), //
-                    Codec.INT.fieldOf("energy").forGetter(SimpleElectricRecipeDisplay::getProcessingEnergy) //
-            ).apply(instance, SimpleElectricRecipeDisplay::new)), //
+public class MachineRecipeDisplay implements Display {
+    public static final DisplaySerializer<MachineRecipeDisplay> SERIALIZER = DisplaySerializer.of( //
+            RecordCodecBuilder.mapCodec(instance -> instance.group( //
+                    Codec.STRING.fieldOf("category").forGetter(display -> display.category.getIdentifier().toString()), //
+                    ResourceLocation.CODEC.optionalFieldOf("location").forGetter(MachineRecipeDisplay::getDisplayLocation), //
+                    EntryIngredient.codec().fieldOf("inputs").forGetter(MachineRecipeDisplay::getInput), //
+                    EntryIngredient.codec().fieldOf("outputs").forGetter(MachineRecipeDisplay::getResult), //
+                    Codec.INT.fieldOf("energy").forGetter(MachineRecipeDisplay::getProcessingEnergy) //
+            ).apply(instance, MachineRecipeDisplay::new)), //
             StreamCodec.composite( //
                     ByteBufCodecs.STRING_UTF8, //
-                    d -> d.category.getIdentifier().toString(), //
+                    display -> display.category.getIdentifier().toString(), //
                     ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC), //
-                    SimpleElectricRecipeDisplay::getDisplayLocation, //
+                    MachineRecipeDisplay::getDisplayLocation, //
                     EntryIngredient.streamCodec(), //
-                    SimpleElectricRecipeDisplay::getInput, //
+                    MachineRecipeDisplay::getInput, //
                     EntryIngredient.streamCodec(), //
-                    SimpleElectricRecipeDisplay::getResult, //
+                    MachineRecipeDisplay::getResult, //
                     ByteBufCodecs.INT, //
-                    SimpleElectricRecipeDisplay::getProcessingEnergy, //
-                    SimpleElectricRecipeDisplay::new));
+                    MachineRecipeDisplay::getProcessingEnergy, //
+                    MachineRecipeDisplay::new));
 
     protected final CategoryIdentifier<?> category;
     @Getter
@@ -54,7 +54,7 @@ public class SimpleElectricRecipeDisplay implements Display {
     @Getter
     protected final int processingEnergy;
 
-    public SimpleElectricRecipeDisplay(String category, Optional<ResourceLocation> location, EntryIngredient input, EntryIngredient result, int processingEnergy) {
+    public MachineRecipeDisplay(String category, Optional<ResourceLocation> location, EntryIngredient input, EntryIngredient result, int processingEnergy) {
         this.category = CategoryIdentifier.of(category);
         this.location = location;
         this.input = input;
@@ -62,7 +62,7 @@ public class SimpleElectricRecipeDisplay implements Display {
         this.processingEnergy = processingEnergy;
     }
 
-    public SimpleElectricRecipeDisplay(RecipeHolder<SimpleMachineRecipe> holder) {
+    public MachineRecipeDisplay(RecipeHolder<? extends SimpleMachineRecipe> holder) {
         this.location = Optional.of(holder.id().location());
 
         var recipe = holder.value();
@@ -72,7 +72,7 @@ public class SimpleElectricRecipeDisplay implements Display {
         this.processingEnergy = recipe.processingEnergy();
     }
 
-    public static SimpleElectricRecipeDisplay fromCookingRecipe(RecipeHolder<AbstractCookingRecipe> holder) {
+    public static MachineRecipeDisplay fromCookingRecipe(RecipeHolder<AbstractCookingRecipe> holder) {
         var location = Optional.of(holder.id().location());
 
         var recipe = holder.value();
@@ -83,7 +83,7 @@ public class SimpleElectricRecipeDisplay implements Display {
         var result = EntryIngredients.of(((SingleItemRecipeAccessor) recipe).hayo$getResult());
         var processingEnergy = ElectricFurnaceBlockEntity.energyCostFromCookingTime(recipe.cookingTime());
 
-        return new SimpleElectricRecipeDisplay(category, location, input, result, processingEnergy);
+        return new MachineRecipeDisplay(category, location, input, result, processingEnergy);
     }
 
     @Override

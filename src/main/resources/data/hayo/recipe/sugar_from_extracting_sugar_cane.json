@@ -1,9 +1,9 @@
 {
   "type": "hayo:extracting",
-  "ingredient": "hayo:sticky_resin",
+  "ingredient": "minecraft:sugar_cane",
   "processing_energy": 600,
   "result": {
-    "id": "hayo:rubber",
+    "id": "minecraft:sugar",
     "count": 2
   }
 }

@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.rei_support;
+package io.github.reoseah.hayo.mod_support.roughlyenoughitems;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.client.HayoMachineTexture;
@@ -12,15 +12,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class HayoReiClientPlugin implements REIClientPlugin {
+public class HayoReiClient implements REIClientPlugin {
     @Override
     public void registerCategories(CategoryRegistry registry) {
-        registry.add(new SimpleElectricRecipeCategory(Hayo.modLocation("electric_smelting"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
-        registry.add(new SimpleElectricRecipeCategory(Hayo.modLocation("electric_blasting"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
-        registry.add(new SimpleElectricRecipeCategory(Hayo.modLocation("electric_smoking"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
-        registry.add(new SimpleElectricRecipeCategory(Hayo.modLocation("macerating"), EntryStacks.of(Hayo.Items.MACERATOR), HayoMachineTexture.RecipeArrow.MACERATOR, 2));
-        registry.add(new SimpleElectricRecipeCategory(Hayo.modLocation("compressing"), EntryStacks.of(Hayo.Items.COMPRESSOR), HayoMachineTexture.RecipeArrow.COMPRESSOR, 2));
-        registry.add(new SimpleElectricRecipeCategory(Hayo.modLocation("extracting"), EntryStacks.of(Hayo.Items.EXTRACTOR), HayoMachineTexture.RecipeArrow.EXTRACTOR, 2));
+        registry.add(new MachineRecipeCategory(Hayo.modLocation("electric_smelting"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
+        registry.add(new MachineRecipeCategory(Hayo.modLocation("electric_blasting"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
+        registry.add(new MachineRecipeCategory(Hayo.modLocation("electric_smoking"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
+        registry.add(new MachineRecipeWithExtraCategory(Hayo.modLocation("macerating"), EntryStacks.of(Hayo.Items.MACERATOR), HayoMachineTexture.RecipeArrow.MACERATOR, 2));
+        registry.add(new MachineRecipeCategory(Hayo.modLocation("compressing"), EntryStacks.of(Hayo.Items.COMPRESSOR), HayoMachineTexture.RecipeArrow.COMPRESSOR, 2));
+        registry.add(new MachineRecipeCategory(Hayo.modLocation("extracting"), EntryStacks.of(Hayo.Items.EXTRACTOR), HayoMachineTexture.RecipeArrow.EXTRACTOR, 2));
 
         registry.addWorkstations(CategoryIdentifier.of(Hayo.modLocation("electric_smelting")), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE));
         registry.addWorkstations(CategoryIdentifier.of(Hayo.modLocation("electric_blasting")), machineWithUpgrade(Hayo.Items.ELECTRIC_FURNACE, Hayo.Items.BLASTING_UPGRADE), EntryStacks.of(Hayo.Items.BLASTING_UPGRADE));

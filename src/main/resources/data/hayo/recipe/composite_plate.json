@@ -1,6 +1,6 @@
 {
   "type": "hayo:compressing",
-  "ingredient": "hayo:metal_compound",
+  "ingredient": "hayo:composite_plate_mixture",
   "processing_energy": 480,
   "result": {
     "id": "hayo:composite_plate",

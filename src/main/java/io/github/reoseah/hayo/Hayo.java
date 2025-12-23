@@ -15,23 +15,16 @@ import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
+import io.github.reoseah.hayo.feature.processing_machines.MachineRecipeWithExtraChance;
+import io.github.reoseah.hayo.feature.processing_machines.MachineRecipeWithSideProduct;
 import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
-import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlock;
-import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorMenu;
-import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorScreen;
+import io.github.reoseah.hayo.feature.processing_machines.compressor.*;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlock;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceMenu;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceScreen;
-import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorBlock;
-import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorMenu;
-import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorScreen;
-import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlock;
-import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorMenu;
-import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorScreen;
+import io.github.reoseah.hayo.feature.processing_machines.extractor.*;
+import io.github.reoseah.hayo.feature.processing_machines.macerator.*;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
 import net.fabricmc.api.EnvType;
@@ -234,6 +227,8 @@ public class Hayo {
         public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe", properties -> new AxeItem(SILICON_BRONZE, 6.0F, -3.1F, properties));
         public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
 
+        public static final Item CANISTER = registerItem("canister");
+
         public static final Item BATTERY = registerItem("battery", properties -> new SimpleBatteryItem(properties, 10000, 10));
         public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", properties -> new SimpleBatteryItem(properties, 100000, 100), new Item.Properties().rarity(Rarity.RARE));
 
@@ -262,10 +257,10 @@ public class Hayo {
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
         public static final Item REDSTONE_FLUX_LASER = registerItem("redstone_flux_laser", new Item.Properties().rarity(Rarity.RARE));
-        public static final Item METAL_COMPOUND = registerItem("metal_compound");
+        public static final Item COMPOSITE_PLATE_MIXTURE = registerItem("composite_plate_mixture");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
-        public static final Item CARBON_COMPOUND = registerItem("carbon_compound");
-         public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item CONDUCTIVE_CARBON_MIXTURE = registerItem("conductive_carbon_mixture");
+        public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
@@ -312,6 +307,8 @@ public class Hayo {
                 entries.accept(SILICON_BRONZE_AXE);
                 entries.accept(SILICON_BRONZE_HOE);
 
+                entries.accept(CANISTER);
+
                 entries.accept(BATTERY);
                 entries.accept(Util.make(new ItemStack(BATTERY), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
                 entries.accept(ENERGY_CRYSTAL);
@@ -342,10 +339,10 @@ public class Hayo {
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(TRANSFORMER);
                 entries.accept(REDSTONE_FLUX_LASER);
-                entries.accept(METAL_COMPOUND);
+                entries.accept(COMPOSITE_PLATE_MIXTURE);
                 entries.accept(COMPOSITE_PLATE);
-                entries.accept(CARBON_COMPOUND);
-               entries.accept(CONDUCTIVE_CARBON);
+                entries.accept(CONDUCTIVE_CARBON_MIXTURE);
+                entries.accept(CONDUCTIVE_CARBON);
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
@@ -452,7 +449,7 @@ public class Hayo {
     }
 
     public static class RecipeTypes {
-        public static final RecipeType<SimpleMachineRecipe> MACERATING = register("macerating");
+        public static final RecipeType<MachineRecipeWithExtraChance> MACERATING = register("macerating");
         public static final RecipeType<SimpleMachineRecipe> COMPRESSING = register("compressing");
         public static final RecipeType<SimpleMachineRecipe> EXTRACTING = register("extracting");
 
@@ -472,9 +469,9 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
-        public static final RecipeSerializer<SimpleMachineRecipe> MACERATING = register("macerating", new SimpleMachineRecipe.Serializer<>(SimpleMachineRecipe.Macerating::new, SimpleMachineRecipe.Macerating.DEFAULT_ENERGY));
-        public static final RecipeSerializer<SimpleMachineRecipe> COMPRESSING = register("compressing", new SimpleMachineRecipe.Serializer<>(SimpleMachineRecipe.Compressing::new, SimpleMachineRecipe.Compressing.DEFAULT_ENERGY));
-        public static final RecipeSerializer<SimpleMachineRecipe> EXTRACTING = register("extracting", new SimpleMachineRecipe.Serializer<>(SimpleMachineRecipe.Extracting::new, SimpleMachineRecipe.Extracting.DEFAULT_ENERGY));
+        public static final RecipeSerializer<MachineRecipeWithExtraChance> MACERATING = register("macerating", new MachineRecipeWithExtraChance.Serializer<>(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<MachineRecipeWithSideProduct> COMPRESSING = register("compressing", new MachineRecipeWithSideProduct.Serializer<>(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<SimpleMachineRecipe> EXTRACTING = register("extracting", new SimpleMachineRecipe.Serializer<>(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
 
         public static void initialize() {
         }

@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.rei_support;
+package io.github.reoseah.hayo.mod_support.roughlyenoughitems;
 
 import io.github.reoseah.hayo.base.client.HayoMachineTexture;
 import me.shedaniel.math.Point;

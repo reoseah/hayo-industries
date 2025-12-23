@@ -39,11 +39,11 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         menu.addStandardInventorySlots(inventory, 8, 84);
     }
 
-    public static void addClassicWithSecondaryOutputSlots(MachineMenu menu, Container container, Inventory inventory) {
+    public static void addSlotsWithSecondaryOutput(MachineMenu menu, Container container, Inventory inventory) {
         menu.addSlot(new Slot(container, 0, 47, 18));
         menu.addSlot(new Slot(container, 1, 47, 54));
-        menu.addSlot(new ResultSlot(container, 2, 107, 24));
-        menu.addSlot(new ResultSlot(container, 3, 107, 50));
+        menu.addSlot(new ResultSlot(container, 2, 107, 26));
+        menu.addSlot(new ResultSlot(container, 3, 107, 52));
 
         menu.addSlot(new UpgradeSlot(container, 4, 152, 8, menu.validUpgrades));
         menu.addSlot(new UpgradeSlot(container, 5, 152, 26, menu.validUpgrades));
@@ -64,13 +64,13 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        var previous = stack.copy();
+        var remaining = stack.copy();
         int firstPlayerSlot = getFirstPlayerSlot();
         if (index < firstPlayerSlot) {
             if (!this.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 36, true)) {
                 return ItemStack.EMPTY;
             }
-            slot.onQuickCraft(stack, previous);
+            slot.onQuickCraft(stack, remaining);
         } else {
             if (stack.is(this.validUpgrades)) {
                 if (!this.moveItemStackTo(stack, 3, 7, false)) {
@@ -101,17 +101,19 @@ public abstract class MachineMenu extends AbstractContainerMenu {
             slot.setChanged();
         }
 
-        if (stack.getCount() == previous.getCount()) {
+        if (stack.getCount() == remaining.getCount()) {
             return ItemStack.EMPTY;
         }
 
         slot.onTake(player, stack);
-        return previous;
+        return remaining;
     }
 
     protected abstract int getFirstPlayerSlot();
 
     protected abstract boolean isRecipeInput(ItemStack stack);
+
+    public abstract int getEnergyUseRate();
 
     @Override
     public boolean stillValid(Player player) {
@@ -154,8 +156,6 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         return 100 * this.getRecipeEnergyPercentage() / this.getUseRatePercentage();
     }
 
-    public abstract int getEnergyUseRate();
-
     public static class ResultSlot extends Slot {
         public ResultSlot(Container container, int slot, int x, int y) {
             super(container, slot, x, y);
@@ -166,7 +166,6 @@ public abstract class MachineMenu extends AbstractContainerMenu {
             return false;
         }
     }
-
 
     public static class UpgradeSlot extends Slot {
         protected final TagKey<Item> validItems;

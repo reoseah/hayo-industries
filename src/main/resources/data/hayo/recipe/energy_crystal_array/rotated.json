@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ERE",
+    "C#C",
+    "ERE"
+  ],
+  "key": {
+    "#": "hayo:advanced_machine_block",
+    "E": "hayo:energy_crystal",
+    "C": "hayo:power_cable",
+    "R": "hayo:redstone_flux_laser"
+  },
+  "result": {
+    "id": "hayo:energy_crystal_array",
+    "count": 1
+  }
+}

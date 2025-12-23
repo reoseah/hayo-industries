@@ -1,6 +1,5 @@
 package io.github.reoseah.hayo.feature.ore_crops;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;

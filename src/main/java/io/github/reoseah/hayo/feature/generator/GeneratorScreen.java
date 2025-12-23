@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.generator;
 
+import io.github.reoseah.hayo.api.energy.EnergyTexts;
 import io.github.reoseah.hayo.base.client.HayoContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoMachineTexture;
-import io.github.reoseah.hayo.api.energy.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

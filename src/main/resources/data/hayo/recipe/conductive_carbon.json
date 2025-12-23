@@ -1,6 +1,6 @@
 {
   "type": "hayo:compressing",
-  "ingredient": "hayo:carbon_compound",
+  "ingredient": "hayo:conductive_carbon_mixture",
   "processing_energy": 480,
   "result": {
     "id": "hayo:conductive_carbon",

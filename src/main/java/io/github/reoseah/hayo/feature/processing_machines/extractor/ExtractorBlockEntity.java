@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.processing_machines.extractor;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class ExtractorBlockEntity extends ClassicMachineBlockEntity<SimpleMachineRecipe> {
+public class ExtractorBlockEntity extends SimpleMachineBlockEntity<SimpleMachineRecipe> {
     public static final int TRANSFER_RATE = 32;
     public static final int ENERGY_USE_RATE = 2;
     public static final int CAPACITY = 15 * 20 * ENERGY_USE_RATE; // 15s * 20tick/s * 2e/tick = 600e

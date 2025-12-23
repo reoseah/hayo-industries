@@ -3,13 +3,13 @@
   "category": "misc",
   "pattern": [
     "#R#",
-    "CSC"
+    "CIC"
   ],
   "key": {
     "#": "#c:ingots/gold",
-    "C": "hayo:cable",
     "R": "minecraft:redstone",
-    "S": "#c:dusts/netherite_scrap"
+    "C": "hayo:cable",
+    "I": "#c:ingots/refined_iron"
   },
   "result": {
     "id": "hayo:redstone_flux_laser",

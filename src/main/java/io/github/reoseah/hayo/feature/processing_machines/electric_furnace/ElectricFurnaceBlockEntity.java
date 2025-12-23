@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.processing_machines.electric_furnace;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineBlockEntity;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<AbstractCookingRecipe> {
+public class ElectricFurnaceBlockEntity extends SimpleMachineBlockEntity<AbstractCookingRecipe> {
     public static final int TRANSFER_RATE = 32;
     public static final int ENERGY_USE_RATE = 3;
     public static final int CAPACITY = energyCostFromCookingTime(AbstractFurnaceBlockEntity.BURN_TIME_STANDARD); /* 200 * 3/4 * 3 = 450 e */

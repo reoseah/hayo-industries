@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "hayo:item/metal_compound"
+    "layer0": "hayo:item/composite_plate_mixture"
   }
 }

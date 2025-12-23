@@ -1,0 +1,10 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "#c:ores/coal",
+  "processing_energy": 400,
+  "result": {
+    "id": "hayo:coal_dust",
+    "count": 2
+  },
+  "extra_chance": 0.5
+}

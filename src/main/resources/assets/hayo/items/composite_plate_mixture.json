@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/metal_compound"
+    "model": "hayo:item/composite_plate_mixture"
   }
 }

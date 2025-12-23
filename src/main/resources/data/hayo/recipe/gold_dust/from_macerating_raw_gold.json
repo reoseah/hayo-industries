@@ -1,0 +1,8 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "#c:raw_materials/gold",
+  "processing_energy": 400,
+  "result": {
+    "id": "hayo:gold_dust"
+  }
+}
