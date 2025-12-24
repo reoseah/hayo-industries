@@ -1,11 +1,13 @@
 package io.github.reoseah.hayo.feature.generator;
 
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.api.energy.ElectricBlocks;
 import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
@@ -32,6 +34,38 @@ public class GeneratorBlockEntity extends ElectricBlockEntity {
 
     public GeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.GENERATOR, pos, state);
+    }
+
+    public static void tickServer(Level level, BlockPos pos, BlockState state, GeneratorBlockEntity entity) {
+        boolean wasBurning = entity.fuelEnergyLeft > 0;
+
+        if (!wasBurning && entity.canConsumeFuel() && entity.storedEnergy < CAPACITY) {
+            entity.tryConsumeFuel();
+        }
+
+        if (entity.fuelEnergyLeft > 0) {
+            var generation = Math.min(entity.fuelEnergyLeft, GENERATION_RATE);
+            entity.fuelEnergyLeft -= generation;
+            entity.storedEnergy += generation;
+            if (entity.storedEnergy > CAPACITY) {
+                entity.storedEnergy = CAPACITY;
+            }
+            entity.setChanged();
+        }
+
+        if (entity.storedEnergy > 0) {
+            int sendable = Math.min(entity.storedEnergy, TRANSFER_RATE);
+            int sent = ElectricBlocks.trySendToAllSides(sendable, (ServerLevel) level, pos);
+            if (sent > 0) {
+                entity.storedEnergy -= sent;
+                entity.setChanged();
+            }
+        }
+
+        boolean isBurning = entity.fuelEnergyLeft > 0;
+        if (isBurning != wasBurning) {
+            level.setBlockAndUpdate(pos, state.setValue(GeneratorBlock.LIT, isBurning));
+        }
     }
 
     @Override
@@ -81,26 +115,4 @@ public class GeneratorBlockEntity extends ElectricBlockEntity {
         this.setChanged();
     }
 
-    public static void tickServer(Level level, BlockPos pos, BlockState state, GeneratorBlockEntity entity) {
-        boolean wasBurning = entity.fuelEnergyLeft > 0;
-
-        if (!wasBurning && entity.canConsumeFuel() && entity.storedEnergy < CAPACITY) {
-            entity.tryConsumeFuel();
-        }
-
-        if (entity.fuelEnergyLeft > 0) {
-            var generation = Math.min(entity.fuelEnergyLeft, GENERATION_RATE);
-            entity.fuelEnergyLeft -= generation;
-            entity.storedEnergy += generation;
-            if (entity.storedEnergy > CAPACITY) {
-                entity.storedEnergy = CAPACITY;
-            }
-            entity.setChanged();
-        }
-
-        boolean isBurning = entity.fuelEnergyLeft > 0;
-        if (isBurning != wasBurning) {
-            level.setBlockAndUpdate(pos, state.setValue(GeneratorBlock.LIT, isBurning));
-        }
-    }
 }

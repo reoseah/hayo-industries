@@ -2,7 +2,7 @@ package io.github.reoseah.hayo.mod_support.roughlyenoughitems;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.reoseah.hayo.feature.processing_machines.MachineRecipeWithExtraChance;
+import io.github.reoseah.hayo.feature.processing_machines.ExtraChanceMachineRecipe;
 import lombok.Getter;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.DisplaySerializer;
@@ -56,7 +56,7 @@ public class MachineRecipeWithExtraDisplay extends MachineRecipeDisplay {
         this.extraChance = extraChance;
     }
 
-    public MachineRecipeWithExtraDisplay(RecipeHolder<? extends MachineRecipeWithExtraChance> holder) {
+    public MachineRecipeWithExtraDisplay(RecipeHolder<? extends ExtraChanceMachineRecipe> holder) {
         super(holder);
         var recipe = holder.value();
         this.extraChance = recipe.getExtraChance();

@@ -35,11 +35,9 @@ public class ElectricItems {
         return 0;
     }
 
-    /**
-     * Charge an item or do nothing if the item is not electric.
-     *
-     * @return energy that was added to the item, you probably want to remove it from your energy source
-     */
+    /// Charge the item or do nothing if the item is not electric.
+    ///
+    /// @return energy that was added to the item, you probably want to remove it from your energy source
     public static int tryCharge(int energy, ItemStack stack, Consumer<ItemStack> setItem) {
         if (stack.getItem() instanceof ElectricItem electricItem) {
             return electricItem.charge(stack, energy, setItem);
@@ -47,15 +45,16 @@ public class ElectricItems {
         return 0;
     }
 
+    /// Charge an item in the slot or do nothing if the item is not electric.
+    ///
+    /// @return energy that was added to the item, you probably want to remove it from your energy source
     public static int tryCharge(int max, Container container, int slot) {
         return tryCharge(max, container.getItem(slot), stack -> container.setItem(slot, stack));
     }
 
-    /**
-     * Discharge an item or do nothing if the item is not electric.
-     *
-     * @return energy that was removed from the item, you probably want to add it to your energy source
-     */
+    /// Discharge the item or do nothing if the item is not electric.
+    ///
+    /// @return energy that was removed from the item, you probably want to add it to your energy storage
     public static int tryDischarge(int max, ItemStack stack, Consumer<ItemStack> setItem) {
         if (stack.getItem() instanceof ElectricItem electricItem) {
             return electricItem.discharge(stack, max, setItem);
@@ -63,6 +62,9 @@ public class ElectricItems {
         return 0;
     }
 
+    /// Discharge an item in the slot or do nothing if the item is not electric.
+    ///
+    /// @return energy that was removed from the item, you probably want to add it to your energy storage
     public static int tryDischarge(int max, Container container, int slot) {
         return tryDischarge(max, container.getItem(slot), stack -> container.setItem(slot, stack));
     }

@@ -15,8 +15,8 @@ import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
-import io.github.reoseah.hayo.feature.processing_machines.MachineRecipeWithExtraChance;
-import io.github.reoseah.hayo.feature.processing_machines.MachineRecipeWithSideProduct;
+import io.github.reoseah.hayo.feature.processing_machines.ExtraChanceMachineRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.SideProductMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.compressor.*;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlock;
@@ -145,8 +145,8 @@ public class Hayo {
         public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
 
-        public static final Block CABLE = register("cable", properties -> new CableBlock(2, properties), BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final Block POWER_CABLE = register("power_cable", properties -> new CableBlock(3, properties), BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final Block CABLE = register("cable", properties -> new CableBlock(2, properties), BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final Block POWER_CABLE = register("power_cable", properties -> new CableBlock(3, properties), BlockBehaviour.Properties.of().strength(6F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
@@ -266,7 +266,6 @@ public class Hayo {
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
-
 
         public static void initialize() {
             ItemGroupEvents.modifyEntriesEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
@@ -449,7 +448,7 @@ public class Hayo {
     }
 
     public static class RecipeTypes {
-        public static final RecipeType<MachineRecipeWithExtraChance> MACERATING = register("macerating");
+        public static final RecipeType<ExtraChanceMachineRecipe> MACERATING = register("macerating");
         public static final RecipeType<SimpleMachineRecipe> COMPRESSING = register("compressing");
         public static final RecipeType<SimpleMachineRecipe> EXTRACTING = register("extracting");
 
@@ -469,8 +468,8 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
-        public static final RecipeSerializer<MachineRecipeWithExtraChance> MACERATING = register("macerating", new MachineRecipeWithExtraChance.Serializer<>(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<MachineRecipeWithSideProduct> COMPRESSING = register("compressing", new MachineRecipeWithSideProduct.Serializer<>(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<ExtraChanceMachineRecipe> MACERATING = register("macerating", new ExtraChanceMachineRecipe.Serializer<>(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<SideProductMachineRecipe> COMPRESSING = register("compressing", new SideProductMachineRecipe.Serializer<>(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<SimpleMachineRecipe> EXTRACTING = register("extracting", new SimpleMachineRecipe.Serializer<>(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
 
         public static void initialize() {

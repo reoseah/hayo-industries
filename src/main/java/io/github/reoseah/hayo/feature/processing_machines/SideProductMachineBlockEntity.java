@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class SideProductMachineBlockEntity<R extends MachineRecipeWithSideProduct> extends MachineBlockEntity<R, SingleRecipeInput> {
+public abstract class SideProductMachineBlockEntity<R extends SideProductMachineRecipe> extends MachineBlockEntity<R, SingleRecipeInput> {
     public static final int SLOTS = 8;
     public static final int INPUT_SLOT = 0;
     public static final int BATTERY_SLOT = 1;

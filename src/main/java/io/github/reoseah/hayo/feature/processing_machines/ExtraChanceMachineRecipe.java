@@ -11,41 +11,41 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
-public abstract class MachineRecipeWithExtraChance extends SimpleMachineRecipe {
+public abstract class ExtraChanceMachineRecipe extends SimpleMachineRecipe {
     @Getter
     public final float extraChance;
 
-    public MachineRecipeWithExtraChance(Ingredient input, ItemStack result, int processingEnergy, float extraChance) {
+    public ExtraChanceMachineRecipe(Ingredient input, ItemStack result, int processingEnergy, float extraChance) {
         super(input, result, processingEnergy);
         this.extraChance = extraChance;
     }
 
     @FunctionalInterface
-    public interface Factory<R extends MachineRecipeWithExtraChance> {
+    public interface Factory<R extends ExtraChanceMachineRecipe> {
         R create(Ingredient input, ItemStack result, int processingEnergy, float extraChance);
     }
 
-    public static class Serializer<R extends MachineRecipeWithExtraChance> implements RecipeSerializer<R> {
+    public static class Serializer<R extends ExtraChanceMachineRecipe> implements RecipeSerializer<R> {
         private final MapCodec<R> codec;
         private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec;
 
-        public Serializer(MachineRecipeWithExtraChance.Factory<R> factory, int defaultEnergy) {
+        public Serializer(ExtraChanceMachineRecipe.Factory<R> factory, int defaultEnergy) {
             this.codec = RecordCodecBuilder.mapCodec( //
                     instance -> instance.group( //
-                            Ingredient.CODEC.fieldOf("ingredient").forGetter(MachineRecipeWithExtraChance::input), //
-                            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(MachineRecipeWithExtraChance::result), //
-                            Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(MachineRecipeWithExtraChance::processingEnergy), //
-                            Codec.FLOAT.fieldOf("extra_chance").orElse(0F).forGetter(MachineRecipeWithExtraChance::getExtraChance) //
+                            Ingredient.CODEC.fieldOf("ingredient").forGetter(ExtraChanceMachineRecipe::input), //
+                            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(ExtraChanceMachineRecipe::result), //
+                            Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(ExtraChanceMachineRecipe::processingEnergy), //
+                            Codec.FLOAT.fieldOf("extra_chance").orElse(0F).forGetter(ExtraChanceMachineRecipe::getExtraChance) //
                     ).apply(instance, factory::create));
             this.streamCodec = StreamCodec.composite( //
                     Ingredient.CONTENTS_STREAM_CODEC, //
-                    MachineRecipeWithExtraChance::input, //
+                    ExtraChanceMachineRecipe::input, //
                     ItemStack.STREAM_CODEC, //
-                    MachineRecipeWithExtraChance::result, //
+                    ExtraChanceMachineRecipe::result, //
                     ByteBufCodecs.INT, //
-                    MachineRecipeWithExtraChance::processingEnergy, //
+                    ExtraChanceMachineRecipe::processingEnergy, //
                     ByteBufCodecs.FLOAT, //
-                    MachineRecipeWithExtraChance::getExtraChance, //
+                    ExtraChanceMachineRecipe::getExtraChance, //
                     factory::create);
         }
 

@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo.feature.generator;
 
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.api.energy.ElectricItems;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,8 +11,10 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class GeneratorMenu extends AbstractContainerMenu {
+    protected final Level level;
     protected final ContainerData data;
 
     public GeneratorMenu(int menuId, Inventory inventory) {
@@ -34,8 +37,8 @@ public class GeneratorMenu extends AbstractContainerMenu {
                 return switch (index) {
                     case 0 -> entity.getStoredEnergy() & 0xFFFF;
                     case 1 -> entity.getStoredEnergy() >>> 16;
-                    case 2 -> entity.getFuelEnergyLeft();
-                    case 3 -> entity.getFuelEnergyTotal();
+                    case 2 -> Math.min(entity.getFuelEnergyLeft(), Short.MAX_VALUE);
+                    case 3 -> Math.min(entity.getFuelEnergyTotal(), Short.MAX_VALUE);
                     default -> 0;
                 };
             }
@@ -49,6 +52,8 @@ public class GeneratorMenu extends AbstractContainerMenu {
     protected GeneratorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
         super(Hayo.MenuTypes.GENERATOR, menuId);
 
+        this.level = inventory.player.level();
+
         this.data = data;
         this.addDataSlots(this.data);
 
@@ -58,7 +63,46 @@ public class GeneratorMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return ItemStack.EMPTY;
+        var slot = this.slots.get(index);
+        var stack = slot.getItem();
+        if (stack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        var remaining = stack.copy();
+        int firstPlayerSlot = 1;
+        if (index < firstPlayerSlot) {
+            if (!this.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 36, true)) {
+                return ItemStack.EMPTY;
+            }
+            slot.onQuickCraft(stack, remaining);
+        } else {
+            if (this.level.fuelValues().isFuel(stack)) {
+                if (!this.moveItemStackTo(stack, 0, 1, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index < firstPlayerSlot + 27) {
+                if (!this.moveItemStackTo(stack, firstPlayerSlot + 27, firstPlayerSlot + 36, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
+                if (!this.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 27, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+        }
+
+        if (stack.isEmpty()) {
+            slot.set(ItemStack.EMPTY);
+        } else {
+            slot.setChanged();
+        }
+
+        if (stack.getCount() == remaining.getCount()) {
+            return ItemStack.EMPTY;
+        }
+
+        slot.onTake(player, stack);
+        return remaining;
     }
 
     @Override

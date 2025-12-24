@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.processing_machines.macerator;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.processing_machines.MachineRecipeWithExtraChance;
+import io.github.reoseah.hayo.feature.processing_machines.ExtraChanceMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class MaceratorBlockEntity extends SimpleMachineBlockEntity<MachineRecipeWithExtraChance> {
+public class MaceratorBlockEntity extends SimpleMachineBlockEntity<ExtraChanceMachineRecipe> {
     public static final int TRANSFER_RATE = 32;
     public static final int ENERGY_USE_RATE = 2;
     public static final int CAPACITY = 10 * 20 * ENERGY_USE_RATE; // 10s * 20tick/s * 2e/tick = 400e
@@ -34,7 +34,7 @@ public class MaceratorBlockEntity extends SimpleMachineBlockEntity<MachineRecipe
     }
 
     @Override
-    public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<MachineRecipeWithExtraChance> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
+    public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<ExtraChanceMachineRecipe> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
         if (recipe == null || input.isEmpty()) {
             return false;
         }
@@ -48,7 +48,7 @@ public class MaceratorBlockEntity extends SimpleMachineBlockEntity<MachineRecipe
     }
 
     @Override
-    public void craft(RegistryAccess registryAccess, RecipeHolder<MachineRecipeWithExtraChance> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
+    public void craft(RegistryAccess registryAccess, RecipeHolder<ExtraChanceMachineRecipe> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
         if (recipe.value().extraChance == 0) {
             super.craft(registryAccess, recipe, input, items);
             return;
@@ -72,7 +72,7 @@ public class MaceratorBlockEntity extends SimpleMachineBlockEntity<MachineRecipe
     }
 
     @Override
-    protected RecipeType<MachineRecipeWithExtraChance> getRecipeType() {
+    protected RecipeType<ExtraChanceMachineRecipe> getRecipeType() {
         return Hayo.RecipeTypes.MACERATING;
     }
 
@@ -87,7 +87,7 @@ public class MaceratorBlockEntity extends SimpleMachineBlockEntity<MachineRecipe
     }
 
     @Override
-    public int getDefaultRecipeEnergy(RecipeHolder<MachineRecipeWithExtraChance> recipe) {
+    public int getDefaultRecipeEnergy(RecipeHolder<ExtraChanceMachineRecipe> recipe) {
         return recipe.value().processingEnergy();
     }
 

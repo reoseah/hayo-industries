@@ -1,5 +1,7 @@
 package io.github.reoseah.hayo.feature.cable;
 
+import io.github.reoseah.hayo.api.energy.ElectricBlock;
+import io.github.reoseah.hayo.api.energy.ElectricCableBlock;
 import io.netty.util.collection.IntObjectHashMap;
 import io.netty.util.collection.IntObjectMap;
 import net.minecraft.core.BlockPos;
@@ -19,7 +21,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CableBlock extends Block {
+public class CableBlock extends Block implements ElectricCableBlock {
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
@@ -42,10 +44,10 @@ public class CableBlock extends Block {
 
     public static VoxelShape[] getOrCreateShapes(int radius) {
         return SHAPE_CACHE.computeIfAbsent(radius, (rad) -> {
-            VoxelShape[] shapes = new VoxelShape[64];
+            var shapes = new VoxelShape[64];
             float min = 8 - rad;
             float max = 8 + rad;
-            VoxelShape center = Block.box(min, min, min, max, max, max);
+            var center = Block.box(min, min, min, max, max, max);
             VoxelShape[] connections = { //
                     Block.box(min, 0, min, max, max, max), //
                     Block.box(min, min, min, max, 16, max), //
@@ -55,7 +57,7 @@ public class CableBlock extends Block {
                     Block.box(min, min, min, 16, max, max)};
 
             for (int i = 0; i < 64; i++) {
-                VoxelShape shape = center;
+                var shape = center;
                 for (int face = 0; face < 6; face++) {
                     if ((i & 1 << face) != 0) {
                         shape = Shapes.or(shape, connections[face]);
@@ -109,13 +111,12 @@ public class CableBlock extends Block {
         return state.setValue(getConnectionProperty(direction), this.connectsTo(level, pos, direction));
     }
 
-    protected boolean connectsTo(LevelReader view, BlockPos pos, Direction side) {
-        BlockState neighbor = view.getBlockState(pos.relative(side));
-        Block block = neighbor.getBlock();
-        if (block instanceof CableBlock) {
-            return true;
+    protected boolean connectsTo(LevelReader level, BlockPos pos, Direction side) {
+        var neighborState = level.getBlockState(pos.relative(side));
+        var block = neighborState.getBlock();
+        if (block instanceof ElectricBlock electricBlock) {
+            return electricBlock.connectsToCables(neighborState, level, pos.relative(side), side.getOpposite());
         }
-        // TODO return Electricity.canInteractWithCables(view, pos.relative(side), side.getOpposite());
         return false;
     }
 

@@ -56,7 +56,7 @@ public class HayoMachineTexture {
 
         if (fuelLeft > 0 && fuelTotal > 0) {
             var height = Mth.clamp(1 + (FUEL_SIZE - 1) * fuelLeft / fuelTotal, 1, FUEL_SIZE);
-            blit(graphics, x, y + FUEL_SIZE - 1 - height, FUEL_OVERLAY_X, FUEL_Y + FUEL_SIZE - 1 - height, FUEL_SIZE, height);
+            blit(graphics, x, y + FUEL_SIZE - height, FUEL_OVERLAY_X, FUEL_Y + FUEL_SIZE - height, FUEL_SIZE, height);
         }
     }
 

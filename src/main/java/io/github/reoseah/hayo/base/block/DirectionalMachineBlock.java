@@ -1,5 +1,6 @@
 package io.github.reoseah.hayo.base.block;
 
+import io.github.reoseah.hayo.api.energy.ElectricBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class DirectionalMachineBlock extends BaseEntityBlock {
+public abstract class DirectionalMachineBlock extends BaseEntityBlock implements ElectricBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
     protected DirectionalMachineBlock(Properties properties) {
