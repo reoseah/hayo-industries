@@ -24,6 +24,7 @@ public class EnergyTexts {
     private static final String AMOUNT_AND_CAPACITY_KEY = "hayo.energy.amount_and_capacity";
     private static final String AMOUNT_PER_TICK_KEY = "hayo.energy.amount_per_tick";
     private static final String AVERAGE_AMOUNT_PER_TICK_KEY = "hayo.energy.average_amount_per_tick";
+    private static final String MAX_AMOUNT_PER_TICK_KEY = "hayo.energy.max_amount_per_tick";
     private static final String AMOUNT_PER_USE_KEY = "hayo.energy.amount_per_use";
     private static final String FUEL_VALUE_KEY = "hayo.energy.fuel_value";
     private static final String APPROXIMATE_AMOUNT_KEY = "hayo.energy.approximate_amount";
@@ -65,6 +66,10 @@ public class EnergyTexts {
     /// E.g.: "+42.5 avg. ε/t". Doesn't round the value, make sure to round it yourself to one or two digits.
     public static MutableComponent averageAmountPerTick(float amount) {
         return Component.translatable(AVERAGE_AMOUNT_PER_TICK_KEY, (amount > 0 ? "+" : "") + amount);
+    }
+
+    public static MutableComponent maxAmountPerTick(long amount) {
+        return Component.translatable(MAX_AMOUNT_PER_TICK_KEY, amount);
     }
 
     /// E.g.: "100 ε per use"

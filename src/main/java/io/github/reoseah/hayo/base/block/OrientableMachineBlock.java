@@ -1,17 +1,22 @@
 package io.github.reoseah.hayo.base.block;
 
 import io.github.reoseah.hayo.api.energy.ElectricBlock;
+import io.github.reoseah.hayo.api.energy.ElectricBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -62,5 +67,29 @@ public abstract class OrientableMachineBlock extends BaseEntityBlock implements 
             player.openMenu(factory);
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
+        super.destroy(level, pos, state);
+        if (level instanceof ServerLevel serverLevel) {
+            ElectricBlocks.updateState(serverLevel, pos);
+        }
+    }
+
+    @Override
+    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
+        super.playerDestroy(level, player, pos, state, blockEntity, tool);
+        if (level instanceof ServerLevel serverLevel) {
+            ElectricBlocks.updateState(serverLevel, pos);
+        }
+    }
+
+    @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+        super.onPlace(state, level, pos, oldState, movedByPiston);
+        if (state.getBlock() != oldState.getBlock() && level instanceof ServerLevel serverLevel) {
+            ElectricBlocks.updateState(serverLevel, pos);
+        }
     }
 }

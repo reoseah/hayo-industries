@@ -41,7 +41,7 @@ public class EnergyCrystalArrayBlock extends DirectionalMachineBlock implements 
 
     @Override
     public boolean canReceiveEnergy(BlockState state, ServerLevel level, BlockPos pos, Direction side) {
-        return side != state.getValue(FACING);
+        return side.getOpposite() != state.getValue(FACING);
     }
 
     @Override

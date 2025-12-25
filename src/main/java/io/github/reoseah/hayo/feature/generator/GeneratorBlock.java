@@ -2,6 +2,7 @@ package io.github.reoseah.hayo.feature.generator;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.api.energy.ElectricSenderBlock;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class GeneratorBlock extends OrientableMachineBlock {
+public class GeneratorBlock extends OrientableMachineBlock implements ElectricSenderBlock {
     public static final MapCodec<GeneratorBlock> CODEC = simpleCodec(GeneratorBlock::new);
 
     public GeneratorBlock(Properties properties) {

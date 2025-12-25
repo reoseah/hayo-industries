@@ -1,18 +1,20 @@
 package io.github.reoseah.hayo.feature.cable;
 
 import io.github.reoseah.hayo.api.energy.ElectricBlock;
+import io.github.reoseah.hayo.api.energy.ElectricBlocks;
 import io.github.reoseah.hayo.api.energy.ElectricCableBlock;
 import io.netty.util.collection.IntObjectHashMap;
 import io.netty.util.collection.IntObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -20,6 +22,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 public class CableBlock extends Block implements ElectricCableBlock {
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
@@ -69,10 +72,14 @@ public class CableBlock extends Block implements ElectricCableBlock {
         });
     }
 
+    public final int transferLimit;
     public final VoxelShape[] shapes;
 
-    public CableBlock(int radius, Properties settings) {
+    public CableBlock(int transferLimit, int radius, Properties settings) {
         super(settings);
+        this.transferLimit = transferLimit;
+        this.shapes = getOrCreateShapes(radius);
+
         this.registerDefaultState(this.defaultBlockState() //
                 .setValue(DOWN, false) //
                 .setValue(UP, false) //
@@ -80,8 +87,6 @@ public class CableBlock extends Block implements ElectricCableBlock {
                 .setValue(SOUTH, false) //
                 .setValue(EAST, false) //
                 .setValue(WEST, false));
-
-        this.shapes = getOrCreateShapes(radius);
     }
 
     @Override
@@ -115,7 +120,7 @@ public class CableBlock extends Block implements ElectricCableBlock {
         var neighborState = level.getBlockState(pos.relative(side));
         var block = neighborState.getBlock();
         if (block instanceof ElectricBlock electricBlock) {
-            return electricBlock.connectsToCables(neighborState, level, pos.relative(side), side.getOpposite());
+            return electricBlock.connectsToCables(neighborState, level, pos.relative(side), side);
         }
         return false;
     }
@@ -129,5 +134,29 @@ public class CableBlock extends Block implements ElectricCableBlock {
                 | (state.getValue(WEST) ? 16 : 0) //
                 | (state.getValue(EAST) ? 32 : 0);
         return this.shapes[idx];
+    }
+
+    @Override
+    public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
+        super.destroy(level, pos, state);
+        if (level instanceof ServerLevel serverLevel) {
+            ElectricBlocks.updateState(serverLevel, pos);
+        }
+    }
+
+    @Override
+    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
+        super.playerDestroy(level, player, pos, state, blockEntity, tool);
+        if (level instanceof ServerLevel serverLevel) {
+            ElectricBlocks.updateState(serverLevel, pos);
+        }
+    }
+
+    @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+        super.onPlace(state, level, pos, oldState, movedByPiston);
+        if (level instanceof ServerLevel serverLevel) {
+            ElectricBlocks.updateState(serverLevel, pos);
+        }
     }
 }

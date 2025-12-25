@@ -5,6 +5,7 @@ import io.github.reoseah.hayo.base.EnergyModelProperty;
 import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
+import io.github.reoseah.hayo.feature.cable.CableItem;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlock;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlockEntity;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayMenu;
@@ -14,8 +15,8 @@ import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
-import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import io.github.reoseah.hayo.feature.processing_machines.ExtraChanceMachineRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import io.github.reoseah.hayo.feature.processing_machines.SideProductMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.compressor.*;
@@ -145,8 +146,8 @@ public class Hayo {
         public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
 
-        public static final Block CABLE = register("cable", properties -> new CableBlock(2, properties), BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final Block POWER_CABLE = register("power_cable", properties -> new CableBlock(3, properties), BlockBehaviour.Properties.of().strength(6F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final CableBlock CABLE = register("cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(6F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
@@ -177,7 +178,7 @@ public class Hayo {
             StrippableBlockRegistry.register(RUBBER_WOOD, STRIPPED_RUBBER_WOOD);
         }
 
-        private static Block register(String name, Function<BlockBehaviour.Properties, Block> constructor, BlockBehaviour.Properties properties) {
+        private static <T extends Block> T register(String name, Function<BlockBehaviour.Properties, T> constructor, BlockBehaviour.Properties properties) {
             var key = ResourceKey.create(Registries.BLOCK, modLocation(name));
 
             return Registry.register(BuiltInRegistries.BLOCK, key, constructor.apply(properties.setId(key)));
@@ -193,8 +194,8 @@ public class Hayo {
         public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item CABLE = registerBlock(Blocks.CABLE);
-        public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE);
+        public static final Item CABLE = registerBlock(Blocks.CABLE, CableItem::new);
+        public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, CableItem::new);
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
         public static final Item RUBBER_WOOD = registerBlock(Blocks.RUBBER_WOOD);
@@ -354,7 +355,7 @@ public class Hayo {
             return registerBlock(block, BlockItem::new);
         }
 
-        public static Item registerBlock(Block block, BiFunction<Block, Item.Properties, Item> constructor) {
+        public static <T extends Block> Item registerBlock(T block, BiFunction<T, Item.Properties, Item> constructor) {
             return registerBlock(block, constructor, new Item.Properties());
         }
 
@@ -362,7 +363,7 @@ public class Hayo {
             return registerBlock(block, BlockItem::new, properties);
         }
 
-        public static Item registerBlock(Block block, BiFunction<Block, Item.Properties, Item> constructor, Item.Properties properties) {
+        public static <T extends Block> Item registerBlock(T block, BiFunction<T, Item.Properties, Item> constructor, Item.Properties properties) {
             @SuppressWarnings("deprecation")
             var key = ResourceKey.create(Registries.ITEM, block.builtInRegistryHolder().key().location());
 
