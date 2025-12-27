@@ -37,6 +37,7 @@ import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -52,6 +53,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -87,12 +89,15 @@ import static net.minecraft.world.level.block.Blocks.logProperties;
 
 public class Hayo {
     public static final String MOD_ID = "hayo";
-
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
     public static final CreativeModeTab TAB = FabricItemGroup.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
 
-    public static final AttachmentType<ElectricBlockManager.ElectricBlockData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create(ElectricBlockManager.ElectricBlockData.ID, //
-            builder -> builder.initializer(ElectricBlockManager.ElectricBlockData::new).persistent(ElectricBlockManager.ElectricBlockData.CODEC.codec()));
+    public static final AttachmentType<ElectricBlockManager.ChunkSavedData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create( //
+            modLocation("electric_blocks"), //
+            builder -> builder //
+                    .initializer(ElectricBlockManager.ChunkSavedData::new) //
+                    .persistent(ElectricBlockManager.ChunkSavedData.CODEC.codec()));
 
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modLocation("main"), TAB);
@@ -120,6 +125,15 @@ public class Hayo {
         });
         ServerChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
             ElectricBlockManager.get(level).onChunkUnload(chunk);
+        });
+        ServerTickEvents.END_WORLD_TICK.register(new ServerTickEvents.EndWorldTick() {
+            @Override
+            public void onEndTick(ServerLevel world) {
+                var manager = world.getDataStorage().get(ElectricBlockManager.TYPE);
+                if (manager != null) {
+                    manager.onLevelTickEnd();
+                }
+            }
         });
     }
 
@@ -376,8 +390,7 @@ public class Hayo {
         }
 
         public static <T extends Block> Item registerBlock(T block, BiFunction<T, Item.Properties, Item> constructor, Item.Properties properties) {
-            @SuppressWarnings("deprecation")
-            var key = ResourceKey.create(Registries.ITEM, block.builtInRegistryHolder().key().location());
+            @SuppressWarnings("deprecation") var key = ResourceKey.create(Registries.ITEM, block.builtInRegistryHolder().key().location());
 
             return Registry.register(BuiltInRegistries.ITEM, key, constructor.apply(block, properties.setId(key).useBlockDescriptionPrefix()));
         }

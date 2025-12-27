@@ -51,7 +51,7 @@ public class CableBlock extends Block implements ElectricCableBlock {
             float min = 8 - rad;
             float max = 8 + rad;
             var center = Block.box(min, min, min, max, max, max);
-            VoxelShape[] connections = { //
+            var connections = new VoxelShape[]{ //
                     Block.box(min, 0, min, max, max, max), //
                     Block.box(min, min, min, max, 16, max), //
                     Block.box(min, min, 0, max, max, max), //
@@ -158,5 +158,15 @@ public class CableBlock extends Block implements ElectricCableBlock {
         if (level instanceof ServerLevel serverLevel) {
             ElectricBlocks.addOrUpdate(serverLevel, pos);
         }
+    }
+
+    @Override
+    protected boolean skipRendering(BlockState state, BlockState adjacentState, Direction direction) {
+        return state.getValue(getConnectionProperty(direction)) && adjacentState.is(this);
+    }
+
+    @Override
+    public int getTransferLimit(BlockState state) {
+        return this.transferLimit;
     }
 }
