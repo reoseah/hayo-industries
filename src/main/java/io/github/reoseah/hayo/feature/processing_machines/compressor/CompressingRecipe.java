@@ -1,16 +1,16 @@
 package io.github.reoseah.hayo.feature.processing_machines.compressor;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.processing_machines.SideProductMachineRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.BasicMachineRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
-public class CompressingRecipe extends SideProductMachineRecipe {
+public class CompressingRecipe extends BasicMachineRecipe {
     private static final int DEFAULT_DURATION_SECONDS = 12;
     public static final int DEFAULT_ENERGY = DEFAULT_DURATION_SECONDS * CompressorBlockEntity.ENERGY_USE_RATE * 20;
 
-    public CompressingRecipe(Ingredient input, ItemStack result, int processingEnergy, ItemStack secondaryResult, float secondaryResultChance) {
-        super(input, result, processingEnergy, secondaryResult, secondaryResultChance);
+    public CompressingRecipe(Ingredient input, ItemStack result, int processingEnergy, float extraChance) {
+        super(input, result, processingEnergy, extraChance);
     }
 
     @Override

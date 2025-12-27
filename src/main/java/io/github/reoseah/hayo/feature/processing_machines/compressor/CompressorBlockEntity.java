@@ -2,8 +2,7 @@ package io.github.reoseah.hayo.feature.processing_machines.compressor;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.BasicMachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -16,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class CompressorBlockEntity extends SimpleMachineBlockEntity<SimpleMachineRecipe> {
+public class CompressorBlockEntity extends BasicMachineBlockEntity<CompressingRecipe> {
     public static final int TRANSFER_RATE = 32;
     public static final int ENERGY_USE_RATE = 2;
     public static final int CAPACITY = 12 * 20 * ENERGY_USE_RATE; // 12s * 20tick/s * 2e/tick = 480e
@@ -31,7 +30,7 @@ public class CompressorBlockEntity extends SimpleMachineBlockEntity<SimpleMachin
     }
 
     @Override
-    protected RecipeType<SimpleMachineRecipe> getRecipeType() {
+    protected RecipeType<CompressingRecipe> getRecipeType() {
         return Hayo.RecipeTypes.COMPRESSING;
     }
 
@@ -46,7 +45,7 @@ public class CompressorBlockEntity extends SimpleMachineBlockEntity<SimpleMachin
     }
 
     @Override
-    public int getDefaultRecipeEnergy(RecipeHolder<SimpleMachineRecipe> recipe) {
+    public int getDefaultRecipeEnergy(RecipeHolder<CompressingRecipe> recipe) {
         return recipe.value().processingEnergy();
     }
 

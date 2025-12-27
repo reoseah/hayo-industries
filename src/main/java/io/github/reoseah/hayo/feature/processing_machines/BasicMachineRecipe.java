@@ -3,6 +3,8 @@ package io.github.reoseah.hayo.feature.processing_machines;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -11,17 +13,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-public abstract class SimpleMachineRecipe implements Recipe<SingleRecipeInput>, MachineRecipe {
+@Accessors(fluent = true)
+public abstract class BasicMachineRecipe implements Recipe<SingleRecipeInput>, MachineRecipe {
+    @Getter
     private final Ingredient input;
+    @Getter
     private final ItemStack result;
     private final int processingEnergy;
+    @Getter
+    public final float extraChance;
 
-    public SimpleMachineRecipe(Ingredient input, //
-                               ItemStack result, //
-                               int processingEnergy) {
+    public BasicMachineRecipe(Ingredient input, //
+                              ItemStack result, //
+                              int processingEnergy, //
+                              float extraChance) {
         this.input = input;
         this.result = result;
         this.processingEnergy = processingEnergy;
+        this.extraChance = extraChance;
     }
 
     @Override
@@ -50,42 +59,37 @@ public abstract class SimpleMachineRecipe implements Recipe<SingleRecipeInput>, 
         return null;
     }
 
-    public Ingredient input() {
-        return this.input;
-    }
-
-    public ItemStack result() {
-        return this.result;
-    }
-
     @Override
     public int processingEnergy() {
         return this.processingEnergy;
     }
 
     @FunctionalInterface
-    public interface Factory<R extends SimpleMachineRecipe> {
-        R create(Ingredient input, ItemStack result, int processingEnergy);
+    public interface Factory<R extends BasicMachineRecipe> {
+        R create(Ingredient input, ItemStack result, int processingEnergy, float extraChance);
     }
 
-    public static class Serializer<R extends SimpleMachineRecipe> implements RecipeSerializer<R> {
+    public static class Serializer<R extends BasicMachineRecipe> implements RecipeSerializer<R> {
         private final MapCodec<R> codec;
         private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec;
 
         public Serializer(Factory<R> factory, int defaultEnergy) {
             this.codec = RecordCodecBuilder.mapCodec( //
                     instance -> instance.group( //
-                            Ingredient.CODEC.fieldOf("ingredient").forGetter(SimpleMachineRecipe::input), //
-                            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(SimpleMachineRecipe::result), //
-                            Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(SimpleMachineRecipe::processingEnergy) //
+                            Ingredient.CODEC.fieldOf("ingredient").forGetter(BasicMachineRecipe::input), //
+                            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(BasicMachineRecipe::result), //
+                            Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(BasicMachineRecipe::processingEnergy), //
+                            Codec.FLOAT.fieldOf("extra_chance").orElse(0F).forGetter(BasicMachineRecipe::extraChance) //
                     ).apply(instance, factory::create));
             this.streamCodec = StreamCodec.composite( //
                     Ingredient.CONTENTS_STREAM_CODEC, //
-                    SimpleMachineRecipe::input, //
+                    BasicMachineRecipe::input, //
                     ItemStack.STREAM_CODEC, //
-                    SimpleMachineRecipe::result, //
+                    BasicMachineRecipe::result, //
                     ByteBufCodecs.INT, //
-                    SimpleMachineRecipe::processingEnergy, //
+                    BasicMachineRecipe::processingEnergy, //
+                    ByteBufCodecs.FLOAT, //
+                    BasicMachineRecipe::extraChance, //
                     factory::create);
         }
 

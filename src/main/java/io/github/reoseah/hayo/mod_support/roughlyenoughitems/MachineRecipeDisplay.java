@@ -2,7 +2,7 @@ package io.github.reoseah.hayo.mod_support.roughlyenoughitems;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.BasicMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayo.mixin.SingleItemRecipeAccessor;
 import lombok.Getter;
@@ -62,7 +62,7 @@ public class MachineRecipeDisplay implements Display {
         this.processingEnergy = processingEnergy;
     }
 
-    public MachineRecipeDisplay(RecipeHolder<? extends SimpleMachineRecipe> holder) {
+    public MachineRecipeDisplay(RecipeHolder<? extends BasicMachineRecipe> holder) {
         this.location = Optional.of(holder.id().location());
 
         var recipe = holder.value();

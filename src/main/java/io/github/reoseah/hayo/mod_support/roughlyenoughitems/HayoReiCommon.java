@@ -24,8 +24,8 @@ public class HayoReiCommon implements REICommonPlugin {
 
     @Override
     public void registerDisplays(ServerDisplayRegistry registry) {
-        registry.beginRecipeFiller(CompressingRecipe.class).fill(MachineRecipeDisplay::new);
-        registry.beginRecipeFiller(ExtractingRecipe.class).fill(MachineRecipeDisplay::new);
+        registry.beginRecipeFiller(CompressingRecipe.class).fill(MachineRecipeWithExtraDisplay::new);
+        registry.beginRecipeFiller(ExtractingRecipe.class).fill(MachineRecipeWithExtraDisplay::new);
         registry.beginRecipeFiller(MaceratingRecipe.class).fill(MachineRecipeWithExtraDisplay::new);
         registry.beginRecipeFiller(AbstractCookingRecipe.class) //
                 .filterType(type -> ((RecipeType<?>) type) == RecipeType.SMELTING || ((RecipeType<?>) type) == RecipeType.BLASTING || ((RecipeType<?>) type) == RecipeType.SMOKING) //

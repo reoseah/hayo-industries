@@ -16,10 +16,8 @@ import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
-import io.github.reoseah.hayo.feature.processing_machines.ExtraChanceMachineRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.BasicMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
-import io.github.reoseah.hayo.feature.processing_machines.SideProductMachineRecipe;
-import io.github.reoseah.hayo.feature.processing_machines.SimpleMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.compressor.*;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlock;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
@@ -272,9 +270,9 @@ public class Hayo {
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
         public static final Item REDSTONE_FLUX_LASER = registerItem("redstone_flux_laser", new Item.Properties().rarity(Rarity.RARE));
-        public static final Item COMPOSITE_PLATE_MIXTURE = registerItem("composite_plate_mixture");
+        public static final Item mixed_metal_ingot = registerItem("mixed_metal_ingot");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
-        public static final Item CONDUCTIVE_CARBON_MIXTURE = registerItem("conductive_carbon_mixture");
+        public static final Item carbon_redstone_matrix = registerItem("carbon_redstone_matrix");
         public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
@@ -353,9 +351,9 @@ public class Hayo {
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(TRANSFORMER);
                 entries.accept(REDSTONE_FLUX_LASER);
-                entries.accept(COMPOSITE_PLATE_MIXTURE);
+                entries.accept(mixed_metal_ingot);
                 entries.accept(COMPOSITE_PLATE);
-                entries.accept(CONDUCTIVE_CARBON_MIXTURE);
+                entries.accept(carbon_redstone_matrix);
                 entries.accept(CONDUCTIVE_CARBON);
 
                 entries.accept(OVERCLOCK_UPGRADE);
@@ -463,9 +461,9 @@ public class Hayo {
     }
 
     public static class RecipeTypes {
-        public static final RecipeType<ExtraChanceMachineRecipe> MACERATING = register("macerating");
-        public static final RecipeType<SimpleMachineRecipe> COMPRESSING = register("compressing");
-        public static final RecipeType<SimpleMachineRecipe> EXTRACTING = register("extracting");
+        public static final RecipeType<MaceratingRecipe> MACERATING = register("macerating");
+        public static final RecipeType<CompressingRecipe> COMPRESSING = register("compressing");
+        public static final RecipeType<ExtractingRecipe> EXTRACTING = register("extracting");
 
         public static void initialize() {
         }
@@ -483,9 +481,9 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
-        public static final RecipeSerializer<ExtraChanceMachineRecipe> MACERATING = register("macerating", new ExtraChanceMachineRecipe.Serializer<>(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<SideProductMachineRecipe> COMPRESSING = register("compressing", new SideProductMachineRecipe.Serializer<>(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<SimpleMachineRecipe> EXTRACTING = register("extracting", new SimpleMachineRecipe.Serializer<>(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", new BasicMachineRecipe.Serializer<>(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", new BasicMachineRecipe.Serializer<>(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", new BasicMachineRecipe.Serializer<>(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
 
         public static void initialize() {
         }

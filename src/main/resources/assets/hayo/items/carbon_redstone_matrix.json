@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/conductive_carbon_mixture"
+    "model": "hayo:item/carbon_redstone_matrix"
   }
 }

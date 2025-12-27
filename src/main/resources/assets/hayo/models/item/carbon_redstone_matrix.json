@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "hayo:item/conductive_carbon_mixture"
+    "layer0": "hayo:item/carbon_redstone_matrix"
   }
 }
