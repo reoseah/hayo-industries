@@ -6,6 +6,7 @@ import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
+import io.github.reoseah.hayo.feature.cable.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlock;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlockEntity;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayMenu;
@@ -30,11 +31,14 @@ import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -89,6 +93,9 @@ public class Hayo {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final CreativeModeTab TAB = FabricItemGroup.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
 
+    public static final AttachmentType<ElectricBlockManager.ElectricBlockData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create(ElectricBlockManager.ElectricBlockData.ID, //
+            builder -> builder.initializer(ElectricBlockManager.ElectricBlockData::new).persistent(ElectricBlockManager.ElectricBlockData.CODEC.codec()));
+
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modLocation("main"), TAB);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modLocation("energy"), SimpleBatteryItem.ENERGY);
@@ -109,6 +116,13 @@ public class Hayo {
                         (selectionCtx, modificationCtx) -> {
                             modificationCtx.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, modKey(Registries.PLACED_FEATURE, "rubber_tree_patch"));
                         });
+
+        ServerChunkEvents.CHUNK_LOAD.register((level, chunk) -> {
+            ElectricBlockManager.get(level).onChunkLoad(chunk);
+        });
+        ServerChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
+            ElectricBlockManager.get(level).onChunkUnload(chunk);
+        });
     }
 
     @Environment(EnvType.CLIENT)

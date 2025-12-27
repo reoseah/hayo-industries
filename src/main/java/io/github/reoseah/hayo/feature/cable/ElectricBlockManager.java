@@ -1,31 +1,38 @@
 package io.github.reoseah.hayo.feature.cable;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.api.energy.ElectricBlock;
 import io.github.reoseah.hayo.api.energy.ElectricCableBlock;
 import io.github.reoseah.hayo.api.energy.ElectricReceiverBlock;
 import io.github.reoseah.hayo.api.energy.ElectricSenderBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.*;
 
-public class CableManager extends SavedData {
+public class ElectricBlockManager extends SavedData {
     public static final String ID = "HayoCables";
-    public static final SavedDataType<CableManager> TYPE = new SavedDataType<>(ID, (ctx) -> new CableManager(ctx.level()), ctx -> Codec.unit(() -> new CableManager(ctx.level())), null);
+    public static final SavedDataType<ElectricBlockManager> TYPE = new SavedDataType<>(ID, (ctx) -> new ElectricBlockManager(ctx.level()), ctx -> Codec.unit(() -> new ElectricBlockManager(ctx.level())), null);
 
     protected final ServerLevel level;
-    protected final Map<BlockPos, SenderState> senders = new HashMap<>();
+    @VisibleForTesting
+    public final Map<BlockPos, SenderState> senders = new HashMap<>();
 
-    public CableManager(ServerLevel level) {
+    public ElectricBlockManager(ServerLevel level) {
         this.level = level;
     }
 
-    public static CableManager get(ServerLevel level) {
+    public static ElectricBlockManager get(ServerLevel level) {
         return level.getDataStorage().computeIfAbsent(TYPE);
     }
 
@@ -37,6 +44,7 @@ public class CableManager extends SavedData {
         for (var iterator = senderState.receivers.iterator(); iterator.hasNext(); ) {
             var path = iterator.next();
             var state = this.level.getBlockState(path.receiver);
+
             if (state.getBlock() instanceof ElectricReceiverBlock receiver) {
                 int sent = receiver.receiveEnergy(amount, this.level, path.receiver, path.receivingFace);
                 totalSent += sent;
@@ -49,10 +57,46 @@ public class CableManager extends SavedData {
         return totalSent;
     }
 
-    public void updateState(BlockPos pos) {
-        var potentialSenders = discoverSenders(this.level, pos);
-        for (var senderPos : potentialSenders) {
-            this.senders.remove(senderPos);
+    public void addOrUpdate(BlockPos pos) {
+        deleteReachableSenders(this.level, pos, this.senders);
+
+        var chunkData = this.level.getChunk(pos).getAttachedOrCreate(Hayo.CHUNK_ELECTRIC_DATA);
+        var state = this.level.getBlockState(pos);
+        if (state.getBlock() instanceof ElectricBlock) {
+            if (!chunkData.electricBlocks.contains(pos)) {
+                chunkData.electricBlocks.add(pos.immutable());
+            }
+        } else {
+            chunkData.electricBlocks.remove(pos);
+        }
+    }
+
+    public void remove(BlockPos pos) {
+        deleteReachableSenders(this.level, pos, this.senders);
+
+        var chunkData = this.level.getChunk(pos).getAttachedOrCreate(Hayo.CHUNK_ELECTRIC_DATA);
+        chunkData.electricBlocks.remove(pos);
+    }
+
+    public void onChunkLoad(LevelChunk chunk) {
+        var data = chunk.getAttached(Hayo.CHUNK_ELECTRIC_DATA);
+        if (data == null) {
+            return;
+        }
+
+        for (var pos : data.electricBlocks) {
+//            this.updateState(pos);
+        }
+    }
+
+    public void onChunkUnload(LevelChunk chunk) {
+        var data = chunk.getAttached(Hayo.CHUNK_ELECTRIC_DATA);
+        if (data == null) {
+            return;
+        }
+
+        for (var pos : data.electricBlocks) {
+            this.remove(pos);
         }
     }
 
@@ -102,6 +146,10 @@ public class CableManager extends SavedData {
                     continue;
                 }
 
+                if (!level.isLoaded(pos)) {
+                    continue;
+                }
+
                 var state = level.getBlockState(pos);
                 if (!(state.getBlock() instanceof ElectricBlock electricBlock) || !electricBlock.connectsToCables(state, level, pos, direction)) {
                     continue;
@@ -141,14 +189,12 @@ public class CableManager extends SavedData {
     private record PosData(int distance, Direction direction, BlockState state) {
     }
 
-    public static List<BlockPos> discoverSenders(ServerLevel level, BlockPos start) {
+    public static void deleteReachableSenders(ServerLevel level, BlockPos start, Map<BlockPos, ?> data) {
         var queue = new ArrayDeque<BlockPos>();
         queue.add(start);
 
         var visited = new HashSet<BlockPos>();
         visited.add(start);
-
-        var result = new ArrayList<BlockPos>();
 
         while (!queue.isEmpty()) {
             var queuedPos = queue.removeFirst();
@@ -156,6 +202,10 @@ public class CableManager extends SavedData {
             for (var direction : Direction.values()) {
                 var pos = queuedPos.relative(direction);
                 if (visited.contains(pos)) {
+                    continue;
+                }
+
+                if (!level.isLoaded(pos)) {
                     continue;
                 }
 
@@ -167,14 +217,36 @@ public class CableManager extends SavedData {
 
                 visited.add(pos);
                 if (state.getBlock() instanceof ElectricSenderBlock) {
-                    result.add(pos);
+                    data.remove(pos);
                 }
                 if (state.getBlock() instanceof ElectricCableBlock) {
                     queue.add(pos);
                 }
             }
         }
+    }
 
-        return result;
+    public static class ElectricBlockData {
+        public static final ResourceLocation ID = Hayo.modLocation("electricity");
+        public static final MapCodec<ElectricBlockData> CODEC = RecordCodecBuilder.mapCodec(instance -> //
+                instance.group(BlockPos.CODEC.listOf().fieldOf("electric_blocks").forGetter(data -> data.electricBlocks)) //
+                        .apply(instance, ElectricBlockData::new));
+
+        protected final List<BlockPos> electricBlocks;
+
+        public ElectricBlockData() {
+            this.electricBlocks = new ArrayList<>();
+        }
+
+        public ElectricBlockData(List<BlockPos> electricBlocks) {
+            this.electricBlocks = new ArrayList<>(electricBlocks);
+        }
+
+        @Override
+        public String toString() {
+            return "ChunkElectricData{" + //
+                    "electricBlocks=" + this.electricBlocks + //
+                    '}';
+        }
     }
 }

@@ -140,7 +140,7 @@ public class CableBlock extends Block implements ElectricCableBlock {
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
         super.destroy(level, pos, state);
         if (level instanceof ServerLevel serverLevel) {
-            ElectricBlocks.updateState(serverLevel, pos);
+            ElectricBlocks.remove(serverLevel, pos);
         }
     }
 
@@ -148,7 +148,7 @@ public class CableBlock extends Block implements ElectricCableBlock {
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
         super.playerDestroy(level, player, pos, state, blockEntity, tool);
         if (level instanceof ServerLevel serverLevel) {
-            ElectricBlocks.updateState(serverLevel, pos);
+            ElectricBlocks.remove(serverLevel, pos);
         }
     }
 
@@ -156,7 +156,7 @@ public class CableBlock extends Block implements ElectricCableBlock {
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if (level instanceof ServerLevel serverLevel) {
-            ElectricBlocks.updateState(serverLevel, pos);
+            ElectricBlocks.addOrUpdate(serverLevel, pos);
         }
     }
 }
