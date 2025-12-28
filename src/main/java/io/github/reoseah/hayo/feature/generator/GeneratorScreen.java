@@ -53,8 +53,8 @@ public class GeneratorScreen extends HayoContainerScreen<GeneratorMenu> {
 
         if (this.isHovering(62, 37, HayoMachineTexture.FUEL_SIZE, HayoMachineTexture.FUEL_SIZE, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of( //
-                    Component.translatable("hayo.fuel"), //
-                    EnergyTexts.approximateAmount(this.menu.getFuelEnergyLeft()).withStyle(ChatFormatting.GRAY) //
+                    EnergyTexts.approximateAmount(this.menu.getFuelEnergyLeft()), //
+                    EnergyTexts.conversionRate(GeneratorBlockEntity.GENERATION_RATE).withStyle(ChatFormatting.GRAY) //
             ), Optional.empty(), mouseX, mouseY);
             return;
         }
@@ -69,6 +69,9 @@ public class GeneratorScreen extends HayoContainerScreen<GeneratorMenu> {
             var fuelValue = fuelValues.burnDuration(stack) * GeneratorBlockEntity.ENERGY_PER_FUEL_TICK;
             var tooltip = super.getTooltipFromContainerItem(stack);
             tooltip.add(EnergyTexts.fuelValue(fuelValue).withStyle(ChatFormatting.DARK_AQUA));
+            if (stack.getCount() > 1) {
+                tooltip.add(Component.translatable("hayo.energy.amount_per_stack", fuelValue * stack.getCount()).withStyle(ChatFormatting.DARK_AQUA));
+            }
             return tooltip;
         }
         return super.getTooltipFromContainerItem(stack);

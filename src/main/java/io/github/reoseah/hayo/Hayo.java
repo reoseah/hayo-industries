@@ -18,7 +18,6 @@ import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
 import io.github.reoseah.hayo.feature.processing_machines.BasicMachineRecipe;
-import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import io.github.reoseah.hayo.feature.processing_machines.compressor.*;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlock;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
@@ -99,11 +98,11 @@ public class Hayo {
             ctx -> Codec.unit(() -> new ElectricBlockManager(ctx.level())), //
             null);
 
-    public static final AttachmentType<ElectricBlockManager.ChunkSavedData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create( //
+    public static final AttachmentType<ElectricBlockManager.ChunkData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create( //
             modLocation("electric_blocks"), //
             builder -> builder //
-                    .initializer(ElectricBlockManager.ChunkSavedData::new) //
-                    .persistent(ElectricBlockManager.ChunkSavedData.CODEC.codec()));
+                    .initializer(ElectricBlockManager.ChunkData::new) //
+                    .persistent(ElectricBlockManager.ChunkData.CODEC.codec()));
 
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modLocation("main"), TAB);
@@ -176,7 +175,7 @@ public class Hayo {
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(6F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
-        private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
+        private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F, 30F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
         public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F).noOcclusion().sound(SoundType.GLASS));
         public static final Block REINFORCED_STONE_STAIRS = register("reinforced_stone_stairs", props -> new StairBlock(REINFORCED_STONE.defaultBlockState(), props), REINFORCED_BLOCKS);
@@ -301,7 +300,7 @@ public class Hayo {
                 entries.accept(MACERATOR);
                 entries.accept(COMPRESSOR);
                 entries.accept(EXTRACTOR);
-                entries.accept(AUTOMATED_FERTILIZER);
+//                entries.accept(AUTOMATED_FERTILIZER);
                 entries.accept(ENERGY_CRYSTAL_ARRAY);
 
                 entries.accept(CABLE);
@@ -442,10 +441,10 @@ public class Hayo {
 
     public static class MenuTypes {
         public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
-        public static final MenuType<MachineMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
-        public static final MenuType<MachineMenu> MACERATOR = register("macerator", MaceratorMenu::new);
-        public static final MenuType<MachineMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
-        public static final MenuType<MachineMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
+        public static final MenuType<ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
+        public static final MenuType<MaceratorMenu> MACERATOR = register("macerator", MaceratorMenu::new);
+        public static final MenuType<CompressorMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
+        public static final MenuType<ExtractorMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
         public static final MenuType<EnergyCrystalArrayMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
 
         public static void initialize() {

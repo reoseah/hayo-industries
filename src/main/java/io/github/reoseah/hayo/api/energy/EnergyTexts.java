@@ -27,6 +27,7 @@ public class EnergyTexts {
     private static final String MAX_AMOUNT_PER_TICK_KEY = "hayo.energy.max_amount_per_tick";
     private static final String AMOUNT_PER_USE_KEY = "hayo.energy.amount_per_use";
     private static final String FUEL_VALUE_KEY = "hayo.energy.fuel_value";
+    private static final String CONVERSION_RATE = "hayo.energy.conversion_rate";
     private static final String APPROXIMATE_AMOUNT_KEY = "hayo.energy.approximate_amount";
     private static final String OVERCLOCK_USE_RATE_KEY = "hayo.energy.overclock_use_rate";
     private static final String OVERCLOCK_TOTAL_COST_KEY = "hayo.energy.overclock_total_cost";
@@ -80,6 +81,10 @@ public class EnergyTexts {
     /// E.g.: "1000 ε fuel value", used by basic generator screen in item tooltips
     public static MutableComponent fuelValue(long amount) {
         return Component.translatable(FUEL_VALUE_KEY, formatAmount(amount));
+    }
+
+    public static MutableComponent conversionRate(long amount) {
+        return Component.translatable(CONVERSION_RATE, formatAmount(amount));
     }
 
     /// E.g.: "≈ 1000 ε", used by basic generator screen in tooltip over the fuel gauge

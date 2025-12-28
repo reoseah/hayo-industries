@@ -1,8 +1,11 @@
 package io.github.reoseah.hayo.feature.processing_machines;
 
+import io.github.reoseah.hayo.api.energy.ElectricItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -11,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class BasicMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends MachineBlockEntity<R, SingleRecipeInput> {
+public abstract class BasicMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends MachineBlockEntity<R, SingleRecipeInput> implements WorldlyContainer {
     public static final int SLOTS = 7;
     public static final int INPUT_SLOT = 0;
     public static final int BATTERY_SLOT = 1;
@@ -31,6 +34,16 @@ public abstract class BasicMachineBlockEntity<R extends Recipe<SingleRecipeInput
     @Override
     public boolean isInputSlot(int slot) {
         return slot == INPUT_SLOT;
+    }
+
+    @Override
+    public int getFirstUpgradeSlot() {
+        return FIRST_UPGRADE_SLOT;
+    }
+
+    @Override
+    public int getLastUpgradeSlot() {
+        return LAST_UPGRADE_SLOT;
     }
 
     @Override
@@ -69,16 +82,29 @@ public abstract class BasicMachineBlockEntity<R extends Recipe<SingleRecipeInput
         } else {
             outputStack.grow(recipeOutput.getCount());
         }
-
     }
 
     @Override
-    public int getFirstUpgradeSlot() {
-        return FIRST_UPGRADE_SLOT;
+    public int[] getSlotsForFace(Direction side) {
+        return switch (side) {
+            case UP -> new int[]{INPUT_SLOT};
+            case DOWN -> new int[]{OUTPUT_SLOT};
+            default -> new int[]{BATTERY_SLOT};
+        };
     }
 
     @Override
-    public int getLastUpgradeSlot() {
-        return LAST_UPGRADE_SLOT;
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction side) {
+        return switch (side) {
+            case null -> index != OUTPUT_SLOT;
+            case UP -> true;
+            case DOWN -> false;
+            default -> ElectricItems.isElectric(stack);
+        };
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction side) {
+        return side != Direction.UP;
     }
 }
