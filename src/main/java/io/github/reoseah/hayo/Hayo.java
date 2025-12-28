@@ -1,5 +1,6 @@
 package io.github.reoseah.hayo;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.base.EnergyModelProperty;
 import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
@@ -53,7 +54,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -77,6 +77,7 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +93,11 @@ public class Hayo {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static final CreativeModeTab TAB = FabricItemGroup.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
+
+    public static final SavedDataType<ElectricBlockManager> ELECTRIC_DATA = new SavedDataType<>("HayoElectricData", //
+            ctx -> new ElectricBlockManager(ctx.level()), //
+            ctx -> Codec.unit(() -> new ElectricBlockManager(ctx.level())), //
+            null);
 
     public static final AttachmentType<ElectricBlockManager.ChunkSavedData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create( //
             modLocation("electric_blocks"), //
@@ -126,14 +132,8 @@ public class Hayo {
         ServerChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
             ElectricBlockManager.get(level).onChunkUnload(chunk);
         });
-        ServerTickEvents.END_WORLD_TICK.register(new ServerTickEvents.EndWorldTick() {
-            @Override
-            public void onEndTick(ServerLevel world) {
-                var manager = world.getDataStorage().get(ElectricBlockManager.TYPE);
-                if (manager != null) {
-                    manager.onLevelTickEnd();
-                }
-            }
+        ServerTickEvents.END_WORLD_TICK.register(level -> {
+            ElectricBlockManager.get(level).onLevelTickEnd();
         });
     }
 

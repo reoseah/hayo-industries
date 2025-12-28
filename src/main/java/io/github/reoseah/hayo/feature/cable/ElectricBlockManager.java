@@ -1,6 +1,5 @@
 package io.github.reoseah.hayo.feature.cable;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.reoseah.hayo.Hayo;
@@ -8,24 +7,22 @@ import io.github.reoseah.hayo.api.energy.ElectricBlock;
 import io.github.reoseah.hayo.api.energy.ElectricCableBlock;
 import io.github.reoseah.hayo.api.energy.ElectricReceiverBlock;
 import io.github.reoseah.hayo.api.energy.ElectricSenderBlock;
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.saveddata.SavedDataType;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
 
 public class ElectricBlockManager extends SavedData {
-    public static final String ID = "HayoElectricBlocks";
-    public static final SavedDataType<ElectricBlockManager> TYPE = new SavedDataType<>(ID, (ctx) -> new ElectricBlockManager(ctx.level()), ctx -> Codec.unit(() -> new ElectricBlockManager(ctx.level())), null);
-
     protected final ServerLevel level;
     protected final Map<ChunkPos, ChunkTickData> tickData = new HashMap<>();
     protected final Map<BlockPos, SenderState> senders = new HashMap<>();
@@ -35,28 +32,63 @@ public class ElectricBlockManager extends SavedData {
     }
 
     public static ElectricBlockManager get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(TYPE);
+        return level.getDataStorage().computeIfAbsent(Hayo.ELECTRIC_DATA);
     }
 
     public int sendToAllSides(int amount, BlockPos pos) {
         var senderState = this.senders.computeIfAbsent(pos, (p) -> new SenderState(discoverReceivers(this.level, p)));
 
-        int totalSent = 0;
-        // TODO distribute energy equally..
+        int totalReceivable = 0;
+        var receivables = new Object2IntArrayMap<ReceiverPath>();
+
         for (var iterator = senderState.receivers.iterator(); iterator.hasNext(); ) {
             var path = iterator.next();
             var state = this.level.getBlockState(path.receiver);
 
             if (state.getBlock() instanceof ElectricReceiverBlock receiver) {
-                int received = receiver.receiveEnergy(amount, this.level, path.receiver, path.receivingFace);
+                int receivable = receiver.getReceivableEnergy(this.level, path.receiver, path.receivingFace);
 
-                for (var cablePos : path.cablePositions) {
-                    this.increaseCurrent(cablePos, received);
-                }
-                totalSent += received;
-                amount -= received;
+                receivables.put(path, receivable);
+                totalReceivable += receivable;
             } else {
                 iterator.remove();
+            }
+        }
+
+        if (totalReceivable == 0) {
+            return 0;
+        }
+
+        int totalSent = 0;
+        if (amount >= totalReceivable) {
+            for (var path : senderState.receivers) {
+                var state = this.level.getBlockState(path.receiver);
+
+                if (state.getBlock() instanceof ElectricReceiverBlock receiver) {
+                    int received = receiver.receiveEnergy(amount, this.level, path.receiver, path.receivingFace);
+
+                    for (var cablePos : path.cablePositions) {
+                        this.increaseCurrent(cablePos, received);
+                    }
+                    totalSent += received;
+                    amount -= received;
+                }
+            }
+        } else {
+            var offer = Mth.ceil(amount / (float) receivables.size());
+
+            for (var path : senderState.receivers) {
+                var state = this.level.getBlockState(path.receiver);
+
+                if (state.getBlock() instanceof ElectricReceiverBlock receiver) {
+                    int received = receiver.receiveEnergy(Math.min(amount, offer), this.level, path.receiver, path.receivingFace);
+
+                    for (var cablePos : path.cablePositions) {
+                        this.increaseCurrent(cablePos, received);
+                    }
+                    totalSent += received;
+                    amount -= received;
+                }
             }
         }
 
@@ -78,17 +110,10 @@ public class ElectricBlockManager extends SavedData {
             if (!chunkData.electricBlocks.contains(pos)) {
                 chunkData.electricBlocks.add(pos.immutable());
             }
-            if (state.getBlock() instanceof ElectricCableBlock cable) {
-                var tickData = this.tickData.computeIfAbsent(new ChunkPos(pos), p -> new ChunkTickData());
-                int transferLimit = cable.getTransferLimit(state);
-
-                tickData.cableTransferLimits.put(pos, transferLimit);
-            }
         } else {
             chunkData.electricBlocks.remove(pos);
             var tickData = this.tickData.get(new ChunkPos(pos));
             if (tickData != null) {
-                tickData.cableTransferLimits.removeInt(pos);
                 tickData.cableCurrent.removeInt(pos);
             }
         }
@@ -102,19 +127,17 @@ public class ElectricBlockManager extends SavedData {
     }
 
     public void onLevelTickEnd() {
-        if (this.level.getGameTime() % 20 == 0) {
-            // FIXME debugging
-            System.out.println(this.tickData);
-        }
-
         for (var chunkData : this.tickData.values()) {
             for (var cableEntry : chunkData.cableCurrent.object2IntEntrySet()) {
                 var cablePos = cableEntry.getKey();
                 var current = cableEntry.getIntValue();
-                var maxCurrent = chunkData.cableTransferLimits.getOrDefault(cablePos, 0);
-                if (current > maxCurrent) {
-                    // FIXME test
-                    this.level.destroyBlockProgress(-Math.abs(cablePos.hashCode()), cablePos, 5);
+                var state = this.level.getBlockState(cablePos);
+                if (state.getBlock() instanceof ElectricCableBlock cableBlock) {
+                    var maxCurrent = cableBlock.getTransferLimit(state);
+                    if (current > maxCurrent) {
+                        // FIXME test
+                        this.level.destroyBlockProgress(-Math.abs(cablePos.hashCode()), cablePos, 5);
+                    }
                 }
             }
             chunkData.cableCurrent.clear();
@@ -127,17 +150,8 @@ public class ElectricBlockManager extends SavedData {
             return;
         }
 
-        for (var pos : data.electricBlocks) {
-            var state = chunk.getBlockState(pos);
-            System.out.println(pos + " " + state);
-
-            if (state.getBlock() instanceof ElectricCableBlock cable) {
-                var tickData = this.tickData.computeIfAbsent(chunk.getPos(), p -> new ChunkTickData());
-                int transferLimit = cable.getTransferLimit(state);
-                System.out.println("chunk load cable transfer limit: " + pos + " " + transferLimit);
-                tickData.cableTransferLimits.put(pos, transferLimit);
-            }
-        }
+        // TODO: update potential senders somehow, it seems block information can't be accessed at this point,
+        //  (and doing world.getBlockState gets stuck in a thread lock...)
     }
 
     public void onChunkUnload(LevelChunk chunk) {
@@ -287,6 +301,8 @@ public class ElectricBlockManager extends SavedData {
                 .group(BlockPos.CODEC.listOf().fieldOf("electric_blocks").forGetter(data -> data.electricBlocks)) //
                 .apply(instance, ChunkSavedData::new));
 
+        // don't need to be full BlockPos instance, knowing a chunk position it should be possible to
+        // represent any position within as a `short` or at least an `int`...
         protected final List<BlockPos> electricBlocks;
 
         public ChunkSavedData() {
@@ -296,25 +312,11 @@ public class ElectricBlockManager extends SavedData {
         public ChunkSavedData(@Unmodifiable List<BlockPos> electricBlocks) {
             this.electricBlocks = new ArrayList<>(electricBlocks);
         }
-
-        @Override
-        public String toString() {
-            return "ChunkElectricData{" + //
-                    "electricBlocks=" + this.electricBlocks + //
-                    '}';
-        }
     }
 
     public static class ChunkTickData {
-        public final Object2IntMap<BlockPos> cableTransferLimits = new Object2IntOpenHashMap<>();
+        // don't need to be full BlockPos instance, knowing a chunk position it should be possible to
+        // represent any position within as a `short` or at least an `int`...
         public final Object2IntMap<BlockPos> cableCurrent = new Object2IntOpenHashMap<>();
-
-        @Override
-        public String toString() {
-            return "ChunkTickData{" + //
-                    "cableCurrent=" + this.cableCurrent + //
-                    "cableMaxCurrent=" + this.cableTransferLimits + //
-                    '}';
-        }
     }
 }

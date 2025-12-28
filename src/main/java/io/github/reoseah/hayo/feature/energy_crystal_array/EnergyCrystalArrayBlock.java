@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -42,6 +41,14 @@ public class EnergyCrystalArrayBlock extends DirectionalMachineBlock implements 
     @Override
     public boolean canReceiveEnergy(BlockState state, ServerLevel level, BlockPos pos, Direction side) {
         return side.getOpposite() != state.getValue(FACING);
+    }
+
+    @Override
+    public int getReceivableEnergy(ServerLevel level, BlockPos pos, Direction side) {
+        if (level.getBlockEntity(pos) instanceof EnergyCrystalArrayBlockEntity entity) {
+            return EnergyCrystalArrayBlockEntity.getReceivableEnergy(level, pos, side, entity);
+        }
+        return 0;
     }
 
     @Override

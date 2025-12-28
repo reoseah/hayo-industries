@@ -54,12 +54,17 @@ public class EnergyCrystalArrayBlockEntity extends ElectricBlockEntity implement
         entity.energyPerTick = 0;
     }
 
+    public static int getReceivableEnergy(ServerLevel level, BlockPos pos, Direction side, EnergyCrystalArrayBlockEntity entity) {
+        return Math.min(CAPACITY - entity.getStoredEnergy(), TRANSFER_RATE); // todo: limit energy per tick
+    }
+
     public static int receiveEnergy(int amount, ServerLevel level, BlockPos pos, Direction side, EnergyCrystalArrayBlockEntity entity) {
         int change = Math.min(amount, Math.min(CAPACITY - entity.getStoredEnergy(), TRANSFER_RATE));
         entity.storedEnergy += change;
         entity.energyPerTick += change;
         return change;
     }
+
 
     @Override
     protected NonNullList<ItemStack> createInventory() {

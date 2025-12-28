@@ -10,5 +10,7 @@ public interface ElectricReceiverBlock extends ElectricBlock {
         return this.connectsToCables(state, level, pos, side);
     }
 
+    int getReceivableEnergy(ServerLevel level, BlockPos pos, Direction side);
+
     int receiveEnergy(int amount, ServerLevel level, BlockPos pos, Direction side);
 }
