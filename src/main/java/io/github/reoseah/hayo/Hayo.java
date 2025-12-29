@@ -2,12 +2,13 @@ package io.github.reoseah.hayo;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import io.github.reoseah.hayo.base.EnergyModelProperty;
+import io.github.reoseah.hayo.base.ElectricBlockManager;
+import io.github.reoseah.hayo.base.OverloadCablePayload;
+import io.github.reoseah.hayo.base.item.EnergyModelProperty;
 import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
-import io.github.reoseah.hayo.feature.cable.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlock;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlockEntity;
 import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayMenu;
@@ -34,12 +35,14 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.Util;
@@ -48,9 +51,11 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
 import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
@@ -115,6 +120,7 @@ public class Hayo {
         FoliagePlacerTypes.initialize();
         RecipeTypes.initialize();
         RecipeSerializers.initialize();
+        CustomPayloads.initialize();
 
         BiomeModifications.create(ResourceLocation.fromNamespaceAndPath("hayo", "features")) //
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST) //
@@ -149,6 +155,8 @@ public class Hayo {
         MenuScreens.register(MenuTypes.COMPRESSOR, CompressorScreen::new);
         MenuScreens.register(MenuTypes.EXTRACTOR, ExtractorScreen::new);
         MenuScreens.register(MenuTypes.ENERGY_CRYSTAL_ARRAY, EnergyCrystalArrayScreen::new);
+
+        CustomPayloads.initializeClient();
     }
 
     public static ResourceLocation modLocation(String path) {
@@ -177,7 +185,7 @@ public class Hayo {
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F, 30F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
         public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
-        public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F).noOcclusion().sound(SoundType.GLASS));
+        public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F, 15F).noOcclusion().sound(SoundType.GLASS));
         public static final Block REINFORCED_STONE_STAIRS = register("reinforced_stone_stairs", props -> new StairBlock(REINFORCED_STONE.defaultBlockState(), props), REINFORCED_BLOCKS);
         public static final Block REINFORCED_STONE_SLAB = register("reinforced_stone_slab", SlabBlock::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
@@ -502,6 +510,38 @@ public class Hayo {
 
         private static <T extends Recipe<?>> RecipeSerializer<T> register(String name, RecipeSerializer<T> serializer) {
             return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, modLocation(name), serializer);
+        }
+    }
+
+    public static class CustomPayloads {
+        public static final CustomPacketPayload.Type<OverloadCablePayload> OVERLOAD_CABLE = new CustomPacketPayload.Type<>(modLocation("overload_cable"));
+
+        public static void initialize() {
+            PayloadTypeRegistry.playS2C().register(OVERLOAD_CABLE, OverloadCablePayload.STREAM_CODEC);
+        }
+
+        @Environment(EnvType.CLIENT)
+        public static void initializeClient() {
+            ClientPlayNetworking.registerGlobalReceiver(OVERLOAD_CABLE, (payload, context) -> {
+                var level = context.client().level;
+
+                for (var destructionEntry : payload.destructionProgress().object2IntEntrySet()) {
+                    var pos = destructionEntry.getKey();
+                    var value = destructionEntry.getIntValue();
+
+                    level.destroyBlockProgress(-Math.abs(pos.hashCode()), pos, value);
+                    if (value > 0) {
+                        for (int i = 0; i < 2; i++) {
+                            double x = pos.getX() + 0.25 + level.random.nextFloat() * 0.5;
+                            double y = pos.getY() + 0.25 + level.random.nextFloat() * 0.5;
+                            double z = pos.getZ() + 0.25 + level.random.nextFloat() * 0.5;
+                            level.addParticle(ParticleTypes.SMOKE, x, y, z, 0, 0, 0);
+
+                            level.addParticle(ParticleTypes.FLAME, x, y, z, 0, 0, 0);
+                        }
+                    }
+                }
+            });
         }
     }
 }

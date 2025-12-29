@@ -35,8 +35,8 @@ public class EnergyCrystalArrayScreen extends HayoContainerScreen<EnergyCrystalA
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (this.isHovering(88, 16, HayoMachineTexture.ENERGY_WIDTH, HayoMachineTexture.ENERGY_HEIGHT, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of( //
-                    EnergyTexts.STORED_ENERGY, //
-                    EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), EnergyCrystalArrayBlockEntity.CAPACITY).withStyle(ChatFormatting.GRAY), //
+                    EnergyTexts.amountAndPercentage(this.menu.getStoredEnergy(), this.menu.getStoredEnergy() * 100 / EnergyCrystalArrayBlockEntity.CAPACITY), //
+                    Component.translatable("hayo.energy.max", EnergyTexts.formatAmount(EnergyCrystalArrayBlockEntity.CAPACITY)).withStyle(ChatFormatting.GRAY), //
                     EnergyTexts.averageAmountPerTick(this.menu.getAverageEnergyPerTick()).withStyle(ChatFormatting.GRAY) //
             ), Optional.empty(), mouseX, mouseY);
             return;

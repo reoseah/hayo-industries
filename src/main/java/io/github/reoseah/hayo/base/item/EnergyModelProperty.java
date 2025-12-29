@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.base;
+package io.github.reoseah.hayo.base.item;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.api.energy.ElectricItems;

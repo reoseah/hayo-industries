@@ -104,13 +104,11 @@
   "hayo.energy.amount_and_amount_per_tick": "%s ε at %s ε/t",
   "hayo.energy.max_amount_per_tick": "%s max. ε/t",
   "hayo.energy.fuel_value": "%s ε fuel value",
-  "hayo.energy.amount_per_stack": "(%s ε per stack)",
   "hayo.energy.approximate_amount": "≈ %s ε",
   "hayo.energy.conversion_rate": "%s ε/t conversion",
   "hayo.energy.overclock_use_rate": "%s%% max. ε/t use rate",
   "hayo.energy.overclock_total_cost": "%s%% total ε per recipe",
   "hayo.energy.capacity_change": "%s max. ε",
-  "hayo.energy.recipe_stats": "%s ε at %s ε/t for %s s",
   "hayo.energy.overclocked_recipe": "%s ε (%s%%) at %s ε/t (%s%%) for %s s (%s%%)",
   "hayo.energy.duration_at_amount_per_tick": "%s s at %s ε/t",
   "hayo.fuel": "Fuel",
@@ -120,5 +118,7 @@
   "hayo.extracting": "Extracting",
   "hayo.electric_smelting": "Smelting (Electric)",
   "hayo.electric_blasting": "Blasting (Electric)",
-  "hayo.electric_smoking": "Smoking (Electric)"
+  "hayo.electric_smoking": "Smoking (Electric)",
+  "hayo.energy.max": "%s max. ε",
+  "hayo.energy.amount_and_percentage": "%s ε (%s%%)"
 }

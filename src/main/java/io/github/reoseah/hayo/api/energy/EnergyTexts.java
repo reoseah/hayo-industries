@@ -20,19 +20,18 @@ public class EnergyTexts {
         LARGE_AMOUNTS_FORMAT.setDecimalFormatSymbols(symbols);
     }
 
-    private static final String AMOUNT_KEY = "hayo.energy.amount";
-    private static final String AMOUNT_AND_CAPACITY_KEY = "hayo.energy.amount_and_capacity";
-    private static final String AMOUNT_PER_TICK_KEY = "hayo.energy.amount_per_tick";
-    private static final String AVERAGE_AMOUNT_PER_TICK_KEY = "hayo.energy.average_amount_per_tick";
-    private static final String MAX_AMOUNT_PER_TICK_KEY = "hayo.energy.max_amount_per_tick";
-    private static final String AMOUNT_PER_USE_KEY = "hayo.energy.amount_per_use";
-    private static final String FUEL_VALUE_KEY = "hayo.energy.fuel_value";
-    private static final String CONVERSION_RATE = "hayo.energy.conversion_rate";
-    private static final String APPROXIMATE_AMOUNT_KEY = "hayo.energy.approximate_amount";
-    private static final String OVERCLOCK_USE_RATE_KEY = "hayo.energy.overclock_use_rate";
-    private static final String OVERCLOCK_TOTAL_COST_KEY = "hayo.energy.overclock_total_cost";
-    private static final String RECIPE_STATS_KEY = "hayo.energy.recipe_stats";
-    private static final String OVERCLOCKED_RECIPE_KEY = "hayo.energy.overclocked_recipe";
+    private static final String AMOUNT = "hayo.energy.amount";
+    private static final String AMOUNT_AND_CAPACITY = "hayo.energy.amount_and_capacity";
+    private static final String AMOUNT_PER_TICK = "hayo.energy.amount_per_tick";
+    private static final String AVERAGE_AMOUNT_PER_TICK = "hayo.energy.average_amount_per_tick";
+    private static final String MAX_AMOUNT_PER_TICK = "hayo.energy.max_amount_per_tick";
+    private static final String AMOUNT_AND_PERCENTAGE = "hayo.energy.amount_and_percentage";
+
+    private static final String FUEL_VALUE = "hayo.energy.fuel_value";
+    private static final String CONVERSION = "hayo.energy.conversion_rate";
+    private static final String APPROXIMATE_AMOUNT = "hayo.energy.approximate_amount";
+    private static final String OVERCLOCK_USE_RATE = "hayo.energy.overclock_use_rate";
+    private static final String OVERCLOCK_TOTAL_COST = "hayo.energy.overclock_total_cost";
 
     /// "Energy"
     public static final Component ENERGY = Component.translatable("hayo.energy");
@@ -51,63 +50,53 @@ public class EnergyTexts {
 
     /// E.g.: "1000 ε", after 10000 group with commas - "1,000,000 ε".
     public static MutableComponent amount(long amount) {
-        return Component.translatable(AMOUNT_KEY, formatAmount(amount));
+        return Component.translatable(AMOUNT, formatAmount(amount));
     }
 
     /// E.g.: "500,000 / 1,000,000 ε"
     public static MutableComponent amountAndCapacity(long amount, long capacity) {
-        return Component.translatable(AMOUNT_AND_CAPACITY_KEY, formatAmount(amount), formatAmount(capacity));
+        return Component.translatable(AMOUNT_AND_CAPACITY, formatAmount(amount), formatAmount(capacity));
     }
 
     /// E.g.: "100 ε/t"
     public static MutableComponent amountPerTick(long amount) {
-        return Component.translatable(AMOUNT_PER_TICK_KEY, formatAmount(amount));
+        return Component.translatable(AMOUNT_PER_TICK, formatAmount(amount));
     }
 
     /// E.g.: "+42.5 avg. ε/t". Doesn't round the value, make sure to round it yourself to one or two digits.
     public static MutableComponent averageAmountPerTick(float amount) {
-        return Component.translatable(AVERAGE_AMOUNT_PER_TICK_KEY, (amount > 0 ? "+" : "") + amount);
+        return Component.translatable(AVERAGE_AMOUNT_PER_TICK, (amount > 0 ? "+" : "") + amount);
     }
 
     public static MutableComponent maxAmountPerTick(long amount) {
-        return Component.translatable(MAX_AMOUNT_PER_TICK_KEY, amount);
+        return Component.translatable(MAX_AMOUNT_PER_TICK, amount);
     }
 
-    /// E.g.: "100 ε per use"
-    public static MutableComponent amountPerUse(long amount) {
-        return Component.translatable(AMOUNT_PER_USE_KEY, formatAmount(amount));
-    }
-
-    /// E.g.: "1000 ε fuel value", used by basic generator screen in item tooltips
-    public static MutableComponent fuelValue(long amount) {
-        return Component.translatable(FUEL_VALUE_KEY, formatAmount(amount));
+    public static MutableComponent amountAndPercentage(long amount, int percentage) {
+        return Component.translatable(AMOUNT_AND_PERCENTAGE, formatAmount(amount), percentage);
     }
 
     public static MutableComponent conversionRate(long amount) {
-        return Component.translatable(CONVERSION_RATE, formatAmount(amount));
+        return Component.translatable(CONVERSION, formatAmount(amount));
     }
 
-    /// E.g.: "≈ 1000 ε", used by basic generator screen in tooltip over the fuel gauge
+    /// E.g.: "≈ 1000 ε", used by Generator in tooltip over the fuel gauge
     public static MutableComponent approximateAmount(long amount) {
-        return Component.translatable(APPROXIMATE_AMOUNT_KEY, formatAmount(amount));
+        return Component.translatable(APPROXIMATE_AMOUNT, formatAmount(amount));
     }
 
-    /// E.g.: "400 ε at 2 ε/t for 10 s"
-    public static MutableComponent recipeStats(int total, int useRate, float durationSeconds) {
-        return Component.translatable(RECIPE_STATS_KEY, total, useRate, Math.ceil(durationSeconds * 100) / 100);
+    /// E.g.: "1000 ε fuel value", used by Generator in item tooltips
+    public static MutableComponent fuelValue(long amount) {
+        return Component.translatable(FUEL_VALUE, formatAmount(amount));
     }
 
     /// E.g.: "+100% ε/t", used by machines in Overclock Upgrade tooltip
     public static MutableComponent overclockUseRate(long percentage) {
-        return Component.translatable(OVERCLOCK_USE_RATE_KEY, (percentage > 0 ? "+" : "") + percentage);
+        return Component.translatable(OVERCLOCK_USE_RATE, (percentage > 0 ? "+" : "") + percentage);
     }
 
     /// E.g.: "+25% ε per recipe", used by machines in Overclock Upgrade tooltip
     public static MutableComponent overclockTotalCost(long percentage) {
-        return Component.translatable(OVERCLOCK_TOTAL_COST_KEY, (percentage > 0 ? "+" : "") + percentage);
-    }
-
-    public static MutableComponent overclockedRecipe(int total, int totalPercentage, int useRate, int useRatePercentage, float durationSeconds, float durationPercentage) {
-        return Component.translatable(OVERCLOCKED_RECIPE_KEY, total, totalPercentage, useRate, useRatePercentage, Math.ceil(durationSeconds * 100) / 100, Math.ceil(durationPercentage * 100) / 100);
+        return Component.translatable(OVERCLOCK_TOTAL_COST, (percentage > 0 ? "+" : "") + percentage);
     }
 }

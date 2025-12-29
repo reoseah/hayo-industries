@@ -45,8 +45,9 @@ public class GeneratorScreen extends HayoContainerScreen<GeneratorMenu> {
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (this.isHovering(88, 16, HayoMachineTexture.ENERGY_WIDTH, HayoMachineTexture.ENERGY_HEIGHT, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of( //
-                    EnergyTexts.STORED_ENERGY, //
-                    EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), GeneratorBlockEntity.CAPACITY).withStyle(ChatFormatting.GRAY) //
+                    EnergyTexts.amountAndPercentage(this.menu.getStoredEnergy(), this.menu.getStoredEnergy() * 100 / GeneratorBlockEntity.CAPACITY), //
+                    Component.translatable("hayo.energy.max", EnergyTexts.formatAmount(GeneratorBlockEntity.CAPACITY)).withStyle(ChatFormatting.GRAY) //
+
             ), Optional.empty(), mouseX, mouseY);
             return;
         }
@@ -66,12 +67,10 @@ public class GeneratorScreen extends HayoContainerScreen<GeneratorMenu> {
     protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
         var fuelValues = FuelValues.vanillaBurnTimes(Minecraft.getInstance().level.registryAccess(), FeatureFlags.DEFAULT_FLAGS);
         if (fuelValues.isFuel(stack)) {
-            var fuelValue = fuelValues.burnDuration(stack) * GeneratorBlockEntity.ENERGY_PER_FUEL_TICK;
+            var energyValue = fuelValues.burnDuration(stack) * GeneratorBlockEntity.ENERGY_PER_FUEL_TICK;
+
             var tooltip = super.getTooltipFromContainerItem(stack);
-            tooltip.add(EnergyTexts.fuelValue(fuelValue).withStyle(ChatFormatting.DARK_AQUA));
-            if (stack.getCount() > 1) {
-                tooltip.add(Component.translatable("hayo.energy.amount_per_stack", fuelValue * stack.getCount()).withStyle(ChatFormatting.DARK_AQUA));
-            }
+            tooltip.add(EnergyTexts.fuelValue(energyValue).withStyle(ChatFormatting.DARK_AQUA));
             return tooltip;
         }
         return super.getTooltipFromContainerItem(stack);

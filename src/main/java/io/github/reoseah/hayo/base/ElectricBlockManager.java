@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.cable;
+package io.github.reoseah.hayo.base;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -10,12 +10,14 @@ import io.github.reoseah.hayo.api.energy.ElectricSenderBlock;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -160,31 +162,55 @@ public class ElectricBlockManager extends SavedData {
                 if (state.getBlock() instanceof ElectricCableBlock cableBlock) {
                     var maxCurrent = cableBlock.getTransferLimit(state);
                     if (current <= maxCurrent) {
-                        chunkValues.ticksAboveMaxCurrent.put(pos, Math.max(0, chunkValues.ticksAboveMaxCurrent.getOrDefault(pos, 0) - 1));
+                        int value = Math.max(0, chunkValues.ticksAboveMaxCurrent.getOrDefault(pos, 0) - 1);
+                        if (value > 0) {
+                            chunkValues.ticksAboveMaxCurrent.put(pos, value);
+                        } else {
+                            chunkValues.ticksAboveMaxCurrent.removeInt(pos);
+                        }
                     }
                 }
             }
             chunkValues.cableCurrent.clear();
         }
 
-        if (this.level.getGameTime() % 20 == 0) {
-            for (var chunkValues : this.tickData.values()) {
-                for (var ticksAboveMaxCurrentEntry : chunkValues.ticksAboveMaxCurrent.object2IntEntrySet()) {
+        if (this.level.getGameTime() % 10 == 0) {
+            for (var chunkEntry : this.tickData.entrySet()) {
+                var chunkPos = chunkEntry.getKey();
+                var chunkValues = chunkEntry.getValue();
+
+                var destructionProgressMap = new Object2IntOpenHashMap<BlockPos>();
+
+                for (var iterator = chunkValues.ticksAboveMaxCurrent.object2IntEntrySet().iterator(); iterator.hasNext(); ) {
+                    var ticksAboveMaxCurrentEntry = iterator.next();
                     var pos = ticksAboveMaxCurrentEntry.getKey();
                     var ticksAboveMaxCurrent = ticksAboveMaxCurrentEntry.getIntValue();
 
                     if (ticksAboveMaxCurrent > 100) {
                         // TODO: call a method on ElectricCableBlock?
-                        ticksAboveMaxCurrentEntry.setValue(0);
-                        this.level.destroyBlockProgress(-Mth.abs(pos.hashCode()), pos, -1);
+                       iterator.remove();
+                        destructionProgressMap.put(pos, -1);
                         this.level.destroyBlock(pos, false);
                     } else if (ticksAboveMaxCurrent > 0) {
                         int destructionProgress = Mth.clamp(ticksAboveMaxCurrent / 10, 0, 9);
-                        // FIXME group into one custom packet per chunk, spawn smoke particles on client
-                        this.level.destroyBlockProgress(-Mth.abs(pos.hashCode()), pos, destructionProgress);
+                        destructionProgressMap.put(pos, destructionProgress);
                     } else {
-                        this.level.destroyBlockProgress(-Mth.abs(pos.hashCode()), pos, -1);
+                        destructionProgressMap.put(pos, -1);
                     }
+                }
+
+                for (var iterator = destructionProgressMap.object2IntEntrySet().iterator(); iterator.hasNext(); ) {
+                    var entry = iterator.next();
+                    var pos = entry.getKey();
+                    var destructionProgress = entry.getIntValue();
+
+                    if (destructionProgress == chunkValues.lastDestructionProgressMap.getOrDefault(pos, -1)) {
+                        iterator.remove();
+                    }
+                }
+                chunkValues.lastDestructionProgressMap = destructionProgressMap;
+                if (!destructionProgressMap.isEmpty()) {
+                    PlayerLookup.tracking(this.level, chunkPos).forEach(serverPlayer -> ServerPlayNetworking.send(serverPlayer, new OverloadCablePayload(chunkPos, destructionProgressMap)));
                 }
             }
         }
@@ -367,5 +393,6 @@ public class ElectricBlockManager extends SavedData {
     public static class ChunkTickValues {
         public final Object2IntMap<BlockPos> cableCurrent = new Object2IntOpenHashMap<>();
         public final Object2IntMap<BlockPos> ticksAboveMaxCurrent = new Object2IntOpenHashMap<>();
+        public Object2IntOpenHashMap<BlockPos> lastDestructionProgressMap = new Object2IntOpenHashMap<>();
     }
 }

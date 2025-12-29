@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.api.energy;
 
-import io.github.reoseah.hayo.feature.cable.ElectricBlockManager;
+import io.github.reoseah.hayo.base.ElectricBlockManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 

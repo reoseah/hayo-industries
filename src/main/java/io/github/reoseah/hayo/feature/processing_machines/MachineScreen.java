@@ -53,8 +53,7 @@ public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (this.isHovering(48, 37, HayoMachineTexture.ZAP_SIZE, HayoMachineTexture.ZAP_SIZE, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of( //
-                    Component.translatable("hayo.energy"), //
-                    EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), this.menu.getEnergyCapacity()).withStyle(ChatFormatting.GRAY) //
+                    EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), this.menu.getEnergyCapacity()) //
             ), Optional.empty(), mouseX, mouseY);
             return;
         }
