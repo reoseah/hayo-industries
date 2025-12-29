@@ -188,7 +188,7 @@ public class Hayo {
         public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F, 15F).noOcclusion().sound(SoundType.GLASS));
         public static final Block REINFORCED_STONE_STAIRS = register("reinforced_stone_stairs", props -> new StairBlock(REINFORCED_STONE.defaultBlockState(), props), REINFORCED_BLOCKS);
         public static final Block REINFORCED_STONE_SLAB = register("reinforced_stone_slab", SlabBlock::new, REINFORCED_BLOCKS);
-        public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
+        public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 15F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
 
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
         public static final Block RESIN_YIELDING_RUBBER_LOG = register("resin_yielding_rubber_log", ResinYieldingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
@@ -204,7 +204,7 @@ public class Hayo {
         public static final Block RUBBER_STAIRS = register("rubber_stairs", props -> new StairBlock(RUBBER_PLANKS.defaultBlockState(), props), RUBBER_PROPERTIES);
         public static final Block RUBBER_SLAB = register("rubber_slab", SlabBlock::new, RUBBER_PROPERTIES);
 
-        public static final Block FERRU = register("ferru", FerruBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
+        public static final Block FERRU = register("ferru", props -> new FerruBlock(TagKey.create(Registries.ITEM, modLocation("ferru_fertilizers")), props), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
 
         public static void initialize() {
             StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
@@ -250,6 +250,8 @@ public class Hayo {
         public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
         public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
 
+        public static final Item FERRU_SEEDS = registerItem("ferru_seeds", props -> new BlockItem(Blocks.FERRU, props), new Item.Properties().useItemDescriptionPrefix());
+
         public static final Item WRENCH = registerItem("wrench");
 
         private static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
@@ -291,9 +293,9 @@ public class Hayo {
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
         public static final Item REDSTONE_FLUX_LASER = registerItem("redstone_flux_laser", new Item.Properties().rarity(Rarity.RARE));
-        public static final Item mixed_metal_ingot = registerItem("mixed_metal_ingot");
+        public static final Item MIXED_METAL_INGOT = registerItem("mixed_metal_ingot");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
-        public static final Item carbon_redstone_matrix = registerItem("carbon_redstone_matrix");
+        public static final Item CARBON_REDSTONE_MATRIX = registerItem("carbon_redstone_matrix");
         public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
@@ -332,6 +334,8 @@ public class Hayo {
                 entries.accept(REINFORCED_STONE_SLAB);
                 entries.accept(REINFORCED_GLASS);
                 entries.accept(REINFORCED_DOOR);
+
+                entries.accept(FERRU_SEEDS);
 
                 entries.accept(WRENCH);
                 entries.accept(SILICON_BRONZE_SWORD);
@@ -372,9 +376,9 @@ public class Hayo {
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(TRANSFORMER);
                 entries.accept(REDSTONE_FLUX_LASER);
-                entries.accept(mixed_metal_ingot);
+                entries.accept(MIXED_METAL_INGOT);
                 entries.accept(COMPOSITE_PLATE);
-                entries.accept(carbon_redstone_matrix);
+                entries.accept(CARBON_REDSTONE_MATRIX);
                 entries.accept(CONDUCTIVE_CARBON);
 
                 entries.accept(OVERCLOCK_UPGRADE);

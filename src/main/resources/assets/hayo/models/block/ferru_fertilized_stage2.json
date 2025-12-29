@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "hayo:block/ferru_fertilized_stage2"
+  }
+}
