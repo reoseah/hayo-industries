@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "hayo:block/machine_bottom",
+    "side": "hayo:block/battery_array_side",
+    "top": "hayo:block/battery_array_output_vertical"
+  }
+}

@@ -57,6 +57,11 @@ public class ElectricFurnaceBlockEntity extends BasicMachineBlockEntity<Abstract
     }
 
     @Override
+    protected int getEnergyTransferRate() {
+        return TRANSFER_RATE;
+    }
+
+    @Override
     public int getDefaultRecipeEnergy(RecipeHolder<AbstractCookingRecipe> recipe) {
         return energyCostFromCookingTime(recipe.value().cookingTime());
     }

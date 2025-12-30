@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy_crystal_array;
+package io.github.reoseah.hayo.feature.energy_storages;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
@@ -46,7 +46,7 @@ public class EnergyCrystalArrayBlock extends DirectionalMachineBlock implements 
     @Override
     public int getReceivableEnergy(ServerLevel level, BlockPos pos, Direction side) {
         if (level.getBlockEntity(pos) instanceof EnergyCrystalArrayBlockEntity entity) {
-            return EnergyCrystalArrayBlockEntity.getReceivableEnergy(level, pos, side, entity);
+            return entity.getReceivableEnergy(level, pos, side);
         }
         return 0;
     }
@@ -54,7 +54,7 @@ public class EnergyCrystalArrayBlock extends DirectionalMachineBlock implements 
     @Override
     public int receiveEnergy(int amount, ServerLevel level, BlockPos pos, Direction side) {
         if (level.getBlockEntity(pos) instanceof EnergyCrystalArrayBlockEntity entity) {
-            return EnergyCrystalArrayBlockEntity.receiveEnergy(amount, level, pos, side, entity);
+            return entity.receiveEnergy(amount, level, pos, side);
         }
         return 0;
     }

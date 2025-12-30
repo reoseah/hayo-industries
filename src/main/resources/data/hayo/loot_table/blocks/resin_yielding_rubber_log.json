@@ -2,6 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
+      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "conditions": [
         {
@@ -13,8 +14,26 @@
           "type": "minecraft:item",
           "name": "hayo:rubber_log"
         }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "hayo:resin_yielding_rubber_log",
+          "properties": {
+            "has_resin": "true"
+          }
+        }
       ],
-      "rolls": 1.0
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "hayo:sticky_resin"
+        }
+      ]
     }
   ],
   "random_sequence": "hayo:blocks/resin_yielding_rubber_log"

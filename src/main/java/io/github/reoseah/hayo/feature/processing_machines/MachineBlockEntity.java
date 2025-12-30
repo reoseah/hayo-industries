@@ -39,6 +39,44 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         super(type, pos, state);
     }
 
+    public static <R extends Recipe<I>, I extends RecipeInput> void tickProcessing(ServerLevel level, BlockPos pos, BlockState state, MachineBlockEntity<R, I> entity) {
+        boolean wasProcessing = entity.recipeUsedEnergy > 0;
+
+        var input = entity.createRecipeInput(entity.stacks);
+        if (input.isEmpty()) {
+            if (entity.recipeUsedEnergy > 0) {
+                entity.recipeUsedEnergy = entity.recipeTotalEnergy = 0;
+                entity.setChanged();
+            }
+        } else {
+            var recipeHolder = entity.findMatchingRecipe(level, input);
+
+            int energyUseRate = entity.getEnergyUseRate();
+            boolean hasEnergy = entity.storedEnergy >= energyUseRate;
+            if (hasEnergy && entity.canCraft(level.registryAccess(), recipeHolder, input, entity.stacks)) {
+                int usable = Math.min(Math.min(energyUseRate, entity.recipeTotalEnergy - entity.recipeUsedEnergy), entity.storedEnergy);
+
+                entity.storedEnergy -= usable;
+                entity.recipeUsedEnergy += usable;
+
+                if (entity.recipeUsedEnergy >= entity.recipeTotalEnergy) {
+                    entity.craft(level.registryAccess(), recipeHolder, input, entity.stacks);
+                    entity.resetRecipeProgress();
+                }
+
+                entity.setChanged();
+            } else {
+                entity.recipeUsedEnergy = Mth.clamp(entity.recipeUsedEnergy - 2 * energyUseRate, 0, entity.recipeTotalEnergy);
+                entity.setChanged();
+            }
+        }
+
+        boolean isProcessing = entity.recipeUsedEnergy > 0;
+        if (wasProcessing != isProcessing) {
+            level.setBlockAndUpdate(pos, state.setValue(OrientableMachineBlock.LIT, isProcessing));
+        }
+    }
+
     public static ContainerData createData(MachineBlockEntity<?, ?> entity) {
         return new ContainerData() {
             @Override
@@ -74,14 +112,6 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected abstract int getDefaultRecipeEnergy(RecipeHolder<R> holder);
 
-    public int getEnergyCapacity() {
-        return this.getDefaultCapacity() + this.capacityFromUpgrades;
-    }
-
-    public int getEnergyUseRate() {
-        return this.getDefaultEnergyUseRate() * (1 + this.overclockCount);
-    }
-
     protected abstract int getSlotCount();
 
     protected abstract boolean isInputSlot(int slot);
@@ -95,6 +125,15 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     protected abstract boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, I recipeInput, NonNullList<ItemStack> items);
 
     protected abstract void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, I input, NonNullList<ItemStack> items);
+
+    @Override
+    public int getEnergyCapacity() {
+        return this.getDefaultCapacity() + this.capacityFromUpgrades;
+    }
+
+    public int getEnergyUseRate() {
+        return this.getDefaultEnergyUseRate() * (1 + this.overclockCount);
+    }
 
     public int getRecipeTotalEnergy(RecipeHolder<R> holder) {
         return this.getDefaultRecipeEnergy(holder) * (100 + 25 * this.overclockCount) / 100;
@@ -143,6 +182,15 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
             }
         }
         super.setItem(slot, stack);
+    }
+
+    public @Nullable RecipeHolder<R> findMatchingRecipe(ServerLevel level, I input) {
+        var recipeManager = level.recipeAccess();
+        var optional = recipeManager.getRecipeFor(this.getRecipeType(), input, level, this.lastRecipe);
+        if (optional.isPresent()) {
+            this.lastRecipe = optional.get().id();
+        }
+        return optional.orElse(null);
     }
 
     @MustBeInvokedByOverriders
@@ -195,136 +243,6 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
             }
         }
     }
-
-    public @Nullable RecipeHolder<R> findMatchingRecipe(ServerLevel level, I input) {
-        var recipeManager = level.recipeAccess();
-        var optional = recipeManager.getRecipeFor(this.getRecipeType(), input, level, this.lastRecipe);
-        if (optional.isPresent()) {
-            this.lastRecipe = optional.get().id();
-        }
-        return optional.orElse(null);
-    }
-
-    public static <R extends Recipe<I>, I extends RecipeInput> void tickProcessing(ServerLevel level, BlockPos pos, BlockState state, MachineBlockEntity<R, I> entity) {
-        boolean wasProcessing = entity.recipeUsedEnergy > 0;
-
-        var input = entity.createRecipeInput(entity.stacks);
-        if (input.isEmpty()) {
-            if (entity.recipeUsedEnergy > 0) {
-                entity.recipeUsedEnergy = entity.recipeTotalEnergy = 0;
-                entity.setChanged();
-            }
-        } else {
-            var recipeHolder = entity.findMatchingRecipe(level, input);
-
-            int energyUseRate = entity.getEnergyUseRate();
-            boolean hasEnergy = entity.storedEnergy >= energyUseRate;
-            if (hasEnergy && entity.canCraft(level.registryAccess(), recipeHolder, input, entity.stacks)) {
-                int usable = Math.min(Math.min(energyUseRate, entity.recipeTotalEnergy - entity.recipeUsedEnergy), entity.storedEnergy);
-
-                entity.storedEnergy -= usable;
-                entity.recipeUsedEnergy += usable;
-
-                if (entity.recipeUsedEnergy >= entity.recipeTotalEnergy) {
-                    entity.craft(level.registryAccess(), recipeHolder, input, entity.stacks);
-                    entity.resetRecipeProgress();
-                }
-
-                entity.setChanged();
-            } else {
-                entity.recipeUsedEnergy = Mth.clamp(entity.recipeUsedEnergy - 2 * energyUseRate, 0, entity.recipeTotalEnergy);
-                entity.setChanged();
-            }
-        }
-
-        boolean isProcessing = entity.recipeUsedEnergy > 0;
-        if (wasProcessing != isProcessing) {
-            level.setBlockAndUpdate(pos, state.setValue(OrientableMachineBlock.LIT, isProcessing));
-        }
-    }
-
-//    public interface SlotHelper<R extends Recipe<I>, I extends RecipeInput> {
-//
-//        /// Returns a helper for "classic" machines with one input, one output and 4 upgrade slots.
-//        @SuppressWarnings("unchecked")
-//        static <R extends Recipe<SingleRecipeInput>> SlotHelper<R, SingleRecipeInput> classic() {
-//            return (SlotHelper<R, SingleRecipeInput>) Classic.INSTANCE;
-//        }
-//
-//        @SuppressWarnings("unchecked")
-//        static <R extends Recipe<SingleRecipeInput>> SlotHelper<R, SingleRecipeInput> classicWithExtraOutput() {
-//            return (SlotHelper<R, SingleRecipeInput>) ClassicWithExtraOutput.INSTANCE;
-//        }
-//
-//        enum Classic implements SlotHelper<Recipe<SingleRecipeInput>, SingleRecipeInput> {
-//            INSTANCE;
-//
-//
-//        }
-//
-//        enum ClassicWithExtraOutput implements SlotHelper<SecondaryOutputElectricRecipe, SingleRecipeInput> {
-//            INSTANCE;
-//
-//            public static final int SLOTS = 8;
-//            public static final int INPUT_SLOT = 0;
-//            public static final int OUTPUT_SLOT = 2;
-//            public static final int SECONDARY_OUTPUT_SLOT = 3;
-//            public static final int FIRST_UPGRADE_SLOT = 4;
-//            public static final int LAST_UPGRADE_SLOT = 7;
-//
-//            @Override
-//            public int getSlots() {
-//                return SLOTS;
-//            }
-//
-//            @Override
-//            public boolean isInputSlot(int slot) {
-//                return slot == INPUT_SLOT;
-//            }
-//
-//            @Override
-//            public SingleRecipeInput createRecipeInput(NonNullList<ItemStack> items) {
-//                return new SingleRecipeInput(items.get(INPUT_SLOT));
-//            }
-//
-//            @Override
-//            public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<SecondaryOutputElectricRecipe> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
-//                if (recipe == null || input.isEmpty()) {
-//                    return false;
-//                }
-//
-//                var recipeOutput = recipe.value().assemble(input, registryAccess);
-//                return canInsertToSlot(items, recipeOutput, OUTPUT_SLOT);
-//                // TODO: check additional slot
-//            }
-//
-//            @Override
-//            public void craft(RegistryAccess registryAccess, RecipeHolder<SecondaryOutputElectricRecipe> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
-//                var recipeOutput = recipe.value().assemble(input, registryAccess);
-//                var outputStack = items.get(OUTPUT_SLOT);
-//
-//                if (outputStack.isEmpty()) {
-//                    items.set(OUTPUT_SLOT, recipeOutput);
-//                } else {
-//                    outputStack.grow(recipeOutput.getCount());
-//                }
-//                // TODO: insert secondary output
-//
-//                var inputStack = items.get(INPUT_SLOT);
-//                inputStack.shrink(1);
-//            }
-//
-//            @Override
-//            public int getFirstUpgradeSlot() {
-//                return FIRST_UPGRADE_SLOT;
-//            }
-//
-//            @Override
-//            public int getLastUpgradeSlot() {
-//                return LAST_UPGRADE_SLOT;
-//            }
-//        }
-//    }
 
     protected static boolean canInsertToSlot(NonNullList<ItemStack> items, ItemStack recipeOutput, int slot) {
         var outputStack = items.get(slot);

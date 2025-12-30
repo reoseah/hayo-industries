@@ -44,6 +44,11 @@ public class ExtractorBlockEntity extends BasicMachineBlockEntity<ExtractingReci
     }
 
     @Override
+    protected int getEnergyTransferRate() {
+        return TRANSFER_RATE;
+    }
+
+    @Override
     public int getDefaultRecipeEnergy(RecipeHolder<ExtractingRecipe> recipe) {
         return recipe.value().processingEnergy();
     }

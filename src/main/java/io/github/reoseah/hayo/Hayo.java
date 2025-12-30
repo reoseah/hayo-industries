@@ -9,10 +9,7 @@ import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
-import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlock;
-import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayBlockEntity;
-import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayMenu;
-import io.github.reoseah.hayo.feature.energy_crystal_array.EnergyCrystalArrayScreen;
+import io.github.reoseah.hayo.feature.energy_storages.*;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
@@ -144,7 +141,7 @@ public class Hayo {
 
     @Environment(EnvType.CLIENT)
     public static void initializeClient() {
-        BlockRenderLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU);
+        BlockRenderLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.CHIPBOARD_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU);
         ColorProviderRegistry.BLOCK.register((state, level, pos, seed) -> level != null ? BiomeColors.getAverageFoliageColor(level, pos) : -12012264, Blocks.RUBBER_LEAVES);
 
         RangeSelectItemModelProperties.ID_MAPPER.put(modLocation("energy"), EnergyModelProperty.MAP_CODEC);
@@ -177,12 +174,14 @@ public class Hayo {
         public static final Block COMPRESSOR = register("compressor", CompressorBlock::new, MACHINES);
         public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, MACHINES);
         public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, MACHINES);
+        public static final Block BATTERY_ARRAY = register("battery_array", BatteryArrayBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
 
         public static final CableBlock CABLE = register("cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(6F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
+        public static final Block CHIPBOARD_DOOR = register("chipboard_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F, 30F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
         public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F, 15F).noOcclusion().sound(SoundType.GLASS));
@@ -225,6 +224,7 @@ public class Hayo {
         public static final Item COMPRESSOR = registerBlock(Blocks.COMPRESSOR);
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
         public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
+        public static final Item BATTERY_ARRAY = registerBlock(Blocks.BATTERY_ARRAY);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item CABLE = registerBlock(Blocks.CABLE, CableItem::new);
@@ -244,6 +244,7 @@ public class Hayo {
         public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
 
         public static final Item CHIPBOARD = registerBlock(Blocks.CHIPBOARD);
+        public static final Item CHIPBOARD_DOOR = registerBlock(Blocks.CHIPBOARD_DOOR);
         public static final Item REINFORCED_STONE = registerBlock(Blocks.REINFORCED_STONE);
         public static final Item REINFORCED_GLASS = registerBlock(Blocks.REINFORCED_GLASS);
         public static final Item REINFORCED_STONE_STAIRS = registerBlock(Blocks.REINFORCED_STONE_STAIRS);
@@ -270,7 +271,6 @@ public class Hayo {
 
         public static final Item REFINED_IRON_INGOT = registerItem("refined_iron_ingot");
         public static final Item SILICON_BRONZE_INGOT = registerItem("silicon_bronze_ingot");
-        public static final Item REFINED_IRON_FOIL = registerItem("refined_iron_foil");
         public static final Item RAW_SILICON = registerItem("raw_silicon");
 
         public static final Item WOOD_DUST = registerItem("wood_dust");
@@ -288,6 +288,7 @@ public class Hayo {
 
         public static final Item STICKY_RESIN = registerItem("sticky_resin");
         public static final Item RUBBER = registerItem("rubber");
+        public static final Item REFINED_IRON_FOIL = registerItem("refined_iron_foil");
         public static final Item COPPER_WIRE = registerItem("copper_wire");
         public static final Item CIRCUIT = registerItem("circuit");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
@@ -311,6 +312,7 @@ public class Hayo {
                 entries.accept(COMPRESSOR);
                 entries.accept(EXTRACTOR);
 //                entries.accept(AUTOMATED_FERTILIZER);
+                entries.accept(BATTERY_ARRAY);
                 entries.accept(ENERGY_CRYSTAL_ARRAY);
 
                 entries.accept(CABLE);
@@ -329,6 +331,7 @@ public class Hayo {
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);
                 entries.accept(CHIPBOARD);
+                entries.accept(CHIPBOARD_DOOR);
                 entries.accept(REINFORCED_STONE);
                 entries.accept(REINFORCED_STONE_STAIRS);
                 entries.accept(REINFORCED_STONE_SLAB);
@@ -353,7 +356,6 @@ public class Hayo {
 
                 entries.accept(REFINED_IRON_INGOT);
                 entries.accept(SILICON_BRONZE_INGOT);
-                entries.accept(REFINED_IRON_FOIL);
                 entries.accept(RAW_SILICON);
 
                 entries.accept(WOOD_DUST);
@@ -371,6 +373,7 @@ public class Hayo {
 
                 entries.accept(STICKY_RESIN);
                 entries.accept(RUBBER);
+                entries.accept(REFINED_IRON_FOIL);
                 entries.accept(COPPER_WIRE);
                 entries.accept(CIRCUIT);
                 entries.accept(ELECTRIC_MOTOR);

@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy_crystal_array;
+package io.github.reoseah.hayo.feature.energy_storages;
 
 import io.github.reoseah.hayo.Hayo;
 import net.minecraft.world.Container;

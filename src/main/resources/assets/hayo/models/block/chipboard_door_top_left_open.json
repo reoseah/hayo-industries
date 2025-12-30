@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_left_open",
+  "textures": {
+    "bottom": "hayo:block/chipboard_door_bottom",
+    "top": "hayo:block/chipboard_door_top"
+  }
+}

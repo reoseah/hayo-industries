@@ -84,17 +84,27 @@ public class GeneratorBlockEntity extends ElectricBlockEntity {
     }
 
     @Override
+    protected int getEnergyCapacity() {
+        return CAPACITY;
+    }
+
+    @Override
+    protected int getEnergyTransferRate() {
+        return TRANSFER_RATE;
+    }
+
+    @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("FuelEnergyLeft", this.fuelEnergyLeft);
-        output.putInt("FuelEnergyTotal", this.fuelEnergyTotal);
+        output.putInt("fuel_energy_left", this.fuelEnergyLeft);
+        output.putInt("fuel_energy_total", this.fuelEnergyTotal);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.fuelEnergyLeft = input.getIntOr("FuelEnergyLeft", 0);
-        this.fuelEnergyTotal = input.getIntOr("FuelEnergyTotal", 0);
+        this.fuelEnergyLeft = input.getIntOr("fuel_energy_left", 0);
+        this.fuelEnergyTotal = input.getIntOr("fuel_energy_total", 0);
     }
 
     protected boolean canConsumeFuel() {

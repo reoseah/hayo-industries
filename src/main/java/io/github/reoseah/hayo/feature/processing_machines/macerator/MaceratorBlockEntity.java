@@ -44,6 +44,11 @@ public class MaceratorBlockEntity extends BasicMachineBlockEntity<MaceratingReci
     }
 
     @Override
+    protected int getEnergyTransferRate() {
+        return TRANSFER_RATE;
+    }
+
+    @Override
     public int getDefaultRecipeEnergy(RecipeHolder<MaceratingRecipe> recipe) {
         return recipe.value().processingEnergy();
     }
