@@ -2,7 +2,7 @@ package io.github.reoseah.hayo.feature.energy_storages;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.api.energy.ElectricReceiverBlock;
+import io.github.reoseah.hayo.feature.energy.ElectricReceiverBlock;
 import io.github.reoseah.hayo.base.block.DirectionalMachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,21 +41,5 @@ public class EnergyCrystalArrayBlock extends DirectionalMachineBlock implements 
     @Override
     public boolean canReceiveEnergy(BlockState state, ServerLevel level, BlockPos pos, Direction side) {
         return side.getOpposite() != state.getValue(FACING);
-    }
-
-    @Override
-    public int getReceivableEnergy(ServerLevel level, BlockPos pos, Direction side) {
-        if (level.getBlockEntity(pos) instanceof EnergyCrystalArrayBlockEntity entity) {
-            return entity.getReceivableEnergy(level, pos, side);
-        }
-        return 0;
-    }
-
-    @Override
-    public int receiveEnergy(int amount, ServerLevel level, BlockPos pos, Direction side) {
-        if (level.getBlockEntity(pos) instanceof EnergyCrystalArrayBlockEntity entity) {
-            return entity.receiveEnergy(amount, level, pos, side);
-        }
-        return 0;
     }
 }

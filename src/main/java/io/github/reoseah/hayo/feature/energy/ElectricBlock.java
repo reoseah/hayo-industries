@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.api.energy;
+package io.github.reoseah.hayo.feature.energy;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -12,10 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -25,7 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public abstract class OreCropBlock extends VegetationBlock {
+public abstract class OreCropBlock extends VegetationBlock implements BonemealableBlock {
     private static final VoxelShape[] SHAPES = Block.boxes(7, i -> Block.column(16, 0, 2 + i * 2));
     public static final int MAX_AGE = 7;
 
@@ -63,10 +60,14 @@ public abstract class OreCropBlock extends VegetationBlock {
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (stack.is(this.oreFertilizers) && !state.getValue(ORE_FERTILIZED) && state.getValue(AGE) != MAX_AGE) {
-            if (!player.isCreative()) {
-                stack.setCount(stack.getCount() - 1);
+            if (!level.isClientSide()) {
+                if (!player.isCreative()) {
+                    stack.setCount(stack.getCount() - 1);
+                }
+
+                level.setBlockAndUpdate(pos, state.setValue(ORE_FERTILIZED, true));
+                level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, pos, 15);
             }
-            level.setBlockAndUpdate(pos, state.setValue(ORE_FERTILIZED, true));
             return InteractionResult.SUCCESS;
         }
 
@@ -125,5 +126,17 @@ public abstract class OreCropBlock extends VegetationBlock {
         return level.getRawBrightness(pos, 0) >= 8;
     }
 
-    // TODO bone meal
+    @Override
+    public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
+    }
+
+    @Override
+    public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
+        return false;
+    }
 }

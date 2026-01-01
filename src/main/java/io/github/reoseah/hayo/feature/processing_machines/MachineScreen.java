@@ -1,9 +1,10 @@
 package io.github.reoseah.hayo.feature.processing_machines;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.api.energy.EnergyTexts;
 import io.github.reoseah.hayo.base.client.HayoContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoMachineTexture;
+import io.github.reoseah.hayo.feature.energy.EnergyTexts;
+import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -17,6 +18,8 @@ public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
     public MachineScreen(MachineMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
+
+    protected abstract HayoMachineTexture.RecipeArrow getArrow();
 
     protected static void drawClassicSlots(MachineScreen screen, GuiGraphics graphics) {
         HayoMachineTexture.drawSlot(graphics, screen.leftPos, screen.topPos, screen.menu.slots.get(0));
@@ -57,26 +60,20 @@ public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
             ), Optional.empty(), mouseX, mouseY);
             return;
         }
+        if (this.isHovering(70, 36, HayoMachineTexture.RecipeArrow.WIDTH, HayoMachineTexture.RecipeArrow.HEIGHT, mouseX, mouseY) && this.menu.getRecipeTotalEnergy() > 0) {
+            graphics.setTooltipForNextFrame(this.font, List.of( //
+                    Component.translatable("hayo.energy.amount_with_capacity_and_percentage", this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy(), 100 * this.menu.getRecipeUsedEnergy() / this.menu.getRecipeTotalEnergy()), //
+                    Component.translatable("hayo.energy.duration_at_amount_per_tick", this.menu.getRecipeDuration(), this.menu.getEnergyUseRate()).withStyle(ChatFormatting.GRAY) //
+            ), Optional.empty(), mouseX, mouseY);
+            return;
+        }
 
         super.renderTooltip(graphics, mouseX, mouseY);
     }
 
+
     @Override
     protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
-        // TODO: show this over the arrow, split into three lines + the name of recipe type as title?
-//        if (stack == this.menu.getSlot(0).getItem()) {
-//            var tooltip = super.getTooltipFromContainerItem(stack);
-//            if (this.menu.hasOverclockUpgrades()) {
-//                tooltip.add(EnergyTexts.overclockedRecipe(this.menu.getRecipeTotalEnergy(), this.menu.getRecipeEnergyPercentage(), //
-//                                this.menu.getEnergyUseRate(), this.menu.getUseRatePercentage(), //
-//                                this.menu.getRecipeDuration(), this.menu.getRecipeDurationPercentage()) //
-//                        .withStyle(ChatFormatting.DARK_AQUA));
-//            } else {
-//                tooltip.add(EnergyTexts.recipe(this.menu.getRecipeTotalEnergy(), this.menu.getEnergyUseRate(), this.menu.getRecipeDuration()).withStyle(ChatFormatting.DARK_AQUA));
-//            }
-//
-//            return tooltip;
-//        }
         if (stack.is(Hayo.Items.OVERCLOCK_UPGRADE)) {
             var tooltip = super.getTooltipFromContainerItem(stack);
             tooltip.add(EnergyTexts.overclockUseRate(100).withStyle(ChatFormatting.DARK_AQUA));
@@ -86,10 +83,14 @@ public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
             var tooltip = super.getTooltipFromContainerItem(stack);
             tooltip.add(Component.translatable("hayo.energy.capacity_change", "+10000").withStyle(ChatFormatting.DARK_AQUA));
             return tooltip;
+        } else if (stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE)) {
+            if (!(this instanceof ElectricFurnaceScreen)) { // TODO: use item tags
+                var tooltip = super.getTooltipFromContainerItem(stack);
+                tooltip.add(Component.translatable("hayo.not_valid_for_this_machine").withStyle(ChatFormatting.DARK_AQUA));
+                return tooltip;
+            }
         }
         return super.getTooltipFromContainerItem(stack);
     }
-
-    protected abstract HayoMachineTexture.RecipeArrow getArrow();
 
 }

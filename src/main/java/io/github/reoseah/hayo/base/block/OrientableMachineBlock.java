@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.base.block;
 
-import io.github.reoseah.hayo.api.energy.ElectricBlock;
-import io.github.reoseah.hayo.api.energy.ElectricBlocks;
+import io.github.reoseah.hayo.feature.energy.ElectricBlock;
+import io.github.reoseah.hayo.feature.energy.ElectricBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

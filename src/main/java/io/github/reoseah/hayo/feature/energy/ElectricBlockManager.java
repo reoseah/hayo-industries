@@ -1,16 +1,11 @@
-package io.github.reoseah.hayo.base;
+package io.github.reoseah.hayo.feature.energy;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.api.energy.ElectricBlock;
-import io.github.reoseah.hayo.api.energy.ElectricCableBlock;
-import io.github.reoseah.hayo.api.energy.ElectricReceiverBlock;
-import io.github.reoseah.hayo.api.energy.ElectricSenderBlock;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
@@ -30,16 +25,17 @@ import java.util.logging.Logger;
 public class ElectricBlockManager extends SavedData {
     public static final Logger LOGGER = Logger.getLogger("Hayo/ElectricBlockManager");
 
-    protected final ServerLevel level;
+    protected ServerLevel level;
     protected final Map<ChunkPos, ChunkTickValues> tickData = new HashMap<>();
     protected final Map<BlockPos, SenderState> senders = new HashMap<>();
 
-    public ElectricBlockManager(ServerLevel level) {
+    public ElectricBlockManager setLevel(ServerLevel level) {
         this.level = level;
+        return this;
     }
 
     public static ElectricBlockManager get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(Hayo.ELECTRIC_DATA);
+        return level.getDataStorage().computeIfAbsent(Hayo.ELECTRIC_DATA).setLevel(level);
     }
 
     public int sendToAllSides(int amount, BlockPos pos) {
@@ -188,7 +184,7 @@ public class ElectricBlockManager extends SavedData {
 
                     if (ticksAboveMaxCurrent > 100) {
                         // TODO: call a method on ElectricCableBlock?
-                       iterator.remove();
+                        iterator.remove();
                         destructionProgressMap.put(pos, -1);
                         this.level.destroyBlock(pos, false);
                     } else if (ticksAboveMaxCurrent > 0) {
@@ -217,13 +213,23 @@ public class ElectricBlockManager extends SavedData {
     }
 
     public void onChunkLoad(LevelChunk chunk) {
-        var data = chunk.getAttached(Hayo.CHUNK_ELECTRIC_DATA);
-        if (data == null) {
-            return;
-        }
+        try {
+            var data = chunk.getAttached(Hayo.CHUNK_ELECTRIC_DATA);
+            if (data == null) {
+                return;
+            }
 
-        // TODO: update potential senders somehow, it seems block information can't be accessed at this point,
-        //  (and doing world.getBlockState gets stuck in a thread lock...)
+            var server = this.level.getServer();
+            server.schedule(server.wrapRunnable(() -> {
+                if (this.level.isLoaded(chunk.getPos().getWorldPosition())) {
+                    for (var pos : data.electricBlocks) {
+                        this.remove(pos);
+                    }
+                }
+            }));
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error while updating internal state for loaded chunk", e);
+        }
     }
 
     public void onChunkUnload(LevelChunk chunk) {
@@ -246,25 +252,13 @@ public class ElectricBlockManager extends SavedData {
         }
     }
 
-    public static class SenderState {
-        // TODO: directions from which energy can be emitted, e.g. for energy storages
-        public final List<ReceiverPath> receivers;
-
-        public SenderState(List<ReceiverPath> receivers) {
-            this.receivers = receivers;
-        }
+    /**
+     * @param receivers TODO: directions from which energy can be emitted, e.g. for energy storages
+     */
+    public record SenderState(List<ReceiverPath> receivers) {
     }
 
-    public static class ReceiverPath {
-        public final BlockPos receiver;
-        public final Direction receivingFace;
-        public final List<BlockPos> cables;
-
-        public ReceiverPath(BlockPos receiver, Direction receivingFace, List<BlockPos> cables) {
-            this.receiver = receiver;
-            this.receivingFace = receivingFace;
-            this.cables = cables;
-        }
+    public record ReceiverPath(BlockPos receiver, Direction receivingFace, List<BlockPos> cables) {
     }
 
     public static List<ReceiverPath> discoverReceivers(ServerLevel level, BlockPos start) {

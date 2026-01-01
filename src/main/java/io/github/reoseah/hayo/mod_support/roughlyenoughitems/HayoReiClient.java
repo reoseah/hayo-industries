@@ -15,24 +15,24 @@ import net.minecraft.world.item.ItemStack;
 public class HayoReiClient implements REIClientPlugin {
     @Override
     public void registerCategories(CategoryRegistry registry) {
-        registry.add(new MachineRecipeCategory(Hayo.modLocation("electric_smelting"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
-        registry.add(new MachineRecipeCategory(Hayo.modLocation("electric_blasting"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
-        registry.add(new MachineRecipeCategory(Hayo.modLocation("electric_smoking"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
-        registry.add(new MachineRecipeWithExtraCategory(Hayo.modLocation("macerating"), EntryStacks.of(Hayo.Items.MACERATOR), HayoMachineTexture.RecipeArrow.MACERATOR, 2));
-        registry.add(new MachineRecipeWithExtraCategory(Hayo.modLocation("compressing"), EntryStacks.of(Hayo.Items.COMPRESSOR), HayoMachineTexture.RecipeArrow.COMPRESSOR, 2));
-        registry.add(new MachineRecipeWithExtraCategory(Hayo.modLocation("extracting"), EntryStacks.of(Hayo.Items.EXTRACTOR), HayoMachineTexture.RecipeArrow.EXTRACTOR, 2));
+        registry.add(new MachineRecipeCategory(Hayo.modId("electric_smelting"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
+        registry.add(new MachineRecipeCategory(Hayo.modId("electric_blasting"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
+        registry.add(new MachineRecipeCategory(Hayo.modId("electric_smoking"), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE), HayoMachineTexture.RecipeArrow.DEFAULT, 3));
+        registry.add(new MachineRecipeWithExtraCategory(Hayo.modId("macerating"), EntryStacks.of(Hayo.Items.MACERATOR), HayoMachineTexture.RecipeArrow.MACERATOR, 2));
+        registry.add(new MachineRecipeWithExtraCategory(Hayo.modId("compressing"), EntryStacks.of(Hayo.Items.COMPRESSOR), HayoMachineTexture.RecipeArrow.COMPRESSOR, 2));
+        registry.add(new MachineRecipeWithExtraCategory(Hayo.modId("extracting"), EntryStacks.of(Hayo.Items.EXTRACTOR), HayoMachineTexture.RecipeArrow.EXTRACTOR, 2));
 
-        registry.addWorkstations(CategoryIdentifier.of(Hayo.modLocation("electric_smelting")), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE));
-        registry.addWorkstations(CategoryIdentifier.of(Hayo.modLocation("electric_blasting")), machineWithUpgrade(Hayo.Items.ELECTRIC_FURNACE, Hayo.Items.BLASTING_UPGRADE), EntryStacks.of(Hayo.Items.BLASTING_UPGRADE));
-        registry.addWorkstations(CategoryIdentifier.of(Hayo.modLocation("electric_smoking")), machineWithUpgrade(Hayo.Items.ELECTRIC_FURNACE, Hayo.Items.SMOKING_UPGRADE), EntryStacks.of(Hayo.Items.SMOKING_UPGRADE));
-        registry.addWorkstations(CategoryIdentifier.of(Hayo.modLocation("macerating")), EntryStacks.of(Hayo.Items.MACERATOR));
-        registry.addWorkstations(CategoryIdentifier.of(Hayo.modLocation("compressing")), EntryStacks.of(Hayo.Items.COMPRESSOR));
-        registry.addWorkstations(CategoryIdentifier.of(Hayo.modLocation("extracting")), EntryStacks.of(Hayo.Items.EXTRACTOR));
+        registry.addWorkstations(CategoryIdentifier.of(Hayo.modId("electric_smelting")), EntryStacks.of(Hayo.Items.ELECTRIC_FURNACE));
+        registry.addWorkstations(CategoryIdentifier.of(Hayo.modId("electric_blasting")), machineWithUpgrade(Hayo.Items.ELECTRIC_FURNACE, Hayo.Items.BLASTING_UPGRADE), EntryStacks.of(Hayo.Items.BLASTING_UPGRADE));
+        registry.addWorkstations(CategoryIdentifier.of(Hayo.modId("electric_smoking")), machineWithUpgrade(Hayo.Items.ELECTRIC_FURNACE, Hayo.Items.SMOKING_UPGRADE), EntryStacks.of(Hayo.Items.SMOKING_UPGRADE));
+        registry.addWorkstations(CategoryIdentifier.of(Hayo.modId("macerating")), EntryStacks.of(Hayo.Items.MACERATOR));
+        registry.addWorkstations(CategoryIdentifier.of(Hayo.modId("compressing")), EntryStacks.of(Hayo.Items.COMPRESSOR));
+        registry.addWorkstations(CategoryIdentifier.of(Hayo.modId("extracting")), EntryStacks.of(Hayo.Items.EXTRACTOR));
     }
 
     public static EntryStack<ItemStack> machineWithUpgrade(Item machine, Item upgrade) {
         return EntryStacks.of(machine).tooltip( //
-                Component.translatable(upgrade.builtInRegistryHolder().key().location().toLanguageKey("item")).withStyle(ChatFormatting.DARK_AQUA) //
+                Component.translatable(upgrade.builtInRegistryHolder().key().identifier().toLanguageKey("item")).withStyle(ChatFormatting.DARK_AQUA) //
         );
     }
 }

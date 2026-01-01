@@ -1,7 +1,6 @@
 package io.github.reoseah.hayo.feature.processing_machines.compressor;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.BasicMachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -25,8 +24,9 @@ public class CompressorBlockEntity extends BasicMachineBlockEntity<CompressingRe
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, CompressorBlockEntity entity) {
-        ElectricBlockEntity.tickChargeFromSlot(entity, BATTERY_SLOT, CAPACITY, TRANSFER_RATE);
+        entity.chargeFromSlot(BATTERY_SLOT);
         tickProcessing((ServerLevel) level, pos, state, entity);
+        entity.onTickEnd();
     }
 
     @Override

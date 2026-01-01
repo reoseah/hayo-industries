@@ -3,12 +3,12 @@ package io.github.reoseah.hayo.base.client;
 import io.github.reoseah.hayo.Hayo;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.Slot;
 
 public class HayoMachineTexture {
-    public static final ResourceLocation LOCATION = Hayo.modLocation("textures/gui/container/machine.png");
+    public static final Identifier LOCATION = Hayo.modId("textures/gui/container/machine.png");
 
     public static final int SLOT_X = 0, SLOT_Y = 192, SLOT_SIZE = 18;
     public static final int OUTPUT_SLOT_X = 0, OUTPUT_SLOT_Y = 166, OUTPUT_SLOT_SIZE = 26;

@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.mod_support.roughlyenoughitems;
 
-import io.github.reoseah.hayo.api.energy.EnergyTexts;
+import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import io.github.reoseah.hayo.base.client.HayoMachineTexture;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -11,19 +11,19 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MachineRecipeCategory implements DisplayCategory<MachineRecipeDisplay> {
-    protected final ResourceLocation location;
+    protected final Identifier location;
     protected final Renderer icon;
     protected final HayoMachineTexture.RecipeArrow arrowType;
     protected final int energyUseRate;
 
-    public MachineRecipeCategory(ResourceLocation location, Renderer icon, HayoMachineTexture.RecipeArrow arrowType, int energyUseRate) {
+    public MachineRecipeCategory(Identifier location, Renderer icon, HayoMachineTexture.RecipeArrow arrowType, int energyUseRate) {
         this.location = location;
         this.icon = icon;
         this.arrowType = arrowType;

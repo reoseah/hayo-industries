@@ -36,8 +36,9 @@ public class ElectricFurnaceBlockEntity extends BasicMachineBlockEntity<Abstract
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, ElectricFurnaceBlockEntity entity) {
-        tickChargeFromSlot(entity, BATTERY_SLOT, entity.getDefaultCapacity(), TRANSFER_RATE);
+        entity.chargeFromSlot(BATTERY_SLOT);
         tickProcessing((ServerLevel) level, pos, state, entity);
+        entity.onTickEnd();
     }
 
     @SuppressWarnings("unchecked")

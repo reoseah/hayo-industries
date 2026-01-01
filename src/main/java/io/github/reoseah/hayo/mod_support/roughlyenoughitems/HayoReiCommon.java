@@ -18,8 +18,8 @@ public class HayoReiCommon implements REICommonPlugin {
 
     @Override
     public void registerDisplaySerializer(DisplaySerializerRegistry registry) {
-        registry.register(Hayo.modLocation("machine_recipe"), MachineRecipeDisplay.SERIALIZER);
-        registry.register(Hayo.modLocation("machine_recipe_with_extra"), MachineRecipeWithExtraDisplay.SERIALIZER);
+        registry.register(Hayo.modId("machine_recipe"), MachineRecipeDisplay.SERIALIZER);
+        registry.register(Hayo.modId("machine_recipe_with_extra"), MachineRecipeWithExtraDisplay.SERIALIZER);
     }
 
     @Override

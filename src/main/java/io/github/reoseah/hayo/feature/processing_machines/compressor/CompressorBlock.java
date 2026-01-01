@@ -2,6 +2,7 @@ package io.github.reoseah.hayo.feature.processing_machines.compressor;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.feature.energy.ElectricReceiverBlock;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -12,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class CompressorBlock extends OrientableMachineBlock {
+public class CompressorBlock extends OrientableMachineBlock implements ElectricReceiverBlock {
     public static final MapCodec<CompressorBlock> CODEC = simpleCodec(CompressorBlock::new);
 
     public CompressorBlock(Properties properties) {

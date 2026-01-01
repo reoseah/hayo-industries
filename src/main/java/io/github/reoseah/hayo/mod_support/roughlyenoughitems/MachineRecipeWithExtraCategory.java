@@ -9,18 +9,18 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MachineRecipeWithExtraCategory implements DisplayCategory<MachineRecipeWithExtraDisplay> {
-    protected final ResourceLocation location;
+    protected final Identifier location;
     protected final Renderer icon;
     protected final HayoMachineTexture.RecipeArrow arrowType;
     protected final int energyUseRate;
 
-    public MachineRecipeWithExtraCategory(ResourceLocation location, Renderer icon, HayoMachineTexture.RecipeArrow arrowType, int energyUseRate) {
+    public MachineRecipeWithExtraCategory(Identifier location, Renderer icon, HayoMachineTexture.RecipeArrow arrowType, int energyUseRate) {
         this.location = location;
         this.icon = icon;
         this.arrowType = arrowType;

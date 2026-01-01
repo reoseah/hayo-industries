@@ -1,11 +1,13 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.api.energy.ElectricItems;
+import io.github.reoseah.hayo.feature.energy.ElectricItems;
 import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -19,20 +21,24 @@ public class EnergyCrystalArrayBlockEntity extends ElectricBlockEntity implement
     public static final int CAPACITY = 1_000_000;
     public static final int TRANSFER_RATE = 128;
 
+    @Getter
+    protected float averageEnergyPerTick;
+
     public EnergyCrystalArrayBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.ENERGY_CRYSTAL_ARRAY, pos, state);
     }
 
     @SuppressWarnings("unused")
     public static void tickServer(Level level, BlockPos pos, BlockState state, EnergyCrystalArrayBlockEntity entity) {
-        tickChargeFromSlot(entity, 0, CAPACITY, TRANSFER_RATE);
+        entity.chargeFromSlot(0);
+
         int discharge = ElectricItems.tryCharge(TRANSFER_RATE, entity, 1);
         if (discharge > 0) {
             entity.storedEnergy -= discharge;
             entity.energyPerTick -= discharge;
             entity.setChanged();
         }
-        tickEnergyPerTick(entity);
+        entity.onTickEnd();
     }
 
     @Override
@@ -58,5 +64,11 @@ public class EnergyCrystalArrayBlockEntity extends ElectricBlockEntity implement
     @Override
     protected int getEnergyTransferRate() {
         return TRANSFER_RATE;
+    }
+
+    @Override
+    protected void onTickEnd() {
+        this.averageEnergyPerTick = Mth.lerp(0.05F, this.averageEnergyPerTick, this.energyPerTick);
+        super.onTickEnd();
     }
 }

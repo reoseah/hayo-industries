@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.api.energy;
+package io.github.reoseah.hayo.feature.energy;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;

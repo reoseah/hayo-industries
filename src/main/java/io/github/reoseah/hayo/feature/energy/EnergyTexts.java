@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.api.energy;
+package io.github.reoseah.hayo.feature.energy;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -24,6 +24,7 @@ public class EnergyTexts {
     private static final String AMOUNT_AND_CAPACITY = "hayo.energy.amount_and_capacity";
     private static final String AMOUNT_PER_TICK = "hayo.energy.amount_per_tick";
     private static final String AVERAGE_AMOUNT_PER_TICK = "hayo.energy.average_amount_per_tick";
+    private static final String MAX_AMOUNT = "hayo.energy.max_amount";
     private static final String MAX_AMOUNT_PER_TICK = "hayo.energy.max_amount_per_tick";
     private static final String AMOUNT_AND_PERCENTAGE = "hayo.energy.amount_and_percentage";
 
@@ -32,11 +33,6 @@ public class EnergyTexts {
     private static final String APPROXIMATE_AMOUNT = "hayo.energy.approximate_amount";
     private static final String OVERCLOCK_USE_RATE = "hayo.energy.overclock_use_rate";
     private static final String OVERCLOCK_TOTAL_COST = "hayo.energy.overclock_total_cost";
-
-    /// "Energy"
-    public static final Component ENERGY = Component.translatable("hayo.energy");
-    /// "Stored Energy", used for tooltip when hovering over energy bar in storage blocks.
-    public static final Component STORED_ENERGY = Component.translatable("hayo.energy.stored");
 
     /// Format energy amount, grouping digits with commas for large numbers.
     /// <aside>
@@ -67,6 +63,11 @@ public class EnergyTexts {
     public static MutableComponent averageAmountPerTick(float amount) {
         return Component.translatable(AVERAGE_AMOUNT_PER_TICK, (amount > 0 ? "+" : "") + amount);
     }
+
+    public static MutableComponent maxAmount(long amount) {
+        return Component.translatable(MAX_AMOUNT, formatAmount(amount));
+    }
+
 
     public static MutableComponent maxAmountPerTick(long amount) {
         return Component.translatable(MAX_AMOUNT_PER_TICK, amount);

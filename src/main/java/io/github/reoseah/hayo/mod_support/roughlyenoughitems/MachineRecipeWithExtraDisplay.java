@@ -10,7 +10,7 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +21,7 @@ public class MachineRecipeWithExtraDisplay extends MachineRecipeDisplay {
     public static final DisplaySerializer<MachineRecipeWithExtraDisplay> SERIALIZER = DisplaySerializer.of( //
             RecordCodecBuilder.mapCodec(instance -> instance.group( //
                     Codec.STRING.fieldOf("category").forGetter(display -> display.category.getIdentifier().toString()), //
-                    ResourceLocation.CODEC.optionalFieldOf("location").forGetter(MachineRecipeWithExtraDisplay::getDisplayLocation), //
+                    Identifier.CODEC.optionalFieldOf("location").forGetter(MachineRecipeWithExtraDisplay::getDisplayLocation), //
                     EntryIngredient.codec().fieldOf("inputs").forGetter(MachineRecipeWithExtraDisplay::getInput), //
                     EntryIngredient.codec().fieldOf("result").forGetter(MachineRecipeWithExtraDisplay::getResult), //
                     Codec.INT.fieldOf("energy").forGetter(MachineRecipeWithExtraDisplay::getProcessingEnergy), //
@@ -31,7 +31,7 @@ public class MachineRecipeWithExtraDisplay extends MachineRecipeDisplay {
             StreamCodec.composite( //
                     ByteBufCodecs.STRING_UTF8, //
                     display -> display.category.getIdentifier().toString(), //
-                    ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC), //
+                    ByteBufCodecs.optional(Identifier.STREAM_CODEC), //
                     MachineRecipeWithExtraDisplay::getDisplayLocation, //
                     EntryIngredient.streamCodec(), //
                     MachineRecipeWithExtraDisplay::getInput, //
@@ -50,7 +50,7 @@ public class MachineRecipeWithExtraDisplay extends MachineRecipeDisplay {
     @Getter
     public final float extraChance;
 
-    public MachineRecipeWithExtraDisplay(String category, Optional<ResourceLocation> location, EntryIngredient input, EntryIngredient result, int processingEnergy, EntryIngredient extraResult, float extraChance) {
+    public MachineRecipeWithExtraDisplay(String category, Optional<Identifier> location, EntryIngredient input, EntryIngredient result, int processingEnergy, EntryIngredient extraResult, float extraChance) {
         super(category, location, input, result, processingEnergy);
         this.extraResult = extraResult;
         this.extraChance = extraChance;

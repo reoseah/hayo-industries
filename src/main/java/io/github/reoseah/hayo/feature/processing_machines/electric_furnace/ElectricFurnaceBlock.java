@@ -3,6 +3,7 @@ package io.github.reoseah.hayo.feature.processing_machines.electric_furnace;
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
+import io.github.reoseah.hayo.feature.energy.ElectricReceiverBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -12,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class ElectricFurnaceBlock extends OrientableMachineBlock {
+public class ElectricFurnaceBlock extends OrientableMachineBlock implements ElectricReceiverBlock {
     public static final MapCodec<ElectricFurnaceBlock> CODEC = simpleCodec(ElectricFurnaceBlock::new);
 
     public ElectricFurnaceBlock(Properties properties) {

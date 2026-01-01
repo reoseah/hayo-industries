@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.generator;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.api.energy.ElectricBlocks;
-import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
+import io.github.reoseah.hayo.feature.energy.ElectricBlocks;
+import io.github.reoseah.hayo.base.block.entity.HayoContainerBlockEntity;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -20,12 +20,15 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
-public class GeneratorBlockEntity extends ElectricBlockEntity {
+public class GeneratorBlockEntity extends HayoContainerBlockEntity {
     public static final int FUEL_CONSUMPTION_RATE = 2;
     public static final int ENERGY_PER_FUEL_TICK = 5;
     public static final int GENERATION_RATE = FUEL_CONSUMPTION_RATE * ENERGY_PER_FUEL_TICK;
     public static final int CAPACITY = 10000;
     public static final int TRANSFER_RATE = 32;
+
+    @Getter
+    protected int storedEnergy;
 
     @Getter
     protected int fuelEnergyLeft;
@@ -84,18 +87,9 @@ public class GeneratorBlockEntity extends ElectricBlockEntity {
     }
 
     @Override
-    protected int getEnergyCapacity() {
-        return CAPACITY;
-    }
-
-    @Override
-    protected int getEnergyTransferRate() {
-        return TRANSFER_RATE;
-    }
-
-    @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
+        output.putInt("stored_energy", this.storedEnergy);
         output.putInt("fuel_energy_left", this.fuelEnergyLeft);
         output.putInt("fuel_energy_total", this.fuelEnergyTotal);
     }
@@ -103,6 +97,7 @@ public class GeneratorBlockEntity extends ElectricBlockEntity {
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
+        this.storedEnergy = input.getIntOr("stored_energy", 0);
         this.fuelEnergyLeft = input.getIntOr("fuel_energy_left", 0);
         this.fuelEnergyTotal = input.getIntOr("fuel_energy_total", 0);
     }
@@ -124,5 +119,4 @@ public class GeneratorBlockEntity extends ElectricBlockEntity {
         this.fuelEnergyTotal = this.fuelEnergyLeft = fuelValue * ENERGY_PER_FUEL_TICK;
         this.setChanged();
     }
-
 }

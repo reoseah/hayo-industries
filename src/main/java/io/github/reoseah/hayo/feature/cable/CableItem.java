@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.feature.cable;
 
-import io.github.reoseah.hayo.api.energy.EnergyTexts;
+import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;

@@ -1,14 +1,15 @@
 package io.github.reoseah.hayo;
 
+import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import io.github.reoseah.hayo.base.ElectricBlockManager;
-import io.github.reoseah.hayo.base.OverloadCablePayload;
 import io.github.reoseah.hayo.base.item.EnergyModelProperty;
 import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
+import io.github.reoseah.hayo.feature.energy.ElectricBlockManager;
+import io.github.reoseah.hayo.feature.energy.OverloadCablePayload;
 import io.github.reoseah.hayo.feature.energy_storages.*;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
@@ -23,6 +24,7 @@ import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.Elect
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceScreen;
 import io.github.reoseah.hayo.feature.processing_machines.extractor.*;
 import io.github.reoseah.hayo.feature.processing_machines.macerator.*;
+import io.github.reoseah.hayo.feature.matter_generator.MatterGeneratorBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
 import net.fabricmc.api.EnvType;
@@ -42,7 +44,6 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
-import net.minecraft.Util;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
@@ -53,11 +54,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Util;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -96,19 +98,19 @@ public class Hayo {
     public static final CreativeModeTab TAB = FabricItemGroup.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
 
     public static final SavedDataType<ElectricBlockManager> ELECTRIC_DATA = new SavedDataType<>("HayoElectricData", //
-            ctx -> new ElectricBlockManager(ctx.level()), //
-            ctx -> Codec.unit(() -> new ElectricBlockManager(ctx.level())), //
+            ElectricBlockManager::new, //
+            Codec.EMPTY.xmap((u) -> new ElectricBlockManager(), manager -> Unit.INSTANCE).codec(), //
             null);
 
     public static final AttachmentType<ElectricBlockManager.ChunkData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create( //
-            modLocation("electric_blocks"), //
+            modId("electric_blocks"), //
             builder -> builder //
                     .initializer(ElectricBlockManager.ChunkData::new) //
                     .persistent(ElectricBlockManager.ChunkData.CODEC.codec()));
 
     public static void initialize() {
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modLocation("main"), TAB);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modLocation("energy"), SimpleBatteryItem.ENERGY);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modId("main"), TAB);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy"), SimpleBatteryItem.ENERGY);
 
         Blocks.initialize();
         Items.initialize();
@@ -119,7 +121,7 @@ public class Hayo {
         RecipeSerializers.initialize();
         CustomPayloads.initialize();
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath("hayo", "features")) //
+        BiomeModifications.create(Identifier.fromNamespaceAndPath("hayo", "features")) //
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST) //
                                 .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA)) //
                                 .or(BiomeSelectors.tag(BiomeTags.IS_JUNGLE)) //
@@ -144,7 +146,7 @@ public class Hayo {
         BlockRenderLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.CHIPBOARD_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU);
         ColorProviderRegistry.BLOCK.register((state, level, pos, seed) -> level != null ? BiomeColors.getAverageFoliageColor(level, pos) : -12012264, Blocks.RUBBER_LEAVES);
 
-        RangeSelectItemModelProperties.ID_MAPPER.put(modLocation("energy"), EnergyModelProperty.MAP_CODEC);
+        RangeSelectItemModelProperties.ID_MAPPER.put(modId("energy"), EnergyModelProperty.MAP_CODEC);
 
         MenuScreens.register(MenuTypes.GENERATOR, GeneratorScreen::new);
         MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ElectricFurnaceScreen::new);
@@ -156,12 +158,12 @@ public class Hayo {
         CustomPayloads.initializeClient();
     }
 
-    public static ResourceLocation modLocation(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    public static Identifier modId(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
     public static <T> ResourceKey<T> modKey(ResourceKey<Registry<T>> registryKey, String location) {
-        return ResourceKey.create(registryKey, modLocation(location));
+        return ResourceKey.create(registryKey, modId(location));
     }
 
     public static class Blocks {
@@ -174,6 +176,7 @@ public class Hayo {
         public static final Block COMPRESSOR = register("compressor", CompressorBlock::new, MACHINES);
         public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, MACHINES);
         public static final Block AUTOMATED_FERTILIZER = register("automated_fertilizer", AutomatedFertilizerBlock::new, MACHINES);
+        public static final Block MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlock::new, MACHINES);
         public static final Block BATTERY_ARRAY = register("battery_array", BatteryArrayBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
 
@@ -203,7 +206,10 @@ public class Hayo {
         public static final Block RUBBER_STAIRS = register("rubber_stairs", props -> new StairBlock(RUBBER_PLANKS.defaultBlockState(), props), RUBBER_PROPERTIES);
         public static final Block RUBBER_SLAB = register("rubber_slab", SlabBlock::new, RUBBER_PROPERTIES);
 
-        public static final Block FERRU = register("ferru", props -> new FerruBlock(TagKey.create(Registries.ITEM, modLocation("ferru_fertilizers")), props), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
+        public static final Block RUBBER_BLOCK = register("rubber_block", Block::new, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(3));
+
+
+        public static final Block FERRU = register("ferru", props -> new FerruBlock(TagKey.create(Registries.ITEM, modId("ferru_fertilizers")), props), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
 
         public static void initialize() {
             StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
@@ -211,7 +217,7 @@ public class Hayo {
         }
 
         private static <T extends Block> T register(String name, Function<BlockBehaviour.Properties, T> constructor, BlockBehaviour.Properties properties) {
-            var key = ResourceKey.create(Registries.BLOCK, modLocation(name));
+            var key = ResourceKey.create(Registries.BLOCK, modId(name));
 
             return Registry.register(BuiltInRegistries.BLOCK, key, constructor.apply(properties.setId(key)));
         }
@@ -224,6 +230,7 @@ public class Hayo {
         public static final Item COMPRESSOR = registerBlock(Blocks.COMPRESSOR);
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
         public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
+        public static final Item MATTER_GENERATOR = registerBlock(Blocks.MATTER_GENERATOR);
         public static final Item BATTERY_ARRAY = registerBlock(Blocks.BATTERY_ARRAY);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
 
@@ -251,11 +258,13 @@ public class Hayo {
         public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
         public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
 
+        public static final Item RUBBER_BLOCK = registerBlock(Blocks.RUBBER_BLOCK);
+
         public static final Item FERRU_SEEDS = registerItem("ferru_seeds", props -> new BlockItem(Blocks.FERRU, props), new Item.Properties().useItemDescriptionPrefix());
 
         public static final Item WRENCH = registerItem("wrench");
 
-        private static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
+        private static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
         private static final ToolMaterial SILICON_BRONZE = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, ToolMaterial.DIAMOND.durability(), 7, 2.0F, 10, SILICON_BRONZE_MATERIALS);
 
         public static final Item SILICON_BRONZE_SWORD = registerItem("silicon_bronze_sword", new Item.Properties().sword(SILICON_BRONZE, 3.0F, -2.4F));
@@ -298,6 +307,7 @@ public class Hayo {
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item CARBON_REDSTONE_MATRIX = registerItem("carbon_redstone_matrix");
         public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item REINFORCED_SUPERMETAL = registerItem("reinforced_supermetal", new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
@@ -312,6 +322,7 @@ public class Hayo {
                 entries.accept(COMPRESSOR);
                 entries.accept(EXTRACTOR);
 //                entries.accept(AUTOMATED_FERTILIZER);
+                entries.accept(MATTER_GENERATOR);
                 entries.accept(BATTERY_ARRAY);
                 entries.accept(ENERGY_CRYSTAL_ARRAY);
 
@@ -337,6 +348,8 @@ public class Hayo {
                 entries.accept(REINFORCED_STONE_SLAB);
                 entries.accept(REINFORCED_GLASS);
                 entries.accept(REINFORCED_DOOR);
+
+                entries.accept(RUBBER_BLOCK);
 
                 entries.accept(FERRU_SEEDS);
 
@@ -383,6 +396,7 @@ public class Hayo {
                 entries.accept(COMPOSITE_PLATE);
                 entries.accept(CARBON_REDSTONE_MATRIX);
                 entries.accept(CONDUCTIVE_CARBON);
+                entries.accept(REINFORCED_SUPERMETAL);
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
@@ -404,7 +418,7 @@ public class Hayo {
         }
 
         public static <T extends Block> Item registerBlock(T block, BiFunction<T, Item.Properties, Item> constructor, Item.Properties properties) {
-            @SuppressWarnings("deprecation") var key = ResourceKey.create(Registries.ITEM, block.builtInRegistryHolder().key().location());
+            @SuppressWarnings("deprecation") var key = ResourceKey.create(Registries.ITEM, block.builtInRegistryHolder().key().identifier());
 
             return Registry.register(BuiltInRegistries.ITEM, key, constructor.apply(block, properties.setId(key).useBlockDescriptionPrefix()));
         }
@@ -422,17 +436,17 @@ public class Hayo {
         }
 
         public static Item registerItem(String name, Function<Item.Properties, Item> constructor, Item.Properties properties) {
-            var key = ResourceKey.create(Registries.ITEM, modLocation(name));
+            var key = ResourceKey.create(Registries.ITEM, modId(name));
 
             return Registry.register(BuiltInRegistries.ITEM, key, constructor.apply(properties.setId(key)));
         }
     }
 
     public static class ItemTags {
-        public static final TagKey<Item> ELECTRIC_FURNACE_UPGRADES = TagKey.create(Registries.ITEM, modLocation("electric_furnace_upgrades"));
-        public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modLocation("macerator_upgrades"));
-        public static final TagKey<Item> COMPRESSOR_UPGRADES = TagKey.create(Registries.ITEM, modLocation("compressor_upgrades"));
-        public static final TagKey<Item> EXTRACTOR_UPGRADES = TagKey.create(Registries.ITEM, modLocation("extractor_upgrades"));
+        public static final TagKey<Item> ELECTRIC_FURNACE_UPGRADES = TagKey.create(Registries.ITEM, modId("electric_furnace_upgrades"));
+        public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("macerator_upgrades"));
+        public static final TagKey<Item> COMPRESSOR_UPGRADES = TagKey.create(Registries.ITEM, modId("compressor_upgrades"));
+        public static final TagKey<Item> EXTRACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("extractor_upgrades"));
     }
 
     public static class BlockEntityTypes {
@@ -447,7 +461,7 @@ public class Hayo {
         }
 
         public static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<T> constructor, Block... blocks) {
-            var key = ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, modLocation(name));
+            var key = ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, modId(name));
             var type = FabricBlockEntityTypeBuilder.create(constructor, blocks).build();
 
             return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, key, type);
@@ -466,7 +480,7 @@ public class Hayo {
         }
 
         public static <T extends AbstractContainerMenu> MenuType<T> register(String name, MenuType.MenuSupplier<T> constructor) {
-            var key = ResourceKey.create(Registries.MENU, modLocation(name));
+            var key = ResourceKey.create(Registries.MENU, modId(name));
             var type = new MenuType<>(constructor, FeatureFlags.VANILLA_SET);
 
             return Registry.register(BuiltInRegistries.MENU, key, type);
@@ -480,7 +494,7 @@ public class Hayo {
         }
 
         public static <T extends FoliagePlacer> FoliagePlacerType<T> register(String name, MapCodec<T> codec) {
-            var key = ResourceKey.create(Registries.FOLIAGE_PLACER_TYPE, modLocation(name));
+            var key = ResourceKey.create(Registries.FOLIAGE_PLACER_TYPE, modId(name));
             var type = new FoliagePlacerType<>(codec);
 
             return Registry.register(BuiltInRegistries.FOLIAGE_PLACER_TYPE, key, type);
@@ -503,7 +517,7 @@ public class Hayo {
                 }
             };
 
-            return Registry.register(BuiltInRegistries.RECIPE_TYPE, modLocation(name), type);
+            return Registry.register(BuiltInRegistries.RECIPE_TYPE, modId(name), type);
         }
     }
 
@@ -516,12 +530,12 @@ public class Hayo {
         }
 
         private static <T extends Recipe<?>> RecipeSerializer<T> register(String name, RecipeSerializer<T> serializer) {
-            return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, modLocation(name), serializer);
+            return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, modId(name), serializer);
         }
     }
 
     public static class CustomPayloads {
-        public static final CustomPacketPayload.Type<OverloadCablePayload> OVERLOAD_CABLE = new CustomPacketPayload.Type<>(modLocation("overload_cable"));
+        public static final CustomPacketPayload.Type<OverloadCablePayload> OVERLOAD_CABLE = new CustomPacketPayload.Type<>(modId("overload_cable"));
 
         public static void initialize() {
             PayloadTypeRegistry.playS2C().register(OVERLOAD_CABLE, OverloadCablePayload.STREAM_CODEC);

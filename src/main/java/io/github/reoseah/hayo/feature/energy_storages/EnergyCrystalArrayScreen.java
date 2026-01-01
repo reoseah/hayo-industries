@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
-import io.github.reoseah.hayo.api.energy.EnergyTexts;
+import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import io.github.reoseah.hayo.base.client.HayoContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoMachineTexture;
 import net.minecraft.ChatFormatting;
@@ -36,7 +36,7 @@ public class EnergyCrystalArrayScreen extends HayoContainerScreen<EnergyCrystalA
         if (this.isHovering(88, 16, HayoMachineTexture.ENERGY_WIDTH, HayoMachineTexture.ENERGY_HEIGHT, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of( //
                     EnergyTexts.amountAndPercentage(this.menu.getStoredEnergy(), this.menu.getStoredEnergy() * 100 / EnergyCrystalArrayBlockEntity.CAPACITY), //
-                    Component.translatable("hayo.energy.max", EnergyTexts.formatAmount(EnergyCrystalArrayBlockEntity.CAPACITY)).withStyle(ChatFormatting.GRAY), //
+                    Component.translatable("hayo.energy.max_amount", EnergyTexts.formatAmount(EnergyCrystalArrayBlockEntity.CAPACITY)).withStyle(ChatFormatting.GRAY), //
                     EnergyTexts.averageAmountPerTick(this.menu.getAverageEnergyPerTick()).withStyle(ChatFormatting.GRAY) //
             ), Optional.empty(), mouseX, mouseY);
             return;

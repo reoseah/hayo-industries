@@ -1,7 +1,6 @@
 package io.github.reoseah.hayo.feature.generator;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.api.energy.ElectricItems;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,7 +17,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
     protected final ContainerData data;
 
     public GeneratorMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(1), new SimpleContainerData(4), inventory);
+        this(menuId, new SimpleContainer(1), new SimpleContainerData(6), inventory);
     }
 
     public GeneratorMenu(int menuId, GeneratorBlockEntity entity, Inventory inventory) {
@@ -29,7 +28,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
         return new ContainerData() {
             @Override
             public int getCount() {
-                return 4;
+                return 6;
             }
 
             @Override
@@ -37,8 +36,10 @@ public class GeneratorMenu extends AbstractContainerMenu {
                 return switch (index) {
                     case 0 -> entity.getStoredEnergy() & 0xFFFF;
                     case 1 -> entity.getStoredEnergy() >>> 16;
-                    case 2 -> Math.min(entity.getFuelEnergyLeft(), Short.MAX_VALUE);
-                    case 3 -> Math.min(entity.getFuelEnergyTotal(), Short.MAX_VALUE);
+                    case 2 -> entity.getFuelEnergyLeft() & 0xFFFF;
+                    case 3 -> entity.getFuelEnergyLeft() >>> 16;
+                    case 4 -> entity.getFuelEnergyTotal() & 0xFFFF;
+                    case 5 -> entity.getFuelEnergyTotal() >>> 16;
                     default -> 0;
                 };
             }
@@ -110,15 +111,15 @@ public class GeneratorMenu extends AbstractContainerMenu {
         return true;
     }
 
+    public int getStoredEnergy() {
+        return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
+    }
+
     public int getFuelEnergyLeft() {
-        return this.data.get(2);
+        return (this.data.get(3) << 16) | (this.data.get(2) & 0xFFFF);
     }
 
     public int getFuelEnergyTotal() {
-        return this.data.get(3);
-    }
-
-    public int getStoredEnergy() {
-        return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
+        return (this.data.get(5) << 16) | (this.data.get(4) & 0xFFFF);
     }
 }
