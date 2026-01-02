@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.generator;
 
-import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import io.github.reoseah.hayo.base.client.HayoContainerScreen;
-import io.github.reoseah.hayo.base.client.HayoMachineTexture;
+import io.github.reoseah.hayo.base.client.HayoGuiSprites;
+import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -33,26 +33,29 @@ public class GeneratorScreen extends HayoContainerScreen<GeneratorMenu> {
         int x = this.leftPos;
         int y = this.topPos;
 
-        HayoMachineTexture.drawSlot(graphics, x + 61, y + 53);
-        HayoMachineTexture.blit(graphics, x + 79, y + 44, HayoMachineTexture.TINY_ARROW_X, HayoMachineTexture.TINY_ARROW_Y, HayoMachineTexture.TINY_ARROW_WIDTH, HayoMachineTexture.TINY_ARROW_HEIGHT);
+        HayoGuiSprites.drawSlot(graphics, x + 61, y + 53);
+        HayoGuiSprites.drawSmallArrowRight(graphics, x + 79, y + 44);
 
-        HayoMachineTexture.drawFuelMeter(graphics, x + 62, y + 37, this.menu.getFuelEnergyLeft(), this.menu.getFuelEnergyTotal());
+        HayoGuiSprites.drawFuel(graphics, x + 62, y + 37, this.menu.getFuelEnergyLeft(), this.menu.getFuelEnergyTotal());
 
-        HayoMachineTexture.drawEnergyStorage(graphics, x + 88, y + 16, this.menu.getStoredEnergy(), GeneratorBlockEntity.CAPACITY);
+        HayoGuiSprites.drawEnergyStorage(graphics, x + 88, y + 16, this.menu.getStoredEnergy(), GeneratorBlockEntity.CAPACITY);
     }
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (this.isHovering(88, 16, HayoMachineTexture.ENERGY_WIDTH, HayoMachineTexture.ENERGY_HEIGHT, mouseX, mouseY)) {
+        if (this.isHovering(88, 16, 18, 56, mouseX, mouseY)) {
+            int energy = this.menu.getStoredEnergy();
+            int capacity = GeneratorBlockEntity.CAPACITY;
+
             graphics.setTooltipForNextFrame(this.font, List.of( //
-                    EnergyTexts.amountAndPercentage(this.menu.getStoredEnergy(), this.menu.getStoredEnergy() * 100 / GeneratorBlockEntity.CAPACITY), //
-                    Component.translatable("hayo.energy.max_amount", EnergyTexts.formatAmount(GeneratorBlockEntity.CAPACITY)).withStyle(ChatFormatting.GRAY) //
+                    EnergyTexts.amountAndPercentage(energy, energy * 100 / capacity), //
+                    Component.translatable("hayo.energy.max_amount", EnergyTexts.formatAmount(capacity)).withStyle(ChatFormatting.GRAY) //
 
             ), Optional.empty(), mouseX, mouseY);
             return;
         }
 
-        if (this.isHovering(62, 37, HayoMachineTexture.FUEL_SIZE, HayoMachineTexture.FUEL_SIZE, mouseX, mouseY)) {
+        if (this.isHovering(62, 37, 14, 14, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of( //
                     EnergyTexts.approximateAmount(this.menu.getFuelEnergyLeft()), //
                     EnergyTexts.conversionRate(GeneratorBlockEntity.GENERATION_RATE).withStyle(ChatFormatting.GRAY) //

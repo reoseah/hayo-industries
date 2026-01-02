@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.mod_support.roughlyenoughitems;
 
-import io.github.reoseah.hayo.base.client.HayoMachineTexture;
+import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.widgets.WidgetWithBounds;
@@ -12,10 +12,10 @@ import java.util.List;
 
 public class MachineArrowWidget extends WidgetWithBounds {
     public final Point point;
-    public final HayoMachineTexture.RecipeArrow arrowType;
+    public final HayoGuiSprites.RecipeArrow arrowType;
     public final int animationDuration;
 
-    public MachineArrowWidget(Point point, HayoMachineTexture.RecipeArrow arrowType, int animationDuration) {
+    public MachineArrowWidget(Point point, HayoGuiSprites.RecipeArrow arrowType, int animationDuration) {
         this.point = point;
         this.arrowType = arrowType;
         this.animationDuration = animationDuration;
@@ -28,10 +28,8 @@ public class MachineArrowWidget extends WidgetWithBounds {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        HayoMachineTexture.blit(graphics, this.point.x, this.point.y, HayoMachineTexture.RecipeArrow.X, this.arrowType.y, 24, 16);
-
         int width = Mth.ceil((System.currentTimeMillis() / (this.animationDuration / 24) % 24d));
-        HayoMachineTexture.blit(graphics, this.point.x, this.point.y, HayoMachineTexture.RecipeArrow.OVERLAY_X, this.arrowType.y, width, 16);
+        HayoGuiSprites.drawRecipeArrow(graphics, this.point.x, this.point.y, this.arrowType, width, 24);
     }
 
     @Override

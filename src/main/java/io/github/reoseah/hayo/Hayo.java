@@ -15,6 +15,7 @@ import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
+import io.github.reoseah.hayo.feature.matter_generator.MatterGeneratorBlock;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
 import io.github.reoseah.hayo.feature.processing_machines.BasicMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.compressor.*;
@@ -24,7 +25,6 @@ import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.Elect
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceScreen;
 import io.github.reoseah.hayo.feature.processing_machines.extractor.*;
 import io.github.reoseah.hayo.feature.processing_machines.macerator.*;
-import io.github.reoseah.hayo.feature.matter_generator.MatterGeneratorBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
 import net.fabricmc.api.EnvType;
@@ -230,7 +230,7 @@ public class Hayo {
         public static final Item COMPRESSOR = registerBlock(Blocks.COMPRESSOR);
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
         public static final Item AUTOMATED_FERTILIZER = registerBlock(Blocks.AUTOMATED_FERTILIZER);
-        public static final Item MATTER_GENERATOR = registerBlock(Blocks.MATTER_GENERATOR);
+        public static final Item MATTER_GENERATOR = registerBlock(Blocks.MATTER_GENERATOR, new Item.Properties().rarity(Rarity.EPIC));
         public static final Item BATTERY_ARRAY = registerBlock(Blocks.BATTERY_ARRAY);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
 

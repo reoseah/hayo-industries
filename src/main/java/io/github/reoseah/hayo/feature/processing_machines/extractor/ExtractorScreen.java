@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.feature.processing_machines.extractor;
 
-import io.github.reoseah.hayo.base.client.HayoMachineTexture;
+import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import io.github.reoseah.hayo.feature.processing_machines.MachineScreen;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,8 +13,8 @@ public class ExtractorScreen extends MachineScreen {
     }
 
     @Override
-    protected HayoMachineTexture.RecipeArrow getArrow() {
-        return HayoMachineTexture.RecipeArrow.EXTRACTOR;
+    protected HayoGuiSprites.RecipeArrow getArrow() {
+        return HayoGuiSprites.RecipeArrow.EXTRACTOR;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.mod_support.roughlyenoughitems;
 
-import io.github.reoseah.hayo.base.client.HayoMachineTexture;
+import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.widgets.WidgetWithBounds;
@@ -18,14 +18,12 @@ public class MachineEnergyWidget extends WidgetWithBounds {
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(this.point.x, this.point.y, HayoMachineTexture.ZAP_SIZE, HayoMachineTexture.ZAP_SIZE);
+        return new Rectangle(this.point.x, this.point.y, 14, 14);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        HayoMachineTexture.blit(graphics, this.point.x, this.point.y, HayoMachineTexture.ZAP_X, HayoMachineTexture.ZAP_Y, HayoMachineTexture.ZAP_SIZE, HayoMachineTexture.ZAP_SIZE);
-        int height = 4;
-        HayoMachineTexture.blit(graphics, this.point.x, this.point.y + height, HayoMachineTexture.ZAP_OVERLAY_X, HayoMachineTexture.ZAP_Y + height, HayoMachineTexture.ZAP_SIZE, HayoMachineTexture.ZAP_SIZE - height);
+        HayoGuiSprites.drawMachineEnergy(graphics, this.point.x, this.point.y, 10, 14);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.feature.processing_machines.electric_furnace;
 
-import io.github.reoseah.hayo.base.client.HayoMachineTexture;
+import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import io.github.reoseah.hayo.feature.processing_machines.MachineScreen;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,8 +13,8 @@ public class ElectricFurnaceScreen extends MachineScreen {
     }
 
     @Override
-    protected HayoMachineTexture.RecipeArrow getArrow() {
-        return HayoMachineTexture.RecipeArrow.DEFAULT;
+    protected HayoGuiSprites.RecipeArrow getArrow() {
+        return HayoGuiSprites.RecipeArrow.DEFAULT;
     }
 
     @Override

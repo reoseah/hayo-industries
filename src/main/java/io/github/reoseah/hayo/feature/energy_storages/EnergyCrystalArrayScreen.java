@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
-import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import io.github.reoseah.hayo.base.client.HayoContainerScreen;
-import io.github.reoseah.hayo.base.client.HayoMachineTexture;
+import io.github.reoseah.hayo.base.client.HayoGuiSprites;
+import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -22,22 +22,26 @@ public class EnergyCrystalArrayScreen extends HayoContainerScreen<EnergyCrystalA
         int x = this.leftPos;
         int y = this.topPos;
 
-        HayoMachineTexture.drawSlot(graphics, x + 61, y + 17);
-        HayoMachineTexture.blit(graphics, x + 79, y + 17, HayoMachineTexture.TINY_ARROW_X, HayoMachineTexture.TINY_ARROW_Y, HayoMachineTexture.TINY_ARROW_WIDTH, HayoMachineTexture.TINY_ARROW_HEIGHT);
+        HayoGuiSprites.drawSlot(graphics, x + 61, y + 17);
+        HayoGuiSprites.drawSmallArrowRight(graphics, x + 79, y + 17);
 
-        HayoMachineTexture.drawSlot(graphics, x + 61, y + 53);
-        HayoMachineTexture.blit(graphics, x + 79, y + 53, HayoMachineTexture.TINY_ARROW_LEFT_X, HayoMachineTexture.TINY_ARROW_Y, HayoMachineTexture.TINY_ARROW_WIDTH, HayoMachineTexture.TINY_ARROW_HEIGHT);
+        HayoGuiSprites.drawSlot(graphics, x + 61, y + 53);
+        HayoGuiSprites.drawSmallArrowLeft(graphics, x + 79, y + 53);
 
-        HayoMachineTexture.drawEnergyStorage(graphics, x + 88, y + 16, this.menu.getStoredEnergy(), EnergyCrystalArrayBlockEntity.CAPACITY);
+        HayoGuiSprites.drawEnergyStorage(graphics, x + 88, y + 16, this.menu.getStoredEnergy(), EnergyCrystalArrayBlockEntity.CAPACITY);
     }
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (this.isHovering(88, 16, HayoMachineTexture.ENERGY_WIDTH, HayoMachineTexture.ENERGY_HEIGHT, mouseX, mouseY)) {
+        if (this.isHovering(88, 16, 18, 56, mouseX, mouseY)) {
+            int storedEnergy = this.menu.getStoredEnergy();
+            int capacity = EnergyCrystalArrayBlockEntity.CAPACITY;
+            float averageEnergyPerTick = this.menu.getAverageEnergyPerTick();
+
             graphics.setTooltipForNextFrame(this.font, List.of( //
-                    EnergyTexts.amountAndPercentage(this.menu.getStoredEnergy(), this.menu.getStoredEnergy() * 100 / EnergyCrystalArrayBlockEntity.CAPACITY), //
-                    Component.translatable("hayo.energy.max_amount", EnergyTexts.formatAmount(EnergyCrystalArrayBlockEntity.CAPACITY)).withStyle(ChatFormatting.GRAY), //
-                    EnergyTexts.averageAmountPerTick(this.menu.getAverageEnergyPerTick()).withStyle(ChatFormatting.GRAY) //
+                    EnergyTexts.amountAndPercentage(storedEnergy, storedEnergy * 100 / capacity), //
+                    EnergyTexts.maxAmount(capacity).withStyle(ChatFormatting.GRAY), //
+                    EnergyTexts.averageAmountPerTick(averageEnergyPerTick).withStyle(ChatFormatting.GRAY) //
             ), Optional.empty(), mouseX, mouseY);
             return;
         }

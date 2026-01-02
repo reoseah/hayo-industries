@@ -9,16 +9,6 @@ import java.util.Locale;
 /// Default translation keys and formatting for HAYO energy,
 /// generally identified with lowercase epsilon "ε".
 public class EnergyTexts {
-    private static final DecimalFormat LARGE_AMOUNTS_FORMAT;
-
-    static {
-        LARGE_AMOUNTS_FORMAT = (DecimalFormat) DecimalFormat.getInstance(Locale.ROOT);
-        LARGE_AMOUNTS_FORMAT.setGroupingUsed(true);
-        LARGE_AMOUNTS_FORMAT.setGroupingSize(3);
-        var symbols = LARGE_AMOUNTS_FORMAT.getDecimalFormatSymbols();
-        symbols.setGroupingSeparator(',');
-        LARGE_AMOUNTS_FORMAT.setDecimalFormatSymbols(symbols);
-    }
 
     private static final String AMOUNT = "hayo.energy.amount";
     private static final String AMOUNT_AND_CAPACITY = "hayo.energy.amount_and_capacity";
@@ -34,32 +24,43 @@ public class EnergyTexts {
     private static final String OVERCLOCK_USE_RATE = "hayo.energy.overclock_use_rate";
     private static final String OVERCLOCK_TOTAL_COST = "hayo.energy.overclock_total_cost";
 
+    private static final DecimalFormat LARGE_AMOUNTS_FORMAT;
+
+    static {
+        LARGE_AMOUNTS_FORMAT = (DecimalFormat) DecimalFormat.getInstance(Locale.ROOT);
+        LARGE_AMOUNTS_FORMAT.setGroupingUsed(true);
+        LARGE_AMOUNTS_FORMAT.setGroupingSize(3);
+        var symbols = LARGE_AMOUNTS_FORMAT.getDecimalFormatSymbols();
+        symbols.setGroupingSeparator(',');
+        LARGE_AMOUNTS_FORMAT.setDecimalFormatSymbols(symbols);
+    }
+
     /// Format energy amount, grouping digits with commas for large numbers.
     /// <aside>
     /// Not using suffixes like "M", like TechReborn and so many tech mods,
-    /// it has wrong "vibe". If you have to show truly large numbers, use
-    /// scientific notation.
+    /// it has wrong "vibe". (If you have to show truly large numbers, use
+    /// scientific notation.)
     /// </aside>
     public static String formatAmount(long amount) {
         return amount < 10000 ? String.valueOf(amount) : LARGE_AMOUNTS_FORMAT.format(amount);
     }
 
-    /// E.g.: "1000 ε", after 10000 group with commas - "1,000,000 ε".
+    /// E.g.: `1000 ε`, after 10000 group with commas - `1,000,000 ε`.
     public static MutableComponent amount(long amount) {
         return Component.translatable(AMOUNT, formatAmount(amount));
     }
 
-    /// E.g.: "500,000 / 1,000,000 ε"
+    /// E.g.: `500,000 / 1,000,000 ε`.
     public static MutableComponent amountAndCapacity(long amount, long capacity) {
         return Component.translatable(AMOUNT_AND_CAPACITY, formatAmount(amount), formatAmount(capacity));
     }
 
-    /// E.g.: "100 ε/t"
+    /// E.g.: `100 ε/t`.
     public static MutableComponent amountPerTick(long amount) {
         return Component.translatable(AMOUNT_PER_TICK, formatAmount(amount));
     }
 
-    /// E.g.: "+42.5 avg. ε/t". Doesn't round the value, make sure to round it yourself to one or two digits.
+    /// E.g.: `+42.5 avg. ε/t`. Make sure to round amount to one or two digits.
     public static MutableComponent averageAmountPerTick(float amount) {
         return Component.translatable(AVERAGE_AMOUNT_PER_TICK, (amount > 0 ? "+" : "") + amount);
     }
@@ -67,7 +68,6 @@ public class EnergyTexts {
     public static MutableComponent maxAmount(long amount) {
         return Component.translatable(MAX_AMOUNT, formatAmount(amount));
     }
-
 
     public static MutableComponent maxAmountPerTick(long amount) {
         return Component.translatable(MAX_AMOUNT_PER_TICK, amount);

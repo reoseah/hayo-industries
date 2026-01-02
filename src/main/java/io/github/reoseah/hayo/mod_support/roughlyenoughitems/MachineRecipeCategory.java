@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.mod_support.roughlyenoughitems;
 
+import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
-import io.github.reoseah.hayo.base.client.HayoMachineTexture;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -20,10 +20,10 @@ import java.util.List;
 public class MachineRecipeCategory implements DisplayCategory<MachineRecipeDisplay> {
     protected final Identifier location;
     protected final Renderer icon;
-    protected final HayoMachineTexture.RecipeArrow arrowType;
+    protected final HayoGuiSprites.RecipeArrow arrowType;
     protected final int energyUseRate;
 
-    public MachineRecipeCategory(Identifier location, Renderer icon, HayoMachineTexture.RecipeArrow arrowType, int energyUseRate) {
+    public MachineRecipeCategory(Identifier location, Renderer icon, HayoGuiSprites.RecipeArrow arrowType, int energyUseRate) {
         this.location = location;
         this.icon = icon;
         this.arrowType = arrowType;
@@ -60,7 +60,7 @@ public class MachineRecipeCategory implements DisplayCategory<MachineRecipeDispl
         return widgets;
     }
 
-    public static void addCommonMachineRecipeWidgets(MachineRecipeDisplay display, Rectangle bounds, ArrayList<Widget> widgets, Point startPoint, int energyUseRate, HayoMachineTexture.RecipeArrow arrowType) {
+    public static void addCommonMachineRecipeWidgets(MachineRecipeDisplay display, Rectangle bounds, ArrayList<Widget> widgets, Point startPoint, int energyUseRate, HayoGuiSprites.RecipeArrow arrowType) {
         var tooltip = new Component[]{ //
                 EnergyTexts.amount(display.processingEnergy), //
                 Component.translatable("hayo.energy.duration_at_amount_per_tick", //
