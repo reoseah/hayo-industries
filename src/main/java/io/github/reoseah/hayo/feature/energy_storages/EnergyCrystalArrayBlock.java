@@ -2,8 +2,8 @@ package io.github.reoseah.hayo.feature.energy_storages;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.energy.ElectricReceiverBlock;
 import io.github.reoseah.hayo.base.block.DirectionalMachineBlock;
+import io.github.reoseah.hayo.feature.energy.ElectricReceiverBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

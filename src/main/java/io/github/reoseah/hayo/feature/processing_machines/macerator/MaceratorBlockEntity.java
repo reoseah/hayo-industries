@@ -50,8 +50,8 @@ public class MaceratorBlockEntity extends BasicMachineBlockEntity<MaceratingReci
     }
 
     @Override
-    public int getDefaultRecipeEnergy(RecipeHolder<MaceratingRecipe> recipe) {
-        return recipe.value().processingEnergy();
+    public int getDefaultEnergyCost(RecipeHolder<MaceratingRecipe> recipe) {
+        return recipe.value().getEnergyCost();
     }
 
     @Override

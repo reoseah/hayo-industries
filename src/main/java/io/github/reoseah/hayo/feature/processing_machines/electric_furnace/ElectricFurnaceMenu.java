@@ -7,6 +7,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -16,13 +17,11 @@ import net.minecraft.world.item.crafting.RecipePropertySet;
 import java.util.Map;
 
 public class ElectricFurnaceMenu extends MachineMenu {
-    public static final int SLOTS = ElectricFurnaceBlockEntity.SLOTS;
-
     private final DataSlot recipeMode;
     private final Map<ElectricFurnaceMode, RecipePropertySet> recipeInputs;
 
     public ElectricFurnaceMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(SLOTS), new SimpleContainerData(7), inventory, DataSlot.standalone());
+        this(menuId, new SimpleContainer(ElectricFurnaceBlockEntity.SLOTS), new SimpleContainerData(7), inventory, DataSlot.standalone());
     }
 
     public ElectricFurnaceMenu(int menuId, ElectricFurnaceBlockEntity entity, Inventory inventory) {
@@ -62,13 +61,13 @@ public class ElectricFurnaceMenu extends MachineMenu {
     }
 
     @Override
-    protected boolean isRecipeInput(ItemStack stack) {
-        return this.recipeInputs.get(this.getRecipeMode()).test(stack);
+    public ItemStack quickMoveStack(Player player, int index) {
+        return quickMoveClassicMachineStack(this, player, index, ElectricFurnaceBlockEntity.SLOTS);
     }
 
     @Override
-    protected int getFirstPlayerSlot() {
-        return SLOTS;
+    protected boolean isRecipeInput(ItemStack stack) {
+        return this.recipeInputs.get(this.getRecipeMode()).test(stack);
     }
 
     @Override

@@ -15,7 +15,6 @@ import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
-import io.github.reoseah.hayo.feature.matter_generator.MatterGeneratorBlock;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
 import io.github.reoseah.hayo.feature.processing_machines.BasicMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.compressor.*;
@@ -25,6 +24,7 @@ import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.Elect
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceScreen;
 import io.github.reoseah.hayo.feature.processing_machines.extractor.*;
 import io.github.reoseah.hayo.feature.processing_machines.macerator.*;
+import io.github.reoseah.hayo.feature.processing_machines.matter_generator.*;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
 import net.fabricmc.api.EnvType;
@@ -35,14 +35,15 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.ChunkSectionLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
@@ -95,7 +96,7 @@ public class Hayo {
     public static final String MOD_ID = "hayo";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static final CreativeModeTab TAB = FabricItemGroup.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
+    public static final CreativeModeTab TAB = FabricCreativeModeTab.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
 
     public static final SavedDataType<ElectricBlockManager> ELECTRIC_DATA = new SavedDataType<>("HayoElectricData", //
             ElectricBlockManager::new, //
@@ -119,7 +120,9 @@ public class Hayo {
         FoliagePlacerTypes.initialize();
         RecipeTypes.initialize();
         RecipeSerializers.initialize();
+
         CustomPayloads.initialize();
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
 
         BiomeModifications.create(Identifier.fromNamespaceAndPath("hayo", "features")) //
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST) //
@@ -136,14 +139,14 @@ public class Hayo {
         ServerChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
             ElectricBlockManager.get(level).onChunkUnload(chunk);
         });
-        ServerTickEvents.END_WORLD_TICK.register(level -> {
+        ServerTickEvents.END_LEVEL_TICK.register(level -> {
             ElectricBlockManager.get(level).onLevelTickEnd();
         });
     }
 
     @Environment(EnvType.CLIENT)
     public static void initializeClient() {
-        BlockRenderLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.CHIPBOARD_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU);
+        ChunkSectionLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.CHIPBOARD_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU);
         ColorProviderRegistry.BLOCK.register((state, level, pos, seed) -> level != null ? BiomeColors.getAverageFoliageColor(level, pos) : -12012264, Blocks.RUBBER_LEAVES);
 
         RangeSelectItemModelProperties.ID_MAPPER.put(modId("energy"), EnergyModelProperty.MAP_CODEC);
@@ -153,6 +156,7 @@ public class Hayo {
         MenuScreens.register(MenuTypes.MACERATOR, MaceratorScreen::new);
         MenuScreens.register(MenuTypes.COMPRESSOR, CompressorScreen::new);
         MenuScreens.register(MenuTypes.EXTRACTOR, ExtractorScreen::new);
+        MenuScreens.register(MenuTypes.MATTER_GENERATOR, MatterGeneratorScreen::new);
         MenuScreens.register(MenuTypes.ENERGY_CRYSTAL_ARRAY, EnergyCrystalArrayScreen::new);
 
         CustomPayloads.initializeClient();
@@ -207,7 +211,6 @@ public class Hayo {
         public static final Block RUBBER_SLAB = register("rubber_slab", SlabBlock::new, RUBBER_PROPERTIES);
 
         public static final Block RUBBER_BLOCK = register("rubber_block", Block::new, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(3));
-
 
         public static final Block FERRU = register("ferru", props -> new FerruBlock(TagKey.create(Registries.ITEM, modId("ferru_fertilizers")), props), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
 
@@ -315,7 +318,7 @@ public class Hayo {
         public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static void initialize() {
-            ItemGroupEvents.modifyEntriesEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
+            CreativeModeTabEvents.modifyOutputEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
                 entries.accept(GENERATOR);
                 entries.accept(ELECTRIC_FURNACE);
                 entries.accept(MACERATOR);
@@ -455,6 +458,7 @@ public class Hayo {
         public static final BlockEntityType<MaceratorBlockEntity> MACERATOR = register("macerator", MaceratorBlockEntity::new, Blocks.MACERATOR);
         public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR = register("compressor", CompressorBlockEntity::new, Blocks.COMPRESSOR);
         public static final BlockEntityType<ExtractorBlockEntity> EXTRACTOR = register("extractor", ExtractorBlockEntity::new, Blocks.EXTRACTOR);
+        public static final BlockEntityType<MatterGeneratorBlockEntity> MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlockEntity::new, Blocks.MATTER_GENERATOR);
         public static final BlockEntityType<EnergyCrystalArrayBlockEntity> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlockEntity::new, Blocks.ENERGY_CRYSTAL_ARRAY);
 
         public static void initialize() {
@@ -474,6 +478,7 @@ public class Hayo {
         public static final MenuType<MaceratorMenu> MACERATOR = register("macerator", MaceratorMenu::new);
         public static final MenuType<CompressorMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
         public static final MenuType<ExtractorMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
+        public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
         public static final MenuType<EnergyCrystalArrayMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
 
         public static void initialize() {
@@ -505,6 +510,7 @@ public class Hayo {
         public static final RecipeType<MaceratingRecipe> MACERATING = register("macerating");
         public static final RecipeType<CompressingRecipe> COMPRESSING = register("compressing");
         public static final RecipeType<ExtractingRecipe> EXTRACTING = register("extracting");
+        public static final RecipeType<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating");
 
         public static void initialize() {
         }
@@ -525,6 +531,7 @@ public class Hayo {
         public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", new BasicMachineRecipe.Serializer<>(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", new BasicMachineRecipe.Serializer<>(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", new BasicMachineRecipe.Serializer<>(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new MatterGeneratingRecipe.Serializer());
 
         public static void initialize() {
         }
@@ -538,7 +545,7 @@ public class Hayo {
         public static final CustomPacketPayload.Type<OverloadCablePayload> OVERLOAD_CABLE = new CustomPacketPayload.Type<>(modId("overload_cable"));
 
         public static void initialize() {
-            PayloadTypeRegistry.playS2C().register(OVERLOAD_CABLE, OverloadCablePayload.STREAM_CODEC);
+            PayloadTypeRegistry.clientboundPlay().register(OVERLOAD_CABLE, OverloadCablePayload.STREAM_CODEC);
         }
 
         @Environment(EnvType.CLIENT)
@@ -553,9 +560,9 @@ public class Hayo {
                     level.destroyBlockProgress(-Math.abs(pos.hashCode()), pos, value);
                     if (value > 0) {
                         for (int i = 0; i < 2; i++) {
-                            double x = pos.getX() + 0.25 + level.random.nextFloat() * 0.5;
-                            double y = pos.getY() + 0.25 + level.random.nextFloat() * 0.5;
-                            double z = pos.getZ() + 0.25 + level.random.nextFloat() * 0.5;
+                            double x = pos.getX() + 0.25 + level.getRandom().nextFloat() * 0.5;
+                            double y = pos.getY() + 0.25 + level.getRandom().nextFloat() * 0.5;
+                            double z = pos.getZ() + 0.25 + level.getRandom().nextFloat() * 0.5;
                             level.addParticle(ParticleTypes.SMOKE, x, y, z, 0, 0, 0);
 
                             level.addParticle(ParticleTypes.FLAME, x, y, z, 0, 0, 0);

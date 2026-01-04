@@ -47,7 +47,7 @@ public abstract class BasicMachineBlockEntity<R extends Recipe<SingleRecipeInput
     }
 
     @Override
-    public SingleRecipeInput createRecipeInput(NonNullList<ItemStack> items) {
+    public SingleRecipeInput getRecipeInput(NonNullList<ItemStack> items) {
         return new SingleRecipeInput(items.get(INPUT_SLOT));
     }
 

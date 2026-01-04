@@ -66,7 +66,6 @@ public class HayoGuiSprites {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, UPGRADE_SLOT, x, y, 18, 18);
     }
 
-
     public static final Identifier OUTPUT_SLOT = Hayo.modId("slots/output");
 
     public static void drawOutputSlot(GuiGraphics graphics, int x, int y) {
@@ -95,4 +94,8 @@ public class HayoGuiSprites {
             this.overlay = overlay;
         }
     }
+
+    public static final Identifier RECIPE = Hayo.modId("recipe_button/default");
+    public static final Identifier RECIPE_SELECTED = Hayo.modId("recipe_button/selected");
+    public static final Identifier RECIPE_HIGHLIGHTED = Hayo.modId("recipe_button/highlighted");
 }

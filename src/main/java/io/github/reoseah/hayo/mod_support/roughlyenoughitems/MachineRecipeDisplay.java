@@ -69,7 +69,7 @@ public class MachineRecipeDisplay implements Display {
         this.category = CategoryIdentifier.of(BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType()));
         this.input = EntryIngredients.ofIngredient(recipe.input());
         this.result = EntryIngredients.of(recipe.result());
-        this.processingEnergy = recipe.processingEnergy();
+        this.processingEnergy = recipe.getEnergyCost();
     }
 
     public static MachineRecipeDisplay fromCookingRecipe(RecipeHolder<AbstractCookingRecipe> holder) {

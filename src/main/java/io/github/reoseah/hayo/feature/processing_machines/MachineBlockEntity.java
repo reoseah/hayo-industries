@@ -42,7 +42,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     public static <R extends Recipe<I>, I extends RecipeInput> void tickProcessing(ServerLevel level, BlockPos pos, BlockState state, MachineBlockEntity<R, I> entity) {
         boolean wasProcessing = entity.recipeUsedEnergy > 0;
 
-        var input = entity.createRecipeInput(entity.stacks);
+        var input = entity.getRecipeInput(entity.stacks);
         if (input.isEmpty()) {
             if (entity.recipeUsedEnergy > 0) {
                 entity.recipeUsedEnergy = entity.recipeTotalEnergy = 0;
@@ -51,10 +51,10 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         } else {
             var recipeHolder = entity.findMatchingRecipe(level, input);
 
-            int energyUseRate = entity.getEnergyUseRate();
-            boolean hasEnergy = entity.storedEnergy >= energyUseRate;
-            if (hasEnergy && entity.canCraft(level.registryAccess(), recipeHolder, input, entity.stacks)) {
-                int usable = Math.min(Math.min(energyUseRate, entity.recipeTotalEnergy - entity.recipeUsedEnergy), entity.storedEnergy);
+            int minEnergyUseRate = entity.getMinEnergyUseRate();
+            if (entity.storedEnergy >= minEnergyUseRate //
+                    && entity.canCraft(level.registryAccess(), recipeHolder, input, entity.stacks)) {
+                int usable = Math.min(Mth.clamp(entity.recipeTotalEnergy - entity.recipeUsedEnergy, minEnergyUseRate, entity.getEnergyUseRate()), entity.storedEnergy);
 
                 entity.storedEnergy -= usable;
                 entity.recipeUsedEnergy += usable;
@@ -66,7 +66,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
                 entity.setChanged();
             } else {
-                entity.recipeUsedEnergy = Mth.clamp(entity.recipeUsedEnergy - 2 * energyUseRate, 0, entity.recipeTotalEnergy);
+                entity.recipeUsedEnergy = Mth.clamp(entity.recipeUsedEnergy - 2 * minEnergyUseRate, 0, entity.recipeTotalEnergy);
                 entity.setChanged();
             }
         }
@@ -75,6 +75,10 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         if (wasProcessing != isProcessing) {
             level.setBlockAndUpdate(pos, state.setValue(OrientableMachineBlock.LIT, isProcessing));
         }
+    }
+
+    protected int getMinEnergyUseRate() {
+        return this.getEnergyUseRate();
     }
 
     public static ContainerData createData(MachineBlockEntity<?, ?> entity) {
@@ -110,7 +114,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected abstract int getDefaultEnergyUseRate();
 
-    protected abstract int getDefaultRecipeEnergy(RecipeHolder<R> holder);
+    protected abstract int getDefaultEnergyCost(RecipeHolder<R> holder);
 
     protected abstract int getSlotCount();
 
@@ -120,7 +124,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected abstract int getLastUpgradeSlot();
 
-    protected abstract I createRecipeInput(NonNullList<ItemStack> items);
+    protected abstract I getRecipeInput(NonNullList<ItemStack> items);
 
     protected abstract boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, I recipeInput, NonNullList<ItemStack> items);
 
@@ -136,7 +140,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     }
 
     public int getRecipeTotalEnergy(RecipeHolder<R> holder) {
-        return this.getDefaultRecipeEnergy(holder) * (100 + 25 * this.overclockCount) / 100;
+        return this.getDefaultEnergyCost(holder) * (100 + 25 * this.overclockCount) / 100;
     }
 
     @Override
@@ -210,8 +214,8 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         }
 
         this.capacityFromUpgrades = capacityFromUpgrades;
-        if (this.storedEnergy > this.getDefaultCapacity()) {
-            this.storedEnergy = this.getDefaultCapacity();
+        if (this.storedEnergy > this.getEnergyCapacity()) {
+            this.storedEnergy = this.getEnergyCapacity();
         }
         if (overclockCount != this.overclockCount) {
             this.overclockCount = overclockCount;
@@ -221,7 +225,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected void resetRecipeProgress() {
         if (this.level instanceof ServerLevel serverLevel) {
-            var input = this.createRecipeInput(this.stacks);
+            var input = this.getRecipeInput(this.stacks);
             var recipeHolder = this.findMatchingRecipe(serverLevel, input);
             if (recipeHolder != null) {
                 this.recipeTotalEnergy = this.getRecipeTotalEnergy(recipeHolder);
@@ -234,7 +238,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected void updateRecipeCost() {
         if (this.level instanceof ServerLevel serverLevel) {
-            var input = this.createRecipeInput(this.stacks);
+            var input = this.getRecipeInput(this.stacks);
             var recipeHolder = this.findMatchingRecipe(serverLevel, input);
             if (recipeHolder != null) {
                 this.recipeTotalEnergy = this.getRecipeTotalEnergy(recipeHolder);

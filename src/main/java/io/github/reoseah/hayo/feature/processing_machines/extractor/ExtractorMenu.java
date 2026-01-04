@@ -6,15 +6,14 @@ import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 
 public class ExtractorMenu extends MachineMenu {
-    public static final int SLOTS = ExtractorBlockEntity.SLOTS;
-
     public ExtractorMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(SLOTS), new SimpleContainerData(7), inventory);
+        this(menuId, new SimpleContainer(ExtractorBlockEntity.SLOTS), new SimpleContainerData(7), inventory);
     }
 
     public ExtractorMenu(int menuId, ExtractorBlockEntity entity, Inventory inventory) {
@@ -28,8 +27,8 @@ public class ExtractorMenu extends MachineMenu {
     }
 
     @Override
-    protected int getFirstPlayerSlot() {
-        return SLOTS;
+    public ItemStack quickMoveStack(Player player, int index) {
+        return quickMoveClassicMachineStack(this, player, index, ExtractorBlockEntity.SLOTS);
     }
 
     @Override

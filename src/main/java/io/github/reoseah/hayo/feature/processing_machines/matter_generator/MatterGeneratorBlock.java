@@ -1,11 +1,15 @@
-package io.github.reoseah.hayo.feature.matter_generator;
+package io.github.reoseah.hayo.feature.processing_machines.matter_generator;
 
 import com.mojang.serialization.MapCodec;
+import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
 import io.github.reoseah.hayo.feature.energy.ElectricReceiverBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +27,13 @@ public class MatterGeneratorBlock extends OrientableMachineBlock implements Elec
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return null;
+        return new MatterGeneratorBlockEntity(pos, state);
+    }
+
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, Hayo.BlockEntityTypes.MATTER_GENERATOR, world.isClientSide() ? null : MatterGeneratorBlockEntity::tickServer);
     }
 }

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hayo:rubber_block"
+  ],
+  "result": {
+    "id": "hayo:rubber",
+    "count": 9
+  }
+}

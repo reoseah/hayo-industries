@@ -14,7 +14,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 @Accessors(fluent = true)
-public abstract class BasicMachineRecipe implements Recipe<SingleRecipeInput>, MachineRecipe {
+public abstract class BasicMachineRecipe implements Recipe<SingleRecipeInput>, ElectricCostProvider {
     @Getter
     private final Ingredient input;
     @Getter
@@ -60,7 +60,7 @@ public abstract class BasicMachineRecipe implements Recipe<SingleRecipeInput>, M
     }
 
     @Override
-    public int processingEnergy() {
+    public int getEnergyCost() {
         return this.processingEnergy;
     }
 
@@ -78,7 +78,7 @@ public abstract class BasicMachineRecipe implements Recipe<SingleRecipeInput>, M
                     instance -> instance.group( //
                             Ingredient.CODEC.fieldOf("ingredient").forGetter(BasicMachineRecipe::input), //
                             ItemStack.STRICT_CODEC.fieldOf("result").forGetter(BasicMachineRecipe::result), //
-                            Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(BasicMachineRecipe::processingEnergy), //
+                            Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(BasicMachineRecipe::getEnergyCost), //
                             Codec.FLOAT.fieldOf("extra_chance").orElse(0F).forGetter(BasicMachineRecipe::extraChance) //
                     ).apply(instance, factory::create));
             this.streamCodec = StreamCodec.composite( //
@@ -87,7 +87,7 @@ public abstract class BasicMachineRecipe implements Recipe<SingleRecipeInput>, M
                     ItemStack.STREAM_CODEC, //
                     BasicMachineRecipe::result, //
                     ByteBufCodecs.INT, //
-                    BasicMachineRecipe::processingEnergy, //
+                    BasicMachineRecipe::getEnergyCost, //
                     ByteBufCodecs.FLOAT, //
                     BasicMachineRecipe::extraChance, //
                     factory::create);

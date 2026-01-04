@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version "${loom_version}"
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
     id("io.freefair.lombok") version "9.1.0"
     id 'maven-publish'
 }
@@ -30,15 +30,11 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.21.10:2025.10.12@zip")
-    }
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    api "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
+//    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
 //    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
 //    modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${project.rei_version}"
 }

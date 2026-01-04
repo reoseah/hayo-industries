@@ -50,8 +50,8 @@ public class ExtractorBlockEntity extends BasicMachineBlockEntity<ExtractingReci
     }
 
     @Override
-    public int getDefaultRecipeEnergy(RecipeHolder<ExtractingRecipe> recipe) {
-        return recipe.value().processingEnergy();
+    public int getDefaultEnergyCost(RecipeHolder<ExtractingRecipe> recipe) {
+        return recipe.value().getEnergyCost();
     }
 
     @Override

@@ -12,6 +12,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class MachineMenu extends AbstractContainerMenu {
     protected final ContainerData data;
@@ -39,6 +40,13 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         menu.addStandardInventorySlots(inventory, 8, 84);
     }
 
+    public static void addMatterGeneratorSlots(MachineMenu menu, Container container, Inventory inventory) {
+        menu.addSlot(new Slot(container, 0, 56, 34));
+        menu.addSlot(new ResultSlot(container, 1, 116, 26));
+
+        menu.addStandardInventorySlots(inventory, 8, 110);
+    }
+
     public static void addSlotsWithSecondaryOutput(MachineMenu menu, Container container, Inventory inventory) {
         menu.addSlot(new Slot(container, 0, 47, 18));
         menu.addSlot(new Slot(container, 1, 47, 54));
@@ -57,39 +65,37 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         return Mth.ceil(this.getRecipeTotalEnergy() / (float) this.getEnergyUseRate()) / 20F;
     }
 
-    @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        var slot = this.slots.get(index);
+    protected static @NotNull ItemStack quickMoveClassicMachineStack(MachineMenu menu, Player player, int index, int firstPlayerSlot) {
+        var slot = menu.slots.get(index);
         var stack = slot.getItem();
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         }
         var remaining = stack.copy();
-        int firstPlayerSlot = getFirstPlayerSlot();
         if (index < firstPlayerSlot) {
-            if (!this.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 36, true)) {
+            if (!menu.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 36, true)) {
                 return ItemStack.EMPTY;
             }
             slot.onQuickCraft(stack, remaining);
         } else {
-            if (stack.is(this.validUpgrades)) {
-                if (!this.moveItemStackTo(stack, 3, 7, false)) {
+            if (menu.validUpgrades != null && stack.is(menu.validUpgrades)) {
+                if (!menu.moveItemStackTo(stack, 3, 7, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (ElectricItems.isElectric(stack)) {
-                if (!this.moveItemStackTo(stack, 1, 2, false)) {
+                if (!menu.moveItemStackTo(stack, 1, 2, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (this.isRecipeInput(stack)) {
-                if (!this.moveItemStackTo(stack, 0, 1, false)) {
+            } else if (menu.isRecipeInput(stack)) {
+                if (!menu.moveItemStackTo(stack, 0, 1, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index < firstPlayerSlot + 27) {
-                if (!this.moveItemStackTo(stack, firstPlayerSlot + 27, firstPlayerSlot + 36, false)) {
+                if (!menu.moveItemStackTo(stack, firstPlayerSlot + 27, firstPlayerSlot + 36, false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (!this.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 27, false)) {
+                if (!menu.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 27, false)) {
                     return ItemStack.EMPTY;
                 }
             }
@@ -108,8 +114,6 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         slot.onTake(player, stack);
         return remaining;
     }
-
-    protected abstract int getFirstPlayerSlot();
 
     protected abstract boolean isRecipeInput(ItemStack stack);
 

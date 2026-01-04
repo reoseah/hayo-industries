@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.energy.ElectricItems;
 import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
+import io.github.reoseah.hayo.feature.energy.ElectricItems;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;

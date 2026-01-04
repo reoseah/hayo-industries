@@ -50,8 +50,8 @@ public class CompressorBlockEntity extends BasicMachineBlockEntity<CompressingRe
     }
 
     @Override
-    public int getDefaultRecipeEnergy(RecipeHolder<CompressingRecipe> recipe) {
-        return recipe.value().processingEnergy();
+    public int getDefaultEnergyCost(RecipeHolder<CompressingRecipe> recipe) {
+        return recipe.value().getEnergyCost();
     }
 
     @Override

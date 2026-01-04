@@ -2,8 +2,8 @@ package io.github.reoseah.hayo.feature.generator;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.energy.ElectricSenderBlock;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
+import io.github.reoseah.hayo.feature.energy.ElectricSenderBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;

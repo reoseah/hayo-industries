@@ -6,15 +6,14 @@ import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 
 public class CompressorMenu extends MachineMenu {
-    public static final int SLOTS = CompressorBlockEntity.SLOTS;
-
     public CompressorMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(SLOTS), new SimpleContainerData(7), inventory);
+        this(menuId, new SimpleContainer(CompressorBlockEntity.SLOTS), new SimpleContainerData(7), inventory);
     }
 
     public CompressorMenu(int menuId, CompressorBlockEntity entity, Inventory inventory) {
@@ -28,14 +27,14 @@ public class CompressorMenu extends MachineMenu {
     }
 
     @Override
-    protected boolean isRecipeInput(ItemStack stack) {
-        // TODO: synchronize recipe inputs, quick move only valid inputs
-        return true;
+    public ItemStack quickMoveStack(Player player, int index) {
+        return quickMoveClassicMachineStack(this, player, index, CompressorBlockEntity.SLOTS);
     }
 
     @Override
-    protected int getFirstPlayerSlot() {
-        return SLOTS;
+    protected boolean isRecipeInput(ItemStack stack) {
+        // TODO: synchronize recipe inputs, quick move only valid inputs
+        return true;
     }
 
     @Override
