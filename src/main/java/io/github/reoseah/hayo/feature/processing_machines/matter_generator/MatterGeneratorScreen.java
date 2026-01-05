@@ -60,9 +60,8 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
         int row = Mth.floor(event.y() - this.topPos - 59) / 18;
         int idx = 12 * (this.scrollOffset + row) + column;
 
-        if (idx < this.menu.recipes.size()) {
+        if (idx >= 0 && idx < this.menu.recipes.size()) {
             this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, idx);
-
             return true;
         }
         return super.mouseClicked(event, doubleClick);

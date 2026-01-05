@@ -2,6 +2,6 @@
   "type": "hayo:matter_generating",
   "processing_energy": 75000,
   "result": {
-    "id": "minecraft:redstone"
+    "id": "minecraft:clay_ball"
   }
 }

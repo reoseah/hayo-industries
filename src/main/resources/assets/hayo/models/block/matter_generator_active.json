@@ -1,0 +1,19 @@
+{
+  "parent": "block/cube",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "hayo:block/matter_generator_active",
+    "down": "hayo:block/advanced_machine",
+    "up": "hayo:block/advanced_machine",
+    "north": "hayo:block/matter_generator_active",
+    "east": "hayo:block/matter_generator_active",
+    "south": "hayo:block/matter_generator_active",
+    "west": "hayo:block/matter_generator_active"
+  }
+}

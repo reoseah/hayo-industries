@@ -16,18 +16,18 @@
       "y": 270
     },
     "facing=north,lit=true": {
-      "model": "hayo:block/molecular_transformer_active"
+      "model": "hayo:block/matter_generator_active"
     },
     "facing=east,lit=true": {
-      "model": "hayo:block/molecular_transformer_active",
+      "model": "hayo:block/matter_generator_active",
       "y": 90
     },
     "facing=south,lit=true": {
-      "model": "hayo:block/molecular_transformer_active",
+      "model": "hayo:block/matter_generator_active",
       "y": 180
     },
     "facing=west,lit=true": {
-      "model": "hayo:block/molecular_transformer_active",
+      "model": "hayo:block/matter_generator_active",
       "y": 270
     }
   }

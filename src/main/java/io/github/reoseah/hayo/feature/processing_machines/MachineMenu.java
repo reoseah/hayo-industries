@@ -13,29 +13,29 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Predicate;
 
 public abstract class MachineMenu extends AbstractContainerMenu {
     protected final ContainerData data;
-    protected final TagKey<Item> validUpgrades;
 
-    protected MachineMenu(MenuType<?> type, TagKey<Item> validUpgrades, int menuId, Container container, ContainerData data, Inventory inventory) {
+    protected MachineMenu(MenuType<?> type, int menuId, Container container, ContainerData data, Inventory inventory) {
         super(type, menuId);
-
-        this.validUpgrades = validUpgrades;
 
         this.data = data;
         this.addDataSlots(this.data);
     }
 
-    public static void addClassicSlots(MachineMenu menu, Container container, Inventory inventory) {
+    public static void addClassicSlots(MachineMenu menu, Container container, Inventory inventory, TagKey<Item> validUpgrades) {
         menu.addSlot(new Slot(container, 0, 47, 18));
         menu.addSlot(new Slot(container, 1, 47, 54));
         menu.addSlot(new ResultSlot(container, 2, 107, 36));
 
-        menu.addSlot(new UpgradeSlot(container, 3, 152, 8, menu.validUpgrades));
-        menu.addSlot(new UpgradeSlot(container, 4, 152, 26, menu.validUpgrades));
-        menu.addSlot(new UpgradeSlot(container, 5, 152, 44, menu.validUpgrades));
-        menu.addSlot(new UpgradeSlot(container, 6, 152, 62, menu.validUpgrades));
+        menu.addSlot(new UpgradeSlot(container, 3, 152, 8, validUpgrades));
+        menu.addSlot(new UpgradeSlot(container, 4, 152, 26, validUpgrades));
+        menu.addSlot(new UpgradeSlot(container, 5, 152, 44, validUpgrades));
+        menu.addSlot(new UpgradeSlot(container, 6, 152, 62, validUpgrades));
 
         menu.addStandardInventorySlots(inventory, 8, 84);
     }
@@ -47,55 +47,54 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         menu.addStandardInventorySlots(inventory, 8, 110);
     }
 
-    public static void addSlotsWithSecondaryOutput(MachineMenu menu, Container container, Inventory inventory) {
-        menu.addSlot(new Slot(container, 0, 47, 18));
-        menu.addSlot(new Slot(container, 1, 47, 54));
-        menu.addSlot(new ResultSlot(container, 2, 107, 26));
-        menu.addSlot(new ResultSlot(container, 3, 107, 52));
-
-        menu.addSlot(new UpgradeSlot(container, 4, 152, 8, menu.validUpgrades));
-        menu.addSlot(new UpgradeSlot(container, 5, 152, 26, menu.validUpgrades));
-        menu.addSlot(new UpgradeSlot(container, 6, 152, 44, menu.validUpgrades));
-        menu.addSlot(new UpgradeSlot(container, 7, 152, 62, menu.validUpgrades));
-
-        menu.addStandardInventorySlots(inventory, 8, 84);
-    }
-
     public float getRecipeDuration() {
         return Mth.ceil(this.getRecipeTotalEnergy() / (float) this.getEnergyUseRate()) / 20F;
     }
 
-    protected static @NotNull ItemStack quickMoveClassicMachineStack(MachineMenu menu, Player player, int index, int firstPlayerSlot) {
+    protected static @NotNull ItemStack quickMoveClassicMachineStack(MachineMenu menu, //
+                                                                     Player player, //
+                                                                     int index, //
+                                                                     int inputSlots,
+                                                                     int batterySlots,
+                                                                     int outputSlots,
+                                                                     int upgradeSlots,
+                                                                     @Nullable Predicate<ItemStack> inputs,
+                                                                     @Nullable TagKey<Item> validUpgrades) {
         var slot = menu.slots.get(index);
         var stack = slot.getItem();
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         }
         var remaining = stack.copy();
-        if (index < firstPlayerSlot) {
-            if (!menu.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 36, true)) {
+
+        int playerSlotsStart = inputSlots + batterySlots + outputSlots + upgradeSlots;
+        if (index < playerSlotsStart) {
+            if (!menu.moveItemStackTo(stack, playerSlotsStart, playerSlotsStart + 36, true)) {
                 return ItemStack.EMPTY;
             }
             slot.onQuickCraft(stack, remaining);
         } else {
-            if (menu.validUpgrades != null && stack.is(menu.validUpgrades)) {
-                if (!menu.moveItemStackTo(stack, 3, 7, false)) {
+            if (upgradeSlots != 0 && validUpgrades != null && stack.is(validUpgrades)) {
+                int start = inputSlots + batterySlots + outputSlots;
+                if (!menu.moveItemStackTo(stack, start, start + upgradeSlots, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (ElectricItems.isElectric(stack)) {
-                if (!menu.moveItemStackTo(stack, 1, 2, false)) {
+            } else if (batterySlots != 0 && ElectricItems.isElectric(stack)) {
+                int start = inputSlots;
+                if (!menu.moveItemStackTo(stack, start, start + batterySlots, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (menu.isRecipeInput(stack)) {
-                if (!menu.moveItemStackTo(stack, 0, 1, false)) {
+            } else if (inputSlots != 0 && (inputs == null || inputs.test(stack))) {
+                int start = 0;
+                if (!menu.moveItemStackTo(stack, start, start + inputSlots, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index < firstPlayerSlot + 27) {
-                if (!menu.moveItemStackTo(stack, firstPlayerSlot + 27, firstPlayerSlot + 36, false)) {
+            } else if (index < playerSlotsStart + 27) {
+                if (!menu.moveItemStackTo(stack, playerSlotsStart + 27, playerSlotsStart + 36, false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (!menu.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 27, false)) {
+                if (!menu.moveItemStackTo(stack, playerSlotsStart, playerSlotsStart + 27, false)) {
                     return ItemStack.EMPTY;
                 }
             }
@@ -114,8 +113,6 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         slot.onTake(player, stack);
         return remaining;
     }
-
-    protected abstract boolean isRecipeInput(ItemStack stack);
 
     public abstract int getEnergyUseRate();
 

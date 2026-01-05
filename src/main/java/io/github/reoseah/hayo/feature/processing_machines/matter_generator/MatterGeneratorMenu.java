@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.processing_machines.matter_generator;
 
+import com.google.common.base.Predicates;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.energy.ElectricItems;
 import io.github.reoseah.hayo.feature.processing_machines.MachineBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import net.minecraft.world.Container;
@@ -29,7 +29,7 @@ public class MatterGeneratorMenu extends MachineMenu {
     }
 
     protected MatterGeneratorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
-        super(Hayo.MenuTypes.MATTER_GENERATOR, null, menuId, container, data, inventory);
+        super(Hayo.MenuTypes.MATTER_GENERATOR, menuId, container, data, inventory);
 
         addMatterGeneratorSlots(this, container, inventory);
 
@@ -58,52 +58,7 @@ public class MatterGeneratorMenu extends MachineMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        var slot = this.slots.get(index);
-        var stack = slot.getItem();
-        if (stack.isEmpty()) {
-            return ItemStack.EMPTY;
-        }
-        var remaining = stack.copy();
-
-        int slotCount = MatterGeneratorBlockEntity.SLOTS;
-        if (index < slotCount) {
-            if (!this.moveItemStackTo(stack, slotCount, slotCount + 36, true)) {
-                return ItemStack.EMPTY;
-            }
-            slot.onQuickCraft(stack, remaining);
-        } else {
-            if (ElectricItems.isElectric(stack)) {
-                if (!this.moveItemStackTo(stack, 0, 1, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (index < slotCount + 27) {
-                if (!this.moveItemStackTo(stack, slotCount + 27, slotCount + 36, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else {
-                if (!this.moveItemStackTo(stack, slotCount, slotCount + 27, false)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-        }
-
-        if (stack.isEmpty()) {
-            slot.set(ItemStack.EMPTY);
-        } else {
-            slot.setChanged();
-        }
-
-        if (stack.getCount() == remaining.getCount()) {
-            return ItemStack.EMPTY;
-        }
-
-        slot.onTake(player, stack);
-        return remaining;
-    }
-
-    @Override
-    protected boolean isRecipeInput(ItemStack stack) {
-        return false;
+        return quickMoveClassicMachineStack(this, player, index, 0, 1, 1, 0, Predicates.alwaysFalse(), null);
     }
 
     @Override
@@ -118,7 +73,6 @@ public class MatterGeneratorMenu extends MachineMenu {
     public RecipeHolder<MatterGeneratingRecipe> getSelectedRecipe() {
         return this.recipes.get(this.getSelectedRecipeIdx());
     }
-
 
     public boolean clickMenuButton(Player player, int buttonId) {
         if (buttonId >= 0 && buttonId < this.recipes.size()) {

@@ -21,17 +21,16 @@ public class ExtractorMenu extends MachineMenu {
     }
 
     protected ExtractorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
-        super(Hayo.MenuTypes.EXTRACTOR, Hayo.ItemTags.EXTRACTOR_UPGRADES, menuId, container, data, inventory);
+        super(Hayo.MenuTypes.EXTRACTOR, menuId, container, data, inventory);
 
-        addClassicSlots(this, container, inventory);
+        addClassicSlots(this, container, inventory, Hayo.ItemTags.EXTRACTOR_UPGRADES);
     }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveClassicMachineStack(this, player, index, ExtractorBlockEntity.SLOTS);
+        return quickMoveClassicMachineStack(this, player, index, 1, 1, 1, 4, this::isRecipeInput, Hayo.ItemTags.EXTRACTOR_UPGRADES);
     }
 
-    @Override
     protected boolean isRecipeInput(ItemStack stack) {
         // TODO: synchronize recipe inputs, quick move only valid inputs
         return true;

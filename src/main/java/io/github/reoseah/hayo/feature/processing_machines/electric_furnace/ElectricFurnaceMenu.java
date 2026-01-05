@@ -30,9 +30,9 @@ public class ElectricFurnaceMenu extends MachineMenu {
 
 
     protected ElectricFurnaceMenu(int menuId, Container container, ContainerData data, Inventory inventory, DataSlot recipeMode) {
-        super(Hayo.MenuTypes.ELECTRIC_FURNACE, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES, menuId, container, data, inventory);
+        super(Hayo.MenuTypes.ELECTRIC_FURNACE, menuId, container, data, inventory);
 
-        addClassicSlots(this, container, inventory);
+        addClassicSlots(this, container, inventory, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES);
 
         this.recipeMode = this.addDataSlot(recipeMode);
 
@@ -62,10 +62,9 @@ public class ElectricFurnaceMenu extends MachineMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveClassicMachineStack(this, player, index, ElectricFurnaceBlockEntity.SLOTS);
+        return quickMoveClassicMachineStack(this, player, index, 1, 1, 1, 4, this::isRecipeInput, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES);
     }
 
-    @Override
     protected boolean isRecipeInput(ItemStack stack) {
         return this.recipeInputs.get(this.getRecipeMode()).test(stack);
     }
