@@ -1,0 +1,41 @@
+package io.github.reoseah.hayo.feature.energy_storages.crystal_array;
+
+import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+public class EnergyCrystalArrayBlockEntity extends EnergyStorageBlockEntity implements MenuProvider {
+    public static final int CAPACITY = 400_000;
+    public static final int TRANSFER_RATE = 128;
+
+    public EnergyCrystalArrayBlockEntity(BlockPos pos, BlockState state) {
+        super(Hayo.BlockEntityTypes.ENERGY_CRYSTAL_ARRAY, pos, state);
+    }
+
+    @Override
+    public Component getDefaultName() {
+        return Component.translatable("block.hayo.energy_crystal_array");
+    }
+
+    @Override
+    public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player player) {
+        return new EnergyCrystalArrayMenu(menuId, this, playerInventory);
+    }
+
+    @Override
+    protected int getEnergyCapacity() {
+        return CAPACITY;
+    }
+
+    @Override
+    protected int getEnergyTransferRate() {
+        return TRANSFER_RATE;
+    }
+}

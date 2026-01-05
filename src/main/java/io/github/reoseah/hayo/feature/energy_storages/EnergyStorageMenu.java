@@ -1,28 +1,19 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
-import io.github.reoseah.hayo.Hayo;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 
-public class EnergyCrystalArrayMenu extends AbstractContainerMenu {
+public abstract class EnergyStorageMenu extends AbstractContainerMenu {
     protected final ContainerData data;
 
-    public EnergyCrystalArrayMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(3), new SimpleContainerData(3), inventory);
+    protected static ContainerData createData() {
+        return new SimpleContainerData(3);
     }
 
-    public EnergyCrystalArrayMenu(int menuId, EnergyCrystalArrayBlockEntity entity, Inventory inventory) {
-        this(menuId, entity, createData(entity), inventory);
-    }
-
-    protected static ContainerData createData(EnergyCrystalArrayBlockEntity entity) {
+    protected static ContainerData createData(EnergyStorageBlockEntity entity) {
         return new ContainerData() {
             @Override
             public int getCount() {
@@ -45,8 +36,8 @@ public class EnergyCrystalArrayMenu extends AbstractContainerMenu {
         };
     }
 
-    protected EnergyCrystalArrayMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
-        super(Hayo.MenuTypes.ENERGY_CRYSTAL_ARRAY, menuId);
+    protected EnergyStorageMenu(MenuType<?> type, int menuId, Container container, ContainerData data, Inventory inventory) {
+        super(type, menuId);
 
         this.data = data;
         this.addDataSlots(this.data);
@@ -59,6 +50,7 @@ public class EnergyCrystalArrayMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
+        // TODO
         return ItemStack.EMPTY;
     }
 
@@ -74,4 +66,6 @@ public class EnergyCrystalArrayMenu extends AbstractContainerMenu {
     public float getAverageEnergyPerTick() {
         return this.data.get(2) / 10F;
     }
+
+    public abstract int getEnergyCapacity();
 }

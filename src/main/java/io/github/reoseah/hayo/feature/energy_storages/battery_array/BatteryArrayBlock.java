@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy_storages;
+package io.github.reoseah.hayo.feature.energy_storages.battery_array;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
@@ -15,10 +15,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class EnergyCrystalArrayBlock extends DirectionalMachineBlock implements ElectricReceiverBlock {
-    public static final MapCodec<EnergyCrystalArrayBlock> CODEC = simpleCodec(EnergyCrystalArrayBlock::new);
+public class BatteryArrayBlock extends DirectionalMachineBlock implements ElectricReceiverBlock {
+    public static final MapCodec<BatteryArrayBlock> CODEC = simpleCodec(BatteryArrayBlock::new);
 
-    public EnergyCrystalArrayBlock(Properties properties) {
+    public BatteryArrayBlock(Properties properties) {
         super(properties);
     }
 
@@ -29,13 +29,13 @@ public class EnergyCrystalArrayBlock extends DirectionalMachineBlock implements 
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new EnergyCrystalArrayBlockEntity(pos, state);
+        return new BatteryArrayBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, Hayo.BlockEntityTypes.ENERGY_CRYSTAL_ARRAY, world.isClientSide() ? null : EnergyCrystalArrayBlockEntity::tickServer);
+        return createTickerHelper(type, Hayo.BlockEntityTypes.BATTERY_ARRAY, world.isClientSide() ? null : BatteryArrayBlockEntity::tickServer);
     }
 
     @Override

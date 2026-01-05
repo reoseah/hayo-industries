@@ -4,9 +4,9 @@ import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.client.HayoContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
-import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,14 +15,19 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class ClassicMachineScreen extends HayoContainerScreen<MachineMenu> {
+public class ClassicMachineScreen extends HayoContainerScreen<MachineMenu> {
     public static final Identifier BACKGROUND = Hayo.modId("textures/gui/container/machine.png");
 
-    public ClassicMachineScreen(MachineMenu menu, Inventory inventory, Component title) {
+    protected final HayoGuiSprites.RecipeArrow arrow;
+
+    public ClassicMachineScreen(MachineMenu menu, Inventory inventory, Component title, HayoGuiSprites.RecipeArrow arrow) {
         super(menu, inventory, title);
+        this.arrow = arrow;
     }
 
-    protected abstract HayoGuiSprites.RecipeArrow getArrow();
+    public static MenuScreens.ScreenConstructor<MachineMenu, ClassicMachineScreen> withArrow(HayoGuiSprites.RecipeArrow arrowType) {
+        return (menu, inventory, title) -> new ClassicMachineScreen(menu, inventory, title, arrowType);
+    }
 
     protected static void drawClassicSlots(ClassicMachineScreen screen, GuiGraphics graphics) {
         for (var slot : screen.menu.slots.subList(0, 2)) {
@@ -40,8 +45,9 @@ public abstract class ClassicMachineScreen extends HayoContainerScreen<MachineMe
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         super.renderBg(graphics, partialTick, mouseX, mouseY);
 
+        drawClassicSlots(this, graphics);
         HayoGuiSprites.drawMachineEnergy(graphics, this.leftPos + 48, this.topPos + 37, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
-        HayoGuiSprites.drawRecipeArrow(graphics, this.leftPos + 70, this.topPos + 36, this.getArrow(), this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
+        HayoGuiSprites.drawRecipeArrow(graphics, this.leftPos + 70, this.topPos + 36, this.arrow, this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
     }
 
     @Override
@@ -74,7 +80,7 @@ public abstract class ClassicMachineScreen extends HayoContainerScreen<MachineMe
             tooltip.add(Component.translatable("hayo.energy.capacity_change", "+10000").withStyle(ChatFormatting.DARK_AQUA));
             return tooltip;
         }
-        if (!(this instanceof ElectricFurnaceScreen) //
+        if (this.menu.getType() != Hayo.MenuTypes.ELECTRIC_FURNACE //
                 && (stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE))) {
             var tooltip = super.getTooltipFromContainerItem(stack);
             tooltip.add(Component.translatable("hayo.not_valid_for_this_machine").withStyle(ChatFormatting.DARK_AQUA));

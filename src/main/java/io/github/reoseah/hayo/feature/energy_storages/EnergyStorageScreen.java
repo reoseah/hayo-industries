@@ -11,8 +11,8 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.List;
 import java.util.Optional;
 
-public class EnergyCrystalArrayScreen extends HayoContainerScreen<EnergyCrystalArrayMenu> {
-    public EnergyCrystalArrayScreen(EnergyCrystalArrayMenu menu, Inventory playerInventory, Component title) {
+public class EnergyStorageScreen extends HayoContainerScreen<EnergyStorageMenu> {
+    public EnergyStorageScreen(EnergyStorageMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
 
@@ -28,14 +28,14 @@ public class EnergyCrystalArrayScreen extends HayoContainerScreen<EnergyCrystalA
         HayoGuiSprites.drawSlot(graphics, x + 61, y + 53);
         HayoGuiSprites.drawSmallArrowLeft(graphics, x + 79, y + 53);
 
-        HayoGuiSprites.drawEnergyStorage(graphics, x + 88, y + 16, this.menu.getStoredEnergy(), EnergyCrystalArrayBlockEntity.CAPACITY);
+        HayoGuiSprites.drawEnergyStorage(graphics, x + 88, y + 16, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
     }
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (this.isHovering(88, 16, 18, 56, mouseX, mouseY)) {
             int storedEnergy = this.menu.getStoredEnergy();
-            int capacity = EnergyCrystalArrayBlockEntity.CAPACITY;
+            int capacity = this.menu.getEnergyCapacity();
             float averageEnergyPerTick = this.menu.getAverageEnergyPerTick();
 
             graphics.setTooltipForNextFrame(this.font, List.of( //

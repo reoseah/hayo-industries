@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo;
 
 import com.mojang.serialization.MapCodec;
+import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.base.item.EnergyModelProperty;
 import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
@@ -8,20 +9,37 @@ import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
 import io.github.reoseah.hayo.feature.energy.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.energy.OverloadCablePayload;
-import io.github.reoseah.hayo.feature.energy_storages.*;
+import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageMenu;
+import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageScreen;
+import io.github.reoseah.hayo.feature.energy_storages.battery_array.BatteryArrayBlock;
+import io.github.reoseah.hayo.feature.energy_storages.battery_array.BatteryArrayBlockEntity;
+import io.github.reoseah.hayo.feature.energy_storages.battery_array.BatteryArrayMenu;
+import io.github.reoseah.hayo.feature.energy_storages.crystal_array.EnergyCrystalArrayBlock;
+import io.github.reoseah.hayo.feature.energy_storages.crystal_array.EnergyCrystalArrayBlockEntity;
+import io.github.reoseah.hayo.feature.energy_storages.crystal_array.EnergyCrystalArrayMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
 import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineRecipe;
-import io.github.reoseah.hayo.feature.processing_machines.compressor.*;
+import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineScreen;
+import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
+import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressingRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlock;
+import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorMenu;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlock;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceMenu;
-import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceScreen;
-import io.github.reoseah.hayo.feature.processing_machines.extractor.*;
-import io.github.reoseah.hayo.feature.processing_machines.macerator.*;
+import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractingRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorBlock;
+import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorMenu;
+import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratingRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlock;
+import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlockEntity;
+import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorMenu;
 import io.github.reoseah.hayo.feature.processing_machines.matter_generator.*;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
@@ -150,12 +168,13 @@ public class Hayo {
         RangeSelectItemModelProperties.ID_MAPPER.put(modId("energy"), EnergyModelProperty.MAP_CODEC);
 
         MenuScreens.register(MenuTypes.GENERATOR, GeneratorScreen::new);
-        MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ElectricFurnaceScreen::new);
-        MenuScreens.register(MenuTypes.MACERATOR, MaceratorScreen::new);
-        MenuScreens.register(MenuTypes.COMPRESSOR, CompressorScreen::new);
-        MenuScreens.register(MenuTypes.EXTRACTOR, ExtractorScreen::new);
+        MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.DEFAULT));
+        MenuScreens.register(MenuTypes.MACERATOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.MACERATOR));
+        MenuScreens.register(MenuTypes.COMPRESSOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.COMPRESSOR));
+        MenuScreens.register(MenuTypes.EXTRACTOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.EXTRACTOR));
         MenuScreens.register(MenuTypes.MATTER_GENERATOR, MatterGeneratorScreen::new);
-        MenuScreens.register(MenuTypes.ENERGY_CRYSTAL_ARRAY, EnergyCrystalArrayScreen::new);
+        MenuScreens.register(MenuTypes.BATTERY_ARRAY, EnergyStorageScreen::new);
+        MenuScreens.register(MenuTypes.ENERGY_CRYSTAL_ARRAY, EnergyStorageScreen::new);
 
         CustomPayloads.initializeClient();
     }
@@ -458,6 +477,8 @@ public class Hayo {
         public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR = register("compressor", CompressorBlockEntity::new, Blocks.COMPRESSOR);
         public static final BlockEntityType<ExtractorBlockEntity> EXTRACTOR = register("extractor", ExtractorBlockEntity::new, Blocks.EXTRACTOR);
         public static final BlockEntityType<MatterGeneratorBlockEntity> MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlockEntity::new, Blocks.MATTER_GENERATOR);
+
+        public static final BlockEntityType<BatteryArrayBlockEntity> BATTERY_ARRAY = register("battery_array", BatteryArrayBlockEntity::new, Blocks.BATTERY_ARRAY);
         public static final BlockEntityType<EnergyCrystalArrayBlockEntity> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlockEntity::new, Blocks.ENERGY_CRYSTAL_ARRAY);
 
         public static void initialize() {
@@ -473,12 +494,14 @@ public class Hayo {
 
     public static class MenuTypes {
         public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
-        public static final MenuType<ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
-        public static final MenuType<MaceratorMenu> MACERATOR = register("macerator", MaceratorMenu::new);
-        public static final MenuType<CompressorMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
-        public static final MenuType<ExtractorMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
+        public static final MenuType<MachineMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
+        public static final MenuType<MachineMenu> MACERATOR = register("macerator", MaceratorMenu::new);
+        public static final MenuType<MachineMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
+        public static final MenuType<MachineMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
         public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
-        public static final MenuType<EnergyCrystalArrayMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
+
+        public static final MenuType<BatteryArrayMenu> BATTERY_ARRAY = register("battery_array", BatteryArrayMenu::new);
+        public static final MenuType<EnergyStorageMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
 
         public static void initialize() {
         }
