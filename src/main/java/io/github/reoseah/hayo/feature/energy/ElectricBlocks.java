@@ -5,13 +5,11 @@ import net.minecraft.server.level.ServerLevel;
 
 public class ElectricBlocks {
     public static int trySendToAllSides(int amount, ServerLevel level, BlockPos pos) {
-        var manager = ElectricBlockManager.get(level);
-        return manager.sendToAllSides(amount, pos);
+        return ElectricBlockManager.get(level).sendToAllSides(amount, pos);
     }
 
     public static void addOrUpdate(ServerLevel level, BlockPos pos) {
-        var manager = ElectricBlockManager.get(level);
-        manager.addOrUpdate(pos);
+        ElectricBlockManager.get(level).addOrUpdate(pos);
     }
 
     public static void remove(ServerLevel level, BlockPos pos) {

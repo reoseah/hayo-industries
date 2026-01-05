@@ -17,6 +17,7 @@ public class EnergyTexts {
     private static final String MAX_AMOUNT = "hayo.energy.max_amount";
     private static final String MAX_AMOUNT_PER_TICK = "hayo.energy.max_amount_per_tick";
     private static final String AMOUNT_AND_PERCENTAGE = "hayo.energy.amount_and_percentage";
+    private static final String AMOUNT_WITH_CAPACITY_AND_PERCENTAGE = "hayo.energy.amount_with_capacity_and_percentage";
 
     private static final String FUEL_VALUE = "hayo.energy.fuel_value";
     private static final String CONVERSION = "hayo.energy.conversion_rate";
@@ -75,6 +76,10 @@ public class EnergyTexts {
 
     public static MutableComponent amountAndPercentage(long amount, int percentage) {
         return Component.translatable(AMOUNT_AND_PERCENTAGE, formatAmount(amount), percentage);
+    }
+
+    public static MutableComponent amountWithCapacityAndPercentage(long amount, long capacity) {
+        return Component.translatable(AMOUNT_WITH_CAPACITY_AND_PERCENTAGE, formatAmount(amount), formatAmount(capacity), 100 * amount / capacity);
     }
 
     public static MutableComponent conversionRate(long amount) {

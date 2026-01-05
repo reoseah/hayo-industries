@@ -1,23 +1,21 @@
 package io.github.reoseah.hayo.feature.processing_machines.macerator;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.processing_machines.MachineBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 
 public class MaceratorMenu extends MachineMenu {
     public MaceratorMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(MaceratorBlockEntity.SLOTS), new SimpleContainerData(7), inventory);
+        this(menuId, new SimpleContainer(MaceratorBlockEntity.SLOTS), createData(), inventory);
     }
 
     public MaceratorMenu(int menuId, MaceratorBlockEntity entity, Inventory inventory) {
-        this(menuId, entity, MachineBlockEntity.createData(entity), inventory);
+        this(menuId, entity, createData(entity), inventory);
     }
 
     protected MaceratorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {

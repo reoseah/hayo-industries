@@ -1,6 +1,6 @@
 {
   "type": "hayo:matter_generating",
-  "processing_energy": 175000,
+  "processing_energy": 400000,
   "result": {
     "id": "hayo:gold_dust"
   }

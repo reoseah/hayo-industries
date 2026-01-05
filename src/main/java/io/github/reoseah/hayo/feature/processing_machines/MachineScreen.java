@@ -58,14 +58,14 @@ public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (this.isHovering(48, 37, 14, 14, mouseX, mouseY)) {
-            graphics.setTooltipForNextFrame(this.font, List.of(EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), this.menu.getEnergyCapacity())), Optional.empty(), mouseX, mouseY);
+        if (isHovering(48, 37, 14, 14, mouseX, mouseY)) {
+            graphics.setTooltipForNextFrame(font, List.of(EnergyTexts.amountAndCapacity(menu.getStoredEnergy(), menu.getEnergyCapacity())), Optional.empty(), mouseX, mouseY);
             return;
         }
-        if (this.isHovering(70, 36, 24, 16, mouseX, mouseY) && this.menu.getRecipeTotalEnergy() > 0) {
-            graphics.setTooltipForNextFrame(this.font, List.of( //
-                    Component.translatable("hayo.energy.amount_with_capacity_and_percentage", this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy(), 100 * this.menu.getRecipeUsedEnergy() / this.menu.getRecipeTotalEnergy()), //
-                    Component.translatable("hayo.energy.duration_at_amount_per_tick", this.menu.getRecipeDuration(), this.menu.getEnergyUseRate()).withStyle(ChatFormatting.GRAY) //
+        if (isHovering(70, 36, 24, 16, mouseX, mouseY) && menu.getRecipeTotalEnergy() > 0) {
+            graphics.setTooltipForNextFrame(font, List.of( //
+                    EnergyTexts.amountWithCapacityAndPercentage(menu.getRecipeUsedEnergy(), menu.getRecipeTotalEnergy()), //
+                    Component.translatable("hayo.energy.duration_at_amount_per_tick", menu.getRecipeDuration(), menu.getEnergyUseRate()).withStyle(ChatFormatting.GRAY) //
             ), Optional.empty(), mouseX, mouseY);
             return;
         }
@@ -86,12 +86,11 @@ public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
             tooltip.add(Component.translatable("hayo.energy.capacity_change", "+10000").withStyle(ChatFormatting.DARK_AQUA));
             return tooltip;
         }
-        if (stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE)) {
-            if (!(this instanceof ElectricFurnaceScreen)) { // TODO: use item tags
-                var tooltip = super.getTooltipFromContainerItem(stack);
-                tooltip.add(Component.translatable("hayo.not_valid_for_this_machine").withStyle(ChatFormatting.DARK_AQUA));
-                return tooltip;
-            }
+        if (!(this instanceof ElectricFurnaceScreen) //
+                && (stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE))) {
+            var tooltip = super.getTooltipFromContainerItem(stack);
+            tooltip.add(Component.translatable("hayo.not_valid_for_this_machine").withStyle(ChatFormatting.DARK_AQUA));
+            return tooltip;
         }
         return super.getTooltipFromContainerItem(stack);
     }

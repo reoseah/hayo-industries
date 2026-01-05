@@ -45,7 +45,7 @@ public class ElectricItems {
         return 0;
     }
 
-    /// Charge an item in the slot or do nothing if the item is not electric.
+    /// Try to charge an item in a container slot using [Container#setItem(int, ItemStack)].
     ///
     /// @return energy that was added to the item, you probably want to remove it from your energy source
     public static int tryCharge(int max, Container container, int slot) {
@@ -62,7 +62,7 @@ public class ElectricItems {
         return 0;
     }
 
-    /// Discharge an item in the slot or do nothing if the item is not electric.
+    /// Try to charge an item in a container slot using [Container#setItem(int, ItemStack)].
     ///
     /// @return energy that was removed from the item, you probably want to add it to your energy storage
     public static int tryDischarge(int max, Container container, int slot) {

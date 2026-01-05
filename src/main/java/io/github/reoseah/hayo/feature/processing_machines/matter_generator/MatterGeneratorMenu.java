@@ -2,7 +2,6 @@ package io.github.reoseah.hayo.feature.processing_machines.matter_generator;
 
 import com.google.common.base.Predicates;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.processing_machines.MachineBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -10,7 +9,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.DataSlot;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
@@ -21,11 +19,11 @@ public class MatterGeneratorMenu extends MachineMenu {
     public final DataSlot selectedIdx;
 
     public MatterGeneratorMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(MatterGeneratorBlockEntity.SLOTS), new SimpleContainerData(7), inventory);
+        this(menuId, new SimpleContainer(MatterGeneratorBlockEntity.SLOTS), createData(), inventory);
     }
 
     public MatterGeneratorMenu(int menuId, MatterGeneratorBlockEntity entity, Inventory inventory) {
-        this(menuId, entity, MachineBlockEntity.createData(entity), inventory);
+        this(menuId, entity, createData(entity), inventory);
     }
 
     protected MatterGeneratorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {

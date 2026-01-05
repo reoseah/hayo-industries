@@ -1,7 +1,6 @@
 package io.github.reoseah.hayo.feature.processing_machines.electric_furnace;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.processing_machines.MachineBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
@@ -10,7 +9,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.DataSlot;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipePropertySet;
 
@@ -21,13 +19,12 @@ public class ElectricFurnaceMenu extends MachineMenu {
     private final Map<ElectricFurnaceMode, RecipePropertySet> recipeInputs;
 
     public ElectricFurnaceMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(ElectricFurnaceBlockEntity.SLOTS), new SimpleContainerData(7), inventory, DataSlot.standalone());
+        this(menuId, new SimpleContainer(ElectricFurnaceBlockEntity.SLOTS), createData(), inventory, DataSlot.standalone());
     }
 
     public ElectricFurnaceMenu(int menuId, ElectricFurnaceBlockEntity entity, Inventory inventory) {
-        this(menuId, entity, MachineBlockEntity.createData(entity), inventory, createRecipeModeData(entity));
+        this(menuId, entity, createData(entity), inventory, createRecipeModeData(entity));
     }
-
 
     protected ElectricFurnaceMenu(int menuId, Container container, ContainerData data, Inventory inventory, DataSlot recipeMode) {
         super(Hayo.MenuTypes.ELECTRIC_FURNACE, menuId, container, data, inventory);

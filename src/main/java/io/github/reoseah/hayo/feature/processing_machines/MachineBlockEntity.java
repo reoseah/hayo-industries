@@ -10,7 +10,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -79,33 +78,6 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected int getMinEnergyUseRate() {
         return this.getEnergyUseRate();
-    }
-
-    public static ContainerData createData(MachineBlockEntity<?, ?> entity) {
-        return new ContainerData() {
-            @Override
-            public int getCount() {
-                return 7;
-            }
-
-            @Override
-            public int get(int index) {
-                return switch (index) {
-                    case 0 -> entity.getStoredEnergy() & 0xFFFF;
-                    case 1 -> entity.getStoredEnergy() >>> 16;
-                    case 2 -> entity.getRecipeUsedEnergy();
-                    case 3 -> entity.getRecipeTotalEnergy();
-                    case 4 -> entity.getEnergyCapacity() & 0xFFFF;
-                    case 5 -> entity.getEnergyCapacity() >>> 16;
-                    case 6 -> entity.getOverclockCount();
-                    default -> 0;
-                };
-            }
-
-            @Override
-            public void set(int index, int value) {
-            }
-        };
     }
 
     protected abstract RecipeType<R> getRecipeType();

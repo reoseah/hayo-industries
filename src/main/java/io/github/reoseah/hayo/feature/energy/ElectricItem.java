@@ -5,6 +5,8 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Consumer;
 
 /// Interface for items that can be charged and discharged.
+///
+/// @see ElectricItems
 public interface ElectricItem {
     int getEnergy(ItemStack stack);
 

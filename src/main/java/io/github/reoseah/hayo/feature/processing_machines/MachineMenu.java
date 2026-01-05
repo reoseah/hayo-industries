@@ -6,10 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -32,10 +29,10 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         menu.addSlot(new Slot(container, 1, 47, 54));
         menu.addSlot(new ResultSlot(container, 2, 107, 36));
 
-        menu.addSlot(new UpgradeSlot(container, 3, 152, 8, validUpgrades));
-        menu.addSlot(new UpgradeSlot(container, 4, 152, 26, validUpgrades));
-        menu.addSlot(new UpgradeSlot(container, 5, 152, 44, validUpgrades));
-        menu.addSlot(new UpgradeSlot(container, 6, 152, 62, validUpgrades));
+        menu.addSlot(new TagFilteredSlot(container, 3, 152, 8, validUpgrades));
+        menu.addSlot(new TagFilteredSlot(container, 4, 152, 26, validUpgrades));
+        menu.addSlot(new TagFilteredSlot(container, 5, 152, 44, validUpgrades));
+        menu.addSlot(new TagFilteredSlot(container, 6, 152, 62, validUpgrades));
 
         menu.addStandardInventorySlots(inventory, 8, 84);
     }
@@ -45,6 +42,39 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         menu.addSlot(new ResultSlot(container, 1, 116, 26));
 
         menu.addStandardInventorySlots(inventory, 8, 110);
+    }
+
+    public static ContainerData createData(MachineBlockEntity<?, ?> entity) {
+        return new ContainerData() {
+            @Override
+            public int getCount() {
+                return 9;
+            }
+
+            @Override
+            public int get(int index) {
+                return switch (index) {
+                    case 0 -> entity.getStoredEnergy() & 0xFFFF;
+                    case 1 -> entity.getStoredEnergy() >>> 16;
+                    case 2 -> entity.getEnergyCapacity() & 0xFFFF;
+                    case 3 -> entity.getEnergyCapacity() >>> 16;
+                    case 4 -> entity.getRecipeUsedEnergy() & 0xFFFF;
+                    case 5 -> entity.getRecipeUsedEnergy() >>> 16;
+                    case 6 -> entity.getRecipeTotalEnergy() & 0xFFFF;
+                    case 7 -> entity.getRecipeTotalEnergy() >>> 16;
+                    case 8 -> entity.getOverclockCount();
+                    default -> 0;
+                };
+            }
+
+            @Override
+            public void set(int index, int value) {
+            }
+        };
+    }
+
+    public static ContainerData createData() {
+        return new SimpleContainerData(9);
     }
 
     public float getRecipeDuration() {
@@ -125,20 +155,20 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
     }
 
-    public int getRecipeUsedEnergy() {
-        return this.data.get(2);
-    }
-
-    public int getRecipeTotalEnergy() {
-        return this.data.get(3);
-    }
-
     public int getEnergyCapacity() {
+        return (this.data.get(3) << 16) | (this.data.get(2) & 0xFFFF);
+    }
+
+    public int getRecipeUsedEnergy() {
         return (this.data.get(5) << 16) | (this.data.get(4) & 0xFFFF);
     }
 
+    public int getRecipeTotalEnergy() {
+        return (this.data.get(7) << 16) | (this.data.get(6) & 0xFFFF);
+    }
+
     public int getOverclockCount() {
-        return this.data.get(6);
+        return this.data.get(8);
     }
 
     public boolean hasOverclockUpgrades() {
@@ -155,35 +185,5 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 
     public int getRecipeDurationPercentage() {
         return 100 * this.getRecipeEnergyPercentage() / this.getUseRatePercentage();
-    }
-
-    public static class ResultSlot extends Slot {
-        public ResultSlot(Container container, int slot, int x, int y) {
-            super(container, slot, x, y);
-        }
-
-        @Override
-        public boolean mayPlace(ItemStack stack) {
-            return false;
-        }
-    }
-
-    public static class UpgradeSlot extends Slot {
-        protected final TagKey<Item> validItems;
-
-        public UpgradeSlot(Container container, int slot, int x, int y, TagKey<Item> validItems) {
-            super(container, slot, x, y);
-            this.validItems = validItems;
-        }
-
-        @Override
-        public boolean mayPlace(ItemStack stack) {
-            return stack.is(this.validItems);
-        }
-
-        @Override
-        public int getMaxStackSize() {
-            return 1;
-        }
     }
 }

@@ -371,7 +371,7 @@ public class ElectricBlockManager extends SavedData {
                 .group(BlockPos.CODEC.listOf().fieldOf("electric_blocks").forGetter(data -> data.electricBlocks)) //
                 .apply(instance, ChunkData::new));
 
-        // don't need to be full BlockPos instance, knowing a chunk position it should be possible to
+        // doesn't need to be full BlockPos instance, knowing a chunk position it should be possible to
         // represent any position within as a `short` or at least an `int` with bit fiddling...
         protected final List<BlockPos> electricBlocks;
 
