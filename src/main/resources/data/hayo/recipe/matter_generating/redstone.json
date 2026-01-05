@@ -1,6 +1,6 @@
 {
   "type": "hayo:matter_generating",
-  "processing_energy": 150000,
+  "processing_energy": 200000,
   "result": {
     "id": "minecraft:redstone"
   }

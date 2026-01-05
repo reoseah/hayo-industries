@@ -32,10 +32,42 @@ public class MatterGeneratorMenu extends MachineMenu {
         addMatterGeneratorSlots(this, container, inventory);
 
         var level = inventory.player.level();
-        this.recipes = List.copyOf(level.recipeAccess().getSynchronizedRecipes().getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING));
+        this.recipes = level.recipeAccess().getSynchronizedRecipes().getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING) //
+                .stream() //
+                .sorted((holder1, holder2) -> compare(holder1.value(), holder2.value())) //
+                .toList();
 
         this.selectedIdx = (container instanceof MatterGeneratorBlockEntity entity) ? createSelectedIdx(entity, this.recipes) : DataSlot.standalone();
         this.addDataSlot(this.selectedIdx);
+    }
+
+    public static int compare(MatterGeneratingRecipe r1, MatterGeneratingRecipe r2) {
+        int energyCostComparison = Integer.compare(r1.getEnergyCost(), r2.getEnergyCost());
+        if (energyCostComparison != 0) {
+            return energyCostComparison;
+        }
+
+        var id1 = r1.result().getItem().builtInRegistryHolder().key().identifier();
+        var id2 = r2.result().getItem().builtInRegistryHolder().key().identifier();
+        var namespace1 = id1.getNamespace();
+        var namespace2 = id2.getNamespace();
+        var isVanilla1 = namespace1.equals("minecraft");
+        var isVanilla2 = namespace2.equals("minecraft");
+
+        int isVanillaComparison = Boolean.compare(isVanilla1, isVanilla2);
+        if (isVanillaComparison != 0) {
+            return energyCostComparison;
+        }
+
+        int namespaceComparison = namespace1.compareTo(namespace2);
+        if (namespaceComparison != 0) {
+            return namespaceComparison;
+        }
+
+        var path1 = id1.getPath();
+        var path2 = id2.getPath();
+
+        return path1.compareTo(path2);
     }
 
     private static DataSlot createSelectedIdx(MatterGeneratorBlockEntity entity, List<RecipeHolder<MatterGeneratingRecipe>> recipes) {
@@ -61,7 +93,7 @@ public class MatterGeneratorMenu extends MachineMenu {
 
     @Override
     public int getEnergyUseRate() {
-        return MatterGeneratorBlockEntity.TRANSFER_RATE;
+        return MatterGeneratorBlockEntity.USE_RATE;
     }
 
     public int getSelectedRecipeIdx() {

@@ -1,0 +1,7 @@
+{
+  "type": "hayo:matter_generating",
+  "processing_energy": 300000,
+  "result": {
+    "id": "hayo:copper_dust"
+  }
+}

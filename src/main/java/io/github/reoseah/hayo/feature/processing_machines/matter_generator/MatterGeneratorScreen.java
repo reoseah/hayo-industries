@@ -17,9 +17,17 @@ import java.util.List;
 import java.util.Optional;
 
 public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMenu> {
-    public static final Identifier TEXTURE = Hayo.modId("textures/gui/container/matter_generator.png");
+    public static final Identifier BACKGROUND = Hayo.modId("textures/gui/container/matter_generator.png");
 
-    private int scrollOffset = 0;
+    public static final int RECIPE_COLUMNS = 8;
+    public static final int RECIPE_ROWS = 2;
+
+    private static final int SCROLLER_HEIGHT = 15;
+    private static final int SCROLLER_FULL_HEIGHT = 36;
+
+    private int startIndex = 0;
+    private float scrollOffset = 0;
+    private boolean scrolling = false;
 
     public MatterGeneratorScreen(MatterGeneratorMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, 176, 192);
@@ -28,7 +36,7 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 
         HayoGuiSprites.drawSlot(graphics, this.leftPos + this.menu.slots.get(0).x - 1, this.topPos + this.menu.slots.get(0).y - 1);
         HayoGuiSprites.drawOutputSlot(graphics, this.leftPos + this.menu.slots.get(1).x - 4, this.topPos + this.menu.slots.get(1).y - 4);
@@ -37,14 +45,16 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
         HayoGuiSprites.drawRecipeArrow(graphics, this.leftPos + 80, this.topPos + 25, HayoGuiSprites.RecipeArrow.DEFAULT, this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
 
         this.drawRecipeButtons(graphics, mouseX, mouseY);
+
+        this.drawScrollbar(graphics, mouseX, mouseY);
     }
 
     protected void drawRecipeButtons(GuiGraphics graphics, int mouseX, int mouseY) {
-        for (int i = this.scrollOffset; i < this.scrollOffset + 12 && i < this.menu.recipes.size(); i++) {
-            int pos = i - this.scrollOffset;
+        for (int i = this.startIndex; i < this.startIndex + 16 && i < this.menu.recipes.size(); i++) {
+            int pos = i - this.startIndex;
 
-            int x = this.leftPos + 9 + (pos % 8) * 18;
-            int y = this.topPos + 59 + (pos / 8) * 18;
+            int x = this.leftPos + 9 + (pos % RECIPE_COLUMNS) * 18;
+            int y = this.topPos + 59 + (pos / RECIPE_COLUMNS) * 18;
 
             var sprite = HayoGuiSprites.RECIPE;
             if (i == this.menu.getSelectedRecipeIdx()) {
@@ -59,24 +69,37 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
         }
     }
 
-    @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (isHovering(57, 17, 14, 14, mouseX, mouseY)) {
-            graphics.setTooltipForNextFrame(this.font, List.of(EnergyTexts.amountAndCapacity(menu.getStoredEnergy(), menu.getEnergyCapacity())), Optional.empty(), mouseX, mouseY);
-            return;
-        }
-        if (isHovering(80, 25, 24, 16, mouseX, mouseY) && menu.getRecipeTotalEnergy() > 0) {
-            graphics.setTooltipForNextFrame(this.font, List.of( //
-                    EnergyTexts.amountWithCapacityAndPercentage(menu.getRecipeUsedEnergy(), menu.getRecipeTotalEnergy()), //
-                    Component.translatable("hayo.energy.duration_at_amount_per_tick", menu.getRecipeDuration(), menu.getEnergyUseRate()).withStyle(ChatFormatting.GRAY) //
-            ), Optional.empty(), mouseX, mouseY);
+    protected void drawScrollbar(GuiGraphics graphics, int mouseX, int mouseY) {
+        boolean disabled = this.menu.recipes.size() <= RECIPE_ROWS * RECIPE_COLUMNS;
+
+        if (disabled) {
+            HayoGuiSprites.drawScroller(graphics, this.leftPos + 156, this.topPos + 59, true);
             return;
         }
 
-        if (this.isHovering(9, 59, 18 * 12, 18 * 2, mouseX, mouseY)) {
+        int scrollerY = 59 + (int) (this.scrollOffset * (SCROLLER_FULL_HEIGHT - SCROLLER_HEIGHT));
+        HayoGuiSprites.drawScroller(graphics, this.leftPos + 156, this.topPos + scrollerY, false);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        if (this.isHovering(57, 17, 14, 14, mouseX, mouseY)) {
+            graphics.setTooltipForNextFrame(this.font, List.of(EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), this.menu.getEnergyCapacity())), Optional.empty(), mouseX, mouseY);
+            return;
+        }
+        if (this.isHovering(80, 25, 24, 16, mouseX, mouseY) && this.menu.getRecipeTotalEnergy() > 0) {
+            var tooltip = List.<Component>of( //
+                    EnergyTexts.amountWithCapacityAndPercentage(this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy()), //
+                    EnergyTexts.durationAtAmountPerTick(this.menu.getRecipeDuration(), this.menu.getEnergyUseRate()).withStyle(ChatFormatting.GRAY) //
+            );
+            graphics.setTooltipForNextFrame(this.font, tooltip, Optional.empty(), mouseX, mouseY);
+            return;
+        }
+
+        if (this.isHovering(9, 59, 18 * RECIPE_COLUMNS, 18 * RECIPE_ROWS, mouseX, mouseY)) {
             int column = (mouseX - this.leftPos - 9) / 18;
             int row = (mouseY - this.topPos - 59) / 18;
-            int idx = 12 * (this.scrollOffset + row) + column;
+            int idx = this.startIndex + RECIPE_COLUMNS * row + column;
 
             if (idx >= 0 && idx < this.menu.recipes.size()) {
                 var recipe = this.menu.recipes.get(idx).value();
@@ -92,14 +115,68 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        int column = Mth.floor(event.x() - this.leftPos - 9) / 18;
-        int row = Mth.floor(event.y() - this.topPos - 59) / 18;
-        int idx = 12 * (this.scrollOffset + row) + column;
+        if (this.isHovering(9, 59, 18 * RECIPE_COLUMNS, 18 * RECIPE_ROWS, event.x(), event.y())) {
+            int column = Mth.floor(event.x() - this.leftPos - 9) / 18;
+            int row = Mth.floor(event.y() - this.topPos - 59) / 18;
+            int idx = this.startIndex + RECIPE_COLUMNS * row + column;
 
-        if (idx >= 0 && idx < this.menu.recipes.size()) {
-            this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, idx);
+            if (idx >= 0 && idx < this.menu.recipes.size()) {
+                this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, idx);
+                return true;
+            }
+        }
+
+        if (this.isScrollBarActive()) {
+            if (event.x() >= this.leftPos + 156 && event.x() < this.leftPos + 156 + 12 //
+                    && event.y() >= this.topPos + 59 && event.y() < this.topPos + 59 + SCROLLER_FULL_HEIGHT) {
+                this.scrolling = true;
+            }
+        }
+
+        return super.mouseClicked(event, doubleClick);
+    }
+
+    @Override
+    public boolean mouseDragged(final MouseButtonEvent event, final double dx, final double dy) {
+        if (this.scrolling && this.isScrollBarActive()) {
+            int yscr = this.topPos + 59;
+            int yscr2 = yscr + SCROLLER_FULL_HEIGHT;
+            this.scrollOffset = ((float) event.y() - yscr - 7.5F) / (yscr2 - yscr - 15.0F);
+            this.scrollOffset = Mth.clamp(this.scrollOffset, 0.0F, 1.0F);
+            this.startIndex = (int) (this.scrollOffset * this.getOffscreenRows() + 0.5) * RECIPE_COLUMNS;
+            return true;
+        } else {
+            return super.mouseDragged(event, dx, dy);
+        }
+    }
+
+    @Override
+    public boolean mouseReleased(final MouseButtonEvent event) {
+        this.scrolling = false;
+        return super.mouseReleased(event);
+    }
+
+    @Override
+    public boolean mouseScrolled(final double x, final double y, final double scrollX, final double scrollY) {
+        if (super.mouseScrolled(x, y, scrollX, scrollY)) {
             return true;
         }
-        return super.mouseClicked(event, doubleClick);
+        if (this.isScrollBarActive()) {
+            int offscreenRows = this.getOffscreenRows();
+            float scrolledDelta = (float) scrollY / offscreenRows;
+            this.scrollOffset = Mth.clamp(this.scrollOffset - scrolledDelta, 0.0F, 1.0F);
+            this.startIndex = (int) (this.scrollOffset * offscreenRows + 0.5) * RECIPE_COLUMNS;
+        }
+
+        return true;
+    }
+
+
+    private boolean isScrollBarActive() {
+        return this.menu.recipes.size() > RECIPE_COLUMNS * RECIPE_ROWS;
+    }
+
+    protected int getOffscreenRows() {
+        return (this.menu.recipes.size() + RECIPE_COLUMNS - 1) / RECIPE_COLUMNS - RECIPE_ROWS;
     }
 }

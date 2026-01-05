@@ -1,7 +1,5 @@
 package io.github.reoseah.hayo;
 
-import com.mojang.datafixers.util.Unit;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.base.item.EnergyModelProperty;
 import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
@@ -16,7 +14,7 @@ import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
-import io.github.reoseah.hayo.feature.processing_machines.BasicMachineRecipe;
+import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineRecipe;
 import io.github.reoseah.hayo.feature.processing_machines.compressor.*;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlock;
 import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
@@ -100,7 +98,7 @@ public class Hayo {
 
     public static final SavedDataType<ElectricBlockManager> ELECTRIC_DATA = new SavedDataType<>("HayoElectricData", //
             ElectricBlockManager::new, //
-            Codec.EMPTY.xmap((u) -> new ElectricBlockManager(), manager -> Unit.INSTANCE).codec(), //
+            MapCodec.unitCodec(ElectricBlockManager::new), //
             null);
 
     public static final AttachmentType<ElectricBlockManager.ChunkData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create( //
@@ -172,8 +170,6 @@ public class Hayo {
 
     public static class Blocks {
         private static final BlockBehaviour.Properties MACHINES = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.METAL);
-        public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINES);
-        public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, MACHINES);
         public static final Block GENERATOR = register("generator", GeneratorBlock::new, MACHINES);
         public static final Block ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlock::new, MACHINES);
         public static final Block MACERATOR = register("macerator", MaceratorBlock::new, MACHINES);
@@ -186,16 +182,6 @@ public class Hayo {
 
         public static final CableBlock CABLE = register("cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(6F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-
-        public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
-        public static final Block CHIPBOARD_DOOR = register("chipboard_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
-        private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F, 30F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
-        public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
-        public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F, 15F).noOcclusion().sound(SoundType.GLASS));
-        public static final Block REINFORCED_STONE_STAIRS = register("reinforced_stone_stairs", props -> new StairBlock(REINFORCED_STONE.defaultBlockState(), props), REINFORCED_BLOCKS);
-        public static final Block REINFORCED_STONE_SLAB = register("reinforced_stone_slab", SlabBlock::new, REINFORCED_BLOCKS);
-        public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 15F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
-
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
         public static final Block RESIN_YIELDING_RUBBER_LOG = register("resin_yielding_rubber_log", ResinYieldingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
         public static final Block RUBBER_WOOD = register("rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
@@ -210,7 +196,20 @@ public class Hayo {
         public static final Block RUBBER_STAIRS = register("rubber_stairs", props -> new StairBlock(RUBBER_PLANKS.defaultBlockState(), props), RUBBER_PROPERTIES);
         public static final Block RUBBER_SLAB = register("rubber_slab", SlabBlock::new, RUBBER_PROPERTIES);
 
+        public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINES);
+        public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, MACHINES);
+
+        public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
+        public static final Block CHIPBOARD_DOOR = register("chipboard_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
+
         public static final Block RUBBER_BLOCK = register("rubber_block", Block::new, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(3));
+
+        private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F, 30F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
+        public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
+        public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F, 15F).noOcclusion().sound(SoundType.GLASS));
+        public static final Block REINFORCED_STONE_STAIRS = register("reinforced_stone_stairs", props -> new StairBlock(REINFORCED_STONE.defaultBlockState(), props), REINFORCED_BLOCKS);
+        public static final Block REINFORCED_STONE_SLAB = register("reinforced_stone_slab", SlabBlock::new, REINFORCED_BLOCKS);
+        public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 15F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
 
         public static final Block FERRU = register("ferru", props -> new FerruBlock(TagKey.create(Registries.ITEM, modId("ferru_fertilizers")), props), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
 
@@ -255,13 +254,14 @@ public class Hayo {
 
         public static final Item CHIPBOARD = registerBlock(Blocks.CHIPBOARD);
         public static final Item CHIPBOARD_DOOR = registerBlock(Blocks.CHIPBOARD_DOOR);
+
+        public static final Item RUBBER_BLOCK = registerBlock(Blocks.RUBBER_BLOCK);
+
         public static final Item REINFORCED_STONE = registerBlock(Blocks.REINFORCED_STONE);
         public static final Item REINFORCED_GLASS = registerBlock(Blocks.REINFORCED_GLASS);
         public static final Item REINFORCED_STONE_STAIRS = registerBlock(Blocks.REINFORCED_STONE_STAIRS);
         public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
         public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
-
-        public static final Item RUBBER_BLOCK = registerBlock(Blocks.RUBBER_BLOCK);
 
         public static final Item FERRU_SEEDS = registerItem("ferru_seeds", props -> new BlockItem(Blocks.FERRU, props), new Item.Properties().useItemDescriptionPrefix());
 
@@ -346,13 +346,12 @@ public class Hayo {
                 entries.accept(ADVANCED_MACHINE_BLOCK);
                 entries.accept(CHIPBOARD);
                 entries.accept(CHIPBOARD_DOOR);
+                entries.accept(RUBBER_BLOCK);
                 entries.accept(REINFORCED_STONE);
                 entries.accept(REINFORCED_STONE_STAIRS);
                 entries.accept(REINFORCED_STONE_SLAB);
                 entries.accept(REINFORCED_GLASS);
                 entries.accept(REINFORCED_DOOR);
-
-                entries.accept(RUBBER_BLOCK);
 
                 entries.accept(FERRU_SEEDS);
 
@@ -528,9 +527,9 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
-        public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", new BasicMachineRecipe.Serializer<>(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", new BasicMachineRecipe.Serializer<>(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", new BasicMachineRecipe.Serializer<>(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", new ClassicMachineRecipe.Serializer<>(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", new ClassicMachineRecipe.Serializer<>(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", new ClassicMachineRecipe.Serializer<>(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new MatterGeneratingRecipe.Serializer());
 
         public static void initialize() {

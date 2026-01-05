@@ -1,0 +1,7 @@
+{
+  "type": "hayo:matter_generating",
+  "processing_energy": 150000,
+  "result": {
+    "id": "hayo:stone_dust"
+  }
+}

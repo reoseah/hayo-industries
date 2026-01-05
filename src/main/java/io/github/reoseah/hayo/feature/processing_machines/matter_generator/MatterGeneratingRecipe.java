@@ -61,6 +61,11 @@ public class MatterGeneratingRecipe implements Recipe<EmptyRecipeInput>, Electri
         return null;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public static class Serializer implements RecipeSerializer<MatterGeneratingRecipe> {
         private static final MapCodec<MatterGeneratingRecipe> CODEC = RecordCodecBuilder.mapCodec( //
                 instance -> instance.group( //

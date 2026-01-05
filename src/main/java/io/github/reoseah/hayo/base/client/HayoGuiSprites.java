@@ -98,4 +98,11 @@ public class HayoGuiSprites {
     public static final Identifier RECIPE = Hayo.modId("recipe_button/default");
     public static final Identifier RECIPE_SELECTED = Hayo.modId("recipe_button/selected");
     public static final Identifier RECIPE_HIGHLIGHTED = Hayo.modId("recipe_button/highlighted");
+
+    public static final Identifier SCROLLER = Hayo.modId("scroller/default");
+    public static final Identifier SCROLLER_DISABLED = Hayo.modId("scroller/disabled");
+
+    public static void drawScroller(GuiGraphics graphics, int x, int y, boolean disabled) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, disabled ? SCROLLER_DISABLED : SCROLLER, x, y, 12, 15);
+    }
 }

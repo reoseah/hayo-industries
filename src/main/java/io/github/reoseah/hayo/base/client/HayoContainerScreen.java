@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.base.client;
 
-import io.github.reoseah.hayo.feature.processing_machines.MachineScreen;
+import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -31,6 +31,6 @@ public abstract class HayoContainerScreen<T extends AbstractContainerMenu> exten
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        graphics.blit(RenderPipelines.GUI_TEXTURED, MachineScreen.TEXTURE, this.leftPos, this.topPos, 0F, 0F, this.imageWidth, this.imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ClassicMachineScreen.BACKGROUND, this.leftPos, this.topPos, 0F, 0F, this.imageWidth, this.imageHeight, 256, 256);
     }
 }

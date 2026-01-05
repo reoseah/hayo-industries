@@ -15,16 +15,16 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
-    public static final Identifier TEXTURE = Hayo.modId("textures/gui/container/machine.png");
+public abstract class ClassicMachineScreen extends HayoContainerScreen<MachineMenu> {
+    public static final Identifier BACKGROUND = Hayo.modId("textures/gui/container/machine.png");
 
-    public MachineScreen(MachineMenu menu, Inventory inventory, Component title) {
+    public ClassicMachineScreen(MachineMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
 
     protected abstract HayoGuiSprites.RecipeArrow getArrow();
 
-    protected static void drawClassicSlots(MachineScreen screen, GuiGraphics graphics) {
+    protected static void drawClassicSlots(ClassicMachineScreen screen, GuiGraphics graphics) {
         for (var slot : screen.menu.slots.subList(0, 2)) {
             HayoGuiSprites.drawSlot(graphics, screen.leftPos + slot.x - 1, screen.topPos + slot.y - 1);
         }
@@ -34,18 +34,6 @@ public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
         for (var slot : screen.menu.slots.subList(3, 7)) {
             HayoGuiSprites.drawUpgradeSlot(graphics, screen.leftPos + slot.x - 1, screen.topPos + slot.y - 1);
         }
-    }
-
-    protected static void drawSlotsWithSecondaryOutput(MachineScreen screen, GuiGraphics graphics) {
-        HayoGuiSprites.drawSlot(graphics, screen.leftPos + screen.menu.slots.get(0).x - 1, screen.topPos + screen.menu.slots.get(0).y - 1);
-        HayoGuiSprites.drawSlot(graphics, screen.leftPos + screen.menu.slots.get(1).x - 1, screen.topPos + screen.menu.slots.get(1).y - 1);
-        HayoGuiSprites.drawOutputSlot(graphics, screen.leftPos + screen.menu.slots.get(2).x - 5, screen.topPos + screen.menu.slots.get(2).y - 5);
-        HayoGuiSprites.drawSlot(graphics, screen.leftPos + screen.menu.slots.get(3).x - 1, screen.topPos + screen.menu.slots.get(3).y - 1);
-
-        HayoGuiSprites.drawUpgradeSlot(graphics, screen.leftPos + screen.menu.slots.get(4).x - 1, screen.topPos + screen.menu.slots.get(4).y - 1);
-        HayoGuiSprites.drawUpgradeSlot(graphics, screen.leftPos + screen.menu.slots.get(5).x - 1, screen.topPos + screen.menu.slots.get(5).y - 1);
-        HayoGuiSprites.drawUpgradeSlot(graphics, screen.leftPos + screen.menu.slots.get(6).x - 1, screen.topPos + screen.menu.slots.get(6).y - 1);
-        HayoGuiSprites.drawUpgradeSlot(graphics, screen.leftPos + screen.menu.slots.get(7).x - 1, screen.topPos + screen.menu.slots.get(7).y - 1);
     }
 
     @Override
@@ -58,14 +46,14 @@ public abstract class MachineScreen extends HayoContainerScreen<MachineMenu> {
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (isHovering(48, 37, 14, 14, mouseX, mouseY)) {
-            graphics.setTooltipForNextFrame(font, List.of(EnergyTexts.amountAndCapacity(menu.getStoredEnergy(), menu.getEnergyCapacity())), Optional.empty(), mouseX, mouseY);
+        if (this.isHovering(48, 37, 14, 14, mouseX, mouseY)) {
+            graphics.setTooltipForNextFrame(this.font, List.of(EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), this.menu.getEnergyCapacity())), Optional.empty(), mouseX, mouseY);
             return;
         }
-        if (isHovering(70, 36, 24, 16, mouseX, mouseY) && menu.getRecipeTotalEnergy() > 0) {
-            graphics.setTooltipForNextFrame(font, List.of( //
-                    EnergyTexts.amountWithCapacityAndPercentage(menu.getRecipeUsedEnergy(), menu.getRecipeTotalEnergy()), //
-                    Component.translatable("hayo.energy.duration_at_amount_per_tick", menu.getRecipeDuration(), menu.getEnergyUseRate()).withStyle(ChatFormatting.GRAY) //
+        if (this.isHovering(70, 36, 24, 16, mouseX, mouseY) && this.menu.getRecipeTotalEnergy() > 0) {
+            graphics.setTooltipForNextFrame(this.font, List.of( //
+                    EnergyTexts.amountWithCapacityAndPercentage(this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy()), //
+                    EnergyTexts.durationAtAmountPerTick(this.menu.getRecipeDuration(), this.menu.getEnergyUseRate()).withStyle(ChatFormatting.GRAY) //
             ), Optional.empty(), mouseX, mouseY);
             return;
         }

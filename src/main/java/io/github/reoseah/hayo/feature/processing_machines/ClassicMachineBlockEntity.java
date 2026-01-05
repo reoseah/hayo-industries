@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class BasicMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends MachineBlockEntity<R, SingleRecipeInput> implements WorldlyContainer {
+public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends MachineBlockEntity<R, SingleRecipeInput> implements WorldlyContainer {
     public static final int SLOTS = 7;
     public static final int INPUT_SLOT = 0;
     public static final int BATTERY_SLOT = 1;
@@ -22,7 +22,7 @@ public abstract class BasicMachineBlockEntity<R extends Recipe<SingleRecipeInput
     public static final int FIRST_UPGRADE_SLOT = 3;
     public static final int LAST_UPGRADE_SLOT = 6;
 
-    public BasicMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public ClassicMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
@@ -58,7 +58,7 @@ public abstract class BasicMachineBlockEntity<R extends Recipe<SingleRecipeInput
         }
 
         var recipeOutput = recipe.value().assemble(input, registryAccess);
-        if (recipe.value() instanceof BasicMachineRecipe machineRecipe && machineRecipe.extraChance > 0) {
+        if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraChance > 0) {
             recipeOutput.setCount(recipeOutput.getCount() + 1);
         }
         return canInsertToSlot(items, recipeOutput, OUTPUT_SLOT);
@@ -70,7 +70,7 @@ public abstract class BasicMachineBlockEntity<R extends Recipe<SingleRecipeInput
         inputStack.shrink(1);
 
         var recipeOutput = recipe.value().assemble(input, registryAccess);
-        if (recipe.value() instanceof BasicMachineRecipe machineRecipe && machineRecipe.extraChance > 0) {
+        if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraChance > 0) {
             if (this.level.getRandom().nextFloat() < machineRecipe.extraChance) {
                 recipeOutput.setCount(recipeOutput.getCount() + 1);
             }

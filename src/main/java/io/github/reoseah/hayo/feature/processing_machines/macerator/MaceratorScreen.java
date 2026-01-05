@@ -3,7 +3,7 @@ package io.github.reoseah.hayo.feature.processing_machines.macerator;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
-import io.github.reoseah.hayo.feature.processing_machines.MachineScreen;
+import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.List;
 import java.util.Optional;
 
-public class MaceratorScreen extends MachineScreen {
+public class MaceratorScreen extends ClassicMachineScreen {
     public MaceratorScreen(MachineMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }

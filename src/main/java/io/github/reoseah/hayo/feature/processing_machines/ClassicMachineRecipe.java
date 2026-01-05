@@ -14,7 +14,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 @Accessors(fluent = true)
-public abstract class BasicMachineRecipe implements Recipe<SingleRecipeInput>, ElectricCostProvider {
+public abstract class ClassicMachineRecipe implements Recipe<SingleRecipeInput>, ElectricCostProvider {
     @Getter
     private final Ingredient input;
     @Getter
@@ -23,10 +23,10 @@ public abstract class BasicMachineRecipe implements Recipe<SingleRecipeInput>, E
     @Getter
     public final float extraChance;
 
-    public BasicMachineRecipe(Ingredient input, //
-                              ItemStack result, //
-                              int processingEnergy, //
-                              float extraChance) {
+    public ClassicMachineRecipe(Ingredient input, //
+                                ItemStack result, //
+                                int processingEnergy, //
+                                float extraChance) {
         this.input = input;
         this.result = result;
         this.processingEnergy = processingEnergy;
@@ -65,31 +65,31 @@ public abstract class BasicMachineRecipe implements Recipe<SingleRecipeInput>, E
     }
 
     @FunctionalInterface
-    public interface Factory<R extends BasicMachineRecipe> {
+    public interface Factory<R extends ClassicMachineRecipe> {
         R create(Ingredient input, ItemStack result, int processingEnergy, float extraChance);
     }
 
-    public static class Serializer<R extends BasicMachineRecipe> implements RecipeSerializer<R> {
+    public static class Serializer<R extends ClassicMachineRecipe> implements RecipeSerializer<R> {
         private final MapCodec<R> codec;
         private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec;
 
         public Serializer(Factory<R> factory, int defaultEnergy) {
             this.codec = RecordCodecBuilder.mapCodec( //
                     instance -> instance.group( //
-                            Ingredient.CODEC.fieldOf("ingredient").forGetter(BasicMachineRecipe::input), //
-                            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(BasicMachineRecipe::result), //
-                            Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(BasicMachineRecipe::getEnergyCost), //
-                            Codec.FLOAT.fieldOf("extra_chance").orElse(0F).forGetter(BasicMachineRecipe::extraChance) //
+                            Ingredient.CODEC.fieldOf("ingredient").forGetter(ClassicMachineRecipe::input), //
+                            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(ClassicMachineRecipe::result), //
+                            Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(ClassicMachineRecipe::getEnergyCost), //
+                            Codec.FLOAT.fieldOf("extra_chance").orElse(0F).forGetter(ClassicMachineRecipe::extraChance) //
                     ).apply(instance, factory::create));
             this.streamCodec = StreamCodec.composite( //
                     Ingredient.CONTENTS_STREAM_CODEC, //
-                    BasicMachineRecipe::input, //
+                    ClassicMachineRecipe::input, //
                     ItemStack.STREAM_CODEC, //
-                    BasicMachineRecipe::result, //
+                    ClassicMachineRecipe::result, //
                     ByteBufCodecs.INT, //
-                    BasicMachineRecipe::getEnergyCost, //
+                    ClassicMachineRecipe::getEnergyCost, //
                     ByteBufCodecs.FLOAT, //
-                    BasicMachineRecipe::extraChance, //
+                    ClassicMachineRecipe::extraChance, //
                     factory::create);
         }
 

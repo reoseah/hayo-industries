@@ -2,6 +2,6 @@
   "type": "hayo:matter_generating",
   "processing_energy": 200000,
   "result": {
-    "id": "minecraft:glowstone_dust"
+    "id": "hayo:coal_dust"
   }
 }
