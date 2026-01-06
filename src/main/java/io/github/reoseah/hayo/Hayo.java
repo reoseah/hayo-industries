@@ -6,6 +6,7 @@ import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBl
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
 import io.github.reoseah.hayo.feature.electric_tools.ChainsawItem;
+import io.github.reoseah.hayo.feature.electric_tools.DrillItem;
 import io.github.reoseah.hayo.feature.energy.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.energy.EnergyModelProperty;
 import io.github.reoseah.hayo.feature.energy.OverloadCablePayload;
@@ -291,6 +292,7 @@ public class Hayo {
         public static final Item WRENCH = registerItem("wrench");
 
         public static final Item CHAINSAW = registerItem("chainsaw", ChainsawItem::new, new Item.Properties().axe(ToolMaterial.IRON, 8.0F, -3F).component(DataComponents.UNBREAKABLE, Unit.INSTANCE).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
+        public static final Item DRILL = registerItem("drill", DrillItem::new, new Item.Properties().pickaxe(ToolMaterial.IRON, 8.0F, -3F).component(DataComponents.UNBREAKABLE, Unit.INSTANCE).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
 
         private static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
         private static final ToolMaterial SILICON_BRONZE = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, ToolMaterial.DIAMOND.durability(), 7, 2.0F, 10, SILICON_BRONZE_MATERIALS);
@@ -381,8 +383,11 @@ public class Hayo {
                 entries.accept(FERRU_SEEDS);
 
                 entries.accept(WRENCH);
+
                 entries.accept(CHAINSAW);
                 entries.accept(Util.make(new ItemStack(CHAINSAW), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
+                entries.accept(DRILL);
+                entries.accept(Util.make(new ItemStack(DRILL), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
 
                 entries.accept(SILICON_BRONZE_SWORD);
                 entries.accept(SILICON_BRONZE_SHOVEL);

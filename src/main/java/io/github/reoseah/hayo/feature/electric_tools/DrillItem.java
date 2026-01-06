@@ -16,14 +16,14 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Consumer;
 
-public class ChainsawItem extends Item implements ElectricItem {
+public class DrillItem extends Item implements ElectricItem {
     public static final DataComponentType<Integer> ENERGY = SimpleBatteryItem.ENERGY;
 
     public static final int ENERGY_COST = 400;
     public static final int ENERGY_CAPACITY = 10000;
     public static final int ENERGY_TRANSFER_LIMIT = 32;
 
-    public ChainsawItem(Properties properties) {
+    public DrillItem(Properties properties) {
         super(properties);
     }
 
