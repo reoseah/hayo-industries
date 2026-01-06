@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "hayo:reinforced_stone",
+  "result": {
+    "id": "hayo:reinforced_stone_stairs",
+    "count": 1
+  }
+}

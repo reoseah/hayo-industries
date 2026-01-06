@@ -21,10 +21,12 @@ public interface ElectricItem {
     /// "charge" or "discharge" are only called once per tick.)
     int getEnergyTransferLimit(ItemStack stack);
 
+    /// Whether item can be charged, e.g., placed into an energy storage in a charging slot.
     default boolean canCharge(ItemStack stack) {
         return this.getEnergy(stack) < this.getEnergyCapacity(stack);
     }
 
+    /// Whether item can be discharged, e.g., to charge a machine or energy storage.
     default boolean canDischarge(ItemStack stack) {
         return this.getEnergy(stack) > 0;
     }

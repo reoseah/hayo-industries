@@ -1,5 +1,8 @@
 package io.github.reoseah.hayo.feature.energy;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
@@ -67,5 +70,48 @@ public class ElectricItems {
     /// @return energy that was removed from the item, you probably want to add it to your energy storage
     public static int tryDischarge(int max, Container container, int slot) {
         return tryDischarge(max, container.getItem(slot), stack -> container.setItem(slot, stack));
+    }
+
+    public static boolean tryUseEnergy(int amount, ItemStack stack, Consumer<ItemStack> setItem) {
+        if (stack.getItem() instanceof ElectricItem electricItem) {
+            if (stack.getCount() > 1) {
+                return false;
+            }
+            int storedEnergy = electricItem.getEnergy(stack);
+            if (storedEnergy < amount) {
+                return false;
+            }
+            setItem.accept(electricItem.setEnergy(stack, storedEnergy - amount));
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean defaultIsBarVisible(ElectricItem item, ItemStack stack) {
+        if (stack.getCount() != 1) {
+            return false;
+        }
+
+        int energy = item.getEnergy(stack);
+        int capacity = item.getEnergyCapacity(stack);
+        return energy != 0 && energy < capacity;
+    }
+
+    public static int defaultBarWidth(ElectricItem item, ItemStack stack) {
+        return Math.round(13F * ((float) item.getEnergy(stack)) / item.getEnergyCapacity(stack));
+    }
+
+    public static int defaultBarColor(ElectricItem item, ItemStack stack) {
+        float ratio = 1F - ((float) item.getEnergy(stack)) / (float) item.getEnergyCapacity(stack);
+
+        // from blue to red
+        float hue = Mth.lerp(ratio, 240F, 360F) / 360F;
+        // from 50% to 100% saturation, otherwise pure blue is too dark
+        float saturation = Mth.lerp(ratio, 0.5F, 1F);
+        return Mth.hsvToRgb(hue, saturation, 1.0F);
+    }
+
+    public static void defaultTooltip(ElectricItem item, ItemStack stack, Consumer<Component> tooltipAdder) {
+        tooltipAdder.accept(EnergyTexts.amountAndCapacity(item.getEnergy(stack), item.getEnergyCapacity(stack)).withStyle(ChatFormatting.GRAY));
     }
 }

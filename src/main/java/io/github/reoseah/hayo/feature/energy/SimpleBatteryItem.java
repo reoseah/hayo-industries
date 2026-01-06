@@ -1,11 +1,9 @@
 package io.github.reoseah.hayo.feature.energy;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -49,33 +47,21 @@ public class SimpleBatteryItem extends Item implements ElectricItem {
     @SuppressWarnings("deprecation")
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
-        tooltipAdder.accept(EnergyTexts.amountAndCapacity(this.getEnergy(stack), this.getEnergyCapacity(stack)).withStyle(ChatFormatting.GRAY));
+        ElectricItems.defaultTooltip(this, stack, tooltipAdder);
     }
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        if (stack.getCount() != 1) {
-            return false;
-        }
-
-        int energy = this.getEnergy(stack);
-        int capacity = this.getEnergyCapacity(stack);
-        return energy != 0 && energy < capacity;
+        return ElectricItems.defaultIsBarVisible(this, stack);
     }
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return Math.round(13F * ((float) this.getEnergy(stack)) / this.getEnergyCapacity(stack));
+        return ElectricItems.defaultBarWidth(this, stack);
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        float ratio = 1F - ((float) this.getEnergy(stack)) / (float) this.getEnergyCapacity(stack);
-
-        // from blue to red
-        float hue = Mth.lerp(ratio, 240F, 360F) / 360F;
-        // from 50% to 100% saturation, otherwise pure blue is too dark
-        float saturation = Mth.lerp(ratio, 0.5F, 1F);
-        return Mth.hsvToRgb(hue, saturation, 1.0F);
+        return ElectricItems.defaultBarColor(this, stack);
     }
 }
