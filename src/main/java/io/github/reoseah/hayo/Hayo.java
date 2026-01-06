@@ -2,13 +2,13 @@ package io.github.reoseah.hayo;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
-import io.github.reoseah.hayo.base.item.EnergyModelProperty;
-import io.github.reoseah.hayo.base.item.SimpleBatteryItem;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
 import io.github.reoseah.hayo.feature.energy.ElectricBlockManager;
+import io.github.reoseah.hayo.feature.energy.EnergyModelProperty;
 import io.github.reoseah.hayo.feature.energy.OverloadCablePayload;
+import io.github.reoseah.hayo.feature.energy.SimpleBatteryItem;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageMenu;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageScreen;
 import io.github.reoseah.hayo.feature.energy_storages.battery_array.BatteryArrayBlock;
@@ -582,11 +582,11 @@ public class Hayo {
                     level.destroyBlockProgress(-Math.abs(pos.hashCode()), pos, value);
                     if (value > 0) {
                         for (int i = 0; i < 2; i++) {
-                            double x = pos.getX() + 0.25 + level.getRandom().nextFloat() * 0.5;
-                            double y = pos.getY() + 0.25 + level.getRandom().nextFloat() * 0.5;
-                            double z = pos.getZ() + 0.25 + level.getRandom().nextFloat() * 0.5;
-                            level.addParticle(ParticleTypes.SMOKE, x, y, z, 0, 0, 0);
+                            float x = pos.getX() + 0.25F + level.getRandom().nextFloat() * 0.5F;
+                            float y = pos.getY() + 0.25F + level.getRandom().nextFloat() * 0.5F;
+                            float z = pos.getZ() + 0.25F + level.getRandom().nextFloat() * 0.5F;
 
+                            level.addParticle(ParticleTypes.SMOKE, x, y, z, 0, 0, 0);
                             level.addParticle(ParticleTypes.FLAME, x, y, z, 0, 0, 0);
                         }
                     }

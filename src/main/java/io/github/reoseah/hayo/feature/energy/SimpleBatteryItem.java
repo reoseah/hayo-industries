@@ -1,8 +1,6 @@
-package io.github.reoseah.hayo.base.item;
+package io.github.reoseah.hayo.feature.energy;
 
 import com.mojang.serialization.Codec;
-import io.github.reoseah.hayo.feature.energy.ElectricItem;
-import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;

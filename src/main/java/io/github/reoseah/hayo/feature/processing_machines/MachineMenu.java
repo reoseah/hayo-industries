@@ -1,12 +1,16 @@
 package io.github.reoseah.hayo.feature.processing_machines;
 
+import io.github.reoseah.hayo.base.HayoContainerMenu;
 import io.github.reoseah.hayo.feature.energy.ElectricItems;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -14,11 +18,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public abstract class MachineMenu extends AbstractContainerMenu {
+public abstract class MachineMenu extends HayoContainerMenu {
     protected final ContainerData data;
 
     protected MachineMenu(MenuType<?> type, int menuId, Container container, ContainerData data, Inventory inventory) {
-        super(type, menuId);
+        super(type, menuId, container);
 
         this.data = data;
         this.addDataSlots(this.data);
@@ -145,11 +149,6 @@ public abstract class MachineMenu extends AbstractContainerMenu {
     }
 
     public abstract int getEnergyUseRate();
-
-    @Override
-    public boolean stillValid(Player player) {
-        return true;
-    }
 
     public int getStoredEnergy() {
         return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);

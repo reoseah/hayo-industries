@@ -6,15 +6,18 @@ import io.github.reoseah.hayo.feature.energy.ElectricBlocks;
 import io.github.reoseah.hayo.feature.energy.ElectricItems;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
 
-public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity {
+public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity implements WorldlyContainer {
     @Getter
     protected float averageEnergyPerTick;
 
@@ -33,11 +36,38 @@ public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity {
         super.onTickEnd();
     }
 
+    @Override
+    public int[] getSlotsForFace(Direction direction) {
+        return switch (direction) {
+            case UP -> new int[]{0};
+            case DOWN -> new int[]{0, 1};
+            default -> new int[]{1};
+        };
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
+        return switch (direction) {
+            case UP -> !ElectricItems.canDischarge(stack);
+            case DOWN -> slot == 0 ? !ElectricItems.canDischarge(stack) : !ElectricItems.canCharge(stack);
+            default -> !ElectricItems.canCharge(stack);
+        };
+    }
+
+    @Override
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
+        return switch (direction) {
+            case UP -> ElectricItems.canDischarge(stack);
+            case DOWN -> slot == 0 ? ElectricItems.canDischarge(stack) : ElectricItems.canCharge(stack);
+            case null, default -> ElectricItems.canCharge(stack);
+        };
+    }
+
     @SuppressWarnings("unused")
     public static void tickServer(Level level, BlockPos pos, BlockState state, EnergyStorageBlockEntity entity) {
         entity.chargeFromSlot(0);
 
-        int discharge = ElectricItems.tryCharge(entity.getEnergyTransferRate(), entity, 1);
+        int discharge = ElectricItems.tryCharge(Math.min(entity.storedEnergy, entity.getEnergyTransferRate()), entity, 1);
         if (discharge > 0) {
             entity.storedEnergy -= discharge;
             entity.energyPerTick -= discharge;
@@ -45,8 +75,7 @@ public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity {
         }
 
         if (entity.storedEnergy > 0) {
-            int sendable = Math.min(entity.storedEnergy, entity.getEnergyTransferRate());
-            int sent = ElectricBlocks.trySend(sendable, (ServerLevel) level, pos, state.getValue(DirectionalMachineBlock.FACING));
+            int sent = ElectricBlocks.trySend(Math.min(entity.storedEnergy, entity.getEnergyTransferRate()), (ServerLevel) level, pos, state.getValue(DirectionalMachineBlock.FACING));
             if (sent > 0) {
                 entity.storedEnergy -= sent;
                 entity.setChanged();

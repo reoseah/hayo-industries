@@ -5,9 +5,11 @@ import io.github.reoseah.hayo.base.block.entity.HayoContainerBlockEntity;
 import io.github.reoseah.hayo.feature.energy.ElectricBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
@@ -20,7 +22,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
-public class GeneratorBlockEntity extends HayoContainerBlockEntity {
+public class GeneratorBlockEntity extends HayoContainerBlockEntity implements WorldlyContainer {
     public static final int FUEL_CONSUMPTION_RATE = 2;
     public static final int ENERGY_PER_FUEL_TICK = 5;
     public static final int GENERATION_RATE = FUEL_CONSUMPTION_RATE * ENERGY_PER_FUEL_TICK;
@@ -118,5 +120,20 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity {
         this.getItem(0).shrink(1);
         this.fuelEnergyTotal = this.fuelEnergyLeft = fuelValue * ENERGY_PER_FUEL_TICK;
         this.setChanged();
+    }
+
+    @Override
+    public int[] getSlotsForFace(Direction direction) {
+        return new int[]{0};
+    }
+
+    @Override
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
+        return FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).isFuel(stack);
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
+        return !FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).isFuel(stack);
     }
 }

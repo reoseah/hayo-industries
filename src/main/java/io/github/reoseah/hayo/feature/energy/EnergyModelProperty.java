@@ -1,7 +1,6 @@
-package io.github.reoseah.hayo.base.item;
+package io.github.reoseah.hayo.feature.energy;
 
 import com.mojang.serialization.MapCodec;
-import io.github.reoseah.hayo.feature.energy.ElectricItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;

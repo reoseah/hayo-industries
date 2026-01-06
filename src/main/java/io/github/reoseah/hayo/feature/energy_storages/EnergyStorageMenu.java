@@ -1,12 +1,17 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
+import io.github.reoseah.hayo.base.HayoContainerMenu;
+import io.github.reoseah.hayo.feature.energy.ElectricItems;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class EnergyStorageMenu extends AbstractContainerMenu {
+public abstract class EnergyStorageMenu extends HayoContainerMenu {
     protected final ContainerData data;
 
     protected static ContainerData createData() {
@@ -37,7 +42,7 @@ public abstract class EnergyStorageMenu extends AbstractContainerMenu {
     }
 
     protected EnergyStorageMenu(MenuType<?> type, int menuId, Container container, ContainerData data, Inventory inventory) {
-        super(type, menuId);
+        super(type, menuId, container);
 
         this.data = data;
         this.addDataSlots(this.data);
@@ -50,8 +55,50 @@ public abstract class EnergyStorageMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        // TODO
-        return ItemStack.EMPTY;
+        var slot = this.slots.get(index);
+        var stack = slot.getItem();
+        if (stack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        var remaining = stack.copy();
+        int firstPlayerSlot = 2;
+        if (index < firstPlayerSlot) {
+            if (!this.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 36, true)) {
+                return ItemStack.EMPTY;
+            }
+            slot.onQuickCraft(stack, remaining);
+        } else {
+            if (ElectricItems.canDischarge(stack)) {
+                if (!this.moveItemStackTo(stack, 0, 1, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (ElectricItems.canCharge(stack)) {
+                if (!this.moveItemStackTo(stack, 1, 2, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index < firstPlayerSlot + 27) {
+                if (!this.moveItemStackTo(stack, firstPlayerSlot + 27, firstPlayerSlot + 36, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
+                if (!this.moveItemStackTo(stack, firstPlayerSlot, firstPlayerSlot + 27, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+        }
+
+        if (stack.isEmpty()) {
+            slot.set(ItemStack.EMPTY);
+        } else {
+            slot.setChanged();
+        }
+
+        if (stack.getCount() == remaining.getCount()) {
+            return ItemStack.EMPTY;
+        }
+
+        slot.onTake(player, stack);
+        return remaining;
     }
 
     @Override

@@ -11,12 +11,12 @@ public class ElectricItems {
         return stack.getItem() instanceof ElectricItem;
     }
 
-    public static boolean isChargeable(ItemStack stack) {
+    public static boolean canCharge(ItemStack stack) {
         return stack.getItem() instanceof ElectricItem electricItem
                 && electricItem.canCharge(stack);
     }
 
-    public static boolean isDischargeable(ItemStack stack) {
+    public static boolean canDischarge(ItemStack stack) {
         return stack.getItem() instanceof ElectricItem electricItem
                 && electricItem.canDischarge(stack);
     }
