@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.DirectionalMachineBlock;
 import io.github.reoseah.hayo.feature.energy.ElectricReceiverBlock;
+import io.github.reoseah.hayo.feature.energy.ElectricSenderBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -15,7 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class BatteryArrayBlock extends DirectionalMachineBlock implements ElectricReceiverBlock {
+public class BatteryArrayBlock extends DirectionalMachineBlock implements ElectricReceiverBlock, ElectricSenderBlock {
     public static final MapCodec<BatteryArrayBlock> CODEC = simpleCodec(BatteryArrayBlock::new);
 
     public BatteryArrayBlock(Properties properties) {

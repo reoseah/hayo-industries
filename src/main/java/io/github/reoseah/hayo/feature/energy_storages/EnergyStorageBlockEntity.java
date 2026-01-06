@@ -1,10 +1,13 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
+import io.github.reoseah.hayo.base.block.DirectionalMachineBlock;
 import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
+import io.github.reoseah.hayo.feature.energy.ElectricBlocks;
 import io.github.reoseah.hayo.feature.energy.ElectricItems;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -40,6 +43,16 @@ public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity {
             entity.energyPerTick -= discharge;
             entity.setChanged();
         }
+
+        if (entity.storedEnergy > 0) {
+            int sendable = Math.min(entity.storedEnergy, entity.getEnergyTransferRate());
+            int sent = ElectricBlocks.trySend(sendable, (ServerLevel) level, pos, state.getValue(DirectionalMachineBlock.FACING));
+            if (sent > 0) {
+                entity.storedEnergy -= sent;
+                entity.setChanged();
+            }
+        }
+
         entity.onTickEnd();
     }
 }

@@ -16,7 +16,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.saveddata.SavedData;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -29,17 +29,22 @@ public class ElectricBlockManager extends SavedData {
     protected final Map<ChunkPos, ChunkTickValues> tickData = new HashMap<>();
     protected final Map<BlockPos, SenderState> senders = new HashMap<>();
 
-    public ElectricBlockManager setLevel(ServerLevel level) {
-        this.level = level;
+    public ElectricBlockManager setLevelIfAbsent(ServerLevel level) {
+        if (this.level == null) {
+            this.level = level;
+        }
         return this;
     }
 
     public static ElectricBlockManager get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(Hayo.ELECTRIC_DATA).setLevel(level);
+        return level.getDataStorage().computeIfAbsent(Hayo.ELECTRIC_DATA).setLevelIfAbsent(level);
     }
 
-    public int sendToAllSides(int amount, BlockPos pos) {
-        var senderState = this.senders.computeIfAbsent(pos, (p) -> new SenderState(discoverReceivers(this.level, p)));
+    public int sendEnergy(int amount, BlockPos pos, @Nullable Direction sendingFace) {
+        var senderState = this.senders.get(pos);
+        if (senderState == null || senderState.sendingFace != sendingFace) {
+            this.senders.put(pos, senderState = new SenderState(discoverReceivers(this.level, pos, sendingFace), sendingFace));
+        }
 
         int totalReceivable = 0;
         var receivables = new Object2IntArrayMap<ReceiverPath>();
@@ -252,21 +257,24 @@ public class ElectricBlockManager extends SavedData {
         }
     }
 
-    /**
-     * @param receivers TODO: directions from which energy can be emitted, e.g. for energy storages
-     */
-    public record SenderState(List<ReceiverPath> receivers) {
+    public record SenderState(List<ReceiverPath> receivers, @Nullable Direction sendingFace) {
     }
 
     public record ReceiverPath(BlockPos receiver, Direction receivingFace, List<BlockPos> cables) {
     }
 
-    public static List<ReceiverPath> discoverReceivers(ServerLevel level, BlockPos start) {
+    public static List<ReceiverPath> discoverReceivers(ServerLevel level, BlockPos start, @Nullable Direction sendingFace) {
         var queue = new ArrayDeque<BlockPos>();
         queue.add(start);
 
         var visited = new HashMap<BlockPos, PosData>();
         visited.put(start, new PosData(0, null, level.getBlockState(start)));
+
+        if (sendingFace != null) {
+            queue.removeFirst();
+            var pos = start.relative(sendingFace);
+            visitReceiverOrCableAt(level, queue, visited, pos, sendingFace, 1);
+        }
 
         while (!queue.isEmpty()) {
             var queuedPos = queue.removeFirst();
@@ -274,31 +282,7 @@ public class ElectricBlockManager extends SavedData {
 
             for (var direction : Direction.values()) {
                 var pos = queuedPos.relative(direction);
-
-                var existingEntry = visited.get(pos);
-                if (existingEntry != null) {
-                    if (existingEntry.distance > distance) {
-                        visited.put(pos, new PosData(distance, direction, existingEntry.state));
-                        if (existingEntry.state.getBlock() instanceof ElectricCableBlock) {
-                            queue.add(pos);
-                        }
-                    }
-                    continue;
-                }
-
-                if (!level.isLoaded(pos)) {
-                    continue;
-                }
-
-                var state = level.getBlockState(pos);
-                if (!(state.getBlock() instanceof ElectricBlock electricBlock) || !electricBlock.connectsToCables(state, level, pos, direction)) {
-                    continue;
-                }
-
-                visited.put(pos, new PosData(distance, direction, state));
-                if (state.getBlock() instanceof ElectricCableBlock) {
-                    queue.add(pos);
-                }
+                visitReceiverOrCableAt(level, queue, visited, pos, direction, distance);
             }
         }
 
@@ -306,8 +290,10 @@ public class ElectricBlockManager extends SavedData {
         for (var entry : visited.entrySet()) {
             var pos = entry.getKey();
             var data = entry.getValue();
-            if (!(data.state.getBlock() instanceof ElectricReceiverBlock receiver)  //
-                    || !receiver.canReceiveEnergy(data.state, level, pos, data.direction)) {
+            if (pos.equals(start) //
+                    || !(data.state.getBlock() instanceof ElectricReceiverBlock receiver) //
+                    || !receiver.canReceiveEnergy(data.state, level, pos, data.direction) //
+            ) {
                 continue;
             }
 
@@ -324,6 +310,33 @@ public class ElectricBlockManager extends SavedData {
         }
 
         return paths;
+    }
+
+    private static void visitReceiverOrCableAt(ServerLevel level, ArrayDeque<BlockPos> queue, HashMap<BlockPos, PosData> visited, BlockPos pos, Direction direction, int distance) {
+        var existingEntry = visited.get(pos);
+        if (existingEntry != null) {
+            if (existingEntry.distance > distance) {
+                visited.put(pos, new PosData(distance, direction, existingEntry.state));
+                if (existingEntry.state.getBlock() instanceof ElectricCableBlock) {
+                    queue.add(pos);
+                }
+            }
+            return;
+        }
+
+        if (!level.isLoaded(pos)) {
+            return;
+        }
+
+        var state = level.getBlockState(pos);
+        if (!(state.getBlock() instanceof ElectricBlock electricBlock) || !electricBlock.connectsToCables(state, level, pos, direction)) {
+            return;
+        }
+
+        visited.put(pos, new PosData(distance, direction, state));
+        if (state.getBlock() instanceof ElectricCableBlock) {
+            queue.add(pos);
+        }
     }
 
     private record PosData(int distance, Direction direction, BlockState state) {
@@ -373,13 +386,13 @@ public class ElectricBlockManager extends SavedData {
 
         // doesn't need to be full BlockPos instance, knowing a chunk position it should be possible to
         // represent any position within as a `short` or at least an `int` with bit fiddling...
-        protected final List<BlockPos> electricBlocks;
+        protected final ArrayList<BlockPos> electricBlocks;
 
         public ChunkData() {
             this.electricBlocks = new ArrayList<>();
         }
 
-        public ChunkData(@Unmodifiable List<BlockPos> electricBlocks) {
+        public ChunkData(List<BlockPos> electricBlocks) {
             this.electricBlocks = new ArrayList<>(electricBlocks);
         }
     }
