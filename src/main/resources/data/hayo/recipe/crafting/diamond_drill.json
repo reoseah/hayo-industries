@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " # ",
+    "#X#"
+  ],
+  "key": {
+    "#": "minecraft:diamond",
+    "X": "hayo:drill"
+  },
+  "result": {
+    "id": "hayo:diamond_drill",
+    "count": 1
+  }
+}

@@ -5,11 +5,7 @@ import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
-import io.github.reoseah.hayo.feature.energy.ElectricToolItem;
-import io.github.reoseah.hayo.feature.energy.ElectricBlockManager;
-import io.github.reoseah.hayo.feature.energy.EnergyModelProperty;
-import io.github.reoseah.hayo.feature.energy.OverloadCablePayload;
-import io.github.reoseah.hayo.feature.energy.SimpleBatteryItem;
+import io.github.reoseah.hayo.feature.energy.*;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageMenu;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageScreen;
 import io.github.reoseah.hayo.feature.energy_storages.battery_array.BatteryArrayBlock;
@@ -299,7 +295,7 @@ public class Hayo {
                 .component(DataComponents.TOOL, new Tool( //
                         List.of( //
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
-                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(CHAINSAW_MINEABLE), 10F) //
+                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(CHAINSAW_MINEABLE), 9F) //
                         ), 0.5F, 0, false) //
                 ).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
 
@@ -309,6 +305,13 @@ public class Hayo {
                         List.of( //
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
                                 Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(DRILL_MINEABLE), 7F) //
+                        ), 0.5F, 0, true) //
+                ).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
+        public static final Item DIAMOND_DRILL = registerItem("diamond_drill", props -> new ElectricToolItem(props, 80, 10000, 32), new Item.Properties() //
+                .component(DataComponents.TOOL, new Tool( //
+                        List.of( //
+                                Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)), //
+                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(DRILL_MINEABLE), 9F) //
                         ), 0.5F, 0, true) //
                 ).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
 
@@ -406,6 +409,8 @@ public class Hayo {
                 entries.accept(Util.make(new ItemStack(CHAINSAW), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
                 entries.accept(DRILL);
                 entries.accept(Util.make(new ItemStack(DRILL), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
+                entries.accept(DIAMOND_DRILL);
+                entries.accept(Util.make(new ItemStack(DIAMOND_DRILL), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
 
                 entries.accept(SILICON_BRONZE_SWORD);
                 entries.accept(SILICON_BRONZE_SHOVEL);

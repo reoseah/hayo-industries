@@ -16,7 +16,7 @@
       },
       "entries": [
         {
-          "threshold": 400,
+          "threshold": 50,
           "model": {
             "type": "minecraft:model",
             "model": "hayo:item/chainsaw_active"

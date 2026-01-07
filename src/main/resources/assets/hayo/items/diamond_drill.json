@@ -4,7 +4,7 @@
     "property": "minecraft:selected",
     "on_false": {
       "type": "minecraft:model",
-      "model": "hayo:item/drill"
+      "model": "hayo:item/diamond_drill"
     },
     "on_true": {
       "type": "minecraft:range_dispatch",
@@ -12,14 +12,14 @@
       "scale": 1,
       "fallback": {
         "type": "minecraft:model",
-        "model": "hayo:item/drill"
+        "model": "hayo:item/diamond_drill"
       },
       "entries": [
         {
-          "threshold": 50,
+          "threshold": 80,
           "model": {
             "type": "minecraft:model",
-            "model": "hayo:item/drill_active"
+            "model": "hayo:item/diamond_drill_active"
           }
         }
       ]
