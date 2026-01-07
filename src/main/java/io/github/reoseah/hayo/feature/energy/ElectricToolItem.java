@@ -1,8 +1,5 @@
-package io.github.reoseah.hayo.feature.electric_tools;
+package io.github.reoseah.hayo.feature.energy;
 
-import io.github.reoseah.hayo.feature.energy.ElectricItem;
-import io.github.reoseah.hayo.feature.energy.ElectricItems;
-import io.github.reoseah.hayo.feature.energy.SimpleBatteryItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
@@ -16,26 +13,29 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Consumer;
 
-public class ChainsawItem extends Item implements ElectricItem {
+public class ElectricToolItem extends Item implements ElectricItem {
     public static final DataComponentType<Integer> ENERGY = SimpleBatteryItem.ENERGY;
 
-    public static final int ENERGY_COST = 400;
-    public static final int ENERGY_CAPACITY = 10000;
-    public static final int ENERGY_TRANSFER_LIMIT = 32;
+    public final int energyCost;
+    public final int energyCapacity;
+    public final int energyTransferLimit;
 
-    public ChainsawItem(Properties properties) {
+    public ElectricToolItem(Properties properties, int energyCost, int energyCapacity, int energyTransferLimit) {
         super(properties);
+        this.energyCost = energyCost;
+        this.energyCapacity = energyCapacity;
+        this.energyTransferLimit = energyTransferLimit;
     }
 
     @Override
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entity) {
-        return ElectricItems.tryUseEnergy(ENERGY_COST, stack, s -> {
+        return ElectricItems.tryUseEnergy(this.energyCost, stack, s -> {
         });
     }
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (this.getEnergy(stack) >= ENERGY_COST && this.isCorrectToolForDrops(stack, state)) {
+        if (this.getEnergy(stack) >= this.energyCost && this.isCorrectToolForDrops(stack, state)) {
             return super.getDestroySpeed(stack, state);
         }
         return 0.5F;
@@ -48,7 +48,7 @@ public class ChainsawItem extends Item implements ElectricItem {
 
     @Override
     public int getEnergyCapacity(ItemStack stack) {
-        return ENERGY_CAPACITY;
+        return this.energyCapacity;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ChainsawItem extends Item implements ElectricItem {
 
     @Override
     public int getEnergyTransferLimit(ItemStack stack) {
-        return ENERGY_TRANSFER_LIMIT;
+        return this.energyTransferLimit;
     }
 
     @SuppressWarnings("deprecation")
@@ -75,7 +75,7 @@ public class ChainsawItem extends Item implements ElectricItem {
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return ElectricItems.defaultIsBarVisible(this, stack);
+        return this.getEnergy(stack) < this.getEnergyCapacity(stack);
     }
 
     @Override

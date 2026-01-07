@@ -5,8 +5,7 @@ import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
-import io.github.reoseah.hayo.feature.electric_tools.ChainsawItem;
-import io.github.reoseah.hayo.feature.electric_tools.DrillItem;
+import io.github.reoseah.hayo.feature.energy.ElectricToolItem;
 import io.github.reoseah.hayo.feature.energy.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.energy.EnergyModelProperty;
 import io.github.reoseah.hayo.feature.energy.OverloadCablePayload;
@@ -67,6 +66,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -79,13 +79,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.Unit;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -106,6 +106,7 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -291,8 +292,25 @@ public class Hayo {
 
         public static final Item WRENCH = registerItem("wrench");
 
-        public static final Item CHAINSAW = registerItem("chainsaw", ChainsawItem::new, new Item.Properties().axe(ToolMaterial.IRON, 8.0F, -3F).component(DataComponents.UNBREAKABLE, Unit.INSTANCE).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
-        public static final Item DRILL = registerItem("drill", DrillItem::new, new Item.Properties().pickaxe(ToolMaterial.IRON, 8.0F, -3F).component(DataComponents.UNBREAKABLE, Unit.INSTANCE).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
+        private static final HolderGetter<Block> BLOCK_LOOKUP = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
+
+        public static final TagKey<Block> CHAINSAW_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/chainsaw"));
+        public static final Item CHAINSAW = registerItem("chainsaw", props -> new ElectricToolItem(props, 50, 10000, 32), new Item.Properties() //
+                .component(DataComponents.TOOL, new Tool( //
+                        List.of( //
+                                Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
+                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(CHAINSAW_MINEABLE), 10F) //
+                        ), 0.5F, 0, false) //
+                ).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
+
+        public static final TagKey<Block> DRILL_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/drill"));
+        public static final Item DRILL = registerItem("drill", props -> new ElectricToolItem(props, 50, 10000, 32), new Item.Properties() //
+                .component(DataComponents.TOOL, new Tool( //
+                        List.of( //
+                                Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
+                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(DRILL_MINEABLE), 7F) //
+                        ), 0.5F, 0, true) //
+                ).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
 
         private static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
         private static final ToolMaterial SILICON_BRONZE = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, ToolMaterial.DIAMOND.durability(), 7, 2.0F, 10, SILICON_BRONZE_MATERIALS);
