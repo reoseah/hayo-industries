@@ -36,7 +36,7 @@ public class ElectricBlocks {
         try {
             ElectricBlockManager.get(level).remove(pos);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error while remove electric block", e);
+            LOGGER.log(Level.SEVERE, "Error while removing electric block", e);
         }
     }
 }

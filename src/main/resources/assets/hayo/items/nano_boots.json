@@ -1,0 +1,20 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "hayo:energy",
+    "scale": 1,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "hayo:item/nano_boots"
+    },
+    "entries": [
+      {
+        "threshold": 100,
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayo:item/nano_boots_charged"
+        }
+      }
+    ]
+  }
+}

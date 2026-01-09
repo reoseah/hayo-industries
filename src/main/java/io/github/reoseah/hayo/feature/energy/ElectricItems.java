@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
@@ -113,5 +114,23 @@ public class ElectricItems {
 
     public static void defaultTooltip(ElectricItem item, ItemStack stack, Consumer<Component> tooltipAdder) {
         tooltipAdder.accept(EnergyTexts.amountAndCapacity(item.getEnergy(stack), item.getEnergyCapacity(stack)).withStyle(ChatFormatting.GRAY));
+    }
+
+    public static ItemStack withCharge(Item item, int charge) {
+        if (item instanceof ElectricItem electricItem) {
+            var stack = new ItemStack(item);
+            electricItem.setEnergy(stack, charge);
+            return stack;
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    public static ItemStack withFullCharge(Item item) {
+        if (item instanceof ElectricItem electricItem) {
+            var stack = new ItemStack(item);
+            electricItem.setEnergy(stack, electricItem.getEnergyCapacity(stack));
+            return stack;
+        }
+        throw new UnsupportedOperationException();
     }
 }

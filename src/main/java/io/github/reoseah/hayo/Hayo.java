@@ -72,19 +72,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.Util;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.equipment.*;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -185,7 +190,7 @@ public class Hayo {
         return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
-    public static <T> ResourceKey<T> modKey(ResourceKey<Registry<T>> registryKey, String location) {
+    public static <T> ResourceKey<T> modKey(ResourceKey<? extends Registry<T>> registryKey, String location) {
         return ResourceKey.create(registryKey, modId(location));
     }
 
@@ -288,10 +293,17 @@ public class Hayo {
 
         public static final Item WRENCH = registerItem("wrench");
 
-        private static final HolderGetter<Block> BLOCK_LOOKUP = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
+        public static ItemAttributeModifiers createChargedAttributes(float attackDamage, float attackSpeed) {
+            var builder = ItemAttributeModifiers.builder();
+            builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, attackDamage, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+            builder.add(Attributes.ATTACK_SPEED, new AttributeModifier(Item.BASE_ATTACK_SPEED_ID, attackSpeed, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+            return builder.build();
+        }
 
+        private static final HolderGetter<Block> BLOCK_LOOKUP = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
         public static final TagKey<Block> CHAINSAW_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/chainsaw"));
-        public static final Item CHAINSAW = registerItem("chainsaw", props -> new ElectricToolItem(props, 50, 10000, 32), new Item.Properties() //
+
+        public static final Item CHAINSAW = registerItem("chainsaw", props -> new SimpleElectricToolItem(props, createChargedAttributes(12, -3), 50, 10000, 32), new Item.Properties() //
                 .component(DataComponents.TOOL, new Tool( //
                         List.of( //
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
@@ -300,14 +312,15 @@ public class Hayo {
                 ).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
 
         public static final TagKey<Block> DRILL_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/drill"));
-        public static final Item DRILL = registerItem("drill", props -> new ElectricToolItem(props, 50, 10000, 32), new Item.Properties() //
+
+        public static final Item DRILL = registerItem("drill", props -> new SimpleElectricToolItem(props, createChargedAttributes(6, -3), 50, 10000, 32), new Item.Properties() //
                 .component(DataComponents.TOOL, new Tool( //
                         List.of( //
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
                                 Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(DRILL_MINEABLE), 7F) //
                         ), 0.5F, 0, true) //
                 ).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
-        public static final Item DIAMOND_DRILL = registerItem("diamond_drill", props -> new ElectricToolItem(props, 80, 10000, 32), new Item.Properties() //
+        public static final Item DIAMOND_DRILL = registerItem("diamond_drill", props -> new SimpleElectricToolItem(props, createChargedAttributes(8, -3), 80, 10000, 32), new Item.Properties() //
                 .component(DataComponents.TOOL, new Tool( //
                         List.of( //
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)), //
@@ -323,6 +336,63 @@ public class Hayo {
         public static final Item SILICON_BRONZE_PICKAXE = registerItem("silicon_bronze_pickaxe", new Item.Properties().pickaxe(SILICON_BRONZE, 1.0F, -2.8F));
         public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe", properties -> new AxeItem(SILICON_BRONZE, 6.0F, -3.1F, properties));
         public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
+
+        public static final TagKey<Item> FLAK_MATERIALS = TagKey.create(Registries.ITEM, modId("flak_materials"));
+        private static final ArmorMaterial FLAK = new ArmorMaterial( //
+                33, ArmorMaterials.makeDefense(3, 6, 8, 3, 11), 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0F, 0.0F, FLAK_MATERIALS, modKey(EquipmentAssets.ROOT_ID, "flak") //
+        );
+        public static final Item FLAK_CHESTPLATE = registerItem("flak_chestplate", Item::new, new Item.Properties().humanoidArmor(FLAK, ArmorType.CHESTPLATE).stacksTo(1));
+
+        private static final ArmorMaterial NANO = new ArmorMaterial( //
+                33, ArmorMaterials.makeDefense(0, 0, 0, 0, 0), 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0, 0, null, modKey(EquipmentAssets.ROOT_ID, "nano") //
+        );
+
+        public static ItemAttributeModifiers createUnchargedAttributes(ArmorType type) {
+            var builder = ItemAttributeModifiers.builder();
+            var slot = EquipmentSlotGroup.bySlot(type.getSlot());
+            var modifierId = Identifier.withDefaultNamespace("armor." + type.getName());
+            builder.add(Attributes.ARMOR, new AttributeModifier(modifierId, 0, AttributeModifier.Operation.ADD_VALUE), slot);
+            builder.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(modifierId, 0, AttributeModifier.Operation.ADD_VALUE), slot);
+            return builder.build();
+        }
+
+        public static ItemAttributeModifiers createChargedAttributes(ArmorType type, int armor, int toughness) {
+            var builder = ItemAttributeModifiers.builder();
+            var slot = EquipmentSlotGroup.bySlot(type.getSlot());
+            var modifierId = Identifier.withDefaultNamespace("armor." + type.getName());
+            builder.add(Attributes.ARMOR, new AttributeModifier(modifierId, armor, AttributeModifier.Operation.ADD_VALUE), slot);
+            builder.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(modifierId, toughness, AttributeModifier.Operation.ADD_VALUE), slot);
+            return builder.build();
+        }
+
+        public static final Item NANO_HELMET = registerItem("nano_helmet", //
+                props -> new SimpleElectricArmorItem(props, createChargedAttributes(ArmorType.HELMET, 3, 3), 100, 100_000, 128), //
+                new Item.Properties() //
+                        .attributes(createUnchargedAttributes(ArmorType.HELMET)) //
+                        .component(DataComponents.EQUIPPABLE, //
+                                Equippable.builder(ArmorType.HELMET.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                        .stacksTo(1));
+        public static final Item NANO_CHESTPLATE = registerItem("nano_chestplate", //
+                props -> new SimpleElectricArmorItem(props, createChargedAttributes(ArmorType.CHESTPLATE, 8, 3), 100, 100_000, 128), //
+                new Item.Properties() //
+                        .attributes(createUnchargedAttributes(ArmorType.CHESTPLATE)) //
+                        .component(DataComponents.EQUIPPABLE, //
+                                Equippable.builder(ArmorType.CHESTPLATE.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                        .stacksTo(1));
+        public static final Item NANO_LEGGINGS = registerItem("nano_leggings", //
+                props -> new SimpleElectricArmorItem(props, createChargedAttributes(ArmorType.LEGGINGS, 6, 3), 100, 100_000, 128), //
+                new Item.Properties() //
+                        .attributes(createUnchargedAttributes(ArmorType.LEGGINGS)) //
+                        .component(DataComponents.EQUIPPABLE, //
+                                Equippable.builder(ArmorType.LEGGINGS.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                        .stacksTo(1));
+        public static final Item NANO_BOOTS = registerItem("nano_boots", //
+                props -> new SimpleElectricArmorItem(props, createChargedAttributes(ArmorType.BOOTS, 3, 3), 100, 100_000, 128), //
+                new Item.Properties() //
+                        .attributes(createUnchargedAttributes(ArmorType.BOOTS)) //
+                        .component(DataComponents.EQUIPPABLE, //
+                                Equippable.builder(ArmorType.BOOTS.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                        .stacksTo(1));
 
         public static final Item CANISTER = registerItem("canister");
 
@@ -406,11 +476,11 @@ public class Hayo {
                 entries.accept(WRENCH);
 
                 entries.accept(CHAINSAW);
-                entries.accept(Util.make(new ItemStack(CHAINSAW), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
+                entries.accept(ElectricItems.withFullCharge(CHAINSAW));
                 entries.accept(DRILL);
-                entries.accept(Util.make(new ItemStack(DRILL), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
+                entries.accept(ElectricItems.withFullCharge(DRILL));
                 entries.accept(DIAMOND_DRILL);
-                entries.accept(Util.make(new ItemStack(DIAMOND_DRILL), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
+                entries.accept(ElectricItems.withFullCharge(DIAMOND_DRILL));
 
                 entries.accept(SILICON_BRONZE_SWORD);
                 entries.accept(SILICON_BRONZE_SHOVEL);
@@ -418,12 +488,22 @@ public class Hayo {
                 entries.accept(SILICON_BRONZE_AXE);
                 entries.accept(SILICON_BRONZE_HOE);
 
+                entries.accept(FLAK_CHESTPLATE);
+                entries.accept(NANO_HELMET);
+                entries.accept(ElectricItems.withFullCharge(NANO_HELMET));
+                entries.accept(NANO_CHESTPLATE);
+                entries.accept(ElectricItems.withFullCharge(NANO_CHESTPLATE));
+                entries.accept(NANO_LEGGINGS);
+                entries.accept(ElectricItems.withFullCharge(NANO_LEGGINGS));
+                entries.accept(NANO_BOOTS);
+                entries.accept(ElectricItems.withFullCharge(NANO_BOOTS));
+
                 entries.accept(CANISTER);
 
                 entries.accept(BATTERY);
-                entries.accept(Util.make(new ItemStack(BATTERY), stack -> stack.set(SimpleBatteryItem.ENERGY, 10000)));
+                entries.accept(ElectricItems.withFullCharge(BATTERY));
                 entries.accept(ENERGY_CRYSTAL);
-                entries.accept(Util.make(new ItemStack(ENERGY_CRYSTAL), stack -> stack.set(SimpleBatteryItem.ENERGY, 100000)));
+                entries.accept(ElectricItems.withFullCharge(ENERGY_CRYSTAL));
 
                 entries.accept(REFINED_IRON_INGOT);
                 entries.accept(SILICON_BRONZE_INGOT);

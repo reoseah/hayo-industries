@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "minecraft:green_wool",
+    "X": "hayo:composite_plate"
+  },
+  "pattern": [
+    "X X",
+    "X#X",
+    "XXX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:flak_chestplate"
+  }
+}
