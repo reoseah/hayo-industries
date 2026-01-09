@@ -3,8 +3,7 @@
   "package": "io.github.reoseah.hayo.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "LivingEntityMixin",
-    "SingleItemRecipeAccessor"
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

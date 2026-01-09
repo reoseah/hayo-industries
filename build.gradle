@@ -39,6 +39,10 @@ dependencies {
 //    modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${project.rei_version}"
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/hayo.classtweaker")
+}
+
 processResources {
     inputs.property "version", project.version
 

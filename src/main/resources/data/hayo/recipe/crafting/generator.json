@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " # ",
+    "CRC",
+    " F "
+  ],
+  "key": {
+    "#": "hayo:machine_block",
+    "C": "hayo:cable",
+    "R": "minecraft:redstone",
+    "F": "minecraft:furnace"
+  },
+  "result": {
+    "id": "hayo:generator",
+    "count": 1
+  }
+}

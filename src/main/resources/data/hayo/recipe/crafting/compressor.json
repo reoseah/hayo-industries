@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " P ",
+    "CXC",
+    " # "
+  ],
+  "key": {
+    "#": "hayo:machine_block",
+    "C": "hayo:cable",
+    "X": "hayo:circuit",
+    "P": "minecraft:piston"
+  },
+  "result": {
+    "id": "hayo:compressor",
+    "count": 1
+  }
+}

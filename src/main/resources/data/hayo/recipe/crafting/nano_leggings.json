@@ -1,0 +1,17 @@
+{
+  "type": "hayo:electric_shaped_crafting",
+  "category": "misc",
+  "key": {
+    "#": "hayo:energy_crystal",
+    "X": "hayo:conductive_carbon"
+  },
+  "pattern": [
+    "X#X",
+    "X X",
+    "X X"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:nano_leggings"
+  }
+}

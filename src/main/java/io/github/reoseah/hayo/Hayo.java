@@ -309,7 +309,9 @@ public class Hayo {
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
                                 Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(CHAINSAW_MINEABLE), 9F) //
                         ), 0.5F, 0, false) //
-                ).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
+                ) //
+                .equippable(EquipmentSlot.MAINHAND) //
+                .stacksTo(1));
 
         public static final TagKey<Block> DRILL_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/drill"));
 
@@ -319,14 +321,19 @@ public class Hayo {
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
                                 Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(DRILL_MINEABLE), 7F) //
                         ), 0.5F, 0, true) //
-                ).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
+                ) //
+                .equippable(EquipmentSlot.MAINHAND) //
+                .stacksTo(1));
         public static final Item DIAMOND_DRILL = registerItem("diamond_drill", props -> new SimpleElectricToolItem(props, createChargedAttributes(8, -3), 80, 10000, 32), new Item.Properties() //
                 .component(DataComponents.TOOL, new Tool( //
                         List.of( //
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)), //
                                 Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(DRILL_MINEABLE), 9F) //
                         ), 0.5F, 0, true) //
-                ).stacksTo(1).equippable(EquipmentSlot.MAINHAND));
+                ) //
+                .equippable(EquipmentSlot.MAINHAND) //
+                .rarity(Rarity.RARE) //
+                .stacksTo(1));
 
         private static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
         private static final ToolMaterial SILICON_BRONZE = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, ToolMaterial.DIAMOND.durability(), 7, 2.0F, 10, SILICON_BRONZE_MATERIALS);
@@ -371,6 +378,7 @@ public class Hayo {
                         .attributes(createUnchargedAttributes(ArmorType.HELMET)) //
                         .component(DataComponents.EQUIPPABLE, //
                                 Equippable.builder(ArmorType.HELMET.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                        .rarity(Rarity.RARE) //
                         .stacksTo(1));
         public static final Item NANO_CHESTPLATE = registerItem("nano_chestplate", //
                 props -> new SimpleElectricArmorItem(props, createChargedAttributes(ArmorType.CHESTPLATE, 8, 3), 100, 100_000, 128), //
@@ -378,6 +386,7 @@ public class Hayo {
                         .attributes(createUnchargedAttributes(ArmorType.CHESTPLATE)) //
                         .component(DataComponents.EQUIPPABLE, //
                                 Equippable.builder(ArmorType.CHESTPLATE.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                        .rarity(Rarity.RARE) //
                         .stacksTo(1));
         public static final Item NANO_LEGGINGS = registerItem("nano_leggings", //
                 props -> new SimpleElectricArmorItem(props, createChargedAttributes(ArmorType.LEGGINGS, 6, 3), 100, 100_000, 128), //
@@ -385,6 +394,7 @@ public class Hayo {
                         .attributes(createUnchargedAttributes(ArmorType.LEGGINGS)) //
                         .component(DataComponents.EQUIPPABLE, //
                                 Equippable.builder(ArmorType.LEGGINGS.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                        .rarity(Rarity.RARE) //
                         .stacksTo(1));
         public static final Item NANO_BOOTS = registerItem("nano_boots", //
                 props -> new SimpleElectricArmorItem(props, createChargedAttributes(ArmorType.BOOTS, 3, 3), 100, 100_000, 128), //
@@ -392,6 +402,7 @@ public class Hayo {
                         .attributes(createUnchargedAttributes(ArmorType.BOOTS)) //
                         .component(DataComponents.EQUIPPABLE, //
                                 Equippable.builder(ArmorType.BOOTS.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                        .rarity(Rarity.RARE) //
                         .stacksTo(1));
 
         public static final Item CANISTER = registerItem("canister");
@@ -671,6 +682,7 @@ public class Hayo {
         public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", new ClassicMachineRecipe.Serializer<>(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", new ClassicMachineRecipe.Serializer<>(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new MatterGeneratingRecipe.Serializer());
+        public static final RecipeSerializer<ElectricShapedRecipe> ELECTRIC_SHAPED_CRAFTING = register("electric_shaped_crafting", new ElectricShapedRecipe.Serializer());
 
         public static void initialize() {
         }
