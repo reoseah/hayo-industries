@@ -26,6 +26,21 @@ repositories {
             includeGroup "dev.architectury"
         }
     }
+
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
+
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -34,9 +49,26 @@ dependencies {
 
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-//    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
+    // FIXME REI not available for the snapshot yet
+    //  edit: adding just api, have to disable transitive dependencies because api still brings in a lot of not available things
+    //  edit 2: nope, still doesn't work because it's not remapped, get things like "Item in not assignable to class_123",
+    //          excluding `mod_compat/roughlyenoughitems` package for now
+//    api ("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") {
+//        transitive = false
+//    }
 //    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
 //    modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${project.rei_version}"
+
+    api("mezz.jei:jei-${project.minecraft_version}-fabric-api:+")
+    implementation("mezz.jei:jei-${project.minecraft_version}-fabric:+")
+}
+
+sourceSets {
+    main {
+        java {
+            exclude 'io/github/reoseah/hayo/mod_support/roughlyenoughitems/**'
+        }
+    }
 }
 
 loom {
@@ -78,6 +110,5 @@ publishing {
         }
     }
 
-    repositories {
-    }
+    repositories {}
 }

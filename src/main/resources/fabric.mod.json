@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "hayo",
   "version": "${version}",
-  "name": "HAYO Industries Inc.",
+  "name": "HAYO Industries",
   "description": "",
   "authors": [
     "reoseah"
@@ -26,6 +26,9 @@
     ],
     "rei_client": [
       "io.github.reoseah.hayo.mod_support.roughlyenoughitems.HayoReiClient"
+    ],
+    "jei_mod_plugin": [
+      "io.github.reoseah.hayo.mod_support.jei.HayoJeiPlugin"
     ]
   },
   "mixins": [
@@ -39,6 +42,5 @@
     "fabric-api": "*"
   },
   "suggests": {
-    "roughlyenoughitems": "*"
   }
 }

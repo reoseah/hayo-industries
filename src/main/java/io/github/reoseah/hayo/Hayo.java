@@ -145,6 +145,9 @@ public class Hayo {
         RecipeSerializers.initialize();
 
         CustomPayloads.initialize();
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MACERATING);
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.COMPRESSING);
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.EXTRACTING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
 
         BiomeModifications.create(Identifier.fromNamespaceAndPath("hayo", "features")) //

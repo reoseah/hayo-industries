@@ -1,3 +1,4 @@
 classTweaker v1 official
 accessible field net/minecraft/world/item/crafting/ShapedRecipe pattern Lnet/minecraft/world/item/crafting/ShapedRecipePattern;
 accessible field net/minecraft/world/item/crafting/ShapedRecipe result Lnet/minecraft/world/item/ItemStack;
+accessible method net/minecraft/world/item/crafting/SingleItemRecipe result ()Lnet/minecraft/world/item/ItemStack;
