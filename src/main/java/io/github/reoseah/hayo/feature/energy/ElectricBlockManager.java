@@ -104,7 +104,7 @@ public class ElectricBlockManager extends SavedData {
     }
 
     protected void increaseCurrent(BlockPos cablePos, int amount) {
-        var chunkPos = new ChunkPos(cablePos);
+        var chunkPos = ChunkPos.containing(cablePos);
         var data = this.tickData.computeIfAbsent(chunkPos, p -> new ChunkTickValues());
         data.cableCurrent.put(cablePos, data.cableCurrent.getOrDefault(cablePos, 0) + amount);
     }
@@ -120,7 +120,7 @@ public class ElectricBlockManager extends SavedData {
             }
         } else {
             chunkData.electricBlocks.remove(pos);
-            var tickData = this.tickData.get(new ChunkPos(pos));
+            var tickData = this.tickData.get(ChunkPos.containing(pos));
             if (tickData != null) {
                 tickData.cableCurrent.removeInt(pos);
             }
@@ -134,7 +134,7 @@ public class ElectricBlockManager extends SavedData {
         if (chunkData != null) {
             chunkData.electricBlocks.remove(pos);
         }
-        var chunkValues = this.tickData.get(new ChunkPos(pos));
+        var chunkValues = this.tickData.get(ChunkPos.containing(pos));
         if (chunkValues != null) {
             chunkValues.cableCurrent.removeInt(pos);
             chunkValues.ticksAboveMaxCurrent.removeInt(pos);

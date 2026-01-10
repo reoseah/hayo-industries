@@ -156,7 +156,7 @@ public class Hayo {
                             modificationCtx.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, modKey(Registries.PLACED_FEATURE, "rubber_tree_patch"));
                         });
 
-        ServerChunkEvents.CHUNK_LOAD.register((level, chunk) -> {
+        ServerChunkEvents.CHUNK_LOAD.register((level, chunk, generated) -> {
             ElectricBlockManager.get(level).onChunkLoad(chunk);
         });
         ServerChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
@@ -350,10 +350,6 @@ public class Hayo {
         );
         public static final Item FLAK_CHESTPLATE = registerItem("flak_chestplate", Item::new, new Item.Properties().humanoidArmor(FLAK, ArmorType.CHESTPLATE).stacksTo(1));
 
-        private static final ArmorMaterial NANO = new ArmorMaterial( //
-                33, ArmorMaterials.makeDefense(0, 0, 0, 0, 0), 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0, 0, null, modKey(EquipmentAssets.ROOT_ID, "nano") //
-        );
-
         public static ItemAttributeModifiers createUnchargedAttributes(ArmorType type) {
             var builder = ItemAttributeModifiers.builder();
             var slot = EquipmentSlotGroup.bySlot(type.getSlot());
@@ -377,7 +373,10 @@ public class Hayo {
                 new Item.Properties() //
                         .attributes(createUnchargedAttributes(ArmorType.HELMET)) //
                         .component(DataComponents.EQUIPPABLE, //
-                                Equippable.builder(ArmorType.HELMET.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                                Equippable.builder(ArmorType.HELMET.getSlot()) //
+                                        .setEquipSound(SoundEvents.ARMOR_EQUIP_DIAMOND) //
+                                        .setAsset(modKey(EquipmentAssets.ROOT_ID, "nano")) //
+                                        .build()) //
                         .rarity(Rarity.RARE) //
                         .stacksTo(1));
         public static final Item NANO_CHESTPLATE = registerItem("nano_chestplate", //
@@ -385,7 +384,10 @@ public class Hayo {
                 new Item.Properties() //
                         .attributes(createUnchargedAttributes(ArmorType.CHESTPLATE)) //
                         .component(DataComponents.EQUIPPABLE, //
-                                Equippable.builder(ArmorType.CHESTPLATE.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                                Equippable.builder(ArmorType.CHESTPLATE.getSlot()) //
+                                        .setEquipSound(SoundEvents.ARMOR_EQUIP_DIAMOND) //
+                                        .setAsset(modKey(EquipmentAssets.ROOT_ID, "nano")) //
+                                        .build())//
                         .rarity(Rarity.RARE) //
                         .stacksTo(1));
         public static final Item NANO_LEGGINGS = registerItem("nano_leggings", //
@@ -393,7 +395,10 @@ public class Hayo {
                 new Item.Properties() //
                         .attributes(createUnchargedAttributes(ArmorType.LEGGINGS)) //
                         .component(DataComponents.EQUIPPABLE, //
-                                Equippable.builder(ArmorType.LEGGINGS.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                                Equippable.builder(ArmorType.LEGGINGS.getSlot()) //
+                                        .setEquipSound(SoundEvents.ARMOR_EQUIP_DIAMOND) //
+                                        .setAsset(modKey(EquipmentAssets.ROOT_ID, "nano")) //
+                                        .build()) //
                         .rarity(Rarity.RARE) //
                         .stacksTo(1));
         public static final Item NANO_BOOTS = registerItem("nano_boots", //
@@ -401,8 +406,22 @@ public class Hayo {
                 new Item.Properties() //
                         .attributes(createUnchargedAttributes(ArmorType.BOOTS)) //
                         .component(DataComponents.EQUIPPABLE, //
-                                Equippable.builder(ArmorType.BOOTS.getSlot()).setEquipSound(NANO.equipSound()).setAsset(NANO.assetId()).build()) //
+                                Equippable.builder(ArmorType.BOOTS.getSlot()) //
+                                        .setEquipSound(SoundEvents.ARMOR_EQUIP_DIAMOND) //
+                                        .setAsset(modKey(EquipmentAssets.ROOT_ID, "nano")) //
+                                        .build()) //
                         .rarity(Rarity.RARE) //
+                        .stacksTo(1));
+
+        public static final Item BATTERY_PACK = registerItem("battery_pack", //
+                props -> new SimpleBatteryItem(props, 60_000, 32), //
+                new Item.Properties() //
+                        .attributes(createUnchargedAttributes(ArmorType.CHESTPLATE)) //
+                        .component(DataComponents.EQUIPPABLE, //
+                                Equippable.builder(ArmorType.CHESTPLATE.getSlot()) //
+                                        .setEquipSound(SoundEvents.ARMOR_EQUIP_DIAMOND) //
+                                        .setAsset(modKey(EquipmentAssets.ROOT_ID, "battery_pack")) //
+                                        .build()) //
                         .stacksTo(1));
 
         public static final Item CANISTER = registerItem("canister");
@@ -484,6 +503,12 @@ public class Hayo {
 
                 entries.accept(FERRU_SEEDS);
 
+                entries.accept(SILICON_BRONZE_SWORD);
+                entries.accept(SILICON_BRONZE_SHOVEL);
+                entries.accept(SILICON_BRONZE_PICKAXE);
+                entries.accept(SILICON_BRONZE_AXE);
+                entries.accept(SILICON_BRONZE_HOE);
+                entries.accept(FLAK_CHESTPLATE);
                 entries.accept(WRENCH);
 
                 entries.accept(CHAINSAW);
@@ -493,13 +518,6 @@ public class Hayo {
                 entries.accept(DIAMOND_DRILL);
                 entries.accept(ElectricItems.withFullCharge(DIAMOND_DRILL));
 
-                entries.accept(SILICON_BRONZE_SWORD);
-                entries.accept(SILICON_BRONZE_SHOVEL);
-                entries.accept(SILICON_BRONZE_PICKAXE);
-                entries.accept(SILICON_BRONZE_AXE);
-                entries.accept(SILICON_BRONZE_HOE);
-
-                entries.accept(FLAK_CHESTPLATE);
                 entries.accept(NANO_HELMET);
                 entries.accept(ElectricItems.withFullCharge(NANO_HELMET));
                 entries.accept(NANO_CHESTPLATE);
@@ -509,13 +527,15 @@ public class Hayo {
                 entries.accept(NANO_BOOTS);
                 entries.accept(ElectricItems.withFullCharge(NANO_BOOTS));
 
-                entries.accept(CANISTER);
+                entries.accept(BATTERY_PACK);
+                entries.accept(ElectricItems.withFullCharge(BATTERY_PACK));
 
                 entries.accept(BATTERY);
                 entries.accept(ElectricItems.withFullCharge(BATTERY));
                 entries.accept(ENERGY_CRYSTAL);
                 entries.accept(ElectricItems.withFullCharge(ENERGY_CRYSTAL));
 
+                entries.accept(CANISTER);
                 entries.accept(REFINED_IRON_INGOT);
                 entries.accept(SILICON_BRONZE_INGOT);
                 entries.accept(RAW_SILICON);

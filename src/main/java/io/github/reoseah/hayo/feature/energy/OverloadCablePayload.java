@@ -48,7 +48,7 @@ public record OverloadCablePayload(ChunkPos chunkPos,
             var x = serializedPos & 0b1111;
             var z = (serializedPos >> 4) & 0b1111;
             var y = serializedPos >>> 8;
-            var pos = new BlockPos(chunkPos.x * 16 + x, y, chunkPos.z * 16 + z);
+            var pos = new BlockPos(chunkPos.x() * 16 + x, y, chunkPos.z() * 16 + z);
 
             var value = buffer.readVarInt();
 

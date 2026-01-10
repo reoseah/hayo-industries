@@ -1,0 +1,18 @@
+{
+  "type": "hayo:electric_shaped_crafting",
+  "category": "misc",
+  "key": {
+    "#": "hayo:refined_iron_ingot",
+    "B": "hayo:battery",
+    "E": "hayo:electric_motor"
+  },
+  "pattern": [
+    " # ",
+    "#E#",
+    "#B#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:battery_pack"
+  }
+}
