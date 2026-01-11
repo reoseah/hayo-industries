@@ -1,57 +1,34 @@
-package io.github.reoseah.hayo.feature.energy;
+package io.github.reoseah.hayo.feature.energy.items;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class SimpleElectricToolItem extends Item implements ElectricItem {
+public class SimpleElectricArmorItem extends Item implements ElectricItem {
     public static final DataComponentType<Integer> ENERGY = SimpleBatteryItem.ENERGY;
 
     public final ItemAttributeModifiers chargedAttributes;
     public final int energyCost;
     public final int energyCapacity;
     public final int energyTransferLimit;
-    public final int energyPerEntityHit;
 
-    public SimpleElectricToolItem(Properties properties, ItemAttributeModifiers chargedAttributes, int energyCost, int energyCapacity, int energyTransferLimit) {
+    public SimpleElectricArmorItem(Properties properties, ItemAttributeModifiers chargedAttributes, int energyCost, int energyCapacity, int energyTransferLimit) {
         super(properties);
         this.chargedAttributes = chargedAttributes;
         this.energyCost = energyCost;
         this.energyCapacity = energyCapacity;
         this.energyTransferLimit = energyTransferLimit;
-        this.energyPerEntityHit = this.energyCost * 2;
-    }
-
-    @Override
-    public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entity) {
-        return ElectricItems.tryUseEnergy(this.energyCost, stack, s -> {
-        });
-    }
-
-    @Override
-    public void postHurtEnemy(ItemStack stack, LivingEntity mob, LivingEntity attacker) {
-        ElectricItems.tryUseEnergy(this.energyPerEntityHit, stack, s -> {
-        });
-        super.postHurtEnemy(stack, mob, attacker);
-    }
-
-    @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (this.getEnergy(stack) >= this.energyCost && this.isCorrectToolForDrops(stack, state)) {
-            return super.getDestroySpeed(stack, state);
-        }
-        return 0.5F;
     }
 
     @Override
@@ -103,11 +80,18 @@ public class SimpleElectricToolItem extends Item implements ElectricItem {
         return ElectricItems.defaultBarColor(this, stack);
     }
 
+    @Override
+    public void inventoryTick(ItemStack stack, ServerLevel level, Entity owner, @Nullable EquipmentSlot slot) {
+        int energy = stack.getOrDefault(ENERGY, 0);
+
+        this.updateAttributeModifiers(stack, energy);
+    }
+
     public void updateAttributeModifiers(ItemStack stack, int energy) {
         var attributes = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
-        if (energy >= this.energyPerEntityHit && attributes != this.chargedAttributes) {
+        if (energy >= this.energyCost && attributes != this.chargedAttributes) {
             stack.set(DataComponents.ATTRIBUTE_MODIFIERS, this.chargedAttributes);
-        } else if (stack.getOrDefault(ENERGY, 0) < this.energyPerEntityHit && attributes == this.chargedAttributes) {
+        } else if (stack.getOrDefault(ENERGY, 0) < this.energyCost && attributes == this.chargedAttributes) {
             stack.remove(DataComponents.ATTRIBUTE_MODIFIERS);
         }
     }

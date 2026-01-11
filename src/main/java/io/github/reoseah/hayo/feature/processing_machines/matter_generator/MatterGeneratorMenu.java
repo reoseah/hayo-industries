@@ -93,7 +93,7 @@ public class MatterGeneratorMenu extends MachineMenu {
 
     @Override
     public int getEnergyUseRate() {
-        return MatterGeneratorBlockEntity.USE_RATE;
+        return MatterGeneratorBlockEntity.ENERGY_USE_RATE;
     }
 
     public int getSelectedRecipeIdx() {

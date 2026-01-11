@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.feature.processing_machines;
 
-import io.github.reoseah.hayo.feature.energy.ElectricItems;
+import io.github.reoseah.hayo.feature.energy.items.ElectricItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;

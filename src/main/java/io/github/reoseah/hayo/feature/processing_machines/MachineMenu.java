@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.processing_machines;
 
 import io.github.reoseah.hayo.base.HayoContainerMenu;
-import io.github.reoseah.hayo.feature.energy.ElectricItems;
+import io.github.reoseah.hayo.feature.energy.items.ElectricItems;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;

@@ -41,12 +41,12 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
 
     @Override
     public int getWidth() {
-        return 88;
+        return 82;
     }
 
     @Override
     public int getHeight() {
-        return 45;
+        return 35;
     }
 
     @Override
@@ -56,22 +56,22 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<? extends AbstractCookingRecipe> recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5) //
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1) //
                 .setStandardSlotBackground() //
                 .add(recipe.value().input());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 65, 9) //
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 61, 5) //
                 .setOutputSlotBackground() //
                 .add(recipe.value().result());
     }
 
     @Override
     public void draw(RecipeHolder<? extends AbstractCookingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        HayoGuiSprites.drawMachineEnergy(guiGraphics, 5, 24, 10, 14);
+        HayoGuiSprites.drawMachineEnergy(guiGraphics, 1, 20, 10, 14);
 
         int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(recipe.value().cookingTime());
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ENERGY_USE_RATE / 24)) % 24d);
-        HayoGuiSprites.drawRecipeArrow(guiGraphics, 28, 8, HayoGuiSprites.RecipeArrow.DEFAULT, progress, 24);
+        HayoGuiSprites.drawRecipeArrow(guiGraphics, 24, 4, HayoGuiSprites.RecipeArrow.DEFAULT, progress, 24);
 
-        guiGraphics.drawString(net.minecraft.client.Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 23, 28, 0xFF404040, false);
+        guiGraphics.drawString(net.minecraft.client.Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
     }
 }

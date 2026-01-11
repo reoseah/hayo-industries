@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
 import io.github.reoseah.hayo.base.HayoContainerMenu;
-import io.github.reoseah.hayo.feature.energy.ElectricItems;
+import io.github.reoseah.hayo.feature.energy.items.ElectricItems;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

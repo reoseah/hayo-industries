@@ -1,7 +1,6 @@
 package io.github.reoseah.hayo.mixin;
 
-import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.energy.SimpleElectricArmorItem;
+import io.github.reoseah.hayo.feature.energy.items.SimpleElectricArmorItem;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;

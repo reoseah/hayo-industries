@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.base.block.entity;
 
-import io.github.reoseah.hayo.feature.energy.ElectricItems;
+import io.github.reoseah.hayo.feature.energy.items.ElectricItems;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;

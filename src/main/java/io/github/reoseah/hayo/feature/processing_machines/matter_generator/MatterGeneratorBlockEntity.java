@@ -23,7 +23,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGeneratingRecipe, EmptyRecipeInput> {
-    public static final int CAPACITY = 10000, TRANSFER_RATE = 128, USE_RATE = 50, SLOTS = 2, BATTERY_SLOT = 0, OUTPUT_SLOT = 1;
+    public static final int CAPACITY = 10000, TRANSFER_RATE = 128, ENERGY_USE_RATE = 50, SLOTS = 2, BATTERY_SLOT = 0, OUTPUT_SLOT = 1;
 
     protected @Nullable Identifier selectedRecipeId;
 
@@ -49,7 +49,7 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
 
     @Override
     protected int getDefaultEnergyUseRate() {
-        return USE_RATE;
+        return ENERGY_USE_RATE;
     }
 
     @Override

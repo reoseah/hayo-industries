@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy;
+package io.github.reoseah.hayo.feature.energy.items;
 
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;

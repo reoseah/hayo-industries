@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.cable;
 
-import io.github.reoseah.hayo.feature.energy.ElectricBlock;
-import io.github.reoseah.hayo.feature.energy.ElectricBlocks;
-import io.github.reoseah.hayo.feature.energy.ElectricCableBlock;
+import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlock;
+import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlocks;
+import io.github.reoseah.hayo.feature.energy.blocks.ElectricCableBlock;
 import io.netty.util.collection.IntObjectHashMap;
 import io.netty.util.collection.IntObjectMap;
 import net.minecraft.core.BlockPos;

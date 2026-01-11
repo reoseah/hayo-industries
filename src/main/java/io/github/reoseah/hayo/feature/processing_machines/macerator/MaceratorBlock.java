@@ -3,7 +3,7 @@ package io.github.reoseah.hayo.feature.processing_machines.macerator;
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
-import io.github.reoseah.hayo.feature.energy.ElectricReceiverBlock;
+import io.github.reoseah.hayo.feature.energy.blocks.ElectricReceiverBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;

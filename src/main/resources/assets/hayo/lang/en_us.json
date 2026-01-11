@@ -134,5 +134,6 @@
   "hayo.electric_smelting": "Smelting (Electric)",
   "hayo.electric_blasting": "Blasting (Electric)",
   "hayo.electric_smoking": "Smoking (Electric)",
-  "hayo.not_valid_for_this_machine": "Not valid for this machine"
+  "hayo.not_valid_for_this_machine": "Not valid for this machine",
+  "hayo.matter_generating": "Matter Generating"
 }

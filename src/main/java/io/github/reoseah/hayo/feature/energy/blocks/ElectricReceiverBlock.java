@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy;
+package io.github.reoseah.hayo.feature.energy.blocks;
 
 import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
 import net.minecraft.core.BlockPos;
