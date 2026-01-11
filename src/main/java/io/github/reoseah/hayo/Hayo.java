@@ -235,8 +235,6 @@ public class Hayo {
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         public static final Block CHIPBOARD_DOOR = register("chipboard_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
 
-        public static final Block RUBBER_BLOCK = register("rubber_block", Block::new, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(3));
-
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F, 30F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
         public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F, 15F).noOcclusion().sound(SoundType.GLASS));
@@ -287,8 +285,6 @@ public class Hayo {
 
         public static final Item CHIPBOARD = registerBlock(Blocks.CHIPBOARD);
         public static final Item CHIPBOARD_DOOR = registerBlock(Blocks.CHIPBOARD_DOOR);
-
-        public static final Item RUBBER_BLOCK = registerBlock(Blocks.RUBBER_BLOCK);
 
         public static final Item REINFORCED_STONE = registerBlock(Blocks.REINFORCED_STONE);
         public static final Item REINFORCED_GLASS = registerBlock(Blocks.REINFORCED_GLASS);
@@ -447,8 +443,6 @@ public class Hayo {
         public static final Item IRON_DUST = registerItem("iron_dust");
         public static final Item GOLD_DUST = registerItem("gold_dust");
         public static final Item DIAMOND_DUST = registerItem("diamond_dust");
-        public static final Item QUARTZ_DUST = registerItem("quartz_dust");
-        public static final Item NETHERITE_SCRAP_DUST = registerItem("netherite_scrap_dust");
         public static final Item ENDER_PEARL_DUST = registerItem("ender_pearl_dust");
         public static final Item SILICON_DUST = registerItem("silicon_dust");
         public static final Item SILICON_BRONZE_DUST = registerItem("silicon_bronze_dust");
@@ -460,7 +454,6 @@ public class Hayo {
         public static final Item CIRCUIT = registerItem("circuit");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
-        public static final Item REDSTONE_FLUX_LASER = registerItem("redstone_flux_laser", new Item.Properties().rarity(Rarity.RARE));
         public static final Item MIXED_METAL_INGOT = registerItem("mixed_metal_ingot");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item CARBON_REDSTONE_MATRIX = registerItem("carbon_redstone_matrix");
@@ -501,7 +494,6 @@ public class Hayo {
                 entries.accept(ADVANCED_MACHINE_BLOCK);
                 entries.accept(CHIPBOARD);
                 entries.accept(CHIPBOARD_DOOR);
-                entries.accept(RUBBER_BLOCK);
                 entries.accept(REINFORCED_STONE);
                 entries.accept(REINFORCED_STONE_STAIRS);
                 entries.accept(REINFORCED_STONE_SLAB);
@@ -554,8 +546,6 @@ public class Hayo {
                 entries.accept(IRON_DUST);
                 entries.accept(GOLD_DUST);
                 entries.accept(DIAMOND_DUST);
-                entries.accept(QUARTZ_DUST);
-                entries.accept(NETHERITE_SCRAP_DUST);
                 entries.accept(ENDER_PEARL_DUST);
                 entries.accept(SILICON_DUST);
                 entries.accept(SILICON_BRONZE_DUST);
@@ -567,7 +557,6 @@ public class Hayo {
                 entries.accept(CIRCUIT);
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(TRANSFORMER);
-                entries.accept(REDSTONE_FLUX_LASER);
                 entries.accept(MIXED_METAL_INGOT);
                 entries.accept(COMPOSITE_PLATE);
                 entries.accept(CARBON_REDSTONE_MATRIX);

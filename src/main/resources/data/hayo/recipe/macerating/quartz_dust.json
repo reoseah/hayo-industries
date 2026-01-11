@@ -1,8 +1,0 @@
-{
-  "type": "hayo:macerating",
-  "ingredient": "minecraft:quartz",
-  "processing_energy": 400,
-  "result": {
-    "id": "hayo:quartz_dust"
-  }
-}

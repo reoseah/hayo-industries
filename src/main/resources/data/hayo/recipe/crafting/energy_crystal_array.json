@@ -3,14 +3,14 @@
   "category": "misc",
   "pattern": [
     "ECE",
-    "R#R",
+    "G#G",
     "ECE"
   ],
   "key": {
     "#": "hayo:advanced_machine_block",
     "E": "hayo:energy_crystal",
     "C": "hayo:power_cable",
-    "R": "hayo:redstone_flux_laser"
+    "G": "minecraft:gold_ingot"
   },
   "result": {
     "id": "hayo:energy_crystal_array",
