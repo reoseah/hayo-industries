@@ -113,11 +113,18 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity implements Wo
         if (this.level == null) {
             return;
         }
-        int fuelValue = FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).burnDuration(this.getItem(0));
+        var fuel = this.getItem(0);
+        int fuelValue = FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).burnDuration(fuel);
         if (fuelValue <= 0) {
             return;
         }
-        this.getItem(0).shrink(1);
+
+        var fuelRemainder = fuel.getCraftingRemainder();
+        fuel.shrink(1);
+        if (fuel.isEmpty() && !fuelRemainder.isEmpty()) {
+            this.setItem(0, fuelRemainder.copy());
+        }
+
         this.fuelEnergyTotal = this.fuelEnergyLeft = fuelValue * ENERGY_PER_FUEL_TICK;
         this.setChanged();
     }
