@@ -1,0 +1,14 @@
+{
+  "values": [
+    "hayo:machine_block",
+    "hayo:advanced_machine_block",
+    "hayo:generator",
+    "hayo:electric_furnace",
+    "hayo:macerator",
+    "hayo:extractor",
+    "hayo:compressor",
+    "hayo:automated_fertilizer",
+    "hayo:battery_array",
+    "hayo:energy_crystal_array"
+  ]
+}

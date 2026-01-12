@@ -1,12 +1,7 @@
 {
   "values": [
-    "hayo:machine_block",
-    "hayo:advanced_machine_block",
-    "hayo:electric_furnace",
-    "hayo:macerator",
-    "hayo:compressor",
-    "hayo:extractor",
-    "hayo:automated_fertilizer",
+    "#hayo:machines",
+    "hayo:silicon_bronze_block",
     "hayo:reinforced_stone",
     "hayo:reinforced_glass",
     "hayo:reinforced_stone_stairs",

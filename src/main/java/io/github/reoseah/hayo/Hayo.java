@@ -231,6 +231,7 @@ public class Hayo {
 
         public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINES);
         public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, MACHINES);
+        public static final Block SILICON_BRONZE_BLOCK = register("silicon_bronze_block", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.COLOR_ORANGE));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         public static final Block CHIPBOARD_DOOR = register("chipboard_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
@@ -282,6 +283,7 @@ public class Hayo {
 
         public static final Item MACHINE_BLOCK = registerBlock(Blocks.MACHINE_BLOCK);
         public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
+        public static final Item SILICON_BRONZE_BLOCK = registerBlock(Blocks.SILICON_BRONZE_BLOCK);
 
         public static final Item CHIPBOARD = registerBlock(Blocks.CHIPBOARD);
         public static final Item CHIPBOARD_DOOR = registerBlock(Blocks.CHIPBOARD_DOOR);
@@ -294,7 +296,21 @@ public class Hayo {
 
         public static final Item FERRU_SEEDS = registerItem("ferru_seeds", props -> new BlockItem(Blocks.FERRU, props), new Item.Properties().useItemDescriptionPrefix());
 
-        public static final Item WRENCH = registerItem("wrench");
+        private static final HolderGetter<Block> BLOCK_LOOKUP = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
+
+        public static final TagKey<Block> WRENCH_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/wrench"));
+        public static final Item WRENCH = registerItem("wrench", Item::new, new Item.Properties() //
+                .component(DataComponents.TOOL, new Tool( //
+                        List.of( //
+                                Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
+                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(WRENCH_MINEABLE), 20F) //
+                        ), 1F, 1, true) //
+                ) //
+                .repairable(TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"))) //
+                .enchantable(10) //
+                .durability(256) //
+                .equippable(EquipmentSlot.MAINHAND) //
+                .stacksTo(1));
 
         public static ItemAttributeModifiers createChargedAttributes(float attackDamage, float attackSpeed) {
             var builder = ItemAttributeModifiers.builder();
@@ -303,9 +319,7 @@ public class Hayo {
             return builder.build();
         }
 
-        private static final HolderGetter<Block> BLOCK_LOOKUP = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
         public static final TagKey<Block> CHAINSAW_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/chainsaw"));
-
         public static final Item CHAINSAW = registerItem("chainsaw", props -> new SimpleElectricToolItem(props, createChargedAttributes(12, -3), 50, 10000, 32), new Item.Properties() //
                 .component(DataComponents.TOOL, new Tool( //
                         List.of( //
@@ -317,7 +331,6 @@ public class Hayo {
                 .stacksTo(1));
 
         public static final TagKey<Block> DRILL_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/drill"));
-
         public static final Item DRILL = registerItem("drill", props -> new SimpleElectricToolItem(props, createChargedAttributes(6, -3), 50, 10000, 32), new Item.Properties() //
                 .component(DataComponents.TOOL, new Tool( //
                         List.of( //
@@ -454,6 +467,8 @@ public class Hayo {
         public static final Item CIRCUIT = registerItem("circuit");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item TRANSFORMER = registerItem("transformer");
+        public static final Item DATA_CIRCUIT = registerItem("data_circuit", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item ENERGY_FLOW_CIRCUIT = registerItem("energy_flow_circuit", new Item.Properties().rarity(Rarity.RARE));
         public static final Item MIXED_METAL_INGOT = registerItem("mixed_metal_ingot");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item CARBON_REDSTONE_MATRIX = registerItem("carbon_redstone_matrix");
@@ -492,6 +507,7 @@ public class Hayo {
 
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);
+                entries.accept(SILICON_BRONZE_BLOCK);
                 entries.accept(CHIPBOARD);
                 entries.accept(CHIPBOARD_DOOR);
                 entries.accept(REINFORCED_STONE);
@@ -557,6 +573,9 @@ public class Hayo {
                 entries.accept(CIRCUIT);
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(TRANSFORMER);
+                entries.accept(DATA_CIRCUIT);
+                entries.accept(ENERGY_FLOW_CIRCUIT);
+
                 entries.accept(MIXED_METAL_INGOT);
                 entries.accept(COMPOSITE_PLATE);
                 entries.accept(CARBON_REDSTONE_MATRIX);
