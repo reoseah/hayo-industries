@@ -1,0 +1,10 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": "minecraft:sunflower",
+  "processing_energy": 600,
+  "result": {
+    "id": "minecraft:yellow_dye",
+    "count": 3
+  },
+  "extra_chance": 0.25
+}

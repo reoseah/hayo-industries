@@ -1,0 +1,10 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": "minecraft:rose_bush",
+  "processing_energy": 600,
+  "result": {
+    "id": "minecraft:red_dye",
+    "count": 3
+  },
+  "extra_chance": 0.25
+}

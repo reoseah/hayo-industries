@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.energy.items.ElectricItem;
+import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -24,15 +24,13 @@ public class ElectricShapedRecipe extends ShapedRecipe {
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
         var result = super.assemble(input, registries);
 
-        if (result.getItem() instanceof ElectricItem resultElectricItem) {
+        if (result.has(EnergyComponents.ENERGY_STORAGE)) {
             int totalEnergy = 0;
             for (int i = 0; i < input.size(); i++) {
                 var stack = input.getItem(i);
-                if (stack.getItem() instanceof ElectricItem electricItem) {
-                    totalEnergy += electricItem.getEnergy(stack);
-                }
+                totalEnergy += stack.getOrDefault(EnergyComponents.ENERGY, 0);
             }
-            resultElectricItem.setEnergy(result, totalEnergy);
+            EnergyComponents.setEnergy(result, totalEnergy);
         }
 
         return result;

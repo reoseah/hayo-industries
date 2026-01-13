@@ -1,9 +1,9 @@
 {
   "type": "hayo:extracting",
-  "ingredient": "minecraft:sugar_cane",
+  "ingredient": "minecraft:wither_rose",
   "processing_energy": 600,
   "result": {
-    "id": "minecraft:sugar",
+    "id": "minecraft:black_dye",
     "count": 2
   },
   "extra_chance": 0.1

@@ -1,0 +1,10 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": "minecraft:lilac",
+  "processing_energy": 600,
+  "result": {
+    "id": "minecraft:magenta_dye",
+    "count": 3
+  },
+  "extra_chance": 0.25
+}

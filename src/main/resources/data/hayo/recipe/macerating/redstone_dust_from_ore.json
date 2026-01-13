@@ -1,0 +1,10 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "#c:ores/redstone",
+  "processing_energy": 400,
+  "result": {
+    "id": "minecraft:redstone",
+    "count": 6
+  },
+  "extra_chance": 0.5
+}

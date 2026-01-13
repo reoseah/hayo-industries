@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.processing_machines;
 
 import io.github.reoseah.hayo.base.HayoContainerMenu;
-import io.github.reoseah.hayo.feature.energy.items.ElectricItems;
+import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
@@ -113,7 +113,7 @@ public abstract class MachineMenu extends HayoContainerMenu {
                 if (!menu.moveItemStackTo(stack, start, start + upgradeSlots, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (batterySlots != 0 && ElectricItems.isElectric(stack)) {
+            } else if (batterySlots != 0 && EnergyComponents.isStorage(stack)) {
                 int start = inputSlots;
                 if (!menu.moveItemStackTo(stack, start, start + batterySlots, false)) {
                     return ItemStack.EMPTY;

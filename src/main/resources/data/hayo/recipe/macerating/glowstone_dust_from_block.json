@@ -1,0 +1,10 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "minecraft:glowstone",
+  "processing_energy": 400,
+  "result": {
+    "id": "minecraft:glowstone_dust",
+    "count": 3
+  },
+  "extra_chance": 0.75
+}

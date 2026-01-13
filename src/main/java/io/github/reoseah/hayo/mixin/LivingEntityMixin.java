@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.mixin;
 
-import io.github.reoseah.hayo.feature.energy.items.SimpleElectricArmorItem;
+import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,8 +17,9 @@ public class LivingEntityMixin {
             int durabilityDamage = (int) Math.max(1.0F, damage / 4.0F);
             for (var slot : slots) {
                 var stack = ((LivingEntity) (Object) this).getItemBySlot(slot);
-                if (stack.getItem() instanceof SimpleElectricArmorItem armor) {
-                    armor.setEnergy(stack, Math.max(0, armor.getEnergy(stack) - armor.energyCost * durabilityDamage));
+                var energyArmor = stack.get(EnergyComponents.ENERGY_ARMOR);
+                if (energyArmor != null) {
+                    EnergyComponents.setEnergy(stack, Math.max(0, EnergyComponents.getEnergy(stack) - energyArmor.energyPerDamage() * durabilityDamage));
                 }
             }
         }

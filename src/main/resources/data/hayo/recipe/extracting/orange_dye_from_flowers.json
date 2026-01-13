@@ -1,0 +1,14 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": [
+    "minecraft:orange_tulip",
+    "minecraft:torchflower",
+    "minecraft:open_eye_blossom"
+  ],
+  "processing_energy": 600,
+  "result": {
+    "id": "minecraft:orange_dye",
+    "count": 2
+  },
+  "extra_chance": 0.1
+}

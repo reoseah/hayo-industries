@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.feature.processing_machines;
 
-import io.github.reoseah.hayo.feature.energy.items.ElectricItems;
+import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -99,7 +99,7 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
             case null -> index != OUTPUT_SLOT;
             case UP -> true;
             case DOWN -> false;
-            default -> ElectricItems.isElectric(stack);
+            default -> EnergyComponents.isStorage(stack);
         };
     }
 

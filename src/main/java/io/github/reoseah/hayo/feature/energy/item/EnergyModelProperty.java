@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy.items;
+package io.github.reoseah.hayo.feature.energy.item;
 
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
@@ -15,7 +15,7 @@ public record EnergyModelProperty() implements RangeSelectItemModelProperty {
 
     @Override
     public float get(ItemStack stack, @Nullable ClientLevel level, @Nullable ItemOwner owner, int seed) {
-        return ((float) ElectricItems.tryGetEnergy(stack));
+        return ((float) EnergyComponents.getEnergy(stack));
     }
 
     @Override

@@ -1,9 +1,9 @@
 {
   "type": "hayo:extracting",
-  "ingredient": "minecraft:sugar_cane",
+  "ingredient": "minecraft:blue_orchid",
   "processing_energy": 600,
   "result": {
-    "id": "minecraft:sugar",
+    "id": "minecraft:light_blue_dye",
     "count": 2
   },
   "extra_chance": 0.1

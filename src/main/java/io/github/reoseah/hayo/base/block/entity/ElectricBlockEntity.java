@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.base.block.entity;
 
-import io.github.reoseah.hayo.feature.energy.items.ElectricItems;
+import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -54,7 +54,7 @@ public abstract class ElectricBlockEntity extends HayoContainerBlockEntity {
     public void chargeFromSlot(int slot) {
         int limit = this.getReceivableEnergy();
         if (limit > 0) {
-            int change = ElectricItems.tryDischarge(limit, this, slot);
+            int change = EnergyComponents.discharge(limit, getItem(slot));
             if (change > 0) {
                 this.storedEnergy += change;
                 this.energyPerTick += change;

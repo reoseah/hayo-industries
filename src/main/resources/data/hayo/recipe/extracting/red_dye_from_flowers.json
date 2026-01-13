@@ -1,9 +1,12 @@
 {
   "type": "hayo:extracting",
-  "ingredient": "minecraft:sugar_cane",
+  "ingredient": [
+    "minecraft:poppy",
+    "minecraft:red_tulip"
+  ],
   "processing_energy": 600,
   "result": {
-    "id": "minecraft:sugar",
+    "id": "minecraft:red_dye",
     "count": 2
   },
   "extra_chance": 0.1

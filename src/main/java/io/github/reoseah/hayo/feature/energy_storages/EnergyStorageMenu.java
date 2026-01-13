@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
 import io.github.reoseah.hayo.base.HayoContainerMenu;
-import io.github.reoseah.hayo.feature.energy.items.ElectricItems;
+import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -68,11 +68,11 @@ public abstract class EnergyStorageMenu extends HayoContainerMenu {
             }
             slot.onQuickCraft(stack, remaining);
         } else {
-            if (ElectricItems.canDischarge(stack)) {
+            if (EnergyComponents.canDischargeInMachine(stack)) {
                 if (!this.moveItemStackTo(stack, 0, 1, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (ElectricItems.canCharge(stack)) {
+            } else if (EnergyComponents.canChargeInMachine(stack)) {
                 if (!this.moveItemStackTo(stack, 1, 2, false)) {
                     return ItemStack.EMPTY;
                 }

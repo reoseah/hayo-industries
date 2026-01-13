@@ -3,7 +3,7 @@ package io.github.reoseah.hayo.feature.energy_storages;
 import io.github.reoseah.hayo.base.block.DirectionalMachineBlock;
 import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
 import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlocks;
-import io.github.reoseah.hayo.feature.energy.items.ElectricItems;
+import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,18 +48,18 @@ public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity imple
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
         return switch (direction) {
-            case UP -> !ElectricItems.canDischarge(stack);
-            case DOWN -> slot == 0 ? !ElectricItems.canDischarge(stack) : !ElectricItems.canCharge(stack);
-            default -> !ElectricItems.canCharge(stack);
+            case UP -> !EnergyComponents.canDischargeInMachine(stack);
+            case DOWN -> slot == 0 ? !EnergyComponents.canDischargeInMachine(stack) : !EnergyComponents.canChargeInMachine(stack);
+            default -> !EnergyComponents.canChargeInMachine(stack);
         };
     }
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
         return switch (direction) {
-            case UP -> ElectricItems.canDischarge(stack);
-            case DOWN -> slot == 0 ? ElectricItems.canDischarge(stack) : ElectricItems.canCharge(stack);
-            case null, default -> ElectricItems.canCharge(stack);
+            case UP -> EnergyComponents.canDischargeInMachine(stack);
+            case DOWN -> slot == 0 ? EnergyComponents.canDischargeInMachine(stack) : EnergyComponents.canChargeInMachine(stack);
+            case null, default -> EnergyComponents.canChargeInMachine(stack);
         };
     }
 
@@ -67,7 +67,8 @@ public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity imple
     public static void tickServer(Level level, BlockPos pos, BlockState state, EnergyStorageBlockEntity entity) {
         entity.chargeFromSlot(0);
 
-        int discharge = ElectricItems.tryCharge(Math.min(entity.storedEnergy, entity.getEnergyTransferRate()), entity, 1);
+        int max = Math.min(entity.storedEnergy, entity.getEnergyTransferRate());
+        int discharge = EnergyComponents.charge(max, entity.getItem(1));
         if (discharge > 0) {
             entity.storedEnergy -= discharge;
             entity.energyPerTick -= discharge;

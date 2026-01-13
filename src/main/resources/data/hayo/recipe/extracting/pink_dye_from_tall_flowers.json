@@ -1,0 +1,10 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": "minecraft:peony",
+  "processing_energy": 600,
+  "result": {
+    "id": "minecraft:pink_dye",
+    "count": 3
+  },
+  "extra_chance": 0.25
+}
