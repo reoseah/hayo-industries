@@ -1,6 +1,6 @@
 {
   "type": "hayo:extracting",
-  "ingredient": "minecraft:cownflower",
+  "ingredient": "minecraft:cornflower",
   "processing_energy": 600,
   "result": {
     "id": "minecraft:blue_dye",

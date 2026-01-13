@@ -31,6 +31,7 @@ public class EnergyComponents {
     public static final DataComponentType<Integer> ENERGY = DataComponentType.<Integer>builder() //
             .persistent(Codec.INT) //
             .networkSynchronized(ByteBufCodecs.VAR_INT) //
+            .ignoreSwapAnimation() //
             .build();
 
     /// Marks an item as capable to charge machines, energy storages, etc.
@@ -191,5 +192,24 @@ public class EnergyComponents {
 
     public static void defaultTooltip(ItemStack stack, Consumer<Component> tooltipAdder) {
         tooltipAdder.accept(EnergyTexts.amountAndCapacity(stack.getOrDefault(ENERGY, 0), getCapacity(stack)).withStyle(ChatFormatting.GRAY));
+    }
+
+    public static int moveEnergy(ItemStack source, ItemStack target) {
+        var sourceStorage = source.get(ENERGY_STORAGE);
+        var targetStorage = target.get(ENERGY_STORAGE);
+
+        if (sourceStorage == null || targetStorage == null) {
+            return 0;
+        }
+
+        var transferRate = Math.min(sourceStorage.transferLimit(), targetStorage.transferLimit());
+        var sourceEnergy = getEnergy(source);
+        int targetEnergy = getEnergy(target);
+
+        var transfer = Math.min(transferRate, Math.min(sourceEnergy, targetStorage.capacity() - targetEnergy));
+        setEnergy(target, targetEnergy + transfer);
+        setEnergy(source, sourceEnergy - transfer);
+
+        return transfer;
     }
 }

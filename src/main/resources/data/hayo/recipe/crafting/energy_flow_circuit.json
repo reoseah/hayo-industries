@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "hayo:energy_crystal",
+    "X": "hayo:circuit",
+    "G": "minecraft:glowstone_dust",
+    "L": "minecraft:lapis_lazuli"
+  },
+  "pattern": [
+    "GXG",
+    "L#L",
+    "GXG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:energy_flow_circuit"
+  }
+}

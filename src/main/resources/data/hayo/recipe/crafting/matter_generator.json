@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "hayo:advanced_machine_block",
+    "X": "hayo:energy_flow_circuit",
+    "G": "minecraft:glowstone_dust"
+  },
+  "pattern": [
+    "GXG",
+    "# #",
+    "GXG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:matter_generator"
+  }
+}

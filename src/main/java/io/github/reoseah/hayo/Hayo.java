@@ -3,6 +3,7 @@ package io.github.reoseah.hayo;
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.automated_fertilizer.AutomatedFertilizerBlock;
+import io.github.reoseah.hayo.feature.batpack.BatpackItem;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
 import io.github.reoseah.hayo.feature.energy.ElectricShapedRecipe;
@@ -43,6 +44,7 @@ import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorMen
 import io.github.reoseah.hayo.feature.processing_machines.matter_generator.*;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
+import io.github.reoseah.hayo.feature.wrench.WrenchItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
@@ -305,7 +307,7 @@ public class Hayo {
         private static final HolderGetter<Block> BLOCK_LOOKUP = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
 
         public static final TagKey<Block> WRENCH_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/wrench"));
-        public static final Item WRENCH = registerItem("wrench", Item::new, new Item.Properties() //
+        public static final Item WRENCH = registerItem("wrench", WrenchItem::new, new Item.Properties() //
                 .component(DataComponents.TOOL, new Tool( //
                         List.of( //
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
@@ -457,7 +459,7 @@ public class Hayo {
                         .stacksTo(1));
 
         public static final Item BATTERY_PACK = registerItem("battery_pack", //
-                ElectricItem::new, //
+                BatpackItem::new, //
                 new Item.Properties() //
                         .attributes(createUnchargedAttributes(ArmorType.CHESTPLATE)) //
                         .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(60_000, 32)) //
