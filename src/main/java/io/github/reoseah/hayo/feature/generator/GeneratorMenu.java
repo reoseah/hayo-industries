@@ -77,7 +77,7 @@ public class GeneratorMenu extends HayoContainerMenu {
             }
             slot.onQuickCraft(stack, remaining);
         } else {
-            if (this.level.fuelValues().isFuel(stack)) {
+            if (this.level.fuelValues().isFuel(stack) && !stack.is(GeneratorBlockEntity.DISABLED_GENERATOR_FUELS)) {
                 if (!this.moveItemStackTo(stack, 0, 1, false)) {
                     return ItemStack.EMPTY;
                 }

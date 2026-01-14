@@ -1,14 +1,11 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "key": {
-    "#": "hayo:sticky_resin",
-    "X": "hayo:wood_dust"
-  },
-  "pattern": [
-    "XXX",
-    "X#X",
-    "XXX"
+  "ingredients": [
+    "hayo:sticky_resin",
+    "#c:dusts/wood",
+    "#c:dusts/wood",
+    "#c:dusts/wood"
   ],
   "result": {
     "count": 1,

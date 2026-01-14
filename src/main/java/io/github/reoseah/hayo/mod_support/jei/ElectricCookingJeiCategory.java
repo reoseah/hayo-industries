@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 
 public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<? extends AbstractCookingRecipe>> {
     private static final int ENERGY_USE_RATE = ElectricFurnaceBlockEntity.ENERGY_USE_RATE;
@@ -68,7 +69,7 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
     public void draw(RecipeHolder<? extends AbstractCookingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         HayoGuiSprites.drawMachineEnergy(guiGraphics, 1, 20, 10, 14);
 
-        int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(recipe.value().cookingTime());
+        int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(recipe.value().cookingTime()) * (recipe.value().getType() == RecipeType.SMELTING ? 1 : 2);
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ENERGY_USE_RATE / 24)) % 24d);
         HayoGuiSprites.drawRecipeArrow(guiGraphics, 24, 4, HayoGuiSprites.RecipeArrow.DEFAULT, progress, 24);
 

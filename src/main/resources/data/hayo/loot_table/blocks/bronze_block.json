@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:automated_fertilizer"
+          "name": "hayo:bronze_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/automated_fertilizer"
+  "random_sequence": "hayo:blocks/bronze_block"
 }

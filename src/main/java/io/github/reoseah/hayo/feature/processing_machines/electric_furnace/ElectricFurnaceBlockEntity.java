@@ -64,6 +64,9 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
 
     @Override
     public int getDefaultEnergyCost(RecipeHolder<AbstractCookingRecipe> recipe) {
+        if (recipe.value().getType() != RecipeType.SMELTING) {
+            return 2 * energyCostFromCookingTime(recipe.value().cookingTime());
+        }
         return energyCostFromCookingTime(recipe.value().cookingTime());
     }
 

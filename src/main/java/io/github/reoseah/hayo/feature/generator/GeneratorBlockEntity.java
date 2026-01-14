@@ -7,13 +7,16 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.FuelValues;
@@ -28,6 +31,8 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity implements Wo
     public static final int GENERATION_RATE = FUEL_CONSUMPTION_RATE * ENERGY_PER_FUEL_TICK;
     public static final int CAPACITY = 10000;
     public static final int TRANSFER_RATE = 32;
+
+    public static final TagKey<Item> DISABLED_GENERATOR_FUELS = TagKey.create(Registries.ITEM, Hayo.modId("disabled_generator_fuels"));
 
     @Getter
     protected int storedEnergy;
@@ -105,8 +110,9 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity implements Wo
     }
 
     protected boolean canConsumeFuel() {
-        return this.level != null && //
-                FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).isFuel(this.getItem(0));
+        return this.level != null //
+                && !this.getItem(0).is(DISABLED_GENERATOR_FUELS) //
+                && FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).isFuel(this.getItem(0));
     }
 
     protected void tryConsumeFuel() {
@@ -114,6 +120,9 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity implements Wo
             return;
         }
         var fuel = this.getItem(0);
+        if (fuel.is(DISABLED_GENERATOR_FUELS)) {
+            return;
+        }
         int fuelValue = FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).burnDuration(fuel);
         if (fuelValue <= 0) {
             return;
