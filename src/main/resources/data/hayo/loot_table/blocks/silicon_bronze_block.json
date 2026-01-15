@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:bronze_block"
+          "name": "hayo:silicon_bronze_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/bronze_block"
+  "random_sequence": "hayo:blocks/silicon_bronze_block"
 }

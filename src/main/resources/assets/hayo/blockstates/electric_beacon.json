@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "hayo:block/electric_beacon"
+    },
+    "lit=true": {
+      "model": "hayo:block/electric_beacon_active"
+    }
+  }
+}

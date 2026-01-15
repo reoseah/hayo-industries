@@ -1,5 +1,6 @@
 package io.github.reoseah.hayo.feature.generator;
 
+import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.client.HayoContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
@@ -69,7 +70,7 @@ public class GeneratorScreen extends HayoContainerScreen<GeneratorMenu> {
     @Override
     protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
         var fuelValues = FuelValues.vanillaBurnTimes(Minecraft.getInstance().level.registryAccess(), FeatureFlags.DEFAULT_FLAGS);
-        if (fuelValues.isFuel(stack) && !stack.is(GeneratorBlockEntity.DISABLED_GENERATOR_FUELS)) {
+        if (fuelValues.isFuel(stack) && !stack.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS)) {
             var energyValue = fuelValues.burnDuration(stack) * GeneratorBlockEntity.ENERGY_PER_FUEL_TICK;
 
             var tooltip = super.getTooltipFromContainerItem(stack);

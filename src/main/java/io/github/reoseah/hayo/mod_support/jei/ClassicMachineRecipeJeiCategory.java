@@ -78,28 +78,33 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
     }
 
     @Override
-    public void draw(RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView slots, GuiGraphics graphics, double mouseX, double mouseY) {
         var recipe = holder.value();
         HayoGuiSprites.drawMachineEnergy(graphics, 1, 20, 10, 14);
 
         int energyCost = recipe.getEnergyCost();
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / this.energyUseRate / 24)) % 24d);
-        HayoGuiSprites.drawRecipeArrow(graphics, 24, 4, HayoGuiSprites.RecipeArrow.DEFAULT, progress, 24);
+        HayoGuiSprites.drawRecipeArrow(graphics, 24, 4, this.arrowType, progress, 24);
 
-        graphics.drawString(net.minecraft.client.Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
+        var font = Minecraft.getInstance().font;
 
+        graphics.drawString(font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
         if (recipe.extraChance() > 0) {
-            Component chance = Component.translatable("hayo.chance.percentage", String.format("%.0f", 100 * recipe.extraChance()));
-            graphics.drawString(Minecraft.getInstance().font, chance, 85, 24, 0xFF404040, false);
+            var extraChance = Component.translatable("hayo.chance.percentage", String.format("%.0f", 100 * recipe.extraChance()));
+            graphics.drawString(font, extraChance, 85, 24, 0xFF404040, false);
         }
     }
 
     @Override
-    public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-        if (mouseX >= 1 && mouseX <= 1 + 14 && mouseY >= 20 && mouseY <= 20 + 14) {
+    public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView slots, double mouseX, double mouseY) {
+        if (mouseX >= 1 && mouseX <= 1 + 14 && mouseY >= 20 && mouseY <= 20 + 14 //
+                || mouseX > 24 && mouseX <= 24 + 24 && mouseY > 4 && mouseY <= 4 + 16) {
             var recipe = holder.value();
-            tooltip.addAll(List.of(EnergyTexts.amount(recipe.getEnergyCost()), //
-                    EnergyTexts.durationAtAmountPerTick(Mth.positiveCeilDiv(recipe.getEnergyCost(), energyUseRate) / 20F, energyUseRate).withStyle(ChatFormatting.GRAY)));
+            float duration = Mth.positiveCeilDiv(recipe.getEnergyCost(), this.energyUseRate) / 20F;
+
+            tooltip.addAll(List.of( //
+                    EnergyTexts.amount(recipe.getEnergyCost()), //
+                    EnergyTexts.durationAtAmountPerTick(duration, this.energyUseRate).withStyle(ChatFormatting.GRAY)));
         }
     }
 }

@@ -30,7 +30,6 @@ public class MatterGeneratorBlock extends OrientableMachineBlock implements Elec
         return new MatterGeneratorBlockEntity(pos, state);
     }
 
-
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {

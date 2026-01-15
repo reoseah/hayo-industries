@@ -31,7 +31,6 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
 
     public MatterGeneratorScreen(MatterGeneratorMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, 176, 192);
-        this.inventoryLabelY = this.imageHeight - 94;
     }
 
     @Override

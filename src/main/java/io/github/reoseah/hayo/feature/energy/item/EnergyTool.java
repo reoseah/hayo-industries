@@ -7,8 +7,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 
-public record EnergyTool(float chargedMiningSpeed, int miningEnergy,
-                         int attackEnergy) {
+public record EnergyTool(float chargedMiningSpeed, int miningEnergy, int attackEnergy) {
     public static final Codec<EnergyTool> CODEC = RecordCodecBuilder.create(instance -> instance //
             .group( //
                     ExtraCodecs.NON_NEGATIVE_FLOAT.fieldOf("charged_mining_speed").forGetter(EnergyTool::chargedMiningSpeed), //

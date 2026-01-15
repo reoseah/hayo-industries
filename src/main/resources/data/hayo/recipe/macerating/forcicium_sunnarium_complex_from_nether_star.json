@@ -1,0 +1,8 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "#c:nether_stars",
+  "processing_energy": 400,
+  "result": {
+    "id": "hayo:forcicium_sunnarium_complex"
+  }
+}

@@ -9,6 +9,7 @@
     "hayo:compressor",
     "hayo:matter_generator",
     "hayo:battery_array",
-    "hayo:energy_crystal_array"
+    "hayo:energy_crystal_array",
+    "hayo:electric_beacon"
   ]
 }

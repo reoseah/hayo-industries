@@ -1,0 +1,9 @@
+{
+  "type": "hayo:compressing",
+  "ingredient": "hayo:forcicium_sunnarium_complex",
+  "processing_energy": 480,
+  "result": {
+    "id": "minecraft:nether_star",
+    "count": 1
+  }
+}

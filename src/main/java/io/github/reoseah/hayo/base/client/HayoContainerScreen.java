@@ -15,6 +15,7 @@ public abstract class HayoContainerScreen<T extends AbstractContainerMenu> exten
 
     public HayoContainerScreen(T menu, Inventory inventory, Component title, int imageWidth, int imageHeight) {
         super(menu, inventory, title, imageWidth, imageHeight);
+        this.inventoryLabelY = this.imageHeight - 94;
     }
 
     @Override

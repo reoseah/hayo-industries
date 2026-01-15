@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GGG",
+    "G#G",
+    "RCA"
+  ],
+  "key": {
+    "#": "minecraft:nether_star",
+    "C": "hayo:energy_flow_circuit",
+    "A": "hayo:advanced_machine_block",
+    "R": "hayo:reinforced_stone",
+    "G": "hayo:reinforced_glass"
+  },
+  "result": {
+    "id": "hayo:electric_beacon",
+    "count": 1
+  }
+}

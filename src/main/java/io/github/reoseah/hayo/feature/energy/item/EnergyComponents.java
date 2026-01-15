@@ -26,7 +26,7 @@ public class EnergyComponents {
 
     /// Stores amount of energy in an item.
     ///
-    /// Note: do not set values of this component directly, use [#setEnergy] or other
+    /// Do not set values of this component directly, use [#setEnergy] or other
     /// methods in this class, so that [#CHARGED_ATTRIBUTES] can be applied or removed correctly.
     public static final DataComponentType<Integer> ENERGY = DataComponentType.<Integer>builder() //
             .persistent(Codec.INT) //
@@ -40,8 +40,9 @@ public class EnergyComponents {
             .networkSynchronized(Unit.STREAM_CODEC) //
             .build();
 
-    /// Provides an amount of energy and item attributes that a stack should have when
-    /// above the said amount of energy. Use this for electric tools, weapons or armor.
+    /// Contains attributes that an item should have when charged and energy required for that.
+    /// Use this for electric tools, weapons or armor. Energy should probably match attack cost
+    /// in [#ENERGY_TOOL] for weapons or damage cost in [#ENERGY_ARMOR] for armor.
     public static final DataComponentType<ChargedAttributes> CHARGED_ATTRIBUTES = DataComponentType.<ChargedAttributes>builder() //
             .persistent(ChargedAttributes.CODEC) //
             .networkSynchronized(ChargedAttributes.STREAM_CODEC) //
@@ -53,7 +54,9 @@ public class EnergyComponents {
             .networkSynchronized(EnergyTool.STREAM_CODEC) //
             .build();
 
-    /// Supplements default armor attributes with energy cost.
+    /// Contains amount of energy removed from item when equipped to armor slots. Supplements default
+    /// armor and equippable components. Calculations are the same as for vanilla armor damage, but instead
+    /// of `n` points of durability removed, `n * energyArmor.energyPerDamage` is taken from energy.
     public static final DataComponentType<EnergyArmor> ENERGY_ARMOR = DataComponentType.<EnergyArmor>builder() //
             .persistent(EnergyArmor.CODEC) //
             .networkSynchronized(EnergyArmor.STREAM_CODEC) //
