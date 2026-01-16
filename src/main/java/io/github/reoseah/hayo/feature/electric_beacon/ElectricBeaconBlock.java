@@ -1,7 +1,9 @@
 package io.github.reoseah.hayo.feature.electric_beacon;
 
 import com.mojang.serialization.MapCodec;
+import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlocks;
+import io.github.reoseah.hayo.feature.energy.blocks.ElectricReceiverBlock;
 import io.github.reoseah.hayo.feature.processing_machines.matter_generator.MatterGeneratorBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +16,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -21,7 +25,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
-public class ElectricBeaconBlock extends BaseEntityBlock {
+public class ElectricBeaconBlock extends BaseEntityBlock implements ElectricReceiverBlock {
     public static final MapCodec<MatterGeneratorBlock> CODEC = simpleCodec(MatterGeneratorBlock::new);
     public static final BooleanProperty ACTIVE = BlockStateProperties.LIT;
 
@@ -45,6 +49,11 @@ public class ElectricBeaconBlock extends BaseEntityBlock {
         return new ElectricBeaconBlockEntity(pos, state);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, Hayo.BlockEntityTypes.ELECTRIC_BEACON, world.isClientSide() ? null : ElectricBeaconBlockEntity::tickServer);
+    }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {

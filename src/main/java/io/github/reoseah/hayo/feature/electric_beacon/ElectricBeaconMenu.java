@@ -8,10 +8,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.List;
-import java.util.Optional;
+import org.jetbrains.annotations.Nullable;
 
 public class ElectricBeaconMenu extends HayoContainerMenu {
     public static final int DATA_SLOT_TIER_1 = 0, DATA_SLOT_TIER_2 = 1, DATA_SLOT_TIER_3 = 2, DATA_SLOT_TIER_4 = 3;
@@ -22,15 +21,17 @@ public class ElectricBeaconMenu extends HayoContainerMenu {
         super(Hayo.MenuTypes.ELECTRIC_BEACON, containerId, container);
 
         this.addDataSlots(this.data = data);
-        this.addStandardInventorySlots(inventory, 17, 116);
+
+        this.addSlot(new Slot(container, 0, 169, 85));
+        this.addStandardInventorySlots(inventory, 17, 117);
     }
 
     public ElectricBeaconMenu(int containerId, Inventory inventory) {
-        this(containerId, new SimpleContainer(0), createBeaconData(), inventory);
+        this(containerId, new SimpleContainer(1), createBeaconData(), inventory);
     }
 
     public ElectricBeaconMenu(int containerId, ElectricBeaconBlockEntity entity, Inventory inventory) {
-        this(containerId, new SimpleContainer(0), createBeaconData(entity), inventory);
+        this(containerId, entity, createBeaconData(entity), inventory);
     }
 
     @Override
@@ -39,88 +40,67 @@ public class ElectricBeaconMenu extends HayoContainerMenu {
     }
 
     public static ContainerData createBeaconData() {
-        return new SimpleContainerData(4);
+        return new SimpleContainerData(6);
     }
 
     public static ContainerData createBeaconData(ElectricBeaconBlockEntity entity) {
         return new ContainerData() {
             @Override
             public int getCount() {
-                return 4;
+                return 6;
             }
 
             @Override
             public int get(int dataId) {
-                switch (dataId) {
-                    case 0 -> {
-                        return entity.tier1Choice != null ? ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(0, List.of()).indexOf(entity.tier1Choice) : -1;
-                    }
-                    case 1 -> {
-                        return entity.tier2Choice != null ? ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(1, List.of()).indexOf(entity.tier2Choice) : -1;
-                    }
-                    case 2 -> {
-                        return entity.tier3Choice != null ? ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(2, List.of()).indexOf(entity.tier3Choice) : -1;
-                    }
-                    case 3 -> {
-                        return entity.tier3Choice != null ? ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(3, List.of()).indexOf(entity.tier3Choice) : -1;
-                    }
-                }
-                return 0;
+                return switch (dataId) {
+                    case 0 -> ElectricBeacon.encodeOption(entity.choices[0]);
+                    case 1 -> ElectricBeacon.encodeOption(entity.choices[1]);
+                    case 2 -> ElectricBeacon.encodeOption(entity.choices[2]);
+                    case 3 -> ElectricBeacon.encodeOption(entity.choices[3]);
+
+                    case 4 -> entity.getStoredEnergy() & 0xFFFF;
+                    case 5 -> entity.getStoredEnergy() >>> 16;
+                    default -> 0;
+                };
             }
 
             @Override
             public void set(int dataId, int value) {
                 switch (dataId) {
-                    case 0 -> {
-                        if (value == -1) {
-                            entity.tier1Choice = null;
-                            entity.setChanged();
-                        } else if (value < ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(0, List.of()).size()) {
-                            entity.tier1Choice = ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(0, List.of()).get(value);
-                            entity.setChanged();
-                        }
-                    }
-                    case 1 -> {
-                        if (value == -1) {
-                            entity.tier2Choice = null;
-                            entity.setChanged();
-                        } else if (value < ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(1, List.of()).size()) {
-                            entity.tier2Choice = ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(1, List.of()).get(value);
-                            entity.setChanged();
-                        }
-                    }
-                    case 2 -> {
-                        if (value == -1) {
-                            entity.tier3Choice = null;
-                            entity.setChanged();
-                        } else if (value < ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(2, List.of()).size()) {
-                            entity.tier3Choice = ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(2, List.of()).get(value);
-                            entity.setChanged();
-                        }
-                    }
-                    case 3 -> {
-                        if (value == -1) {
-                            entity.tier4Choice = null;
-                            entity.setChanged();
-                        } else if (value < ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(3, List.of()).size()) {
-                            entity.tier4Choice = ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(3, List.of()).get(value);
-                            entity.setChanged();
-                        }
+                    case 0, 1, 2, 3 -> {
+                        entity.setChoice(dataId, ElectricBeacon.decodeOption(value));
                     }
                 }
             }
         };
     }
 
-    public Optional<ElectricBeaconOption> getOption(int tier) {
+    public @Nullable ElectricBeaconOption getOption(int tier) {
         if (tier < 0 || tier > 3) {
             throw new IllegalArgumentException();
         }
         var idx = this.data.get(tier);
-        var options = ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(tier, List.of());
-        if (idx < 0 || idx >= options.size()) {
-            return Optional.empty();
+        return ElectricBeacon.decodeOption(idx);
+    }
+
+    public boolean clickMenuButton(Player player, int buttonId) {
+        var option = ElectricBeacon.decodeOption(buttonId);
+        if (option != null) {
+            for (int tier = 0; tier < 4; tier++) {
+                var options = ElectricBeacon.OPTIONS_BY_TIER.get(tier);
+                if (options.contains(option)) {
+                    // TODO: set option to block entity directly
+                    var idx = ElectricBeacon.OPTIONS.indexOf(option);
+                    this.data.set(tier, idx);
+                    return true;
+                }
+            }
         }
-        return Optional.of(options.get(idx));
+
+        return super.clickMenuButton(player, buttonId);
+    }
+
+    public int getStoredEnergy() {
+        return (this.data.get(5) << 16) | (this.data.get(4) & 0xFFFF);
     }
 }

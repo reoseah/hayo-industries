@@ -3,7 +3,7 @@
   "category": "misc",
   "cookingtime": 100,
   "experience": 0.7,
-  "ingredient": "#hayo:raw_silicon_ingredients",
+  "ingredient": "minecraft:quartz",
   "result": {
     "id": "hayo:raw_silicon"
   }

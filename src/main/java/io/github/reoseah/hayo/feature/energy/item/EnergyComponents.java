@@ -104,6 +104,11 @@ public class EnergyComponents {
         return storage != null ? storage.capacity() : 0;
     }
 
+    public static int getTransferLimit(ItemStack stack) {
+        var storage = stack.get(ENERGY_STORAGE);
+        return storage != null ? storage.transferLimit() : 0;
+    }
+
     /// Charge the item or do nothing if the item is not electric.
     ///
     /// @return energy that was added to the item, you probably want to remove it from your energy source
