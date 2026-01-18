@@ -476,6 +476,7 @@ public class Hayo {
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+        public static final Item INDUCTION_UPGRADE = registerItem("induction_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static void initialize() {
             CreativeModeTabEvents.modifyOutputEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
@@ -584,6 +585,7 @@ public class Hayo {
                 entries.accept(CAPACITOR_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
+                entries.accept(INDUCTION_UPGRADE);
             });
         }
 

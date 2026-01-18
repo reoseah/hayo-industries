@@ -91,11 +91,6 @@ public class MatterGeneratorMenu extends MachineMenu {
         return quickMoveClassicMachineStack(this, player, index, 0, 1, 1, 0, Predicates.alwaysFalse(), null);
     }
 
-    @Override
-    public int getEnergyUseRate() {
-        return MatterGeneratorBlockEntity.ENERGY_USE_RATE;
-    }
-
     public int getSelectedRecipeIdx() {
         return this.selectedIdx.get();
     }

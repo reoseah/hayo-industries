@@ -65,9 +65,4 @@ public class ElectricFurnaceMenu extends MachineMenu {
     protected boolean isRecipeInput(ItemStack stack) {
         return this.recipeInputs.get(this.getRecipeMode()).test(stack);
     }
-
-    @Override
-    public int getEnergyUseRate() {
-        return ElectricFurnaceBlockEntity.ENERGY_USE_RATE * (1 + this.getOverclockCount());
-    }
 }

@@ -56,7 +56,6 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new ClassicMachineRecipeJeiCategory(COMPRESSING, 2, HayoGuiSprites.RecipeArrow.COMPRESSOR, Component.translatable("hayo.compressing"), drawable.apply(Hayo.Items.COMPRESSOR)));
         registration.addRecipeCategories(new ClassicMachineRecipeJeiCategory(EXTRACTING, 2, HayoGuiSprites.RecipeArrow.EXTRACTOR, Component.translatable("hayo.extracting"), drawable.apply(Hayo.Items.EXTRACTOR)));
         registration.addRecipeCategories(new MatterGeneratingJeiCategory(drawable.apply(Hayo.Items.MATTER_GENERATOR)));
-
     }
 
     @Override

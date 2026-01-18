@@ -38,8 +38,9 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         super(type, pos, state);
     }
 
-    public static <R extends Recipe<I>, I extends RecipeInput> void tickProcessing(ServerLevel level, BlockPos pos, BlockState state, MachineBlockEntity<R, I> entity) {
+    public static <R extends Recipe<I>, I extends RecipeInput> boolean tickProcessing(ServerLevel level, BlockPos pos, BlockState state, MachineBlockEntity<R, I> entity) {
         boolean wasProcessing = entity.recipeUsedEnergy > 0;
+        boolean madeProgress = false;
 
         var input = entity.getRecipeInput(entity.stacks);
         if (input.isEmpty()) {
@@ -57,6 +58,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
                 entity.storedEnergy -= usable;
                 entity.recipeUsedEnergy += usable;
+                madeProgress = true;
 
                 if (entity.recipeUsedEnergy >= entity.recipeTotalEnergy) {
                     entity.craft(level.registryAccess(), recipeHolder, input, entity.stacks);
@@ -74,6 +76,8 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         if (wasProcessing != isProcessing) {
             level.setBlockAndUpdate(pos, state.setValue(OrientableMachineBlock.LIT, isProcessing));
         }
+
+        return madeProgress;
     }
 
     protected int getMinEnergyUseRate() {

@@ -66,7 +66,7 @@ public abstract class MachineMenu extends HayoContainerMenu {
                     case 5 -> entity.getRecipeUsedEnergy() >>> 16;
                     case 6 -> entity.getRecipeTotalEnergy() & 0xFFFF;
                     case 7 -> entity.getRecipeTotalEnergy() >>> 16;
-                    case 8 -> entity.getOverclockCount();
+                    case 8 -> entity.getEnergyUseRate();
                     default -> 0;
                 };
             }
@@ -148,7 +148,9 @@ public abstract class MachineMenu extends HayoContainerMenu {
         return remaining;
     }
 
-    public abstract int getEnergyUseRate();
+    public int getEnergyUseRate() {
+        return this.data.get(8);
+    }
 
     public int getStoredEnergy() {
         return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
@@ -164,25 +166,5 @@ public abstract class MachineMenu extends HayoContainerMenu {
 
     public int getRecipeTotalEnergy() {
         return (this.data.get(7) << 16) | (this.data.get(6) & 0xFFFF);
-    }
-
-    public int getOverclockCount() {
-        return this.data.get(8);
-    }
-
-    public boolean hasOverclockUpgrades() {
-        return this.getOverclockCount() > 0;
-    }
-
-    public int getUseRatePercentage() {
-        return 100 + 100 * this.getOverclockCount();
-    }
-
-    public int getRecipeEnergyPercentage() {
-        return 100 + 25 * this.getOverclockCount();
-    }
-
-    public int getRecipeDurationPercentage() {
-        return 100 * this.getRecipeEnergyPercentage() / this.getUseRatePercentage();
     }
 }

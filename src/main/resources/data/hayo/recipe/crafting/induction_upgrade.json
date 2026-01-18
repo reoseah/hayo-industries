@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    "IAI",
+    "X#X"
+  ],
+  "key": {
+    "#": "hayo:circuit",
+    "X": "hayo:cable",
+    "I": "#c:ingots/copper",
+    "A": "hayo:advanced_machine_block"
+  },
+  "result": {
+    "id": "hayo:induction_upgrade",
+    "count": 1
+  }
+}

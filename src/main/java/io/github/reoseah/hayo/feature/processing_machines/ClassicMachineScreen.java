@@ -69,24 +69,42 @@ public class ClassicMachineScreen extends HayoContainerScreen<MachineMenu> {
 
     @Override
     protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
+        var tooltip = super.getTooltipFromContainerItem(stack);
         if (stack.is(Hayo.Items.OVERCLOCK_UPGRADE)) {
-            var tooltip = super.getTooltipFromContainerItem(stack);
             tooltip.add(EnergyTexts.overclockUseRate(100).withStyle(ChatFormatting.DARK_AQUA));
             tooltip.add(EnergyTexts.overclockTotalCost(25).withStyle(ChatFormatting.DARK_AQUA));
             return tooltip;
         }
         if (stack.is(Hayo.Items.CAPACITOR_UPGRADE)) {
-            var tooltip = super.getTooltipFromContainerItem(stack);
             tooltip.add(Component.translatable("hayo.energy.capacity_change", "+10000").withStyle(ChatFormatting.DARK_AQUA));
             return tooltip;
         }
-        if (this.menu.getType() != Hayo.MenuTypes.ELECTRIC_FURNACE //
-                && (stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE))) {
-            var tooltip = super.getTooltipFromContainerItem(stack);
-            tooltip.add(Component.translatable("hayo.not_valid_for_this_machine").withStyle(ChatFormatting.DARK_AQUA));
-            return tooltip;
+        if (stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE)) {
+            if (this.menu.getType() != Hayo.MenuTypes.ELECTRIC_FURNACE) {
+                tooltip.add(Component.translatable("hayo.not_valid_for_this_machine").withStyle(ChatFormatting.DARK_AQUA));
+                return tooltip;
+            } else {
+                if (stack.is(Hayo.Items.BLASTING_UPGRADE)) {
+                    tooltip.add(Component.translatable("hayo.blasting_recipes_only").withStyle(ChatFormatting.DARK_AQUA));
+                } else {
+                    tooltip.add(Component.translatable("hayo.smoking_recipes_only").withStyle(ChatFormatting.DARK_AQUA));
+                }
+                tooltip.add(EnergyTexts.overclockUseRate(100).withStyle(ChatFormatting.DARK_AQUA));
+            }
         }
-        return super.getTooltipFromContainerItem(stack);
+        if (stack.is(Hayo.Items.INDUCTION_UPGRADE)) {
+            if (this.menu.getType() != Hayo.MenuTypes.ELECTRIC_FURNACE) {
+                tooltip.add(Component.translatable("hayo.not_valid_for_this_machine").withStyle(ChatFormatting.DARK_AQUA));
+                return tooltip;
+            } else {
+                tooltip.add(Component.translatable("hayo.use_rate_scales_with_heat").withStyle(ChatFormatting.DARK_AQUA));
+                tooltip.add(EnergyTexts.overclockUseRate(300).withStyle(ChatFormatting.DARK_AQUA));
+                tooltip.add(Component.translatable("hayo.heat.max", 10000).withStyle(ChatFormatting.DARK_AQUA));
+                tooltip.add(Component.translatable("hayo.heat.amount_per_tick_when_active", "+1").withStyle(ChatFormatting.DARK_AQUA));
+                tooltip.add(Component.translatable("hayo.heat.amount_per_tick_when_inactive", "-4").withStyle(ChatFormatting.DARK_AQUA));
+            }
+        }
+        return tooltip;
     }
 
 }

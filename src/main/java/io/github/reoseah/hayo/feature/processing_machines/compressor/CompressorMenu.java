@@ -33,9 +33,4 @@ public class CompressorMenu extends MachineMenu {
         // TODO: synchronize recipe inputs, quick move only valid inputs
         return true;
     }
-
-    @Override
-    public int getEnergyUseRate() {
-        return CompressorBlockEntity.ENERGY_USE_RATE * (1 + this.getOverclockCount());
-    }
 }

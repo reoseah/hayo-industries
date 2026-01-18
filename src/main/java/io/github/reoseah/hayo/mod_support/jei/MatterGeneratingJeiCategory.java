@@ -59,13 +59,13 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
     }
 
     @Override
-    public void draw(RecipeHolder<MatterGeneratingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        HayoGuiSprites.drawMachineEnergy(guiGraphics, 3, 24-18, 10, 14);
+    public void draw(RecipeHolder<MatterGeneratingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        HayoGuiSprites.drawMachineEnergy(graphics, 3, 24 - 18, 10, 14);
 
         int energyCost = recipe.value().getEnergyCost();
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ENERGY_USE_RATE / 24)) % 24d);
-        HayoGuiSprites.drawRecipeArrow(guiGraphics, 22, 4, HayoGuiSprites.RecipeArrow.DEFAULT, progress, 24);
+        HayoGuiSprites.drawRecipeArrow(graphics, 22, 4, HayoGuiSprites.RecipeArrow.DEFAULT, progress, 24);
 
-        guiGraphics.drawString(net.minecraft.client.Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 1, 28, 0xFF404040, false);
+        graphics.drawString(net.minecraft.client.Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 1, 28, 0xFF404040, false);
     }
 }
