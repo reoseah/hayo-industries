@@ -4,12 +4,13 @@
   "key": {
     "#": "minecraft:emerald",
     "X": "hayo:circuit",
-    "G": "minecraft:glowstone_dust"
+    "G": "minecraft:glowstone_dust",
+    "S": "#c:dusts/silicon"
   },
   "pattern": [
-    " X ",
+    "SXS",
     "G#G",
-    " X "
+    "SXS"
   ],
   "result": {
     "count": 1,

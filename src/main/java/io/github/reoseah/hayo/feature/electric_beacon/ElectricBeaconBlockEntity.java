@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -31,7 +30,13 @@ public class ElectricBeaconBlockEntity extends ElectricBlockEntity {
     @Getter
     protected int levels;
     @Getter
-    protected ElectricBeaconOption[] choices = new ElectricBeaconOption[]{ElectricBeacon.NONE_1, ElectricBeacon.NONE_2, ElectricBeacon.NONE_3, ElectricBeacon.NONE_4};
+    protected ElectricBeaconOption[] choices = { //
+            ElectricBeacon.NONE_1, //
+            ElectricBeacon.NONE_2, //
+            ElectricBeacon.NONE_3, //
+            ElectricBeacon.NONE_4 //
+    };
+
     @Getter
     @Setter
     protected boolean choicesChanged = true;
@@ -126,18 +131,13 @@ public class ElectricBeaconBlockEntity extends ElectricBlockEntity {
 
         for (var player : entity.players) {
             if (player.isAlive()) {
-                for (var slot : EquipmentSlot.values()) {
-                    var stack = player.getItemBySlot(slot);
-                    if (energyToSend > 0 && EnergyComponents.isStorage(stack)) {
-                        var stackEnergy = EnergyComponents.getEnergy(stack);
-                        var stackCapacity = EnergyComponents.getCapacity(stack);
-                        var stackTransferRate = EnergyComponents.getTransferLimit(stack);
-                        var insertable = Math.min(energyToSend, Math.min(stackCapacity - stackEnergy, stackTransferRate));
-                        if (insertable > 0) {
-                            EnergyComponents.setEnergy(stack, stackEnergy + insertable);
-                            energyToSend -= insertable;
-                            sentEnergy += insertable;
-                        }
+                int moved = EnergyComponents.spreadEnergy(player, energyToSend, null);
+                if (moved > 0) {
+                    player.getInventory().setChanged();
+                    energyToSend -= moved;
+                    sentEnergy += moved;
+                    if (energyToSend == 0) {
+                        break;
                     }
                 }
             }

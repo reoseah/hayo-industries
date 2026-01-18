@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "hayo:item/reinforced_supermetal"
+    "layer0": "hayo:item/quantum_plate"
   }
 }

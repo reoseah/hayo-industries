@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GMG",
+    "GXG",
+    "C#C"
+  ],
+  "key": {
+    "#": "hayo:machine_block",
+    "C": "hayo:cable",
+    "M": "minecraft:glass",
+    "X": "hayo:circuit",
+    "G": "minecraft:gold_ingot"
+  },
+  "result": {
+    "id": "hayo:extractor",
+    "count": 1
+  }
+}

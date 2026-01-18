@@ -9,9 +9,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumMap;
 import java.util.function.Consumer;
 
 public class EnergyComponents {
@@ -60,6 +64,11 @@ public class EnergyComponents {
     public static final DataComponentType<EnergyArmor> ENERGY_ARMOR = DataComponentType.<EnergyArmor>builder() //
             .persistent(EnergyArmor.CODEC) //
             .networkSynchronized(EnergyArmor.STREAM_CODEC) //
+            .build();
+
+    public static final DataComponentType<Unit> ENERGY_BACKPACK = DataComponentType.<Unit>builder() //
+            .persistent(Unit.CODEC) //
+            .networkSynchronized(Unit.STREAM_CODEC) //
             .build();
 
     public static boolean isStorage(ItemStack stack) {
@@ -117,7 +126,7 @@ public class EnergyComponents {
         if (storage == null) {
             return 0;
         }
-        int stackEnergy = stack.getOrDefault(ENERGY, 0);
+        int stackEnergy = getEnergy(stack);
         int stackCapacity = storage.capacity();
         if (stackEnergy >= stackCapacity || stack.getCount() > 1) {
             return 0;
@@ -139,7 +148,7 @@ public class EnergyComponents {
         if (storage == null) {
             return 0;
         }
-        int stackEnergy = stack.getOrDefault(ENERGY, 0);
+        int stackEnergy = getEnergy(stack);
         if (stackEnergy <= 0 || stack.getCount() > 1) {
             return 0;
         }
@@ -150,11 +159,11 @@ public class EnergyComponents {
 
     /// Removes the specified amount of energy from item and returns true,
     /// otherwise returns false.
-    public static boolean tryUseEnergy(int amount, ItemStack stack) {
+    public static boolean tryRemoveEnergy(int amount, ItemStack stack) {
         if (stack.getCount() > 1) {
             return false;
         }
-        int storedEnergy = stack.getOrDefault(ENERGY, 0);
+        int storedEnergy = getEnergy(stack);
         if (storedEnergy < amount) {
             return false;
         }
@@ -172,24 +181,24 @@ public class EnergyComponents {
         if (stack.getCount() != 1) {
             return false;
         }
-        int energy = stack.getOrDefault(ENERGY, 0);
+        int energy = getEnergy(stack);
         int capacity = getCapacity(stack);
         if (energy >= capacity) {
             return false;
         }
-        var tool = stack.get(ENERGY_TOOL);
-        if (tool != null) {
-            return energy >= Math.min(tool.miningEnergy(), tool.attackEnergy());
+        var isEquipment = stack.get(CHARGED_ATTRIBUTES);
+        if (isEquipment != null) {
+            return true;
         }
         return energy > 0;
     }
 
     public static int defaultBarWidth(ItemStack stack) {
-        return Math.round(13F * ((float) (int) stack.getOrDefault(ENERGY, 0)) / getCapacity(stack));
+        return Math.round(13F * ((float) (int) getEnergy(stack)) / getCapacity(stack));
     }
 
     public static int defaultBarColor(ItemStack stack) {
-        float ratio = 1F - ((float) (int) stack.getOrDefault(ENERGY, 0)) / (float) getCapacity(stack);
+        float ratio = 1F - ((float) (int) getEnergy(stack)) / (float) getCapacity(stack);
 
         // from blue to red
         float hue = Mth.lerp(ratio, 240F, 360F) / 360F;
@@ -199,7 +208,7 @@ public class EnergyComponents {
     }
 
     public static void defaultTooltip(ItemStack stack, Consumer<Component> tooltipAdder) {
-        tooltipAdder.accept(EnergyTexts.amountAndCapacity(stack.getOrDefault(ENERGY, 0), getCapacity(stack)).withStyle(ChatFormatting.GRAY));
+        tooltipAdder.accept(EnergyTexts.amountAndCapacity(getEnergy(stack), getCapacity(stack)).withStyle(ChatFormatting.GRAY));
     }
 
     public static int moveEnergy(ItemStack source, ItemStack target) {
@@ -219,5 +228,82 @@ public class EnergyComponents {
         setEnergy(source, sourceEnergy - transfer);
 
         return transfer;
+    }
+
+    public static int spreadEnergy(LivingEntity player, int amount, @Nullable EquipmentSlot exclude) {
+        var targets = new EnumMap<EquipmentSlot, Integer>(EquipmentSlot.class);
+        int targetsTotal = 0;
+
+        for (var slot : EquipmentSlot.values()) {
+            if (slot == exclude) {
+                continue;
+            }
+            var item = player.getItemBySlot(slot);
+            var storage = item.get(ENERGY_STORAGE);
+            if (storage == null) {
+                continue;
+            }
+
+            int limit = Math.min(storage.transferLimit(), storage.capacity() - getEnergy(item));
+            if (limit > 0) {
+                targets.put(slot, limit);
+                targetsTotal += limit;
+            }
+        }
+
+        if (targetsTotal == 0) {
+            return 0;
+        }
+
+        if (amount >= targetsTotal) {
+            for (var entry : targets.entrySet()) {
+                var slot = entry.getKey();
+                var targetStack = player.getItemBySlot(slot);
+                var limit = targets.getOrDefault(slot, 0);
+                setEnergy(targetStack, getEnergy(targetStack) + limit);
+            }
+            return targetsTotal;
+        }
+
+        int totalDistributed = 0;
+
+        var fraction = Mth.ceil(amount / (float) targets.size());
+        for (var entry : targets.entrySet()) {
+            var slot = entry.getKey();
+            int limit = entry.getValue();
+
+            var targetStack = player.getItemBySlot(slot);
+            int targetEnergy = getEnergy(targetStack);
+
+            int slice = Math.min(amount - totalDistributed, Math.min(limit, fraction));
+            if (slice > 0) {
+                setEnergy(targetStack, targetEnergy + slice);
+                targets.put(slot, limit - slice);
+                totalDistributed += slice;
+            }
+        }
+
+        if (amount - totalDistributed > 0) {
+            for (var entry : targets.entrySet()) {
+                var slot = entry.getKey();
+                int limit = entry.getValue();
+
+                var targetStack = player.getItemBySlot(slot);
+                int targetEnergy = getEnergy(targetStack);
+
+                int min = Math.min(amount - totalDistributed, limit);
+                if (min > 0) {
+                    setEnergy(targetStack, targetEnergy + min);
+                    targets.put(slot, limit - min);
+                    totalDistributed += min;
+                }
+
+                if (amount - totalDistributed == 0) {
+                    break;
+                }
+            }
+        }
+
+        return totalDistributed;
     }
 }

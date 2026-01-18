@@ -2,7 +2,6 @@ package io.github.reoseah.hayo;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
-import io.github.reoseah.hayo.feature.batpack.BatpackItem;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
 import io.github.reoseah.hayo.feature.electric_beacon.ElectricBeaconBlock;
@@ -146,6 +145,7 @@ public class Hayo {
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("charged_attributes"), EnergyComponents.CHARGED_ATTRIBUTES);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_tool"), EnergyComponents.ENERGY_TOOL);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_armor"), EnergyComponents.ENERGY_ARMOR);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_backpack"), EnergyComponents.ENERGY_BACKPACK);
 
         Blocks.initialize();
         Items.initialize();
@@ -179,6 +179,32 @@ public class Hayo {
         });
         ServerTickEvents.END_LEVEL_TICK.register(level -> {
             ElectricBlockManager.get(level).onLevelTickEnd();
+
+            for (var player : level.players()) {
+                var chestItem = player.getItemBySlot(EquipmentSlot.CHEST);
+                if (!chestItem.has(EnergyComponents.ENERGY_BACKPACK)) {
+                    continue;
+                }
+                var chestStats = chestItem.get(EnergyComponents.ENERGY_STORAGE);
+                if (chestStats == null) {
+                    continue;
+                }
+                var chestLimit = chestStats.transferLimit();
+                if (chestLimit == 0) {
+                    continue;
+                }
+                var chestEnergy = EnergyComponents.getEnergy(chestItem);
+                if (chestEnergy == 0) {
+                    continue;
+                }
+                int moved = EnergyComponents.spreadEnergy(player, Math.min(chestEnergy, chestLimit), EquipmentSlot.CHEST);
+                EnergyComponents.setEnergy(chestItem, chestEnergy - moved);
+
+                player.getInventory().setChanged();
+                if (player.isCreative()) {
+                    player.inventoryMenu.broadcastChanges();
+                }
+            }
         });
     }
 
@@ -393,13 +419,14 @@ public class Hayo {
         public static final Item NANO_BOOTS = registerItem("nano_boots", ElectricItem::new, nanoArmorProperties(ArmorType.BOOTS));
 
         public static final Item BATTERY_PACK = registerItem("battery_pack", //
-                BatpackItem::new, //
+                ElectricItem::new, //
                 new Item.Properties() //
                         .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(60_000, 32)) //
                         .component(DataComponents.EQUIPPABLE, //
                                 Equippable.builder(ArmorType.CHESTPLATE.getSlot()) //
                                         .setAsset(modKey(EquipmentAssets.ROOT_ID, "battery_pack")) //
                                         .build()) //
+                        .component(EnergyComponents.ENERGY_BACKPACK, Unit.INSTANCE) //
                         .stacksTo(1));
 
         public static final Item CANISTER = registerItem("canister");
@@ -443,7 +470,7 @@ public class Hayo {
         public static final Item CARBON_REDSTONE_MATRIX = registerItem("carbon_redstone_matrix");
         public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
         public static final Item FORCICIUM_SUNNARIUM_COMPLEX = registerItem("forcicium_sunnarium_complex", new Item.Properties().component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true).rarity(Rarity.UNCOMMON));
-        public static final Item REINFORCED_SUPERMETAL = registerItem("reinforced_supermetal", new Item.Properties().rarity(Rarity.UNCOMMON));
+        public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
@@ -551,7 +578,7 @@ public class Hayo {
                 entries.accept(CARBON_REDSTONE_MATRIX);
                 entries.accept(CONDUCTIVE_CARBON);
                 entries.accept(FORCICIUM_SUNNARIUM_COMPLEX);
-                entries.accept(REINFORCED_SUPERMETAL);
+                entries.accept(QUANTUM_PLATE);
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
@@ -636,8 +663,7 @@ public class Hayo {
         public static final MenuType<MachineMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
         public static final MenuType<MachineMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
         public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
-
-        public static final MenuType<BatteryArrayMenu> BATTERY_ARRAY = register("battery_array", BatteryArrayMenu::new);
+        public static final MenuType<EnergyStorageMenu> BATTERY_ARRAY = register("battery_array", BatteryArrayMenu::new);
         public static final MenuType<EnergyStorageMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
         public static final MenuType<ElectricBeaconMenu> ELECTRIC_BEACON = register("electric_beacon", ElectricBeaconMenu::new);
 

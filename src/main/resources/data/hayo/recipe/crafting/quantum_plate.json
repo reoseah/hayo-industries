@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "hayo:forcicium_sunnarium_complex",
+    "X": "#c:dusts/diamond",
+    "P": "hayo:composite_plate"
+  },
+  "pattern": [
+    " P ",
+    "X#X",
+    " P "
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:quantum_plate"
+  }
+}

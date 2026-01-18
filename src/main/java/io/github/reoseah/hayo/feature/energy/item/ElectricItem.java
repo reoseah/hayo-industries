@@ -52,7 +52,7 @@ public class ElectricItem extends Item {
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entity) {
         var energyTool = stack.get(EnergyComponents.ENERGY_TOOL);
         if (energyTool != null) {
-            return EnergyComponents.tryUseEnergy(energyTool.miningEnergy(), stack);
+            return EnergyComponents.tryRemoveEnergy(energyTool.miningEnergy(), stack);
         }
         return super.mineBlock(stack, level, state, pos, entity);
     }
@@ -61,7 +61,7 @@ public class ElectricItem extends Item {
     public void postHurtEnemy(ItemStack stack, LivingEntity mob, LivingEntity attacker) {
         var energyTool = stack.get(EnergyComponents.ENERGY_TOOL);
         if (energyTool != null) {
-            EnergyComponents.tryUseEnergy(energyTool.attackEnergy(), stack);
+            EnergyComponents.tryRemoveEnergy(energyTool.attackEnergy(), stack);
         }
         super.postHurtEnemy(stack, mob, attacker);
     }
