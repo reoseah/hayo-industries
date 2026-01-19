@@ -145,6 +145,11 @@ public class ElectricBeaconBlockEntity extends ElectricBlockEntity {
         if (sentEnergy > 0) {
             entity.storedEnergy -= sentEnergy;
             entity.setChanged();
+            if (!state.getValue(ElectricBeaconBlock.TRANSFERRING)) {
+                level.setBlockAndUpdate(pos, state.setValue(ElectricBeaconBlock.TRANSFERRING, true));
+            }
+        } else if (state.getValue(ElectricBeaconBlock.TRANSFERRING)) {
+            level.setBlockAndUpdate(pos, state.setValue(ElectricBeaconBlock.TRANSFERRING, false));
         }
 
         entity.onTickEnd();
@@ -208,13 +213,13 @@ public class ElectricBeaconBlockEntity extends ElectricBlockEntity {
         entity.levels = getLevels(level, pos);
         if (entity.levels != previousLevels) {
             if (entity.levels > 0) {
-                if (!state.getValue(ElectricBeaconBlock.ACTIVE)) {
+                if (!state.getValue(ElectricBeaconBlock.LIT)) {
                     level.playSound(null, pos, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    level.setBlockAndUpdate(pos, state.setValue(ElectricBeaconBlock.ACTIVE, true));
+                    level.setBlockAndUpdate(pos, state.setValue(ElectricBeaconBlock.LIT, true));
                 }
             } else {
                 level.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                level.setBlockAndUpdate(pos, state.setValue(ElectricBeaconBlock.ACTIVE, false));
+                level.setBlockAndUpdate(pos, state.setValue(ElectricBeaconBlock.LIT, false));
             }
         }
     }

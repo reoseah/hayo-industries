@@ -7,6 +7,7 @@ import io.github.reoseah.hayo.feature.energy.blocks.ElectricReceiverBlock;
 import io.github.reoseah.hayo.feature.processing_machines.matter_generator.MatterGeneratorBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -27,16 +28,17 @@ import org.jspecify.annotations.Nullable;
 
 public class ElectricBeaconBlock extends BaseEntityBlock implements ElectricReceiverBlock {
     public static final MapCodec<MatterGeneratorBlock> CODEC = simpleCodec(MatterGeneratorBlock::new);
-    public static final BooleanProperty ACTIVE = BlockStateProperties.LIT;
+    public static final BooleanProperty LIT = BlockStateProperties.LIT;
+    public static final BooleanProperty TRANSFERRING = BooleanProperty.create("transferring");
 
     public ElectricBeaconBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(ACTIVE, false));
+        this.registerDefaultState(this.defaultBlockState().setValue(LIT, false).setValue(TRANSFERRING, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(ACTIVE);
+        builder.add(LIT, TRANSFERRING);
     }
 
     @Override
@@ -89,5 +91,18 @@ public class ElectricBeaconBlock extends BaseEntityBlock implements ElectricRece
         if (state.getBlock() != oldState.getBlock() && level instanceof ServerLevel serverLevel) {
             ElectricBlocks.addOrUpdate(serverLevel, pos);
         }
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (!state.getValue(LIT) || !state.getValue(TRANSFERRING)) {
+            return;
+        }
+
+        float x = pos.getX() + random.nextFloat();
+        float z = pos.getZ() + random.nextFloat();
+        float y = pos.getY() + 1F + 0.125F * random.nextFloat();
+
+        level.addParticle(Hayo.Particles.ELECTRIC_BEACON, x, y, z, 0, 0, 0);
     }
 }

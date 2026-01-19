@@ -4,10 +4,7 @@ import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
-import io.github.reoseah.hayo.feature.electric_beacon.ElectricBeaconBlock;
-import io.github.reoseah.hayo.feature.electric_beacon.ElectricBeaconBlockEntity;
-import io.github.reoseah.hayo.feature.electric_beacon.ElectricBeaconMenu;
-import io.github.reoseah.hayo.feature.electric_beacon.ElectricBeaconScreen;
+import io.github.reoseah.hayo.feature.electric_beacon.*;
 import io.github.reoseah.hayo.feature.energy.ElectricShapedRecipe;
 import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.energy.blocks.OverloadCablePayload;
@@ -55,6 +52,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ChunkSectionLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
@@ -63,6 +61,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -73,6 +72,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -154,6 +154,7 @@ public class Hayo {
         FoliagePlacerTypes.initialize();
         RecipeTypes.initialize();
         RecipeSerializers.initialize();
+        Particles.initialize();
 
         CustomPayloads.initialize();
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MACERATING);
@@ -215,16 +216,8 @@ public class Hayo {
 
         RangeSelectItemModelProperties.ID_MAPPER.put(modId("energy"), EnergyModelProperty.MAP_CODEC);
 
-        MenuScreens.register(MenuTypes.GENERATOR, GeneratorScreen::new);
-        MenuScreens.register(MenuTypes.ELECTRIC_FURNACE, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.DEFAULT));
-        MenuScreens.register(MenuTypes.MACERATOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.MACERATOR));
-        MenuScreens.register(MenuTypes.COMPRESSOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.COMPRESSOR));
-        MenuScreens.register(MenuTypes.EXTRACTOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.EXTRACTOR));
-        MenuScreens.register(MenuTypes.MATTER_GENERATOR, MatterGeneratorScreen::new);
-        MenuScreens.register(MenuTypes.BATTERY_ARRAY, EnergyStorageScreen::new);
-        MenuScreens.register(MenuTypes.ENERGY_CRYSTAL_ARRAY, EnergyStorageScreen::new);
-        MenuScreens.register(MenuTypes.ELECTRIC_BEACON, ElectricBeaconScreen::new);
-
+        MenuTypes.initializeClient();
+        Particles.initializeClient();
         CustomPayloads.initializeClient();
     }
 
@@ -267,6 +260,7 @@ public class Hayo {
         public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINES);
         public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, MACHINES);
         public static final Block SILICON_BRONZE_BLOCK = register("silicon_bronze_block", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.COLOR_ORANGE));
+        public static final Block RAW_SILICON_BLOCK = register("raw_silicon_block", Block::new, BlockBehaviour.Properties.of().strength(3F).mapColor(MapColor.COLOR_BLACK));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         public static final Block CHIPBOARD_DOOR = register("chipboard_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
@@ -328,6 +322,7 @@ public class Hayo {
         public static final Item MACHINE_BLOCK = registerBlock(Blocks.MACHINE_BLOCK);
         public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
         public static final Item SILICON_BRONZE_BLOCK = registerBlock(Blocks.SILICON_BRONZE_BLOCK);
+        public static final Item RAW_SILICON_BLOCK = registerBlock(Blocks.RAW_SILICON_BLOCK);
 
         public static final Item CHIPBOARD = registerBlock(Blocks.CHIPBOARD);
         public static final Item CHIPBOARD_DOOR = registerBlock(Blocks.CHIPBOARD_DOOR);
@@ -524,6 +519,7 @@ public class Hayo {
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);
                 entries.accept(SILICON_BRONZE_BLOCK);
+                entries.accept(RAW_SILICON_BLOCK);
                 entries.accept(CHIPBOARD);
                 entries.accept(CHIPBOARD_DOOR);
                 entries.accept(REINFORCED_STONE);
@@ -699,6 +695,18 @@ public class Hayo {
 
             return Registry.register(BuiltInRegistries.MENU, key, type);
         }
+
+        public static void initializeClient() {
+            MenuScreens.register(GENERATOR, GeneratorScreen::new);
+            MenuScreens.register(ELECTRIC_FURNACE, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.DEFAULT));
+            MenuScreens.register(MACERATOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.MACERATOR));
+            MenuScreens.register(COMPRESSOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.COMPRESSOR));
+            MenuScreens.register(EXTRACTOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.EXTRACTOR));
+            MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
+            MenuScreens.register(BATTERY_ARRAY, EnergyStorageScreen::new);
+            MenuScreens.register(ENERGY_CRYSTAL_ARRAY, EnergyStorageScreen::new);
+            MenuScreens.register(ELECTRIC_BEACON, ElectricBeaconScreen::new);
+        }
     }
 
     public static class FoliagePlacerTypes {
@@ -748,6 +756,22 @@ public class Hayo {
 
         private static <T extends Recipe<?>> RecipeSerializer<T> register(String name, RecipeSerializer<T> serializer) {
             return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, modId(name), serializer);
+        }
+    }
+
+    public static class Particles {
+        public static final SimpleParticleType ELECTRIC_BEACON = register("electric_beacon");
+
+        public static void initialize() {
+        }
+
+        public static void initializeClient() {
+            ParticleProviderRegistry.getInstance().register(ELECTRIC_BEACON, ElectricBeaconParticle.Provider::new);
+        }
+
+        private static SimpleParticleType register(String name) {
+            var type = FabricParticleTypes.simple();
+            return Registry.register(BuiltInRegistries.PARTICLE_TYPE, modId(name), type);
         }
     }
 

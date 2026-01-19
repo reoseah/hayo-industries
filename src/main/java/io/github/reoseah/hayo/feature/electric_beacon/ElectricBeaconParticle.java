@@ -1,0 +1,53 @@
+package io.github.reoseah.hayo.feature.electric_beacon;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SimpleAnimatedParticle;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
+
+public class ElectricBeaconParticle extends SimpleAnimatedParticle {
+    private ElectricBeaconParticle(ClientLevel level, double x, double y, double z, double xa, double ya, double za, SpriteSet sprites) {
+        super(level, x, y, z, sprites, -0.0375F);
+        this.xd = xa;
+        this.yd = ya;
+        this.zd = za;
+        this.quadSize *= 0.75F;
+        this.lifetime = 60 + this.random.nextInt(12);
+        this.setColor(0xe0f2ff);
+        this.setFadeColor(0x93d2ff);
+        this.setSpriteFromAge(sprites);
+    }
+
+    @Override
+    public void move(double xa, double ya, double za) {
+        this.setBoundingBox(this.getBoundingBox().move(xa, ya, za));
+        this.setLocationFromBoundingbox();
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static class Provider implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
+
+        public Provider(SpriteSet sprites) {
+            this.sprites = sprites;
+        }
+
+        public Particle createParticle(SimpleParticleType options, //
+                                       ClientLevel level, //
+                                       double x, //
+                                       double y, //
+                                       double z, //
+                                       double xAux, //
+                                       double yAux, //
+                                       double zAux, //
+                                       RandomSource random //
+        ) {
+            return new ElectricBeaconParticle(level, x, y, z, xAux, yAux, zAux, this.sprites);
+        }
+    }
+}
