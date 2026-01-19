@@ -1,0 +1,55 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "hayo:energy",
+    "scale": 1,
+    "entries": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayo:item/advanced_battery_pack_charge1"
+        },
+        "threshold": 15000
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayo:item/advanced_battery_pack_charge2"
+        },
+        "threshold": 60000
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayo:item/advanced_battery_pack_charge3"
+        },
+        "threshold": 120000
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayo:item/advanced_battery_pack_charge4"
+        },
+        "threshold": 180000
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayo:item/advanced_battery_pack_charge5"
+        },
+        "threshold": 210000
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayo:item/advanced_battery_pack_charge6"
+        },
+        "threshold": 285000
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "hayo:item/advanced_battery_pack"
+    }
+  }
+}

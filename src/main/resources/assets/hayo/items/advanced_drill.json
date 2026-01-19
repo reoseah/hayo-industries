@@ -1,0 +1,28 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:selected",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "hayo:item/advanced_drill"
+    },
+    "on_true": {
+      "type": "minecraft:range_dispatch",
+      "property": "hayo:energy",
+      "scale": 1,
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "hayo:item/advanced_drill"
+      },
+      "entries": [
+        {
+          "threshold": 160,
+          "model": {
+            "type": "minecraft:model",
+            "model": "hayo:item/advanced_drill_active"
+          }
+        }
+      ]
+    }
+  }
+}

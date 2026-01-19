@@ -1,0 +1,17 @@
+{
+  "type": "hayo:electric_shaped_crafting",
+  "category": "misc",
+  "pattern": [
+    " C ",
+    "#X#"
+  ],
+  "key": {
+    "#": "hayo:energy_crystal",
+    "C": "hayo:energy_flow_circuit",
+    "X": "hayo:battery_pack"
+  },
+  "result": {
+    "id": "hayo:advanced_battery_pack",
+    "count": 1
+  }
+}

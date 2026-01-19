@@ -1,0 +1,18 @@
+{
+  "type": "hayo:electric_shaped_crafting",
+  "category": "misc",
+  "pattern": [
+    " # ",
+    "#X#",
+    " C "
+  ],
+  "key": {
+    "#": "hayo:composite_plate",
+    "C": "hayo:energy_flow_circuit",
+    "X": "hayo:diamond_drill"
+  },
+  "result": {
+    "id": "hayo:advanced_drill",
+    "count": 1
+  }
+}

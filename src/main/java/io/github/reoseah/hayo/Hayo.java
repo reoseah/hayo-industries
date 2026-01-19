@@ -362,7 +362,7 @@ public class Hayo {
                 ) //
                 .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
                 .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 50, 100)) //
-                .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.tool(12, -3, 100)) //
+                .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.tool(10, -3, 100)) //
                 .equippable(EquipmentSlot.MAINHAND) //
                 .stacksTo(1));
 
@@ -385,6 +385,15 @@ public class Hayo {
                 .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
                 .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 80, 160)) //
                 .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.tool(8, -3, 160)) //
+                .equippable(EquipmentSlot.MAINHAND) //
+                .rarity(Rarity.RARE) //
+                .stacksTo(1));
+
+        public static final Item ADVANCED_DRILL = registerItem("advanced_drill", ElectricItem::new, new Item.Properties() //
+                .component(DataComponents.TOOL, drillTool(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)) //
+                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(60_000, 128)) //
+                .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(12F, 160, 320)) //
+                .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.tool(9, -3, 320)) //
                 .equippable(EquipmentSlot.MAINHAND) //
                 .rarity(Rarity.RARE) //
                 .stacksTo(1));
@@ -428,6 +437,16 @@ public class Hayo {
                                         .build()) //
                         .component(EnergyComponents.ENERGY_BACKPACK, Unit.INSTANCE) //
                         .stacksTo(1));
+        public static final Item ADVANCED_BATTERY_PACK = registerItem("advanced_battery_pack", //
+                ElectricItem::new, //
+                new Item.Properties() //
+                        .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(300_000, 128)) //
+                        .component(DataComponents.EQUIPPABLE, //
+                                Equippable.builder(ArmorType.CHESTPLATE.getSlot()) //
+                                        .setAsset(modKey(EquipmentAssets.ROOT_ID, "battery_pack")) //
+                                        .build()) //
+                        .component(EnergyComponents.ENERGY_BACKPACK, Unit.INSTANCE) //
+                        .stacksTo(1));
 
         public static final Item CANISTER = registerItem("canister");
 
@@ -462,7 +481,6 @@ public class Hayo {
         public static final Item COPPER_WIRE = registerItem("copper_wire");
         public static final Item CIRCUIT = registerItem("circuit");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
-        public static final Item TRANSFORMER = registerItem("transformer");
         public static final Item DATA_CIRCUIT = registerItem("data_circuit", new Item.Properties().rarity(Rarity.RARE));
         public static final Item ENERGY_FLOW_CIRCUIT = registerItem("energy_flow_circuit", new Item.Properties().rarity(Rarity.RARE));
         public static final Item MIXED_METAL_INGOT = registerItem("mixed_metal_ingot");
@@ -530,6 +548,8 @@ public class Hayo {
                 entries.accept(EnergyComponents.withFullCharge(DRILL));
                 entries.accept(DIAMOND_DRILL);
                 entries.accept(EnergyComponents.withFullCharge(DIAMOND_DRILL));
+                entries.accept(ADVANCED_DRILL);
+                entries.accept(EnergyComponents.withFullCharge(ADVANCED_DRILL));
 
                 entries.accept(NANO_HELMET);
                 entries.accept(EnergyComponents.withFullCharge(NANO_HELMET));
@@ -542,6 +562,8 @@ public class Hayo {
 
                 entries.accept(BATTERY_PACK);
                 entries.accept(EnergyComponents.withFullCharge(BATTERY_PACK));
+                entries.accept(ADVANCED_BATTERY_PACK);
+                entries.accept(EnergyComponents.withFullCharge(ADVANCED_BATTERY_PACK));
 
                 entries.accept(BATTERY);
                 entries.accept(EnergyComponents.withFullCharge(BATTERY));
@@ -570,7 +592,6 @@ public class Hayo {
                 entries.accept(COPPER_WIRE);
                 entries.accept(CIRCUIT);
                 entries.accept(ELECTRIC_MOTOR);
-                entries.accept(TRANSFORMER);
                 entries.accept(DATA_CIRCUIT);
                 entries.accept(ENERGY_FLOW_CIRCUIT);
 
