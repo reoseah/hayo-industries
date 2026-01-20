@@ -13,18 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class ElectricBeaconMenu extends HayoContainerMenu {
-    public static final int DATA_SLOT_TIER_1 = 0, DATA_SLOT_TIER_2 = 1, DATA_SLOT_TIER_3 = 2, DATA_SLOT_TIER_4 = 3;
-
     protected final ContainerData data;
-
-    public ElectricBeaconMenu(int containerId, Container container, ContainerData data, Inventory inventory) {
-        super(Hayo.MenuTypes.ELECTRIC_BEACON, containerId, container);
-
-        this.addDataSlots(this.data = data);
-
-        this.addSlot(new Slot(container, 0, 169, 85));
-        this.addStandardInventorySlots(inventory, 17, 117);
-    }
 
     public ElectricBeaconMenu(int containerId, Inventory inventory) {
         this(containerId, new SimpleContainer(1), createBeaconData(), inventory);
@@ -34,20 +23,29 @@ public class ElectricBeaconMenu extends HayoContainerMenu {
         this(containerId, entity, createBeaconData(entity), inventory);
     }
 
+    protected ElectricBeaconMenu(int containerId, Container container, ContainerData data, Inventory inventory) {
+        super(Hayo.MenuTypes.ELECTRIC_BEACON, containerId, container);
+
+        this.addDataSlots(this.data = data);
+
+        this.addSlot(new Slot(container, 0, 169, 85));
+        this.addStandardInventorySlots(inventory, 17, 117);
+    }
+
     @Override
     public ItemStack quickMoveStack(Player player, int slotIndex) {
         return ItemStack.EMPTY;
     }
 
     public static ContainerData createBeaconData() {
-        return new SimpleContainerData(6);
+        return new SimpleContainerData(7);
     }
 
     public static ContainerData createBeaconData(ElectricBeaconBlockEntity entity) {
         return new ContainerData() {
             @Override
             public int getCount() {
-                return 6;
+                return 7;
             }
 
             @Override
@@ -57,9 +55,9 @@ public class ElectricBeaconMenu extends HayoContainerMenu {
                     case 1 -> ElectricBeacon.encodeOption(entity.choices[1]);
                     case 2 -> ElectricBeacon.encodeOption(entity.choices[2]);
                     case 3 -> ElectricBeacon.encodeOption(entity.choices[3]);
-
                     case 4 -> entity.getStoredEnergy() & 0xFFFF;
                     case 5 -> entity.getStoredEnergy() >>> 16;
+                    case 6 -> entity.levels;
                     default -> 0;
                 };
             }
@@ -102,5 +100,9 @@ public class ElectricBeaconMenu extends HayoContainerMenu {
 
     public int getStoredEnergy() {
         return (this.data.get(5) << 16) | (this.data.get(4) & 0xFFFF);
+    }
+
+    public int getBeaconLevels() {
+        return this.data.get(6);
     }
 }

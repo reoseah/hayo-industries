@@ -35,19 +35,19 @@ public class ElectricBeacon {
             Hayo.modId("power_1"), //
             Hayo.modId("electric_beacon_options/power"), //
             Component.translatable("hayo.electric_beacon.power_1"), //
-            Component.translatable("hayo.energy.max_amount_per_tick", "+32").withStyle(ChatFormatting.GRAY) //
+            Component.translatable("hayo.energy.max_amount_per_tick", "+100%").withStyle(ChatFormatting.GRAY) //
     );
     public static final ElectricBeaconOption HORIZONTAL_RANGE_1 = new ElectricBeaconOption( //
             Hayo.modId("horizontal_range_1"), //
             Hayo.modId("electric_beacon_options/horizontal_range"), //
             Component.translatable("hayo.electric_beacon.horizontal_range_1"), //
-            Component.translatable("hayo.distance.blocks", "+10").withStyle(ChatFormatting.GRAY) //
+            Component.translatable("hayo.distance.percentage", "+100").withStyle(ChatFormatting.GRAY) //
     );
     public static final ElectricBeaconOption VERTICAL_RANGE_1 = new ElectricBeaconOption( //
             Hayo.modId("vertical_range_1"), //
             Hayo.modId("electric_beacon_options/vertical_range"), //
             Component.translatable("hayo.electric_beacon.vertical_range_1"), //
-            Component.translatable("hayo.distance.blocks", "+10").withStyle(ChatFormatting.GRAY) //
+            Component.translatable("hayo.distance.percentage", "+100").withStyle(ChatFormatting.GRAY) //
     );
 
     public static final ElectricBeaconOption NONE_3 = new ElectricBeaconOption( //
@@ -58,19 +58,26 @@ public class ElectricBeacon {
             Hayo.modId("power_2"), //
             Hayo.modId("electric_beacon_options/power"), //
             Component.translatable("hayo.electric_beacon.power_2"), //
-            Component.translatable("hayo.energy.max_amount_per_tick", "+32").withStyle(ChatFormatting.GRAY) //
+            Component.translatable("hayo.energy.max_amount_per_tick", "+200%").withStyle(ChatFormatting.GRAY) //
     );
     public static final ElectricBeaconOption HORIZONTAL_RANGE_2 = new ElectricBeaconOption( //
             Hayo.modId("horizontal_range_2"), //
             Hayo.modId("electric_beacon_options/horizontal_range"), //
             Component.translatable("hayo.electric_beacon.horizontal_range_2"), //
-            Component.translatable("hayo.distance.blocks", "+10").withStyle(ChatFormatting.GRAY) //
+            Component.translatable("hayo.distance.percentage", "+200").withStyle(ChatFormatting.GRAY) //
     );
     public static final ElectricBeaconOption VERTICAL_RANGE_2 = new ElectricBeaconOption( //
             Hayo.modId("vertical_range_2"), //
             Hayo.modId("electric_beacon_options/vertical_range"), //
             Component.translatable("hayo.electric_beacon.vertical_range_2"), //
-            Component.translatable("hayo.distance.blocks", "+10").withStyle(ChatFormatting.GRAY) //
+            Component.translatable("hayo.distance.percentage", "+200").withStyle(ChatFormatting.GRAY) //
+    );
+    public static final ElectricBeaconOption CHARGE_PAD = new ElectricBeaconOption( //
+            Hayo.modId("charge_pad"), //
+            Hayo.modId("electric_beacon_options/charge_pad"), //
+            Component.translatable("hayo.electric_beacon.charge_pad"), //
+            Component.translatable("hayo.electric_beacon.charge_pad.desc").withStyle(ChatFormatting.GRAY), //
+            Component.translatable("hayo.energy.max_amount_per_tick", "+700").withStyle(ChatFormatting.GRAY) //
     );
 
     public static final ElectricBeaconOption NONE_4 = new ElectricBeaconOption( //
@@ -82,25 +89,26 @@ public class ElectricBeacon {
             Hayo.modId("power_3"), //
             Hayo.modId("electric_beacon_options/power"), //
             Component.translatable("hayo.electric_beacon.power_3"), //
-            Component.translatable("hayo.energy.max_amount_per_tick", "+64").withStyle(ChatFormatting.GRAY) //
+            Component.translatable("hayo.energy.max_amount_per_tick", "+200%").withStyle(ChatFormatting.GRAY) //
     );
     public static final ElectricBeaconOption HORIZONTAL_RANGE_3 = new ElectricBeaconOption( //
             Hayo.modId("horizontal_range_3"), //
             Hayo.modId("electric_beacon_options/horizontal_range"), //
             Component.translatable("hayo.electric_beacon.horizontal_range_3"), //
-            Component.translatable("hayo.distance.blocks", "+20").withStyle(ChatFormatting.GRAY) //
+            Component.translatable("hayo.distance.percentage", "+200").withStyle(ChatFormatting.GRAY) //
     );
     public static final ElectricBeaconOption VERTICAL_RANGE_3 = new ElectricBeaconOption( //
             Hayo.modId("vertical_range_3"), //
             Hayo.modId("electric_beacon_options/vertical_range"), //
             Component.translatable("hayo.electric_beacon.vertical_range_3"), //
-            Component.translatable("hayo.distance.blocks", "+20").withStyle(ChatFormatting.GRAY) //
+            Component.translatable("hayo.distance.percentage", "+200").withStyle(ChatFormatting.GRAY) //
     );
 
-    public static final Map<Integer, List<ElectricBeaconOption>> OPTIONS_BY_TIER = Map.of(0, List.of(NONE_1, WIRELESS_CHARGE), //
-            1, List.of(NONE_2, POWER_1, HORIZONTAL_RANGE_1, VERTICAL_RANGE_1), //
+    public static final Map<Integer, List<ElectricBeaconOption>> OPTIONS_BY_TIER = Map.of( //
+            0, List.of(NONE_1, WIRELESS_CHARGE), //
+            1, List.of(NONE_2, POWER_1, HORIZONTAL_RANGE_1, VERTICAL_RANGE_1, CHARGE_PAD), //
             2, List.of(NONE_3, POWER_2, HORIZONTAL_RANGE_2, VERTICAL_RANGE_2), //
-            3, List.of(NONE_4, POWER_3, HORIZONTAL_RANGE_3, VERTICAL_RANGE_3));
+            3, List.of(NONE_4 /*, POWER_3, HORIZONTAL_RANGE_3, VERTICAL_RANGE_3 */));
     public static final List<ElectricBeaconOption> OPTIONS = OPTIONS_BY_TIER.values().stream().flatMap(List::stream).toList();
     public static final Map<Identifier, ElectricBeaconOption> OPTIONS_BY_ID = OPTIONS.stream().collect(Collectors.toMap(ElectricBeaconOption::id, o -> o));
     public static final Codec<ElectricBeaconOption> CODEC = Identifier.CODEC.xmap(OPTIONS_BY_ID::get, ElectricBeaconOption::id);

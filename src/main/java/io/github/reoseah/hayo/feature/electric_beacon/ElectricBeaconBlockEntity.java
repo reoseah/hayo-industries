@@ -46,10 +46,7 @@ public class ElectricBeaconBlockEntity extends ElectricBlockEntity {
     protected int wirelessTransmissionRate = 0;
     @Getter
     @Setter
-    protected int horizontalRange = 10;
-    @Getter
-    @Setter
-    protected int verticalRange = 10;
+    protected AABB area = new AABB(0, 0, 0, 0, 0, 0);
 
     protected List<Player> players = List.of();
 
@@ -79,7 +76,7 @@ public class ElectricBeaconBlockEntity extends ElectricBlockEntity {
 
     @Override
     protected int getEnergyTransferRate() {
-        return 128;
+        return 512;
     }
 
     @Override
@@ -156,56 +153,63 @@ public class ElectricBeaconBlockEntity extends ElectricBlockEntity {
     }
 
     private static void updatePlayerList(Level level, BlockPos pos, ElectricBeaconBlockEntity entity) {
-        var box = new AABB(pos).inflate(entity.horizontalRange, entity.verticalRange, entity.horizontalRange);
-        entity.players = new ArrayList<>(level.getEntitiesOfClass(Player.class, box));
+        entity.players = new ArrayList<>(level.getEntitiesOfClass(Player.class, entity.area));
     }
 
     private static void updateTickingStats(ElectricBeaconBlockEntity entity) {
-        entity.wirelessTransmissionRate = 0;
-        entity.horizontalRange = 10;
-        entity.verticalRange = 10;
+        var areaCenter = entity.worldPosition;
+        int baseUsageRate = 0;
+        int baseHorizontalRange = 1;
+        int baseVerticalRange = 1;
+        int usageMultiplier = 1;
+        int horizontalRangeMultiplier = 1;
+        int verticalRangeMultiplier = 1;
 
         if (entity.levels >= 1) {
             if (entity.choices[0] == ElectricBeacon.WIRELESS_CHARGE) {
-                entity.wirelessTransmissionRate = 32;
+                baseUsageRate = 32;
+                baseHorizontalRange = 10;
+                baseVerticalRange = 10;
             }
         }
 
         if (entity.levels >= 2) {
             if (entity.choices[1] == ElectricBeacon.HORIZONTAL_RANGE_1) {
-                entity.horizontalRange += 10;
+                horizontalRangeMultiplier += 1;
             } else if (entity.choices[1] == ElectricBeacon.VERTICAL_RANGE_1) {
-                entity.verticalRange += 10;
+                verticalRangeMultiplier += 1;
             } else if (entity.choices[1] == ElectricBeacon.POWER_1) {
-                if (entity.wirelessTransmissionRate > 0) {
-                    entity.wirelessTransmissionRate += 32;
-                }
+                usageMultiplier += 1;
+            } else if (entity.choices[1] == ElectricBeacon.CHARGE_PAD) {
+                baseVerticalRange = 1;
+                baseHorizontalRange = 1;
+                areaCenter = entity.worldPosition.above();
+                usageMultiplier += 7;
             }
         }
 
         if (entity.levels >= 3) {
             if (entity.choices[2] == ElectricBeacon.HORIZONTAL_RANGE_2) {
-                entity.horizontalRange += 10;
+                horizontalRangeMultiplier += 1;
             } else if (entity.choices[2] == ElectricBeacon.VERTICAL_RANGE_2) {
-                entity.verticalRange += 10;
+                verticalRangeMultiplier += 1;
             } else if (entity.choices[2] == ElectricBeacon.POWER_2) {
-                if (entity.wirelessTransmissionRate > 0) {
-                    entity.wirelessTransmissionRate += 32;
-                }
+                usageMultiplier += 1;
             }
         }
 
         if (entity.levels >= 4) {
             if (entity.choices[3] == ElectricBeacon.HORIZONTAL_RANGE_3) {
-                entity.horizontalRange += 20;
+                horizontalRangeMultiplier += 2;
             } else if (entity.choices[3] == ElectricBeacon.VERTICAL_RANGE_3) {
-                entity.verticalRange += 20;
+                verticalRangeMultiplier += 2;
             } else if (entity.choices[3] == ElectricBeacon.POWER_3) {
-                if (entity.wirelessTransmissionRate > 0) {
-                    entity.wirelessTransmissionRate += 64;
-                }
+                usageMultiplier += 1;
             }
         }
+
+        entity.wirelessTransmissionRate = baseUsageRate * usageMultiplier;
+        entity.area = new AABB(areaCenter).inflate(baseHorizontalRange * horizontalRangeMultiplier, baseVerticalRange * verticalRangeMultiplier, baseHorizontalRange * horizontalRangeMultiplier);
     }
 
     private static void updateLevels(Level level, BlockPos pos, BlockState state, ElectricBeaconBlockEntity entity) {

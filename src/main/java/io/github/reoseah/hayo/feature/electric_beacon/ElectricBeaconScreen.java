@@ -29,14 +29,19 @@ public class ElectricBeaconScreen extends HayoContainerScreen<ElectricBeaconMenu
         HayoGuiSprites.drawSlot(graphics, this.leftPos + this.menu.slots.getFirst().x - 1, this.topPos + this.menu.slots.getFirst().y - 1);
         HayoGuiSprites.drawMachineEnergy(graphics, this.leftPos + 170, this.topPos + 68, this.menu.getStoredEnergy(), 10_000);
 
+        int levels = this.menu.getBeaconLevels();
+//        System.out.println(levels);
         for (int tier = 0; tier < 4; tier++) {
             int x = this.leftPos + 34;
             int y = this.topPos + 17 + 22 * tier;
 
             var selectedOption = this.menu.getOption(tier);
-            for (var option : ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(tier, List.of())) {
+            var options = ElectricBeacon.OPTIONS_BY_TIER.getOrDefault(tier, List.of());
+            for (var option : options) {
                 var sprite = HayoGuiSprites.RECIPE;
-                if (option == selectedOption) {
+                if (tier >= levels) {
+                    sprite = option == options.getFirst() ? HayoGuiSprites.RECIPE_SELECTED : HayoGuiSprites.RECIPE_DISABLED;
+                } else if (option == selectedOption) {
                     sprite = HayoGuiSprites.RECIPE_SELECTED;
                 } else if (mouseX >= x && mouseY >= y && mouseX < x + 18 && mouseY < y + 18) {
                     sprite = HayoGuiSprites.RECIPE_HIGHLIGHTED;

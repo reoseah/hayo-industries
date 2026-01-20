@@ -98,6 +98,7 @@ public class HayoGuiSprites {
     public static final Identifier RECIPE = Hayo.modId("recipe_button/default");
     public static final Identifier RECIPE_SELECTED = Hayo.modId("recipe_button/selected");
     public static final Identifier RECIPE_HIGHLIGHTED = Hayo.modId("recipe_button/highlighted");
+    public static final Identifier RECIPE_DISABLED = Hayo.modId("recipe_button/disabled");
 
     public static final Identifier SCROLLER = Hayo.modId("scroller/default");
     public static final Identifier SCROLLER_DISABLED = Hayo.modId("scroller/disabled");
