@@ -149,7 +149,7 @@ public class ElectricBeaconBlockEntity extends ElectricBlockEntity {
             level.setBlockAndUpdate(pos, state.setValue(ElectricBeaconBlock.TRANSFERRING, false));
         }
 
-        entity.onTickEnd();
+        entity.resetEnergyPerTick();
     }
 
     private static void updatePlayerList(Level level, BlockPos pos, ElectricBeaconBlockEntity entity) {

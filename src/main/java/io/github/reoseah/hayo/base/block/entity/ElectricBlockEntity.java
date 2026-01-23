@@ -13,7 +13,7 @@ public abstract class ElectricBlockEntity extends HayoContainerBlockEntity {
     @Getter
     protected int storedEnergy;
     @Getter
-    protected int energyPerTick;
+    protected int inputPerTick;
 
     public ElectricBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -46,14 +46,14 @@ public abstract class ElectricBlockEntity extends HayoContainerBlockEntity {
     }
 
     public int getReceivableEnergy() {
-        return Math.min(this.getEnergyCapacity() - this.storedEnergy, this.getEnergyTransferLimit() - this.energyPerTick);
+        return Math.min(this.getEnergyCapacity() - this.storedEnergy, this.getEnergyTransferLimit() - this.inputPerTick);
     }
 
     public int receiveEnergy(int amount) {
         int change = Math.min(amount, this.getReceivableEnergy());
         if (change > 0) {
             this.storedEnergy += change;
-            this.energyPerTick += change;
+            this.inputPerTick += change;
             this.setChanged();
         }
         return change;
@@ -65,13 +65,13 @@ public abstract class ElectricBlockEntity extends HayoContainerBlockEntity {
             int change = EnergyComponents.discharge(limit, this.getItem(slot));
             if (change > 0) {
                 this.storedEnergy += change;
-                this.energyPerTick += change;
+                this.inputPerTick += change;
                 this.setChanged();
             }
         }
     }
 
-    protected void onTickEnd() {
-        this.energyPerTick = 0;
+    protected void resetEnergyPerTick() {
+        this.inputPerTick = 0;
     }
 }

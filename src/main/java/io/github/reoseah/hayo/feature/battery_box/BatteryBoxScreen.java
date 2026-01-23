@@ -41,12 +41,14 @@ public class BatteryBoxScreen extends HayoContainerScreen<BatteryBoxMenu> {
         if (this.isHovering(89, 17, 17, 55, mouseX, mouseY)) {
             int storedEnergy = this.menu.getStoredEnergy();
             int capacity = this.menu.getEnergyCapacity();
-//            float averageEnergyPerTick = this.menu.getAverageEnergyPerTick();
+            float averageInput = this.menu.getAverageInput();
+            float averageOutput = this.menu.getAverageOutput();
 
             graphics.setTooltipForNextFrame(this.font, List.of( //
-                    EnergyTexts.amountAndPercentage(storedEnergy, capacity != 0 ? storedEnergy * 100 / capacity : 0), //
-                    EnergyTexts.maxAmount(capacity).withStyle(ChatFormatting.GRAY) //
-//                    EnergyTexts.averageAmountPerTick(averageEnergyPerTick).withStyle(ChatFormatting.GRAY) //
+                    EnergyTexts.amountAndPercentage(storedEnergy, capacity), //
+                    EnergyTexts.maxAmount(capacity).withStyle(ChatFormatting.GRAY), //
+                    EnergyTexts.averageInputPerTick(averageInput).withStyle(ChatFormatting.GRAY), //
+                    EnergyTexts.averageOutputPerTick(averageOutput).withStyle(ChatFormatting.GRAY) //
             ), Optional.empty(), mouseX, mouseY);
             return;
         }

@@ -18,30 +18,65 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity implements WorldlyContainer {
+    public static final int DISCHARGE_SLOT = 0, CHARGE_SLOT = 1, SLOTS = 2;
+
     @Getter
-    protected float averageEnergyPerTick;
+    protected float averageInputPerTick;
+    @Getter
+    protected int outputPerTick;
+    @Getter
+    protected float averageOutputPerTick;
 
     public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
-    @Override
-    protected NonNullList<ItemStack> createInventory() {
-        return NonNullList.withSize(2, ItemStack.EMPTY);
+    public static void tickServer(Level level, BlockPos pos, BlockState state, EnergyStorageBlockEntity entity) {
+        entity.chargeFromSlot(0);
+
+        var chargeItem = entity.getItem(CHARGE_SLOT);
+        if (!chargeItem.isEmpty()) {
+            int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - entity.outputPerTick);
+            int transfer = EnergyComponents.charge(limit, chargeItem);
+            if (transfer > 0) {
+                entity.storedEnergy -= transfer;
+                entity.outputPerTick += transfer;
+                entity.setChanged();
+            }
+        }
+
+        if (entity.storedEnergy > 0) {
+            int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - entity.outputPerTick);
+            int transfer = ElectricBlocks.trySend(limit, (ServerLevel) level, pos, state.getValue(DirectionalMachineBlock.FACING));
+            if (transfer > 0) {
+                entity.storedEnergy -= transfer;
+                entity.outputPerTick += transfer;
+                entity.setChanged();
+            }
+        }
+
+        entity.resetEnergyPerTick();
     }
 
     @Override
-    protected void onTickEnd() {
-        this.averageEnergyPerTick = Mth.lerp(0.05F, this.averageEnergyPerTick, this.energyPerTick);
-        super.onTickEnd();
+    protected NonNullList<ItemStack> createInventory() {
+        return NonNullList.withSize(SLOTS, ItemStack.EMPTY);
+    }
+
+    @Override
+    protected void resetEnergyPerTick() {
+        this.averageInputPerTick = Mth.lerp(0.05F, this.averageInputPerTick, this.inputPerTick);
+        super.resetEnergyPerTick();
+        this.averageOutputPerTick = Mth.lerp(0.05F, this.averageOutputPerTick, this.outputPerTick);
+        this.outputPerTick = 0;
     }
 
     @Override
     public int[] getSlotsForFace(Direction direction) {
         return switch (direction) {
-            case UP -> new int[]{0};
-            case DOWN -> new int[]{0, 1};
-            default -> new int[]{1};
+            case UP -> new int[]{DISCHARGE_SLOT};
+            case DOWN -> new int[]{DISCHARGE_SLOT, CHARGE_SLOT};
+            default -> new int[]{CHARGE_SLOT};
         };
     }
 
@@ -49,7 +84,8 @@ public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity imple
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
         return switch (direction) {
             case UP -> !EnergyComponents.canDischargeInMachine(stack);
-            case DOWN -> slot == 0 ? !EnergyComponents.canDischargeInMachine(stack) : !EnergyComponents.canChargeInMachine(stack);
+            case DOWN ->
+                    slot == DISCHARGE_SLOT ? !EnergyComponents.canDischargeInMachine(stack) : !EnergyComponents.canChargeInMachine(stack);
             default -> !EnergyComponents.canChargeInMachine(stack);
         };
     }
@@ -58,31 +94,9 @@ public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity imple
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
         return switch (direction) {
             case UP -> EnergyComponents.canDischargeInMachine(stack);
-            case DOWN -> slot == 0 ? EnergyComponents.canDischargeInMachine(stack) : EnergyComponents.canChargeInMachine(stack);
+            case DOWN ->
+                    slot == DISCHARGE_SLOT ? EnergyComponents.canDischargeInMachine(stack) : EnergyComponents.canChargeInMachine(stack);
             case null, default -> EnergyComponents.canChargeInMachine(stack);
         };
-    }
-
-    @SuppressWarnings("unused")
-    public static void tickServer(Level level, BlockPos pos, BlockState state, EnergyStorageBlockEntity entity) {
-        entity.chargeFromSlot(0);
-
-        int max = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit());
-        int discharge = EnergyComponents.charge(max, entity.getItem(1));
-        if (discharge > 0) {
-            entity.storedEnergy -= discharge;
-            entity.energyPerTick -= discharge;
-            entity.setChanged();
-        }
-
-        if (entity.storedEnergy > 0) {
-            int sent = ElectricBlocks.trySend(Math.min(entity.storedEnergy, entity.getEnergyTransferLimit()), (ServerLevel) level, pos, state.getValue(DirectionalMachineBlock.FACING));
-            if (sent > 0) {
-                entity.storedEnergy -= sent;
-                entity.setChanged();
-            }
-        }
-
-        entity.onTickEnd();
     }
 }

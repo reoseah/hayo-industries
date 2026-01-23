@@ -36,12 +36,14 @@ public class EnergyStorageScreen extends HayoContainerScreen<EnergyStorageMenu> 
         if (this.isHovering(89, 17, 17, 55, mouseX, mouseY)) {
             int storedEnergy = this.menu.getStoredEnergy();
             int capacity = this.menu.getEnergyCapacity();
-            float averageEnergyPerTick = this.menu.getAverageEnergyPerTick();
+            float averageInput = this.menu.getAverageInputPerTick();
+            float averageOutput = this.menu.getAverageOutputPerTick();
 
             graphics.setTooltipForNextFrame(this.font, List.of( //
-                    EnergyTexts.amountAndPercentage(storedEnergy, storedEnergy * 100 / capacity), //
+                    EnergyTexts.amountAndPercentage(storedEnergy, capacity), //
                     EnergyTexts.maxAmount(capacity).withStyle(ChatFormatting.GRAY), //
-                    EnergyTexts.averageAmountPerTick(averageEnergyPerTick).withStyle(ChatFormatting.GRAY) //
+                    EnergyTexts.averageInputPerTick(averageInput).withStyle(ChatFormatting.GRAY), //
+                    EnergyTexts.averageOutputPerTick(averageOutput).withStyle(ChatFormatting.GRAY) //
             ), Optional.empty(), mouseX, mouseY);
             return;
         }

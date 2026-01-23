@@ -49,7 +49,7 @@ public class GeneratorScreen extends HayoContainerScreen<GeneratorMenu> {
             int capacity = GeneratorBlockEntity.CAPACITY;
 
             graphics.setTooltipForNextFrame(this.font, List.of( //
-                    EnergyTexts.amountAndPercentage(energy, energy * 100 / capacity), //
+                    EnergyTexts.amountAndPercentage(energy, capacity), //
                     Component.translatable("hayo.energy.max_amount", EnergyTexts.formatAmount(capacity)).withStyle(ChatFormatting.GRAY) //
 
             ), Optional.empty(), mouseX, mouseY);

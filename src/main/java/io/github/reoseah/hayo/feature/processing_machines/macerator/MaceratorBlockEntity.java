@@ -26,7 +26,7 @@ public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRe
     public static void tickServer(Level level, BlockPos pos, BlockState state, MaceratorBlockEntity entity) {
         entity.chargeFromSlot(BATTERY_SLOT);
         tickProcessing((ServerLevel) level, pos, state, entity);
-        entity.onTickEnd();
+        entity.resetEnergyPerTick();
     }
 
     @Override

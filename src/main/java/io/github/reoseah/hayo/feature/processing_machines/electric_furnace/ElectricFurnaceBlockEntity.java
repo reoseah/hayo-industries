@@ -58,7 +58,7 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
         } else if (!madeProgress && entity.hasInductionUpgrade && entity.inductionHeat > 0) {
             entity.inductionHeat = Math.max(0, entity.inductionHeat - 4);
         }
-        entity.onTickEnd();
+        entity.resetEnergyPerTick();
     }
 
     @SuppressWarnings("unchecked")

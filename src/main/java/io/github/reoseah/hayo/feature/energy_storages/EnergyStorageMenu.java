@@ -27,14 +27,14 @@ public abstract class EnergyStorageMenu extends HayoContainerMenu {
     }
 
     protected static ContainerData createData() {
-        return new SimpleContainerData(3);
+        return new SimpleContainerData(4);
     }
 
     protected static ContainerData createData(EnergyStorageBlockEntity entity) {
         return new ContainerData() {
             @Override
             public int getCount() {
-                return 3;
+                return 4;
             }
 
             @Override
@@ -42,7 +42,8 @@ public abstract class EnergyStorageMenu extends HayoContainerMenu {
                 return switch (index) {
                     case 0 -> entity.getStoredEnergy() & 0xFFFF;
                     case 1 -> entity.getStoredEnergy() >>> 16;
-                    case 2 -> Math.round(entity.getAverageEnergyPerTick() * 10);
+                    case 2 -> Math.round(entity.getAverageInputPerTick() * 10);
+                    case 3 -> Math.round(entity.getAverageOutputPerTick() * 10);
                     default -> 0;
                 };
             }
@@ -110,8 +111,12 @@ public abstract class EnergyStorageMenu extends HayoContainerMenu {
         return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
     }
 
-    public float getAverageEnergyPerTick() {
+    public float getAverageInputPerTick() {
         return this.data.get(2) / 10F;
+    }
+
+    public float getAverageOutputPerTick() {
+        return this.data.get(3) / 10F;
     }
 
     public abstract int getEnergyCapacity();

@@ -43,14 +43,14 @@ public class BatteryBoxMenu extends HayoContainerMenu {
     }
 
     protected static ContainerData createData() {
-        return new SimpleContainerData(6);
+        return new SimpleContainerData(8);
     }
 
     protected static ContainerData createData(BatteryBoxBlockEntity entity) {
         return new ContainerData() {
             @Override
             public int getCount() {
-                return 6;
+                return 8;
             }
 
             @Override
@@ -62,6 +62,8 @@ public class BatteryBoxMenu extends HayoContainerMenu {
                     case 3 -> entity.getEnergyCapacity() >>> 16;
                     case 4 -> entity.getEnergyTransferLimit() & 0xFFFF;
                     case 5 -> entity.getEnergyTransferLimit() >>> 16;
+                    case 6 -> Math.round(entity.getAverageInputPerTick() * 10);
+                    case 7 -> Math.round(entity.getAverageOutputPerTick() * 10);
                     default -> 0;
                 };
             }
@@ -130,6 +132,14 @@ public class BatteryBoxMenu extends HayoContainerMenu {
 
     public int getEnergyTransferLimit() {
         return (this.data.get(5) << 16) | (this.data.get(4) & 0xFFFF);
+    }
+
+    public float getAverageInput() {
+        return this.data.get(6) / 10F;
+    }
+
+    public float getAverageOutput() {
+        return this.data.get(7) / 10F;
     }
 
     private static class BatterySlot extends Slot {

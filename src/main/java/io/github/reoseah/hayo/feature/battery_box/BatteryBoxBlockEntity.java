@@ -2,11 +2,15 @@ package io.github.reoseah.hayo.feature.battery_box;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
+import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlocks;
 import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +24,13 @@ import org.jspecify.annotations.Nullable;
 public class BatteryBoxBlockEntity extends ElectricBlockEntity implements WorldlyContainer {
     public static final int BATTERY_SLOTS = 6, CHARGING_SLOT = 6, SLOTS = 7;
 
+    @Getter
+    protected float averageInputPerTick;
+    @Getter
+    protected int outputPerTick;
+    @Getter
+    protected float averageOutputPerTick;
+
     protected int capacity = 0;
     protected int transferLimit = 0;
     protected int batteryCount = 0;
@@ -27,6 +38,40 @@ public class BatteryBoxBlockEntity extends ElectricBlockEntity implements Worldl
 
     public BatteryBoxBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.BATTERY_BOX, pos, state);
+    }
+
+    public static void tickServer(Level level, BlockPos pos, BlockState state, BatteryBoxBlockEntity entity) {
+        if (entity.batteryCountChanged) {
+            if (entity.batteryCount != state.getValue(BatteryBoxBlock.BATTERIES)) {
+                level.setBlockAndUpdate(pos, state.setValue(BatteryBoxBlock.BATTERIES, entity.batteryCount));
+            }
+            entity.batteryCountChanged = false;
+        }
+
+        var chargeItem = entity.getItem(CHARGING_SLOT);
+        if (!chargeItem.isEmpty()) {
+            int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - entity.outputPerTick);
+            int transfer = EnergyComponents.charge(limit, chargeItem);
+            if (transfer > 0) {
+                entity.extractFromBatteries(transfer);
+                entity.storedEnergy -= transfer;
+                entity.outputPerTick += transfer;
+                entity.setChanged();
+            }
+        }
+
+        if (entity.storedEnergy > 0) {
+            int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - entity.outputPerTick);
+            int transfer = ElectricBlocks.trySend(limit, (ServerLevel) level, pos, state.getValue(BatteryBoxBlock.FACING));
+            if (transfer > 0) {
+                entity.extractFromBatteries(transfer);
+                entity.storedEnergy -= transfer;
+                entity.outputPerTick += transfer;
+                entity.setChanged();
+            }
+        }
+
+        entity.resetEnergyPerTick();
     }
 
     @Override
@@ -125,26 +170,12 @@ public class BatteryBoxBlockEntity extends ElectricBlockEntity implements Worldl
         return slot == CHARGING_SLOT && EnergyComponents.canChargeInMachine(stack);
     }
 
-    public static void tickServer(Level level, BlockPos pos, BlockState state, BatteryBoxBlockEntity entity) {
-        if (entity.batteryCountChanged) {
-            if (entity.batteryCount != state.getValue(BatteryBoxBlock.BATTERIES)) {
-                level.setBlockAndUpdate(pos, state.setValue(BatteryBoxBlock.BATTERIES, entity.batteryCount));
-            }
-            entity.batteryCountChanged = false;
-        }
-
-        if (!entity.getItem(CHARGING_SLOT).isEmpty()) {
-            int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit());
-            int transfer = EnergyComponents.charge(limit, entity.getItem(CHARGING_SLOT));
-            if (transfer > 0) {
-                entity.extractFromBatteries(transfer);
-                entity.storedEnergy -= transfer;
-                entity.energyPerTick -= transfer;
-                entity.setChanged();
-            }
-        }
-
-        entity.onTickEnd();
+    @Override
+    protected void resetEnergyPerTick() {
+        this.averageInputPerTick = Mth.lerp(0.05F, this.averageInputPerTick, this.inputPerTick);
+        super.resetEnergyPerTick();
+        this.averageOutputPerTick = Mth.lerp(0.05F, this.averageOutputPerTick, this.outputPerTick);
+        this.outputPerTick = 0;
     }
 
     @Override

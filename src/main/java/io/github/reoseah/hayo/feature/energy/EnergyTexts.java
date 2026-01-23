@@ -14,6 +14,8 @@ public class EnergyTexts {
     private static final String AMOUNT_AND_CAPACITY = "hayo.energy.amount_and_capacity";
     private static final String AMOUNT_PER_TICK = "hayo.energy.amount_per_tick";
     private static final String AVERAGE_AMOUNT_PER_TICK = "hayo.energy.average_amount_per_tick";
+    private static final String AVERAGE_INPUT_PER_TICK = "hayo.energy.average_input_per_tick";
+    private static final String AVERAGE_OUTPUT_PER_TICK = "hayo.energy.average_output_per_tick";
     private static final String MAX_AMOUNT = "hayo.energy.max_amount";
     private static final String MAX_AMOUNT_PER_TICK = "hayo.energy.max_amount_per_tick";
     private static final String AMOUNT_AND_PERCENTAGE = "hayo.energy.amount_and_percentage";
@@ -66,6 +68,15 @@ public class EnergyTexts {
         return Component.translatable(AVERAGE_AMOUNT_PER_TICK, (amount > 0 ? "+" : "") + amount);
     }
 
+    public static MutableComponent averageInputPerTick(float amount) {
+        return Component.translatable(AVERAGE_INPUT_PER_TICK, (amount > 0 ? "+" : "") + amount);
+    }
+
+    public static MutableComponent averageOutputPerTick(float amount) {
+        if (amount != 0) amount = -amount;
+        return Component.translatable(AVERAGE_OUTPUT_PER_TICK, (amount > 0 ? "+" : "") + amount);
+    }
+
     public static MutableComponent maxAmount(long amount) {
         return Component.translatable(MAX_AMOUNT, formatAmount(amount));
     }
@@ -74,12 +85,20 @@ public class EnergyTexts {
         return Component.translatable(MAX_AMOUNT_PER_TICK, amount);
     }
 
-    public static MutableComponent amountAndPercentage(long amount, int percentage) {
+    public static MutableComponent amountAndPercentage(long amount, long capacity) {
+        if (capacity == 0) {
+            return Component.translatable(AMOUNT_AND_PERCENTAGE, formatAmount(amount), 0);
+        }
+        long percentage = 100 * amount / capacity;
         return Component.translatable(AMOUNT_AND_PERCENTAGE, formatAmount(amount), percentage);
     }
 
     public static MutableComponent amountWithCapacityAndPercentage(long amount, long capacity) {
-        return Component.translatable(AMOUNT_WITH_CAPACITY_AND_PERCENTAGE, formatAmount(amount), formatAmount(capacity), 100 * amount / capacity);
+        if (capacity == 0) {
+            return Component.translatable(AMOUNT_WITH_CAPACITY_AND_PERCENTAGE, formatAmount(amount), formatAmount(capacity), 0);
+        }
+        long percentage = 100 * amount / capacity;
+        return Component.translatable(AMOUNT_WITH_CAPACITY_AND_PERCENTAGE, formatAmount(amount), formatAmount(capacity), percentage);
     }
 
     public static MutableComponent durationAtAmountPerTick(float duration, int amountPerTick) {

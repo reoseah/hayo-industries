@@ -26,7 +26,7 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ExtractingRe
     public static void tickServer(Level level, BlockPos pos, BlockState state, ExtractorBlockEntity entity) {
         entity.chargeFromSlot(BATTERY_SLOT);
         tickProcessing((ServerLevel) level, pos, state, entity);
-        entity.onTickEnd();
+        entity.resetEnergyPerTick();
     }
 
     @Override
