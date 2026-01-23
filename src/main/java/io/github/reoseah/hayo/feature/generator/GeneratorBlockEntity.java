@@ -27,7 +27,7 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity implements Wo
     public static final int ENERGY_PER_FUEL_TICK = 5;
     public static final int GENERATION_RATE = FUEL_CONSUMPTION_RATE * ENERGY_PER_FUEL_TICK;
     public static final int CAPACITY = 10000;
-    public static final int TRANSFER_RATE = 32;
+    public static final int TRANSFER_LIMIT = 32;
 
     @Getter
     protected int storedEnergy;
@@ -58,7 +58,7 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity implements Wo
         }
 
         if (entity.storedEnergy > 0) {
-            int sendable = Math.min(entity.storedEnergy, TRANSFER_RATE);
+            int sendable = Math.min(entity.storedEnergy, TRANSFER_LIMIT);
             int sent = ElectricBlocks.trySendToAllSides(sendable, (ServerLevel) level, pos);
             if (sent > 0) {
                 entity.storedEnergy -= sent;

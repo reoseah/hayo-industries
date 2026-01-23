@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRecipe> {
-    public static final int TRANSFER_RATE = 32;
+    public static final int TRANSFER_LIMIT = 32;
     public static final int ENERGY_USE_RATE = 2;
     public static final int CAPACITY = 10 * 20 * ENERGY_USE_RATE; // 10s * 20tick/s * 2e/tick = 400e
 
@@ -45,8 +45,8 @@ public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRe
     }
 
     @Override
-    protected int getEnergyTransferRate() {
-        return TRANSFER_RATE;
+    protected int getEnergyTransferLimit() {
+        return TRANSFER_LIMIT;
     }
 
     @Override

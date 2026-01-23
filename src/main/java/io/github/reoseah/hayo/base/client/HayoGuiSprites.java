@@ -106,4 +106,8 @@ public class HayoGuiSprites {
     public static void drawScroller(GuiGraphics graphics, int x, int y, boolean disabled) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, disabled ? SCROLLER_DISABLED : SCROLLER, x, y, 12, 15);
     }
+
+    public static final Identifier SLOT_CONNECTION_9_WIDE = Hayo.modId("slot_connection_9_wide");
+
+    public static final Identifier BATTERY_SLOT_ICON = Hayo.modId("slot_icons/battery");
 }

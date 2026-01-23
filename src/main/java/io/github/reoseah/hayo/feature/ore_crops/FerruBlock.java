@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 
 public class FerruBlock extends OreCropBlock {
     public static final MapCodec<FerruBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance //
-            .group(TagKey.codec(Registries.ITEM).fieldOf("ore_fertilizers").forGetter(trapDoorBlock -> trapDoorBlock.oreFertilizers), //
+            .group(TagKey.codec(Registries.ITEM).fieldOf("ore_fertilizers").forGetter(trapDoorBlock -> trapDoorBlock.fertilizers), //
                     propertiesCodec()) //
             .apply(instance, FerruBlock::new));
 

@@ -1,0 +1,109 @@
+{
+  "variants": {
+    "facing=north,batteries=0": {
+      "model": "hayo:block/battery_box"
+    },
+    "facing=east,batteries=0": {
+      "model": "hayo:block/battery_box",
+      "y": 90
+    },
+    "facing=south,batteries=0": {
+      "model": "hayo:block/battery_box",
+      "y": 180
+    },
+    "facing=west,batteries=0": {
+      "model": "hayo:block/battery_box",
+      "y": 270
+    },
+    "facing=north,batteries=1": {
+      "model": "hayo:block/battery_box_batteries1"
+    },
+    "facing=east,batteries=1": {
+      "model": "hayo:block/battery_box_batteries1",
+      "y": 90
+    },
+    "facing=south,batteries=1": {
+      "model": "hayo:block/battery_box_batteries1",
+      "y": 180
+    },
+    "facing=west,batteries=1": {
+      "model": "hayo:block/battery_box_batteries1",
+      "y": 270
+    },
+    "facing=north,batteries=2": {
+      "model": "hayo:block/battery_box_batteries2"
+    },
+    "facing=east,batteries=2": {
+      "model": "hayo:block/battery_box_batteries2",
+      "y": 90
+    },
+    "facing=south,batteries=2": {
+      "model": "hayo:block/battery_box_batteries2",
+      "y": 180
+    },
+    "facing=west,batteries=2": {
+      "model": "hayo:block/battery_box_batteries2",
+      "y": 270
+    },
+    "facing=north,batteries=3": {
+      "model": "hayo:block/battery_box_batteries3"
+    },
+    "facing=east,batteries=3": {
+      "model": "hayo:block/battery_box_batteries3",
+      "y": 90
+    },
+    "facing=south,batteries=3": {
+      "model": "hayo:block/battery_box_batteries3",
+      "y": 180
+    },
+    "facing=west,batteries=3": {
+      "model": "hayo:block/battery_box_batteries3",
+      "y": 270
+    },
+    "facing=north,batteries=4": {
+      "model": "hayo:block/battery_box_batteries4"
+    },
+    "facing=east,batteries=4": {
+      "model": "hayo:block/battery_box_batteries4",
+      "y": 90
+    },
+    "facing=south,batteries=4": {
+      "model": "hayo:block/battery_box_batteries4",
+      "y": 180
+    },
+    "facing=west,batteries=4": {
+      "model": "hayo:block/battery_box_batteries4",
+      "y": 270
+    },
+    "facing=north,batteries=5": {
+      "model": "hayo:block/battery_box_batteries5"
+    },
+    "facing=east,batteries=5": {
+      "model": "hayo:block/battery_box_batteries5",
+      "y": 90
+    },
+    "facing=south,batteries=5": {
+      "model": "hayo:block/battery_box_batteries5",
+      "y": 180
+    },
+    "facing=west,batteries=5": {
+      "model": "hayo:block/battery_box_batteries5",
+      "y": 270
+    },
+    "facing=north,batteries=6": {
+      "model": "hayo:block/battery_box_batteries6"
+    },
+    "facing=east,batteries=6": {
+      "model": "hayo:block/battery_box_batteries6",
+      "y": 90
+    },
+    "facing=south,batteries=6": {
+      "model": "hayo:block/battery_box_batteries6",
+      "y": 180
+    },
+    "facing=west,batteries=6": {
+      "model": "hayo:block/battery_box_batteries6",
+      "y": 270
+    }
+  }
+}

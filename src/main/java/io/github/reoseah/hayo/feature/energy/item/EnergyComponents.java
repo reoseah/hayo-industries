@@ -219,11 +219,11 @@ public class EnergyComponents {
             return 0;
         }
 
-        var transferRate = Math.min(sourceStorage.transferLimit(), targetStorage.transferLimit());
+        var transferLimit = Math.min(sourceStorage.transferLimit(), targetStorage.transferLimit());
         var sourceEnergy = getEnergy(source);
         int targetEnergy = getEnergy(target);
 
-        var transfer = Math.min(transferRate, Math.min(sourceEnergy, targetStorage.capacity() - targetEnergy));
+        var transfer = Math.min(transferLimit, Math.min(sourceEnergy, targetStorage.capacity() - targetEnergy));
         setEnergy(target, targetEnergy + transfer);
         setEnergy(source, sourceEnergy - transfer);
 

@@ -2,6 +2,10 @@ package io.github.reoseah.hayo;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
+import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlock;
+import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlockEntity;
+import io.github.reoseah.hayo.feature.battery_box.BatteryBoxMenu;
+import io.github.reoseah.hayo.feature.battery_box.BatteryBoxScreen;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.cable.CableItem;
 import io.github.reoseah.hayo.feature.electric_beacon.*;
@@ -71,7 +75,6 @@ import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemMode
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -79,6 +82,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
@@ -180,33 +184,36 @@ public class Hayo {
         });
         ServerTickEvents.END_LEVEL_TICK.register(level -> {
             ElectricBlockManager.get(level).onLevelTickEnd();
-
-            for (var player : level.players()) {
-                var chestItem = player.getItemBySlot(EquipmentSlot.CHEST);
-                if (!chestItem.has(EnergyComponents.ENERGY_BACKPACK)) {
-                    continue;
-                }
-                var chestStats = chestItem.get(EnergyComponents.ENERGY_STORAGE);
-                if (chestStats == null) {
-                    continue;
-                }
-                var chestLimit = chestStats.transferLimit();
-                if (chestLimit == 0) {
-                    continue;
-                }
-                var chestEnergy = EnergyComponents.getEnergy(chestItem);
-                if (chestEnergy == 0) {
-                    continue;
-                }
-                int moved = EnergyComponents.spreadEnergy(player, Math.min(chestEnergy, chestLimit), EquipmentSlot.CHEST);
-                EnergyComponents.setEnergy(chestItem, chestEnergy - moved);
-
-                player.getInventory().setChanged();
-                if (player.isCreative()) {
-                    player.inventoryMenu.broadcastChanges();
-                }
-            }
+            tickPlayerInventories(level);
         });
+    }
+
+    private static void tickPlayerInventories(ServerLevel level) {
+        for (var player : level.players()) {
+            var chestItem = player.getItemBySlot(EquipmentSlot.CHEST);
+            if (!chestItem.has(EnergyComponents.ENERGY_BACKPACK)) {
+                continue;
+            }
+            var chestStats = chestItem.get(EnergyComponents.ENERGY_STORAGE);
+            if (chestStats == null) {
+                continue;
+            }
+            var chestLimit = chestStats.transferLimit();
+            if (chestLimit == 0) {
+                continue;
+            }
+            var chestEnergy = EnergyComponents.getEnergy(chestItem);
+            if (chestEnergy == 0) {
+                continue;
+            }
+            int moved = EnergyComponents.spreadEnergy(player, Math.min(chestEnergy, chestLimit), EquipmentSlot.CHEST);
+            EnergyComponents.setEnergy(chestItem, chestEnergy - moved);
+
+            player.getInventory().setChanged();
+            if (player.isCreative()) {
+                player.inventoryMenu.broadcastChanges();
+            }
+        }
     }
 
     @Environment(EnvType.CLIENT)
@@ -237,12 +244,15 @@ public class Hayo {
         public static final Block COMPRESSOR = register("compressor", CompressorBlock::new, MACHINES);
         public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, MACHINES);
         public static final Block MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlock::new, MACHINES);
+        public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, MACHINES);
         public static final Block BATTERY_ARRAY = register("battery_array", BatteryArrayBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
         public static final Block ELECTRIC_BEACON = register("electric_beacon", ElectricBeaconBlock::new, BlockBehaviour.Properties.of().strength(5F, 30F).lightLevel(s -> 15).noOcclusion().sound(SoundType.GLASS));
 
         public static final CableBlock CABLE = register("cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final Block GLASS_FIBER = register("glass_fiber", properties -> /* TODO */ new Block(properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
         public static final Block RESIN_YIELDING_RUBBER_LOG = register("resin_yielding_rubber_log", ResinYieldingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
         public static final Block RUBBER_WOOD = register("rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
@@ -286,7 +296,7 @@ public class Hayo {
         }
     }
 
-    public static class HayoBlockTags {
+    public static class HBlockTags {
         public static final TagKey<Block> WRENCH_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/wrench"));
         public static final TagKey<Block> CHAINSAW_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/chainsaw"));
         public static final TagKey<Block> DRILL_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/drill"));
@@ -302,12 +312,14 @@ public class Hayo {
         public static final Item COMPRESSOR = registerBlock(Blocks.COMPRESSOR);
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
         public static final Item MATTER_GENERATOR = registerBlock(Blocks.MATTER_GENERATOR, new Item.Properties().rarity(Rarity.EPIC));
+        public static final Item BATTERY_BOX = registerBlock(Blocks.BATTERY_BOX);
         public static final Item BATTERY_ARRAY = registerBlock(Blocks.BATTERY_ARRAY);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
         public static final Item ELECTRIC_BEACON = registerBlock(Blocks.ELECTRIC_BEACON, new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item CABLE = registerBlock(Blocks.CABLE, CableItem::new);
         public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, CableItem::new);
+        public static final Item GLASS_FIBER = registerBlock(Blocks.GLASS_FIBER);
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
         public static final Item RUBBER_WOOD = registerBlock(Blocks.RUBBER_WOOD);
@@ -339,7 +351,7 @@ public class Hayo {
                 .component(DataComponents.TOOL, new Tool( //
                         List.of( //
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
-                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HayoBlockTags.WRENCH_MINEABLE), 20F) //
+                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.WRENCH_MINEABLE), 20F) //
                         ), 1F, 1, true) //
                 ) //
                 .repairable(COPPER_INGOTS) //
@@ -352,7 +364,7 @@ public class Hayo {
                 .component(DataComponents.TOOL, new Tool( //
                         List.of( //
                                 Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
-                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HayoBlockTags.CHAINSAW_MINEABLE), 0.5F) //
+                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.CHAINSAW_MINEABLE), 0.5F) //
                         ), 0.5F, 0, false) //
                 ) //
                 .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
@@ -364,7 +376,7 @@ public class Hayo {
         private static Tool drillTool(TagKey<Block> incorrectBlocks) {
             return new Tool(List.of( //
                     Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(incorrectBlocks)), //
-                    Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HayoBlockTags.DRILL_MINEABLE), 0.5F) //
+                    Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.DRILL_MINEABLE), 0.5F) //
             ), 0.5F, 0, true);
         }
 
@@ -499,12 +511,14 @@ public class Hayo {
                 entries.accept(COMPRESSOR);
                 entries.accept(EXTRACTOR);
                 entries.accept(MATTER_GENERATOR);
+                entries.accept(BATTERY_BOX);
                 entries.accept(BATTERY_ARRAY);
                 entries.accept(ENERGY_CRYSTAL_ARRAY);
                 entries.accept(ELECTRIC_BEACON);
 
                 entries.accept(CABLE);
                 entries.accept(POWER_CABLE);
+                // entries.accept(GLASS_FIBER);
 
                 entries.accept(RUBBER_LOG);
                 entries.accept(RUBBER_WOOD);
@@ -644,13 +658,16 @@ public class Hayo {
     }
 
     public static class ItemTags {
+        public static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
+        public static final TagKey<Item> FLAK_MATERIALS = TagKey.create(Registries.ITEM, modId("flak_materials"));
+        public static final TagKey<Item> DISABLED_GENERATOR_FUELS = TagKey.create(Registries.ITEM, modId("disabled_generator_fuels"));
+
         public static final TagKey<Item> ELECTRIC_FURNACE_UPGRADES = TagKey.create(Registries.ITEM, modId("electric_furnace_upgrades"));
         public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("macerator_upgrades"));
         public static final TagKey<Item> COMPRESSOR_UPGRADES = TagKey.create(Registries.ITEM, modId("compressor_upgrades"));
         public static final TagKey<Item> EXTRACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("extractor_upgrades"));
-        public static final TagKey<Item> SILICON_BRONZE_MATERIALS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/silicon_bronze"));
-        public static final TagKey<Item> FLAK_MATERIALS = TagKey.create(Registries.ITEM, modId("flak_materials"));
-        public static final TagKey<Item> DISABLED_GENERATOR_FUELS = TagKey.create(Registries.ITEM, modId("disabled_generator_fuels"));
+
+        public static final TagKey<Item> BATTERY_BOX_BATTERIES = TagKey.create(Registries.ITEM, modId("battery_box_batteries"));
     }
 
     public static class BlockEntityTypes {
@@ -660,6 +677,7 @@ public class Hayo {
         public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR = register("compressor", CompressorBlockEntity::new, Blocks.COMPRESSOR);
         public static final BlockEntityType<ExtractorBlockEntity> EXTRACTOR = register("extractor", ExtractorBlockEntity::new, Blocks.EXTRACTOR);
         public static final BlockEntityType<MatterGeneratorBlockEntity> MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlockEntity::new, Blocks.MATTER_GENERATOR);
+        public static final BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX = register("battery_box", BatteryBoxBlockEntity::new, Blocks.BATTERY_BOX);
         public static final BlockEntityType<BatteryArrayBlockEntity> BATTERY_ARRAY = register("battery_array", BatteryArrayBlockEntity::new, Blocks.BATTERY_ARRAY);
         public static final BlockEntityType<EnergyCrystalArrayBlockEntity> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlockEntity::new, Blocks.ENERGY_CRYSTAL_ARRAY);
         public static final BlockEntityType<ElectricBeaconBlockEntity> ELECTRIC_BEACON = register("electric_beacon", ElectricBeaconBlockEntity::new, Blocks.ELECTRIC_BEACON);
@@ -685,6 +703,7 @@ public class Hayo {
         public static final MenuType<EnergyStorageMenu> BATTERY_ARRAY = register("battery_array", BatteryArrayMenu::new);
         public static final MenuType<EnergyStorageMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
         public static final MenuType<ElectricBeaconMenu> ELECTRIC_BEACON = register("electric_beacon", ElectricBeaconMenu::new);
+        public static final MenuType<BatteryBoxMenu> BATTERY_BOX = register("battery_box", BatteryBoxMenu::new);
 
         public static void initialize() {
         }
@@ -703,6 +722,7 @@ public class Hayo {
             MenuScreens.register(COMPRESSOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.COMPRESSOR));
             MenuScreens.register(EXTRACTOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.EXTRACTOR));
             MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
+            MenuScreens.register(BATTERY_BOX, BatteryBoxScreen::new);
             MenuScreens.register(BATTERY_ARRAY, EnergyStorageScreen::new);
             MenuScreens.register(ENERGY_CRYSTAL_ARRAY, EnergyStorageScreen::new);
             MenuScreens.register(ELECTRIC_BEACON, ElectricBeaconScreen::new);
@@ -784,26 +804,7 @@ public class Hayo {
 
         @Environment(EnvType.CLIENT)
         public static void initializeClient() {
-            ClientPlayNetworking.registerGlobalReceiver(OVERLOAD_CABLE, (payload, context) -> {
-                var level = context.client().level;
-
-                for (var destructionEntry : payload.destructionProgress().object2IntEntrySet()) {
-                    var pos = destructionEntry.getKey();
-                    var value = destructionEntry.getIntValue();
-
-                    level.destroyBlockProgress(-Math.abs(pos.hashCode()), pos, value);
-                    if (value > 0) {
-                        for (int i = 0; i < 2; i++) {
-                            float x = pos.getX() + 0.25F + level.getRandom().nextFloat() * 0.5F;
-                            float y = pos.getY() + 0.25F + level.getRandom().nextFloat() * 0.5F;
-                            float z = pos.getZ() + 0.25F + level.getRandom().nextFloat() * 0.5F;
-
-                            level.addParticle(ParticleTypes.SMOKE, x, y, z, 0, 0, 0);
-                            level.addParticle(ParticleTypes.FLAME, x, y, z, 0, 0, 0);
-                        }
-                    }
-                }
-            });
+            ClientPlayNetworking.registerGlobalReceiver(OVERLOAD_CABLE, OverloadCablePayload::receive);
         }
     }
 }

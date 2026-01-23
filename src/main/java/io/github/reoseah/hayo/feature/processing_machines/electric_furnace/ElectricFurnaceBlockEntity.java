@@ -20,7 +20,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<AbstractCookingRecipe> {
-    public static final int TRANSFER_RATE = 32;
+    public static final int TRANSFER_LIMIT = 32;
     public static final int ENERGY_USE_RATE = 3;
     public static final int CAPACITY = energyCostFromCookingTime(AbstractFurnaceBlockEntity.BURN_TIME_STANDARD); /* 200 * 3/4 * 3 = 450 e */
     public static final int MAX_INDUCTION_HEAT = 10_000;
@@ -78,8 +78,8 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
     }
 
     @Override
-    protected int getEnergyTransferRate() {
-        return TRANSFER_RATE;
+    protected int getEnergyTransferLimit() {
+        return TRANSFER_LIMIT;
     }
 
     @Override

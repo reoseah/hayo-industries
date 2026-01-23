@@ -71,11 +71,11 @@ public class ElectricBeaconBlockEntity extends ElectricBlockEntity {
 
     @Override
     protected int getEnergyCapacity() {
-        return 10000;
+        return 100_000;
     }
 
     @Override
-    protected int getEnergyTransferRate() {
+    protected int getEnergyTransferLimit() {
         return 512;
     }
 
@@ -190,22 +190,22 @@ public class ElectricBeaconBlockEntity extends ElectricBlockEntity {
 
         if (entity.levels >= 3) {
             if (entity.choices[2] == ElectricBeacon.HORIZONTAL_RANGE_2) {
-                horizontalRangeMultiplier += 1;
+                horizontalRangeMultiplier += 2;
             } else if (entity.choices[2] == ElectricBeacon.VERTICAL_RANGE_2) {
-                verticalRangeMultiplier += 1;
+                verticalRangeMultiplier += 2;
             } else if (entity.choices[2] == ElectricBeacon.POWER_2) {
-                usageMultiplier += 1;
+                usageMultiplier += 2;
             }
         }
 
         if (entity.levels >= 4) {
-            if (entity.choices[3] == ElectricBeacon.HORIZONTAL_RANGE_3) {
-                horizontalRangeMultiplier += 2;
-            } else if (entity.choices[3] == ElectricBeacon.VERTICAL_RANGE_3) {
-                verticalRangeMultiplier += 2;
-            } else if (entity.choices[3] == ElectricBeacon.POWER_3) {
-                usageMultiplier += 1;
-            }
+//            if (entity.choices[3] == ElectricBeacon.HORIZONTAL_RANGE_3) {
+//                horizontalRangeMultiplier += 2;
+//            } else if (entity.choices[3] == ElectricBeacon.VERTICAL_RANGE_3) {
+//                verticalRangeMultiplier += 2;
+//            } else if (entity.choices[3] == ElectricBeacon.POWER_3) {
+//                usageMultiplier += 1;
+//            }
         }
 
         entity.wirelessTransmissionRate = baseUsageRate * usageMultiplier;

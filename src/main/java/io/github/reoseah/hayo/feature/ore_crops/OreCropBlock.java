@@ -29,11 +29,11 @@ public abstract class OreCropBlock extends VegetationBlock implements Bonemealab
     public static final IntegerProperty AGE = BlockStateProperties.AGE_7;
     public static final BooleanProperty ORE_FERTILIZED = BooleanProperty.create("ore_fertilized");
 
-    public final TagKey<Item> oreFertilizers;
+    public final TagKey<Item> fertilizers;
 
-    public OreCropBlock(TagKey<Item> oreFertilizers, Properties properties) {
+    public OreCropBlock(TagKey<Item> fertilizers, Properties properties) {
         super(properties);
-        this.oreFertilizers = oreFertilizers;
+        this.fertilizers = fertilizers;
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(ORE_FERTILIZED, false));
     }
 
@@ -59,7 +59,7 @@ public abstract class OreCropBlock extends VegetationBlock implements Bonemealab
 
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.is(this.oreFertilizers) && !state.getValue(ORE_FERTILIZED) && state.getValue(AGE) != MAX_AGE) {
+        if (stack.is(this.fertilizers) && !state.getValue(ORE_FERTILIZED) && state.getValue(AGE) != MAX_AGE) {
             if (!level.isClientSide()) {
                 if (!player.isCreative()) {
                     stack.setCount(stack.getCount() - 1);

@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class EnergyCrystalArrayBlockEntity extends EnergyStorageBlockEntity implements MenuProvider {
     public static final int CAPACITY = 400_000;
-    public static final int TRANSFER_RATE = 128;
+    public static final int TRANSFER_LIMIT = 128;
 
     public EnergyCrystalArrayBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.ENERGY_CRYSTAL_ARRAY, pos, state);
@@ -35,7 +35,7 @@ public class EnergyCrystalArrayBlockEntity extends EnergyStorageBlockEntity impl
     }
 
     @Override
-    protected int getEnergyTransferRate() {
-        return TRANSFER_RATE;
+    protected int getEnergyTransferLimit() {
+        return TRANSFER_LIMIT;
     }
 }

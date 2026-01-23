@@ -21,24 +21,32 @@ public abstract class ElectricBlockEntity extends HayoContainerBlockEntity {
 
     protected abstract int getEnergyCapacity();
 
-    protected abstract int getEnergyTransferRate();
+    protected abstract int getEnergyTransferLimit();
+
+    protected boolean doesStoredEnergyPersist() {
+        return true;
+    }
 
     @Override
     @MustBeInvokedByOverriders
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("stored_energy", this.storedEnergy);
+        if (this.doesStoredEnergyPersist()) {
+            output.putInt("stored_energy", this.storedEnergy);
+        }
     }
 
     @Override
     @MustBeInvokedByOverriders
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.storedEnergy = input.getIntOr("stored_energy", 0);
+        if (this.doesStoredEnergyPersist()) {
+            this.storedEnergy = input.getIntOr("stored_energy", 0);
+        }
     }
 
     public int getReceivableEnergy() {
-        return Math.min(this.getEnergyCapacity() - this.storedEnergy, this.getEnergyTransferRate() - this.energyPerTick);
+        return Math.min(this.getEnergyCapacity() - this.storedEnergy, this.getEnergyTransferLimit() - this.energyPerTick);
     }
 
     public int receiveEnergy(int amount) {
@@ -54,7 +62,7 @@ public abstract class ElectricBlockEntity extends HayoContainerBlockEntity {
     public void chargeFromSlot(int slot) {
         int limit = this.getReceivableEnergy();
         if (limit > 0) {
-            int change = EnergyComponents.discharge(limit, getItem(slot));
+            int change = EnergyComponents.discharge(limit, this.getItem(slot));
             if (change > 0) {
                 this.storedEnergy += change;
                 this.energyPerTick += change;

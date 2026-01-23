@@ -33,7 +33,7 @@ public class EnergyStorageScreen extends HayoContainerScreen<EnergyStorageMenu> 
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (this.isHovering(88, 16, 18, 56, mouseX, mouseY)) {
+        if (this.isHovering(89, 17, 17, 55, mouseX, mouseY)) {
             int storedEnergy = this.menu.getStoredEnergy();
             int capacity = this.menu.getEnergyCapacity();
             float averageEnergyPerTick = this.menu.getAverageEnergyPerTick();

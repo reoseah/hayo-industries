@@ -3,7 +3,9 @@ package io.github.reoseah.hayo.feature.energy.blocks;
 import io.github.reoseah.hayo.Hayo;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -12,6 +14,27 @@ import net.minecraft.world.level.ChunkPos;
 public record OverloadCablePayload(ChunkPos chunkPos,
                                    Object2IntMap<BlockPos> destructionProgress) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, OverloadCablePayload> STREAM_CODEC = CustomPacketPayload.codec(OverloadCablePayload::write, OverloadCablePayload::read);
+
+    public static void receive(OverloadCablePayload payload, ClientPlayNetworking.Context context) {
+        var level = context.client().level;
+
+        for (var destructionEntry : payload.destructionProgress().object2IntEntrySet()) {
+            var pos = destructionEntry.getKey();
+            var value = destructionEntry.getIntValue();
+
+            level.destroyBlockProgress(-Math.abs(pos.hashCode()), pos, value);
+            if (value > 0) {
+                for (int i = 0; i < 2; i++) {
+                    float x = pos.getX() + 0.25F + level.getRandom().nextFloat() * 0.5F;
+                    float y = pos.getY() + 0.25F + level.getRandom().nextFloat() * 0.5F;
+                    float z = pos.getZ() + 0.25F + level.getRandom().nextFloat() * 0.5F;
+
+                    level.addParticle(ParticleTypes.SMOKE, x, y, z, 0, 0, 0);
+                    level.addParticle(ParticleTypes.FLAME, x, y, z, 0, 0, 0);
+                }
+            }
+        }
+    }
 
     public static OverloadCablePayload read(FriendlyByteBuf buffer) {
         var chunkPos = ChunkPos.STREAM_CODEC.decode(buffer);

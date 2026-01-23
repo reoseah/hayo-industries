@@ -24,13 +24,13 @@ public class ElectricShapedRecipe extends ShapedRecipe {
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
         var result = super.assemble(input, registries);
 
-        if (result.has(EnergyComponents.ENERGY_STORAGE)) {
+        var resultStorage = result.get(EnergyComponents.ENERGY_STORAGE);
+        if (resultStorage != null) {
             int totalEnergy = 0;
             for (int i = 0; i < input.size(); i++) {
-                var stack = input.getItem(i);
-                totalEnergy += stack.getOrDefault(EnergyComponents.ENERGY, 0);
+                totalEnergy += EnergyComponents.getEnergy(input.getItem(i));
             }
-            EnergyComponents.setEnergy(result, totalEnergy);
+            EnergyComponents.setEnergy(result, Math.min(totalEnergy, resultStorage.capacity()));
         }
 
         return result;

@@ -14,6 +14,18 @@ import net.minecraft.world.item.ItemStack;
 public abstract class EnergyStorageMenu extends HayoContainerMenu {
     protected final ContainerData data;
 
+    protected EnergyStorageMenu(MenuType<?> type, int menuId, Container container, ContainerData data, Inventory inventory) {
+        super(type, menuId, container);
+
+        this.data = data;
+        this.addDataSlots(this.data);
+
+        this.addSlot(new Slot(container, 0, 62, 18));
+        this.addSlot(new Slot(container, 1, 62, 54));
+
+        this.addStandardInventorySlots(inventory, 8, 84);
+    }
+
     protected static ContainerData createData() {
         return new SimpleContainerData(3);
     }
@@ -39,18 +51,6 @@ public abstract class EnergyStorageMenu extends HayoContainerMenu {
             public void set(int index, int value) {
             }
         };
-    }
-
-    protected EnergyStorageMenu(MenuType<?> type, int menuId, Container container, ContainerData data, Inventory inventory) {
-        super(type, menuId, container);
-
-        this.data = data;
-        this.addDataSlots(this.data);
-
-        this.addSlot(new Slot(container, 0, 62, 18));
-        this.addSlot(new Slot(container, 1, 62, 54));
-
-        this.addStandardInventorySlots(inventory, 8, 84);
     }
 
     @Override

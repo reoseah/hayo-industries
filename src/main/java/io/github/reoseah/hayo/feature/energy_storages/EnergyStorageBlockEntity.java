@@ -67,7 +67,7 @@ public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity imple
     public static void tickServer(Level level, BlockPos pos, BlockState state, EnergyStorageBlockEntity entity) {
         entity.chargeFromSlot(0);
 
-        int max = Math.min(entity.storedEnergy, entity.getEnergyTransferRate());
+        int max = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit());
         int discharge = EnergyComponents.charge(max, entity.getItem(1));
         if (discharge > 0) {
             entity.storedEnergy -= discharge;
@@ -76,7 +76,7 @@ public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity imple
         }
 
         if (entity.storedEnergy > 0) {
-            int sent = ElectricBlocks.trySend(Math.min(entity.storedEnergy, entity.getEnergyTransferRate()), (ServerLevel) level, pos, state.getValue(DirectionalMachineBlock.FACING));
+            int sent = ElectricBlocks.trySend(Math.min(entity.storedEnergy, entity.getEnergyTransferLimit()), (ServerLevel) level, pos, state.getValue(DirectionalMachineBlock.FACING));
             if (sent > 0) {
                 entity.storedEnergy -= sent;
                 entity.setChanged();

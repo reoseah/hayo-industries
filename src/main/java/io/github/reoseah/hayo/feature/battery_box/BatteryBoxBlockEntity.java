@@ -1,0 +1,199 @@
+package io.github.reoseah.hayo.feature.battery_box;
+
+import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
+import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import org.jspecify.annotations.Nullable;
+
+public class BatteryBoxBlockEntity extends ElectricBlockEntity implements WorldlyContainer {
+    public static final int BATTERY_SLOTS = 6, CHARGING_SLOT = 6, SLOTS = 7;
+
+    protected int capacity = 0;
+    protected int transferLimit = 0;
+    protected int batteryCount = 0;
+    protected boolean batteryCountChanged = false;
+
+    public BatteryBoxBlockEntity(BlockPos pos, BlockState state) {
+        super(Hayo.BlockEntityTypes.BATTERY_BOX, pos, state);
+    }
+
+    @Override
+    protected NonNullList<ItemStack> createInventory() {
+        return NonNullList.withSize(SLOTS, ItemStack.EMPTY);
+    }
+
+    @Override
+    protected int getEnergyCapacity() {
+        return this.capacity;
+    }
+
+    @Override
+    protected int getEnergyTransferLimit() {
+        return this.transferLimit;
+    }
+
+    @Override
+    protected boolean doesStoredEnergyPersist() {
+        return false;
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.updateEnergyStats();
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        super.setItem(slot, stack);
+        this.updateEnergyStats();
+    }
+
+    @Override
+    public ItemStack removeItem(int slot, int amount) {
+        var item = super.removeItem(slot, amount);
+        this.updateEnergyStats();
+        return item;
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int slot) {
+        var item = super.removeItemNoUpdate(slot);
+        this.updateEnergyStats();
+        return item;
+    }
+
+    protected void updateEnergyStats() {
+        int batteryCount = 0;
+        int capacity = 0;
+        int transferLimit = 0;
+        int energy = 0;
+        for (int i = 0; i < BATTERY_SLOTS; i++) {
+            var item = this.getItem(i);
+            var itemStorage = item.get(EnergyComponents.ENERGY_STORAGE);
+            if (itemStorage == null) {
+                continue;
+            }
+            batteryCount++;
+            capacity += itemStorage.capacity();
+            transferLimit += itemStorage.transferLimit();
+            energy += EnergyComponents.getEnergy(item);
+        }
+        this.capacity = capacity;
+        this.transferLimit = Math.min(transferLimit, 32);
+        this.storedEnergy = energy;
+        if (this.batteryCount != batteryCount) {
+            this.batteryCount = batteryCount;
+            this.batteryCountChanged = true;
+        }
+    }
+
+    @Override
+    protected Component getDefaultName() {
+        return Component.translatable("block.hayo.battery_box");
+    }
+
+    @Override
+    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new BatteryBoxMenu(containerId, this, inventory);
+    }
+
+    @Override
+    public int[] getSlotsForFace(Direction direction) {
+        return new int[]{CHARGING_SLOT};
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
+        return slot == CHARGING_SLOT && !EnergyComponents.canChargeInMachine(stack);
+    }
+
+    @Override
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
+        return slot == CHARGING_SLOT && EnergyComponents.canChargeInMachine(stack);
+    }
+
+    public static void tickServer(Level level, BlockPos pos, BlockState state, BatteryBoxBlockEntity entity) {
+        if (entity.batteryCountChanged) {
+            if (entity.batteryCount != state.getValue(BatteryBoxBlock.BATTERIES)) {
+                level.setBlockAndUpdate(pos, state.setValue(BatteryBoxBlock.BATTERIES, entity.batteryCount));
+            }
+            entity.batteryCountChanged = false;
+        }
+
+        if (!entity.getItem(CHARGING_SLOT).isEmpty()) {
+            int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit());
+            int transfer = EnergyComponents.charge(limit, entity.getItem(CHARGING_SLOT));
+            if (transfer > 0) {
+                entity.extractFromBatteries(transfer);
+                entity.storedEnergy -= transfer;
+                entity.energyPerTick -= transfer;
+                entity.setChanged();
+            }
+        }
+
+        entity.onTickEnd();
+    }
+
+    @Override
+    public int receiveEnergy(int amount) {
+        int transfer = super.receiveEnergy(amount);
+        this.insertToBatteries(transfer);
+        return transfer;
+    }
+
+    protected void insertToBatteries(int amount) {
+        int leftToInsert = amount;
+        for (int i = 0; i < BATTERY_SLOTS; i++) {
+            var item = this.getItem(i);
+            var itemStorage = item.get(EnergyComponents.ENERGY_STORAGE);
+            if (itemStorage == null) {
+                continue;
+            }
+            int itemEnergy = EnergyComponents.getEnergy(item);
+            int vacancy = itemStorage.capacity() - itemEnergy;
+            if (vacancy > 0) {
+                int inserted = Math.min(leftToInsert, Math.min(vacancy, itemStorage.transferLimit()));
+                EnergyComponents.setEnergy(item, itemEnergy + inserted);
+                leftToInsert -= inserted;
+
+                if (leftToInsert == 0) {
+                    break;
+                }
+            }
+        }
+    }
+
+    protected void extractFromBatteries(int amount) {
+        int leftToExtract = amount;
+        for (int i = BATTERY_SLOTS - 1; i >= 0; i--) {
+            var item = this.getItem(i);
+            var itemStorage = item.get(EnergyComponents.ENERGY_STORAGE);
+            if (itemStorage == null) {
+                continue;
+            }
+            int itemEnergy = EnergyComponents.getEnergy(item);
+            if (itemEnergy > 0) {
+                int extracted = Math.min(leftToExtract, Math.min(itemEnergy, itemStorage.transferLimit()));
+                EnergyComponents.setEnergy(item, itemEnergy - extracted);
+                leftToExtract -= extracted;
+
+                if (leftToExtract == 0) {
+                    break;
+                }
+            }
+        }
+    }
+}

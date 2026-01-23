@@ -35,13 +35,15 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        int x = this.leftPos;
+        int y = this.topPos;
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x, y, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 
-        HayoGuiSprites.drawSlot(graphics, this.leftPos + this.menu.slots.get(0).x - 1, this.topPos + this.menu.slots.get(0).y - 1);
-        HayoGuiSprites.drawOutputSlot(graphics, this.leftPos + this.menu.slots.get(1).x - 4, this.topPos + this.menu.slots.get(1).y - 4);
+        HayoGuiSprites.drawSlot(graphics, x + this.menu.slots.get(0).x - 1, y + this.menu.slots.get(0).y - 1);
+        HayoGuiSprites.drawOutputSlot(graphics, x + this.menu.slots.get(1).x - 4, y + this.menu.slots.get(1).y - 4);
 
-        HayoGuiSprites.drawMachineEnergy(graphics, this.leftPos + 57, this.topPos + 17, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
-        HayoGuiSprites.drawRecipeArrow(graphics, this.leftPos + 80, this.topPos + 25, HayoGuiSprites.RecipeArrow.DEFAULT, this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
+        HayoGuiSprites.drawMachineEnergy(graphics, x + 57, y + 17, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
+        HayoGuiSprites.drawRecipeArrow(graphics, x + 80, y + 25, HayoGuiSprites.RecipeArrow.DEFAULT, this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
 
         this.drawRecipeButtons(graphics, mouseX, mouseY);
 

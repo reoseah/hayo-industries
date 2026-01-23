@@ -77,7 +77,7 @@ public class ElectricBeacon {
             Hayo.modId("electric_beacon_options/charge_pad"), //
             Component.translatable("hayo.electric_beacon.charge_pad"), //
             Component.translatable("hayo.electric_beacon.charge_pad.desc").withStyle(ChatFormatting.GRAY), //
-            Component.translatable("hayo.energy.max_amount_per_tick", "+700").withStyle(ChatFormatting.GRAY) //
+            Component.translatable("hayo.energy.max_amount_per_tick", "+700%").withStyle(ChatFormatting.GRAY) //
     );
 
     public static final ElectricBeaconOption NONE_4 = new ElectricBeaconOption( //
