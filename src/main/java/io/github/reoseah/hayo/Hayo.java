@@ -553,32 +553,40 @@ public class Hayo {
                 entries.accept(WRENCH);
 
                 entries.accept(CHAINSAW);
-                entries.accept(EnergyComponents.withFullCharge(CHAINSAW));
+                entries.accept(EnergyComponents.withFullEnergy(CHAINSAW));
                 entries.accept(DRILL);
-                entries.accept(EnergyComponents.withFullCharge(DRILL));
+                entries.accept(EnergyComponents.withFullEnergy(DRILL));
                 entries.accept(DIAMOND_DRILL);
-                entries.accept(EnergyComponents.withFullCharge(DIAMOND_DRILL));
+                entries.accept(EnergyComponents.withFullEnergy(DIAMOND_DRILL));
                 entries.accept(ADVANCED_DRILL);
-                entries.accept(EnergyComponents.withFullCharge(ADVANCED_DRILL));
+                entries.accept(EnergyComponents.withFullEnergy(ADVANCED_DRILL));
 
                 entries.accept(NANO_HELMET);
-                entries.accept(EnergyComponents.withFullCharge(NANO_HELMET));
+                entries.accept(EnergyComponents.withFullEnergy(NANO_HELMET));
                 entries.accept(NANO_CHESTPLATE);
-                entries.accept(EnergyComponents.withFullCharge(NANO_CHESTPLATE));
+                entries.accept(EnergyComponents.withFullEnergy(NANO_CHESTPLATE));
                 entries.accept(NANO_LEGGINGS);
-                entries.accept(EnergyComponents.withFullCharge(NANO_LEGGINGS));
+                entries.accept(EnergyComponents.withFullEnergy(NANO_LEGGINGS));
                 entries.accept(NANO_BOOTS);
-                entries.accept(EnergyComponents.withFullCharge(NANO_BOOTS));
+                entries.accept(EnergyComponents.withFullEnergy(NANO_BOOTS));
 
                 entries.accept(BATTERY_PACK);
-                entries.accept(EnergyComponents.withFullCharge(BATTERY_PACK));
+                entries.accept(EnergyComponents.withFullEnergy(BATTERY_PACK));
                 entries.accept(ADVANCED_BATTERY_PACK);
-                entries.accept(EnergyComponents.withFullCharge(ADVANCED_BATTERY_PACK));
+                entries.accept(EnergyComponents.withFullEnergy(ADVANCED_BATTERY_PACK));
 
                 entries.accept(BATTERY);
-                entries.accept(EnergyComponents.withFullCharge(BATTERY));
+                entries.accept(EnergyComponents.withEnergy(BATTERY, 500), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withEnergy(BATTERY, 2000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withEnergy(BATTERY, 4000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withEnergy(BATTERY, 6000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withEnergy(BATTERY, 8000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(BATTERY));
                 entries.accept(ENERGY_CRYSTAL);
-                entries.accept(EnergyComponents.withFullCharge(ENERGY_CRYSTAL));
+                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 5000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 30000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 70000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(ENERGY_CRYSTAL));
 
                 entries.accept(CANISTER);
                 entries.accept(REFINED_IRON_INGOT);
