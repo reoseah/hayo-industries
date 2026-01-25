@@ -62,7 +62,7 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
                 .add(recipe.value().input());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 61, 5) //
                 .setOutputSlotBackground() //
-                .add(recipe.value().result());
+                .add(recipe.value().result().create());
     }
 
     @Override

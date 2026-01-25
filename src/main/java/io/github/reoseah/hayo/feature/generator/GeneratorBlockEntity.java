@@ -124,8 +124,8 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity implements Wo
 
         var fuelRemainder = fuel.getCraftingRemainder();
         fuel.shrink(1);
-        if (fuel.isEmpty() && !fuelRemainder.isEmpty()) {
-            this.setItem(0, fuelRemainder.copy());
+        if (fuel.isEmpty() && fuelRemainder != null) {
+            this.setItem(0, fuelRemainder.create());
         }
 
         this.fuelEnergyTotal = this.fuelEnergyLeft = fuelValue * ENERGY_PER_FUEL_TICK;

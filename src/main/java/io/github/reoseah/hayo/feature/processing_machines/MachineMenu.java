@@ -113,7 +113,7 @@ public abstract class MachineMenu extends HayoContainerMenu {
                 if (!menu.moveItemStackTo(stack, start, start + upgradeSlots, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (batterySlots != 0 && EnergyComponents.isStorage(stack)) {
+            } else if (batterySlots != 0 && EnergyComponents.canDischargeInMachine(stack)) {
                 int start = inputSlots;
                 if (!menu.moveItemStackTo(stack, start, start + batterySlots, false)) {
                     return ItemStack.EMPTY;

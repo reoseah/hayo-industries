@@ -10,6 +10,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
@@ -18,13 +19,13 @@ public abstract class ClassicMachineRecipe implements Recipe<SingleRecipeInput>,
     @Getter
     private final Ingredient input;
     @Getter
-    private final ItemStack result;
+    private final ItemStackTemplate result;
     private final int processingEnergy;
     @Getter
     public final float extraChance;
 
     public ClassicMachineRecipe(Ingredient input, //
-                                ItemStack result, //
+                                ItemStackTemplate result, //
                                 int processingEnergy, //
                                 float extraChance) {
         this.input = input;
@@ -39,8 +40,8 @@ public abstract class ClassicMachineRecipe implements Recipe<SingleRecipeInput>,
     }
 
     @Override
-    public ItemStack assemble(SingleRecipeInput input, HolderLookup.Provider registries) {
-        return this.result.copy();
+    public ItemStack assemble(SingleRecipeInput input) {
+        return this.result.create();
     }
 
     @Override
@@ -66,7 +67,7 @@ public abstract class ClassicMachineRecipe implements Recipe<SingleRecipeInput>,
 
     @FunctionalInterface
     public interface Factory<R extends ClassicMachineRecipe> {
-        R create(Ingredient input, ItemStack result, int processingEnergy, float extraChance);
+        R create(Ingredient input, ItemStackTemplate result, int processingEnergy, float extraChance);
     }
 
     public static class Serializer<R extends ClassicMachineRecipe> implements RecipeSerializer<R> {
@@ -77,14 +78,14 @@ public abstract class ClassicMachineRecipe implements Recipe<SingleRecipeInput>,
             this.codec = RecordCodecBuilder.mapCodec( //
                     instance -> instance.group( //
                             Ingredient.CODEC.fieldOf("ingredient").forGetter(ClassicMachineRecipe::input), //
-                            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(ClassicMachineRecipe::result), //
+                            ItemStackTemplate.CODEC.fieldOf("result").forGetter(ClassicMachineRecipe::result), //
                             Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(ClassicMachineRecipe::getEnergyCost), //
                             Codec.FLOAT.fieldOf("extra_chance").orElse(0F).forGetter(ClassicMachineRecipe::extraChance) //
                     ).apply(instance, factory::create));
             this.streamCodec = StreamCodec.composite( //
                     Ingredient.CONTENTS_STREAM_CODEC, //
                     ClassicMachineRecipe::input, //
-                    ItemStack.STREAM_CODEC, //
+                    ItemStackTemplate.STREAM_CODEC, //
                     ClassicMachineRecipe::result, //
                     ByteBufCodecs.INT, //
                     ClassicMachineRecipe::getEnergyCost, //

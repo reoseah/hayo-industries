@@ -118,12 +118,12 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
 
     @Override
     protected boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<MatterGeneratingRecipe> recipe, EmptyRecipeInput recipeInput, NonNullList<ItemStack> items) {
-        return recipe != null && canInsertToSlot(items, recipe.value().result(), OUTPUT_SLOT);
+        return recipe != null && canInsertToSlot(items, recipe.value().result().create(), OUTPUT_SLOT);
     }
 
     @Override
     protected void craft(RegistryAccess registryAccess, RecipeHolder<MatterGeneratingRecipe> recipe, EmptyRecipeInput input, NonNullList<ItemStack> items) {
-        var recipeOutput = recipe.value().assemble(input, registryAccess);
+        var recipeOutput = recipe.value().assemble(input);
         var outputStack = items.get(OUTPUT_SLOT);
         if (outputStack.isEmpty()) {
             items.set(OUTPUT_SLOT, recipeOutput);

@@ -65,7 +65,7 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
             }
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, y, 18, 18);
 
-            var item = this.menu.recipes.get(i).value().result();
+            var item = this.menu.recipes.get(i).value().result().create();
             graphics.renderItem(item, x + 1, y + 1);
         }
     }
@@ -105,7 +105,7 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
             if (idx >= 0 && idx < this.menu.recipes.size()) {
                 var recipe = this.menu.recipes.get(idx).value();
                 graphics.setTooltipForNextFrame(this.font, List.of( //
-                        recipe.result().getStyledHoverName(), //
+                        recipe.result().create().getStyledHoverName(), //
                         EnergyTexts.amount(recipe.getEnergyCost()).withStyle(ChatFormatting.GRAY) //
                 ), Optional.empty(), mouseX, mouseY);
                 return;

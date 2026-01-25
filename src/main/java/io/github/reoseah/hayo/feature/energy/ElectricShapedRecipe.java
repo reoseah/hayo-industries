@@ -9,20 +9,21 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 
 public class ElectricShapedRecipe extends ShapedRecipe {
-    public ElectricShapedRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack result, boolean showNotification) {
+    public ElectricShapedRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStackTemplate result, boolean showNotification) {
         super(group, category, pattern, result, showNotification);
     }
 
-    public ElectricShapedRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack result) {
+    public ElectricShapedRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStackTemplate result) {
         super(group, category, pattern, result);
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
-        var result = super.assemble(input, registries);
+    public ItemStack assemble(CraftingInput input) {
+        var result = super.assemble(input);
 
         var resultStorage = result.get(EnergyComponents.ENERGY_STORAGE);
         if (resultStorage != null) {
@@ -46,7 +47,7 @@ public class ElectricShapedRecipe extends ShapedRecipe {
                 .group(Codec.STRING.optionalFieldOf("group", "").forGetter(ShapedRecipe::group), //
                         CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(ShapedRecipe::category), //
                         ShapedRecipePattern.MAP_CODEC.forGetter(recipe -> recipe.pattern), //
-                        ItemStack.STRICT_CODEC.fieldOf("result").forGetter(o -> o.result), //
+                        ItemStackTemplate.CODEC.fieldOf("result").forGetter(o -> o.result), //
                         Codec.BOOL.optionalFieldOf("show_notification", true).forGetter(ShapedRecipe::showNotification) //
                 ) //
                 .apply(instance, ElectricShapedRecipe::new));
@@ -69,7 +70,7 @@ public class ElectricShapedRecipe extends ShapedRecipe {
             var group = input.readUtf();
             var category = input.readEnum(CraftingBookCategory.class);
             var pattern = ShapedRecipePattern.STREAM_CODEC.decode(input);
-            var result = ItemStack.STREAM_CODEC.decode(input);
+            var result = ItemStackTemplate.STREAM_CODEC.decode(input);
             boolean showNotification = input.readBoolean();
             return new ElectricShapedRecipe(group, category, pattern, result, showNotification);
         }
@@ -78,7 +79,7 @@ public class ElectricShapedRecipe extends ShapedRecipe {
             output.writeUtf(recipe.group());
             output.writeEnum(recipe.category());
             ShapedRecipePattern.STREAM_CODEC.encode(output, recipe.pattern);
-            ItemStack.STREAM_CODEC.encode(output, recipe.result);
+            ItemStackTemplate.STREAM_CODEC.encode(output, recipe.result);
             output.writeBoolean(recipe.showNotification());
         }
     }

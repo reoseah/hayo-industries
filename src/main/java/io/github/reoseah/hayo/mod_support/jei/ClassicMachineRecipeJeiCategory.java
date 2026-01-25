@@ -71,9 +71,9 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 61, 5) //
                 .setOutputSlotBackground() //
-                .add(recipe.result());
+                .add(recipe.result().create());
         if (recipe.extraChance() > 0) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 1).setStandardSlotBackground().add(recipe.result().copyWithCount(1));
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 1).setStandardSlotBackground().add(recipe.result().create().copyWithCount(1));
         }
     }
 

@@ -47,8 +47,8 @@ public class MatterGeneratorMenu extends MachineMenu {
             return energyCostComparison;
         }
 
-        var id1 = r1.result().getItem().builtInRegistryHolder().key().identifier();
-        var id2 = r2.result().getItem().builtInRegistryHolder().key().identifier();
+        var id1 = r1.result().create().getItem().builtInRegistryHolder().key().identifier();
+        var id2 = r2.result().create().getItem().builtInRegistryHolder().key().identifier();
         var namespace1 = id1.getNamespace();
         var namespace2 = id2.getNamespace();
         var isVanilla1 = namespace1.equals("minecraft");

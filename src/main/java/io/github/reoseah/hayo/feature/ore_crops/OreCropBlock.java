@@ -101,7 +101,7 @@ public abstract class OreCropBlock extends VegetationBlock implements Bonemealab
                 var soil = level.getBlockState(below.offset(dx, 0, dy));
                 if (soil.is(Blocks.FARMLAND)) {
                     contribution = 1.0F;
-                    if (soil.getValue(FarmBlock.MOISTURE) > 0) {
+                    if (soil.getValue(FarmlandBlock.MOISTURE) > 0) {
                         contribution = 3.0F;
                     }
                 }

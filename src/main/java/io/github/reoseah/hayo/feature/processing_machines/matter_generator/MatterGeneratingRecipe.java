@@ -7,21 +7,21 @@ import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.processing_machines.ElectricCostProvider;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 @Accessors(fluent = true)
 public class MatterGeneratingRecipe implements Recipe<EmptyRecipeInput>, ElectricCostProvider {
     @Getter
-    private final ItemStack result;
+    private final ItemStackTemplate result;
     private final int processingEnergy;
 
-    public MatterGeneratingRecipe(ItemStack result, int processingEnergy) {
+    public MatterGeneratingRecipe(ItemStackTemplate result, int processingEnergy) {
         this.result = result;
         this.processingEnergy = processingEnergy;
     }
@@ -37,8 +37,8 @@ public class MatterGeneratingRecipe implements Recipe<EmptyRecipeInput>, Electri
     }
 
     @Override
-    public ItemStack assemble(EmptyRecipeInput input, HolderLookup.Provider registries) {
-        return this.result.copy();
+    public ItemStack assemble(EmptyRecipeInput input) {
+        return this.result.create();
     }
 
     @Override
@@ -69,12 +69,12 @@ public class MatterGeneratingRecipe implements Recipe<EmptyRecipeInput>, Electri
     public static class Serializer implements RecipeSerializer<MatterGeneratingRecipe> {
         private static final MapCodec<MatterGeneratingRecipe> CODEC = RecordCodecBuilder.mapCodec( //
                 instance -> instance.group( //
-                        ItemStack.STRICT_CODEC.fieldOf("result").forGetter(MatterGeneratingRecipe::result), //
+                        ItemStackTemplate.CODEC.fieldOf("result").forGetter(MatterGeneratingRecipe::result), //
                         Codec.INT.fieldOf("processing_energy").forGetter(MatterGeneratingRecipe::getEnergyCost) //
                 ).apply(instance, MatterGeneratingRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, MatterGeneratingRecipe> STREAM_CODEC = StreamCodec.composite( //
-                ItemStack.STREAM_CODEC, //
+                ItemStackTemplate.STREAM_CODEC, //
                 MatterGeneratingRecipe::result, //
                 ByteBufCodecs.INT, //
                 MatterGeneratingRecipe::getEnergyCost, //

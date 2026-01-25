@@ -55,7 +55,7 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<MatterGeneratingRecipe> recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.OUTPUT, 59, 5) //
                 .setOutputSlotBackground() //
-                .add(recipe.value().result());
+                .add(recipe.value().result().create());
     }
 
     @Override
