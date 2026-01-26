@@ -1,0 +1,17 @@
+{
+  "type": "hayo:electric_shaped_crafting",
+  "category": "misc",
+  "key": {
+    "#": "#minecraft:wooden_tool_materials",
+    "C": "hayo:circuit"
+  },
+  "pattern": [
+    "#C#",
+    "   ",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:battery_box"
+  }
+}

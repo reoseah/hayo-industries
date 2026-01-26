@@ -1,0 +1,19 @@
+{
+  "type": "hayo:electric_shaped_crafting",
+  "category": "misc",
+  "key": {
+    "#": "hayo:nano_leggings",
+    "X": "hayo:quantum_plate",
+    "E": "hayo:energy_flow_circuit",
+    "D": "hayo:data_circuit"
+  },
+  "pattern": [
+    "EDE",
+    "X#X",
+    "X X"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:quantum_leggings"
+  }
+}

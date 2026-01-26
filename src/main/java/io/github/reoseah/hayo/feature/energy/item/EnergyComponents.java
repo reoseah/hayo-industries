@@ -71,6 +71,11 @@ public class EnergyComponents {
             .networkSynchronized(Unit.STREAM_CODEC) //
             .build();
 
+    public static final DataComponentType<Unit> QUANTUM_ARMOR = DataComponentType.<Unit>builder() //
+            .persistent(Unit.CODEC) //
+            .networkSynchronized(Unit.STREAM_CODEC) //
+            .build();
+
     public static boolean isStorage(ItemStack stack) {
         return stack.has(ENERGY_STORAGE);
     }

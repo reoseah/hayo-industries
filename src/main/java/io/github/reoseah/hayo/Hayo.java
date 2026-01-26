@@ -139,6 +139,7 @@ public class Hayo {
             builder -> builder //
                     .initializer(ElectricBlockManager.ChunkData::new) //
                     .persistent(ElectricBlockManager.ChunkData.CODEC.codec()));
+
     public static final TagKey<Item> COPPER_INGOTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"));
 
     public static void initialize() {
@@ -150,6 +151,7 @@ public class Hayo {
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_tool"), EnergyComponents.ENERGY_TOOL);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_armor"), EnergyComponents.ENERGY_ARMOR);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_backpack"), EnergyComponents.ENERGY_BACKPACK);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("quantum_armor"), EnergyComponents.QUANTUM_ARMOR);
 
         Blocks.initialize();
         Items.initialize();
@@ -417,22 +419,39 @@ public class Hayo {
         );
         public static final Item FLAK_CHESTPLATE = registerItem("flak_chestplate", Item::new, new Item.Properties().humanoidArmor(FLAK_ARMOR, ArmorType.CHESTPLATE).stacksTo(1));
 
-        private static Item.Properties nanoArmorProperties(ArmorType armorType) {
+        private static Item.Properties nanoArmorProperties(ArmorType armorType, int armor) {
             return new Item.Properties() //
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(armorType.getSlot()) //
                             .setAsset(modKey(EquipmentAssets.ROOT_ID, "nano")) //
                             .build()) //
                     .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(100_000, 128)) //
-                    .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.armor(armorType, 3, 3, 100)) //
+                    .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.armor(armorType, armor, 3, 100)) //
                     .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(100)) //
                     .rarity(Rarity.RARE) //
                     .stacksTo(1);
         }
 
-        public static final Item NANO_HELMET = registerItem("nano_helmet", ElectricItem::new, nanoArmorProperties(ArmorType.HELMET));
-        public static final Item NANO_CHESTPLATE = registerItem("nano_chestplate", ElectricItem::new, nanoArmorProperties(ArmorType.CHESTPLATE));
-        public static final Item NANO_LEGGINGS = registerItem("nano_leggings", ElectricItem::new, nanoArmorProperties(ArmorType.LEGGINGS));
-        public static final Item NANO_BOOTS = registerItem("nano_boots", ElectricItem::new, nanoArmorProperties(ArmorType.BOOTS));
+        private static Item.Properties quantumArmorProperties(ArmorType armorType, int armor) {
+            return new Item.Properties() //
+                    .component(DataComponents.EQUIPPABLE, Equippable.builder(armorType.getSlot()) //
+                            .setAsset(modKey(EquipmentAssets.ROOT_ID, "quantum")) //
+                            .build()) //
+                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(1_000_000, 512)) //
+                    .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.armor(armorType, armor, 3, 100)) //
+                    .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(200)) //
+                    .component(EnergyComponents.QUANTUM_ARMOR, Unit.INSTANCE) //
+                    .rarity(Rarity.RARE) //
+                    .stacksTo(1);
+        }
+
+        public static final Item NANO_HELMET = registerItem("nano_helmet", ElectricItem::new, nanoArmorProperties(ArmorType.HELMET, 3));
+        public static final Item NANO_CHESTPLATE = registerItem("nano_chestplate", ElectricItem::new, nanoArmorProperties(ArmorType.CHESTPLATE, 8));
+        public static final Item NANO_LEGGINGS = registerItem("nano_leggings", ElectricItem::new, nanoArmorProperties(ArmorType.LEGGINGS, 6));
+        public static final Item NANO_BOOTS = registerItem("nano_boots", ElectricItem::new, nanoArmorProperties(ArmorType.BOOTS, 3));
+        public static final Item QUANTUM_HELMET = registerItem("quantum_helmet", ElectricItem::new, quantumArmorProperties(ArmorType.HELMET, 3));
+        public static final Item QUANTUM_CHESTPLATE = registerItem("quantum_chestplate", ElectricItem::new, quantumArmorProperties(ArmorType.CHESTPLATE, 8));
+        public static final Item QUANTUM_LEGGINGS = registerItem("quantum_leggings", ElectricItem::new, quantumArmorProperties(ArmorType.LEGGINGS, 6));
+        public static final Item QUANTUM_BOOTS = registerItem("quantum_boots", ElectricItem::new, quantumArmorProperties(ArmorType.BOOTS, 3));
 
         public static final Item BATTERY_PACK = registerItem("battery_pack", //
                 ElectricItem::new, //
@@ -552,27 +571,36 @@ public class Hayo {
                 entries.accept(FLAK_CHESTPLATE);
                 entries.accept(WRENCH);
 
-                entries.accept(CHAINSAW);
+                entries.accept(CHAINSAW, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(CHAINSAW));
-                entries.accept(DRILL);
+                entries.accept(DRILL, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(DRILL));
-                entries.accept(DIAMOND_DRILL);
+                entries.accept(DIAMOND_DRILL, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(DIAMOND_DRILL));
-                entries.accept(ADVANCED_DRILL);
+                entries.accept(ADVANCED_DRILL, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(ADVANCED_DRILL));
 
-                entries.accept(NANO_HELMET);
+                entries.accept(NANO_HELMET, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(NANO_HELMET));
-                entries.accept(NANO_CHESTPLATE);
+                entries.accept(NANO_CHESTPLATE, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(NANO_CHESTPLATE));
-                entries.accept(NANO_LEGGINGS);
+                entries.accept(NANO_LEGGINGS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(NANO_LEGGINGS));
-                entries.accept(NANO_BOOTS);
+                entries.accept(NANO_BOOTS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(NANO_BOOTS));
 
-                entries.accept(BATTERY_PACK);
+                entries.accept(QUANTUM_HELMET, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_HELMET));
+                entries.accept(QUANTUM_CHESTPLATE, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_CHESTPLATE));
+                entries.accept(QUANTUM_LEGGINGS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_LEGGINGS));
+                entries.accept(QUANTUM_BOOTS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_BOOTS));
+
+                entries.accept(BATTERY_PACK, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(BATTERY_PACK));
-                entries.accept(ADVANCED_BATTERY_PACK);
+                entries.accept(ADVANCED_BATTERY_PACK, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(ADVANCED_BATTERY_PACK));
 
                 entries.accept(BATTERY);

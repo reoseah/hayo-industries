@@ -114,13 +114,11 @@ public abstract class MachineMenu extends HayoContainerMenu {
                     return ItemStack.EMPTY;
                 }
             } else if (batterySlots != 0 && EnergyComponents.canDischargeInMachine(stack)) {
-                int start = inputSlots;
-                if (!menu.moveItemStackTo(stack, start, start + batterySlots, false)) {
+                if (!menu.moveItemStackTo(stack, inputSlots, inputSlots + batterySlots, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (inputSlots != 0 && (inputs == null || inputs.test(stack))) {
-                int start = 0;
-                if (!menu.moveItemStackTo(stack, start, start + inputSlots, false)) {
+                if (!menu.moveItemStackTo(stack, 0, inputSlots, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index < playerSlotsStart + 27) {

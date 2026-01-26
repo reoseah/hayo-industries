@@ -1,0 +1,19 @@
+{
+  "type": "hayo:electric_shaped_crafting",
+  "category": "misc",
+  "key": {
+    "#": "hayo:nano_chestplate",
+    "X": "hayo:quantum_plate",
+    "E": "hayo:energy_flow_circuit",
+    "D": "hayo:data_circuit"
+  },
+  "pattern": [
+    "X X",
+    "X#X",
+    "EDE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:quantum_chestplate"
+  }
+}

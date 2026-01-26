@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hayo:copper_wire",
+    "hayo:copper_wire",
+    "hayo:copper_wire",
+    "hayo:copper_wire",
+    "hayo:rubber",
+    "hayo:rubber",
+    "hayo:rubber",
+    "hayo:rubber"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hayo:power_cable"
+  }
+}
