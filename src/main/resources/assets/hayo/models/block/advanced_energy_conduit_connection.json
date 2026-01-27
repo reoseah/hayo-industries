@@ -1,0 +1,20 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "#texture",
+    "texture": "hayo:block/advanced_energy_conduit"
+  },
+  "elements": [
+    {
+      "from": [ 3, 0, 3 ],
+      "to": [ 13, 3, 13 ],
+      "faces": {
+        "down": { "texture": "#texture", "cullface": "down" },
+        "north": { "texture": "#texture" },
+        "south": { "texture": "#texture" },
+        "east": { "texture": "#texture" },
+        "west": { "texture": "#texture" }
+      }
+    }
+  ]
+}

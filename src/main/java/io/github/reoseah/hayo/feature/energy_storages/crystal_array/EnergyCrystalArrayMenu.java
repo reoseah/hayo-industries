@@ -7,10 +7,11 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
 
 public class EnergyCrystalArrayMenu extends EnergyStorageMenu {
     public EnergyCrystalArrayMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(2), createData(), inventory);
+        this(menuId, new SimpleContainer(EnergyStorageBlockEntity.SLOTS), new SimpleContainerData(DATA_SLOTS), inventory);
     }
 
     public EnergyCrystalArrayMenu(int menuId, EnergyStorageBlockEntity entity, Inventory inventory) {

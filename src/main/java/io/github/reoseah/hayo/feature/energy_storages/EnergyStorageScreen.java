@@ -19,6 +19,7 @@ public class EnergyStorageScreen extends HayoContainerScreen<EnergyStorageMenu> 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         super.renderBg(graphics, partialTick, mouseX, mouseY);
+
         int x = this.leftPos;
         int y = this.topPos;
 

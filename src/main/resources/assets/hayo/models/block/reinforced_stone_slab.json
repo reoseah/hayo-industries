@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/slab",
+  "parent": "block/slab",
   "textures": {
     "bottom": "hayo:block/reinforced_stone_tiles",
     "top": "hayo:block/reinforced_stone_tiles",

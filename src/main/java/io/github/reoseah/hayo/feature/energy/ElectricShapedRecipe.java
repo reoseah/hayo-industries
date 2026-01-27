@@ -5,7 +5,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +30,7 @@ public class ElectricShapedRecipe extends ShapedRecipe {
             for (int i = 0; i < input.size(); i++) {
                 totalEnergy += EnergyComponents.getEnergy(input.getItem(i));
             }
-            EnergyComponents.setEnergy(result, Math.min(totalEnergy, resultStorage.capacity()));
+            EnergyComponents.setEnergy(result, Math.min(totalEnergy / result.getCount(), resultStorage.capacity()));
         }
 
         return result;

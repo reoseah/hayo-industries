@@ -27,7 +27,7 @@ public abstract class HayoContainerBlockEntity extends BlockEntity implements Co
 
     public HayoContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
-        this.stacks = createInventory();
+        this.stacks = this.createInventory();
     }
 
     protected abstract NonNullList<ItemStack> createInventory();
@@ -88,14 +88,14 @@ public abstract class HayoContainerBlockEntity extends BlockEntity implements Co
     }
 
     @Override
-    protected void applyImplicitComponents(final DataComponentGetter components) {
+    protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
         this.customName = components.get(DataComponents.CUSTOM_NAME);
         components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(this.stacks);
     }
 
     @Override
-    public boolean stillValid(final Player player) {
+    public boolean stillValid(Player player) {
         return Container.stillValidBlockEntity(this, player);
     }
 

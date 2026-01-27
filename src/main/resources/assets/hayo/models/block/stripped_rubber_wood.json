@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/cube_column",
+  "parent": "block/cube_column",
   "textures": {
     "end": "hayo:block/stripped_rubber_log",
     "side": "hayo:block/stripped_rubber_log"

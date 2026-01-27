@@ -138,7 +138,7 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
     }
 
     @Override
-    public boolean mouseDragged(final MouseButtonEvent event, final double dx, final double dy) {
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
         if (this.scrolling && this.isScrollBarActive()) {
             int yscr = this.topPos + 59;
             int yscr2 = yscr + SCROLLER_FULL_HEIGHT;
@@ -152,13 +152,13 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
     }
 
     @Override
-    public boolean mouseReleased(final MouseButtonEvent event) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         this.scrolling = false;
         return super.mouseReleased(event);
     }
 
     @Override
-    public boolean mouseScrolled(final double x, final double y, final double scrollX, final double scrollY) {
+    public boolean mouseScrolled(double x, double y, double scrollX, double scrollY) {
         if (super.mouseScrolled(x, y, scrollX, scrollY)) {
             return true;
         }

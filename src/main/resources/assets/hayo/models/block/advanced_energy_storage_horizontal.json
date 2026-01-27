@@ -1,0 +1,9 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "particle": "hayo:block/advanced_energy_storage_output",
+    "top": "hayo:block/advanced_energy_storage",
+    "front": "hayo:block/advanced_energy_storage_output",
+    "side": "hayo:block/advanced_energy_storage"
+  }
+}

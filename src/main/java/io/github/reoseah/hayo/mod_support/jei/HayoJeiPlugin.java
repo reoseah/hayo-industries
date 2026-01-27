@@ -32,9 +32,9 @@ import java.util.function.Function;
 
 @JeiPlugin
 public class HayoJeiPlugin implements IModPlugin {
-    public static final IRecipeType<RecipeHolder<SmeltingRecipe>> ELECTRIC_SMELTING = IRecipeType.create(Hayo.MOD_ID, "electric_smelting", (Class<? extends RecipeHolder<SmeltingRecipe>>) (Object) RecipeHolder.class);
-    public static final IRecipeType<RecipeHolder<BlastingRecipe>> ELECTRIC_BLASTING = IRecipeType.create(Hayo.MOD_ID, "electric_blasting", (Class<? extends RecipeHolder<BlastingRecipe>>) (Object) RecipeHolder.class);
-    public static final IRecipeType<RecipeHolder<SmokingRecipe>> ELECTRIC_SMOKING = IRecipeType.create(Hayo.MOD_ID, "electric_smoking", (Class<? extends RecipeHolder<SmokingRecipe>>) (Object) RecipeHolder.class);
+    public static final IRecipeType<RecipeHolder<SmeltingRecipe>> ELECTRIC_SMELTING = (IRecipeType<RecipeHolder<SmeltingRecipe>>) (IRecipeType<?>) IRecipeType.create(Hayo.MOD_ID, "electric_smelting", RecipeHolder.class);
+    public static final IRecipeType<RecipeHolder<BlastingRecipe>> ELECTRIC_BLASTING = (IRecipeType<RecipeHolder<BlastingRecipe>>) (IRecipeType<?>) IRecipeType.create(Hayo.MOD_ID, "electric_blasting", RecipeHolder.class);
+    public static final IRecipeType<RecipeHolder<SmokingRecipe>> ELECTRIC_SMOKING = (IRecipeType<RecipeHolder<SmokingRecipe>>) (IRecipeType<?>) IRecipeType.create(Hayo.MOD_ID, "electric_smoking", RecipeHolder.class);
     public static final IRecipeType<RecipeHolder<MaceratingRecipe>> MACERATING = IRecipeType.create(Hayo.RecipeTypes.MACERATING);
     public static final IRecipeType<RecipeHolder<CompressingRecipe>> COMPRESSING = IRecipeType.create(Hayo.RecipeTypes.COMPRESSING);
     public static final IRecipeType<RecipeHolder<ExtractingRecipe>> EXTRACTING = IRecipeType.create(Hayo.RecipeTypes.EXTRACTING);

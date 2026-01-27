@@ -82,21 +82,11 @@ public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity imple
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
-        return switch (direction) {
-            case UP -> !EnergyComponents.canDischargeInMachine(stack);
-            case DOWN ->
-                    slot == DISCHARGE_SLOT ? !EnergyComponents.canDischargeInMachine(stack) : !EnergyComponents.canChargeInMachine(stack);
-            default -> !EnergyComponents.canChargeInMachine(stack);
-        };
+        return !this.canPlaceItemThroughFace(slot, stack, direction);
     }
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
-        return switch (direction) {
-            case UP -> EnergyComponents.canDischargeInMachine(stack);
-            case DOWN ->
-                    slot == DISCHARGE_SLOT ? EnergyComponents.canDischargeInMachine(stack) : EnergyComponents.canChargeInMachine(stack);
-            case null, default -> EnergyComponents.canChargeInMachine(stack);
-        };
+        return slot == DISCHARGE_SLOT ? EnergyComponents.canDischargeInMachine(stack) : EnergyComponents.canChargeInMachine(stack);
     }
 }

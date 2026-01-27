@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo.feature.generator;
 
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
 import io.github.reoseah.hayo.base.block.entity.HayoContainerBlockEntity;
 import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlocks;
 import lombok.Getter;
@@ -68,7 +69,7 @@ public class GeneratorBlockEntity extends HayoContainerBlockEntity implements Wo
 
         boolean isBurning = entity.fuelEnergyLeft > 0;
         if (isBurning != wasBurning) {
-            level.setBlockAndUpdate(pos, state.setValue(GeneratorBlock.LIT, isBurning));
+            level.setBlockAndUpdate(pos, state.setValue(OrientableMachineBlock.LIT, isBurning));
         }
     }
 

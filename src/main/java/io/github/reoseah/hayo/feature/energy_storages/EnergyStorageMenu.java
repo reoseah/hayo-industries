@@ -7,11 +7,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class EnergyStorageMenu extends HayoContainerMenu {
+    protected static final int DATA_SLOTS = 4;
+
     protected final ContainerData data;
 
     protected EnergyStorageMenu(MenuType<?> type, int menuId, Container container, ContainerData data, Inventory inventory) {
@@ -26,15 +27,11 @@ public abstract class EnergyStorageMenu extends HayoContainerMenu {
         this.addStandardInventorySlots(inventory, 8, 84);
     }
 
-    protected static ContainerData createData() {
-        return new SimpleContainerData(4);
-    }
-
     protected static ContainerData createData(EnergyStorageBlockEntity entity) {
         return new ContainerData() {
             @Override
             public int getCount() {
-                return 4;
+                return DATA_SLOTS;
             }
 
             @Override
@@ -100,11 +97,6 @@ public abstract class EnergyStorageMenu extends HayoContainerMenu {
 
         slot.onTake(player, stack);
         return remaining;
-    }
-
-    @Override
-    public boolean stillValid(Player player) {
-        return true;
     }
 
     public int getStoredEnergy() {

@@ -181,7 +181,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         int first = this.getFirstUpgradeSlot();
         int last = this.getLastUpgradeSlot();
         for (int i = first; i <= last; i++) {
-            var stack = stacks.get(i);
+            var stack = this.stacks.get(i);
             if (stack.is(Hayo.Items.CAPACITOR_UPGRADE)) {
                 capacityFromUpgrades += 10000;
             } else if (stack.is(Hayo.Items.OVERCLOCK_UPGRADE)) {

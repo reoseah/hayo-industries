@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo.feature.processing_machines.macerator;
 
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -11,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class MaceratorMenu extends MachineMenu {
     public MaceratorMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(MaceratorBlockEntity.SLOTS), createData(), inventory);
+        this(menuId, new SimpleContainer(ClassicMachineBlockEntity.SLOTS), createData(), inventory);
     }
 
     public MaceratorMenu(int menuId, MaceratorBlockEntity entity, Inventory inventory) {

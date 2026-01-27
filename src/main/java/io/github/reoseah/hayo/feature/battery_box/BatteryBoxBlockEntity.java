@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo.feature.battery_box;
 
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
 import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
 import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlocks;
 import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
@@ -62,7 +63,7 @@ public class BatteryBoxBlockEntity extends ElectricBlockEntity implements Worldl
 
         if (entity.storedEnergy > 0) {
             int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - entity.outputPerTick);
-            int transfer = ElectricBlocks.trySend(limit, (ServerLevel) level, pos, state.getValue(BatteryBoxBlock.FACING));
+            int transfer = ElectricBlocks.trySend(limit, (ServerLevel) level, pos, state.getValue(OrientableMachineBlock.FACING));
             if (transfer > 0) {
                 entity.extractFromBatteries(transfer);
                 entity.storedEnergy -= transfer;

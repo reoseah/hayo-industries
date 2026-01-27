@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo.feature.processing_machines.extractor;
 
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -11,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class ExtractorMenu extends MachineMenu {
     public ExtractorMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(ExtractorBlockEntity.SLOTS), createData(), inventory);
+        this(menuId, new SimpleContainer(ClassicMachineBlockEntity.SLOTS), createData(), inventory);
     }
 
     public ExtractorMenu(int menuId, ExtractorBlockEntity entity, Inventory inventory) {

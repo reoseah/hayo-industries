@@ -10,13 +10,11 @@
       "from": [ 5.99, 0, 5.99 ],
       "to": [ 10.01, 6, 10.01 ],
       "faces": {
+        "down": { "texture": "#end", "uv": [ 6, 6, 10, 10] },
         "north": { "texture": "#side" },
         "south": { "texture": "#side" },
         "east": { "texture": "#side" },
-        "west": { "texture": "#side" },
-        "down": { "texture": "#end",
-          "uv": [ 6, 6, 10, 10]
-        }
+        "west": { "texture": "#side" }
       }
     }
   ]

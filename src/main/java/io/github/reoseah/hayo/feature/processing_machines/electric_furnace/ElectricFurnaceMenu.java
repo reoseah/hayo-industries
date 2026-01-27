@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo.feature.processing_machines.electric_furnace;
 
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
 import io.github.reoseah.hayo.feature.processing_machines.ResultSlot;
 import io.github.reoseah.hayo.feature.processing_machines.TagFilteredSlot;
@@ -22,7 +23,7 @@ public class ElectricFurnaceMenu extends MachineMenu {
     private final Map<ElectricFurnaceMode, RecipePropertySet> recipeInputs;
 
     public ElectricFurnaceMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(ElectricFurnaceBlockEntity.SLOTS), createData(), inventory, DataSlot.standalone());
+        this(menuId, new SimpleContainer(ClassicMachineBlockEntity.SLOTS), createData(), inventory, DataSlot.standalone());
     }
 
     public ElectricFurnaceMenu(int menuId, ElectricFurnaceBlockEntity entity, Inventory inventory) {
@@ -32,16 +33,16 @@ public class ElectricFurnaceMenu extends MachineMenu {
     protected ElectricFurnaceMenu(int menuId, Container container, ContainerData data, Inventory inventory, DataSlot recipeMode) {
         super(Hayo.MenuTypes.ELECTRIC_FURNACE, menuId, container, data, inventory);
 
-        addSlot(new Slot(container, 0, 47, 18));
-        addSlot(new Slot(container, 1, 47, 54));
-        addSlot(new ResultSlot(container, 2, 107, 36));
+        this.addSlot(new Slot(container, 0, 47, 18));
+        this.addSlot(new Slot(container, 1, 47, 54));
+        this.addSlot(new ResultSlot(container, 2, 107, 36));
 
-        addSlot(new ElectricFurnaceUpgradeSlot(container, 3, 152, 8));
-        addSlot(new ElectricFurnaceUpgradeSlot(container, 4, 152, 26));
-        addSlot(new ElectricFurnaceUpgradeSlot(container, 5, 152, 44));
-        addSlot(new ElectricFurnaceUpgradeSlot(container, 6, 152, 62));
+        this.addSlot(new ElectricFurnaceUpgradeSlot(container, 3, 152, 8));
+        this.addSlot(new ElectricFurnaceUpgradeSlot(container, 4, 152, 26));
+        this.addSlot(new ElectricFurnaceUpgradeSlot(container, 5, 152, 44));
+        this.addSlot(new ElectricFurnaceUpgradeSlot(container, 6, 152, 62));
 
-        addStandardInventorySlots(inventory, 8, 84);
+        this.addStandardInventorySlots(inventory, 8, 84);
 
         this.recipeMode = this.addDataSlot(recipeMode);
 
@@ -88,7 +89,7 @@ public class ElectricFurnaceMenu extends MachineMenu {
             if (!super.mayPlace(stack)) return false;
 
             if (stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE)) {
-                for (int i = ElectricFurnaceBlockEntity.FIRST_UPGRADE_SLOT; i <= ElectricFurnaceBlockEntity.LAST_UPGRADE_SLOT; i++) {
+                for (int i = ClassicMachineBlockEntity.FIRST_UPGRADE_SLOT; i <= ClassicMachineBlockEntity.LAST_UPGRADE_SLOT; i++) {
                     if (i == this.index) continue;
 
                     var upgrade = this.container.getItem(i);
@@ -99,7 +100,7 @@ public class ElectricFurnaceMenu extends MachineMenu {
             }
 
             if (stack.is(Hayo.Items.INDUCTION_UPGRADE)) {
-                for (int i = ElectricFurnaceBlockEntity.FIRST_UPGRADE_SLOT; i <= ElectricFurnaceBlockEntity.LAST_UPGRADE_SLOT; i++) {
+                for (int i = ClassicMachineBlockEntity.FIRST_UPGRADE_SLOT; i <= ClassicMachineBlockEntity.LAST_UPGRADE_SLOT; i++) {
                     if (i == this.index) continue;
 
                     var upgrade = this.container.getItem(i);

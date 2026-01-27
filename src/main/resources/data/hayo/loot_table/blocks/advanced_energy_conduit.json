@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:battery_array"
+          "name": "hayo:advanced_energy_conduit"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/battery_array"
+  "random_sequence": "hayo:blocks/advanced_energy_conduit"
 }

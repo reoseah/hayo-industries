@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy_storages.battery_array;
+package io.github.reoseah.hayo.feature.energy_storages.advanced;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageBlockEntity;
@@ -11,22 +11,22 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class BatteryArrayBlockEntity extends EnergyStorageBlockEntity implements MenuProvider {
-    public static final int CAPACITY = 40_000;
-    public static final int TRANSFER_LIMIT = 32;
+public class AdvancedEnergyStorageBlockEntity extends EnergyStorageBlockEntity implements MenuProvider {
+    public static final int CAPACITY = 4_000_000;
+    public static final int TRANSFER_LIMIT = 512;
 
-    public BatteryArrayBlockEntity(BlockPos pos, BlockState state) {
-        super(Hayo.BlockEntityTypes.BATTERY_ARRAY, pos, state);
+    public AdvancedEnergyStorageBlockEntity(BlockPos pos, BlockState state) {
+        super(Hayo.BlockEntityTypes.ADVANCED_ENERGY_STORAGE, pos, state);
     }
 
     @Override
     public Component getDefaultName() {
-        return Component.translatable("block.hayo.battery_array");
+        return Component.translatable("block.hayo.advanced_energy_storage");
     }
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player player) {
-        return new BatteryArrayMenu(menuId, this, playerInventory);
+        return new AdvancedEnergyStorageMenu(menuId, this, playerInventory);
     }
 
     @Override

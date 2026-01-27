@@ -15,9 +15,9 @@ import io.github.reoseah.hayo.feature.energy.blocks.OverloadCablePayload;
 import io.github.reoseah.hayo.feature.energy.item.*;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageMenu;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageScreen;
-import io.github.reoseah.hayo.feature.energy_storages.battery_array.BatteryArrayBlock;
-import io.github.reoseah.hayo.feature.energy_storages.battery_array.BatteryArrayBlockEntity;
-import io.github.reoseah.hayo.feature.energy_storages.battery_array.BatteryArrayMenu;
+import io.github.reoseah.hayo.feature.energy_storages.advanced.AdvancedEnergyStorageBlock;
+import io.github.reoseah.hayo.feature.energy_storages.advanced.AdvancedEnergyStorageBlockEntity;
+import io.github.reoseah.hayo.feature.energy_storages.advanced.AdvancedEnergyStorageMenu;
 import io.github.reoseah.hayo.feature.energy_storages.crystal_array.EnergyCrystalArrayBlock;
 import io.github.reoseah.hayo.feature.energy_storages.crystal_array.EnergyCrystalArrayBlockEntity;
 import io.github.reoseah.hayo.feature.energy_storages.crystal_array.EnergyCrystalArrayMenu;
@@ -247,13 +247,14 @@ public class Hayo {
         public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, MACHINES);
         public static final Block MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlock::new, MACHINES);
         public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, MACHINES);
-        public static final Block BATTERY_ARRAY = register("battery_array", BatteryArrayBlock::new, MACHINES);
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
+        public static final Block ADVANCED_ENERGY_STORAGE = register("advanced_energy_storage", AdvancedEnergyStorageBlock::new, MACHINES);
         public static final Block ELECTRIC_BEACON = register("electric_beacon", ElectricBeaconBlock::new, BlockBehaviour.Properties.of().strength(5F, 30F).lightLevel(s -> 15).noOcclusion().sound(SoundType.GLASS));
 
         public static final CableBlock CABLE = register("cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final Block GLASS_FIBER = register("glass_fiber", properties -> /* TODO */ new Block(properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final CableBlock ADVANCED_ENERGY_CONDUIT = register("advanced_energy_conduit", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
 
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
         public static final Block RESIN_YIELDING_RUBBER_LOG = register("resin_yielding_rubber_log", ResinYieldingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
@@ -315,13 +316,14 @@ public class Hayo {
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
         public static final Item MATTER_GENERATOR = registerBlock(Blocks.MATTER_GENERATOR, new Item.Properties().rarity(Rarity.EPIC));
         public static final Item BATTERY_BOX = registerBlock(Blocks.BATTERY_BOX);
-        public static final Item BATTERY_ARRAY = registerBlock(Blocks.BATTERY_ARRAY);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
+        public static final Item ADVANCED_ENERGY_STORAGE = registerBlock(Blocks.ADVANCED_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
         public static final Item ELECTRIC_BEACON = registerBlock(Blocks.ELECTRIC_BEACON, new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item CABLE = registerBlock(Blocks.CABLE, CableItem::new);
         public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, CableItem::new);
         public static final Item GLASS_FIBER = registerBlock(Blocks.GLASS_FIBER);
+        public static final Item ADVANCED_ENERGY_CONDUIT = registerBlock(Blocks.ADVANCED_ENERGY_CONDUIT, CableItem::new);
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
         public static final Item RUBBER_WOOD = registerBlock(Blocks.RUBBER_WOOD);
@@ -415,7 +417,7 @@ public class Hayo {
         public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
 
         private static final ArmorMaterial FLAK_ARMOR = new ArmorMaterial( //
-                33, ArmorMaterials.makeDefense(3, 6, 8, 3, 11), 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0F, 0.0F, ItemTags.FLAK_MATERIALS, modKey(EquipmentAssets.ROOT_ID, "flak") //
+                33, ArmorMaterials.makeDefense(3, 6, 8, 3, 11), 10, SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 0.0F, ItemTags.FLAK_MATERIALS, modKey(EquipmentAssets.ROOT_ID, "flak") //
         );
         public static final Item FLAK_CHESTPLATE = registerItem("flak_chestplate", Item::new, new Item.Properties().humanoidArmor(FLAK_ARMOR, ArmorType.CHESTPLATE).stacksTo(1));
 
@@ -437,7 +439,7 @@ public class Hayo {
                             .setAsset(modKey(EquipmentAssets.ROOT_ID, "quantum")) //
                             .build()) //
                     .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(1_000_000, 512)) //
-                    .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.armor(armorType, armor, 3, 100)) //
+                    .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.armor(armorType, armor, 4, 100)) //
                     .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(200)) //
                     .component(EnergyComponents.QUANTUM_ARMOR, Unit.INSTANCE) //
                     .rarity(Rarity.RARE) //
@@ -531,13 +533,14 @@ public class Hayo {
                 entries.accept(EXTRACTOR);
                 entries.accept(MATTER_GENERATOR);
                 entries.accept(BATTERY_BOX);
-                entries.accept(BATTERY_ARRAY);
                 entries.accept(ENERGY_CRYSTAL_ARRAY);
+                entries.accept(ADVANCED_ENERGY_STORAGE);
                 entries.accept(ELECTRIC_BEACON);
 
                 entries.accept(CABLE);
                 entries.accept(POWER_CABLE);
-                // entries.accept(GLASS_FIBER);
+                entries.accept(GLASS_FIBER, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(ADVANCED_ENERGY_CONDUIT);
 
                 entries.accept(RUBBER_LOG);
                 entries.accept(RUBBER_WOOD);
@@ -714,8 +717,8 @@ public class Hayo {
         public static final BlockEntityType<ExtractorBlockEntity> EXTRACTOR = register("extractor", ExtractorBlockEntity::new, Blocks.EXTRACTOR);
         public static final BlockEntityType<MatterGeneratorBlockEntity> MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlockEntity::new, Blocks.MATTER_GENERATOR);
         public static final BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX = register("battery_box", BatteryBoxBlockEntity::new, Blocks.BATTERY_BOX);
-        public static final BlockEntityType<BatteryArrayBlockEntity> BATTERY_ARRAY = register("battery_array", BatteryArrayBlockEntity::new, Blocks.BATTERY_ARRAY);
         public static final BlockEntityType<EnergyCrystalArrayBlockEntity> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlockEntity::new, Blocks.ENERGY_CRYSTAL_ARRAY);
+        public static final BlockEntityType<AdvancedEnergyStorageBlockEntity> ADVANCED_ENERGY_STORAGE = register("advanced_energy_storage", AdvancedEnergyStorageBlockEntity::new, Blocks.ADVANCED_ENERGY_STORAGE);
         public static final BlockEntityType<ElectricBeaconBlockEntity> ELECTRIC_BEACON = register("electric_beacon", ElectricBeaconBlockEntity::new, Blocks.ELECTRIC_BEACON);
 
         public static void initialize() {
@@ -736,8 +739,8 @@ public class Hayo {
         public static final MenuType<MachineMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
         public static final MenuType<MachineMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
         public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
-        public static final MenuType<EnergyStorageMenu> BATTERY_ARRAY = register("battery_array", BatteryArrayMenu::new);
         public static final MenuType<EnergyStorageMenu> ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayMenu::new);
+        public static final MenuType<EnergyStorageMenu> ADVANCED_ENERGY_STORAGE = register("advanced_energy_storage", AdvancedEnergyStorageMenu::new);
         public static final MenuType<ElectricBeaconMenu> ELECTRIC_BEACON = register("electric_beacon", ElectricBeaconMenu::new);
         public static final MenuType<BatteryBoxMenu> BATTERY_BOX = register("battery_box", BatteryBoxMenu::new);
 
@@ -759,8 +762,8 @@ public class Hayo {
             MenuScreens.register(EXTRACTOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.EXTRACTOR));
             MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
             MenuScreens.register(BATTERY_BOX, BatteryBoxScreen::new);
-            MenuScreens.register(BATTERY_ARRAY, EnergyStorageScreen::new);
             MenuScreens.register(ENERGY_CRYSTAL_ARRAY, EnergyStorageScreen::new);
+            MenuScreens.register(ADVANCED_ENERGY_STORAGE, EnergyStorageScreen::new);
             MenuScreens.register(ELECTRIC_BEACON, ElectricBeaconScreen::new);
         }
     }

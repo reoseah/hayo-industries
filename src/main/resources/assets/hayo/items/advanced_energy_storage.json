@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/battery_array"
+    "model": "hayo:item/advanced_energy_storage"
   }
 }

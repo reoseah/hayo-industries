@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/orientable",
+  "parent": "block/orientable",
   "textures": {
     "front": "hayo:block/rubber_log_with_hole",
     "side": "hayo:block/rubber_log",

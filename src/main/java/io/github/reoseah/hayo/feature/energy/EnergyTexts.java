@@ -4,6 +4,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 /// Default translation keys and formatting for HAYO energy,
@@ -30,7 +31,7 @@ public class EnergyTexts {
     private static final DecimalFormat LARGE_AMOUNTS_FORMAT;
 
     static {
-        LARGE_AMOUNTS_FORMAT = (DecimalFormat) DecimalFormat.getInstance(Locale.ROOT);
+        LARGE_AMOUNTS_FORMAT = (DecimalFormat) NumberFormat.getInstance(Locale.ROOT);
         LARGE_AMOUNTS_FORMAT.setGroupingUsed(true);
         LARGE_AMOUNTS_FORMAT.setGroupingSize(3);
         var symbols = LARGE_AMOUNTS_FORMAT.getDecimalFormatSymbols();

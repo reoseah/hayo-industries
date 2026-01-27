@@ -2,7 +2,7 @@
   "multipart": [
     {
       "when": { "down": false, "up": false, "north": false, "south": false, "west": false, "east": false },
-      "apply": { "model": "hayo:block/power_cable_unconnected" }
+      "apply": { "model": "hayo:block/power_cable_center_connections0" }
     },
     {
       "when": {
@@ -78,7 +78,7 @@
           { "east": false }
         ]
       },
-      "apply": { "model": "hayo:block/power_cable_end" }
+      "apply": { "model": "hayo:block/power_cable_center_connections1" }
     },
 
     {
@@ -96,7 +96,7 @@
           { "east": false }
         ]
       },
-      "apply": { "model": "hayo:block/power_cable_end", "uvlock": true, "x": 180 }
+      "apply": { "model": "hayo:block/power_cable_center_connections1", "uvlock": true, "x": 180 }
     },
 
     {
@@ -114,7 +114,7 @@
           { "east": false }
         ]
       },
-      "apply": { "model": "hayo:block/power_cable_end", "uvlock": true, "x": 90, "y": 180 }
+      "apply": { "model": "hayo:block/power_cable_center_connections1", "uvlock": true, "x": 90, "y": 180 }
     },
 
     {
@@ -132,7 +132,7 @@
           { "east": false }
         ]
       },
-      "apply": { "model": "hayo:block/power_cable_end", "uvlock": true, "x": 90 }
+      "apply": { "model": "hayo:block/power_cable_center_connections1", "uvlock": true, "x": 90 }
     },
 
     {
@@ -150,7 +150,7 @@
           { "east": false }
         ]
       },
-      "apply": { "model": "hayo:block/power_cable_end", "uvlock": true, "x": 90, "y": 90 }
+      "apply": { "model": "hayo:block/power_cable_center_connections1", "uvlock": true, "x": 90, "y": 90 }
     },
 
     {
@@ -168,7 +168,7 @@
           { "east": true }
         ]
       },
-      "apply": { "model": "hayo:block/power_cable_end", "uvlock": true, "x": 90, "y": 270 }
+      "apply": { "model": "hayo:block/power_cable_center_connections1", "uvlock": true, "x": 90, "y": 270 }
     }
   ]
 }

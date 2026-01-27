@@ -205,11 +205,11 @@ public class EnergyComponents {
     }
 
     public static int defaultBarWidth(ItemStack stack) {
-        return Math.round(13F * ((float) (int) getEnergy(stack)) / getCapacity(stack));
+        return Math.round(13F * ((float) getEnergy(stack)) / getCapacity(stack));
     }
 
     public static int defaultBarColor(ItemStack stack) {
-        float ratio = 1F - ((float) (int) getEnergy(stack)) / (float) getCapacity(stack);
+        float ratio = 1F - ((float) getEnergy(stack)) / (float) getCapacity(stack);
 
         // from blue to red
         float hue = Mth.lerp(ratio, 240F, 360F) / 360F;

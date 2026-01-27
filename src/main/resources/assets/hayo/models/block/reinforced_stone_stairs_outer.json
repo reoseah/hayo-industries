@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/outer_stairs",
+  "parent": "block/outer_stairs",
   "textures": {
     "bottom": "hayo:block/reinforced_stone_tiles",
     "top": "hayo:block/reinforced_stone_tiles",

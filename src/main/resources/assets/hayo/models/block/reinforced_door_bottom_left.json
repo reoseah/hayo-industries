@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/door_bottom_left",
+  "parent": "block/door_bottom_left",
   "textures": {
     "bottom": "hayo:block/reinforced_door_bottom",
     "top": "hayo:block/reinforced_door_top"

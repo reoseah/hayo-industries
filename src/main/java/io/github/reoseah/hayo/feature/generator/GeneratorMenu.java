@@ -106,11 +106,6 @@ public class GeneratorMenu extends HayoContainerMenu {
         return remaining;
     }
 
-    @Override
-    public boolean stillValid(Player player) {
-        return true;
-    }
-
     public int getStoredEnergy() {
         return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
     }
