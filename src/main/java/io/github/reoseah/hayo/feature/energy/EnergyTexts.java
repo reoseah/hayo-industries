@@ -9,24 +9,24 @@ import java.util.Locale;
 
 /// Default translation keys and formatting for HAYO energy,
 /// generally identified with lowercase epsilon "ε".
-public class EnergyTexts {
-
-    private static final String AMOUNT = "hayo.energy.amount";
-    private static final String AMOUNT_AND_CAPACITY = "hayo.energy.amount_and_capacity";
-    private static final String AMOUNT_PER_TICK = "hayo.energy.amount_per_tick";
-    private static final String AVERAGE_AMOUNT_PER_TICK = "hayo.energy.average_amount_per_tick";
-    private static final String AVERAGE_INPUT_PER_TICK = "hayo.energy.average_input_per_tick";
-    private static final String AVERAGE_OUTPUT_PER_TICK = "hayo.energy.average_output_per_tick";
-    private static final String MAX_AMOUNT = "hayo.energy.max_amount";
-    private static final String MAX_AMOUNT_PER_TICK = "hayo.energy.max_amount_per_tick";
-    private static final String AMOUNT_AND_PERCENTAGE = "hayo.energy.amount_and_percentage";
-    private static final String AMOUNT_WITH_CAPACITY_AND_PERCENTAGE = "hayo.energy.amount_with_capacity_and_percentage";
-    private static final String DURATION_AT_AMOUNT_PER_TICK = "hayo.energy.duration_at_amount_per_tick";
-    private static final String FUEL_VALUE = "hayo.energy.fuel_value";
-    private static final String CONVERSION = "hayo.energy.conversion_rate";
-    private static final String APPROXIMATE_AMOUNT = "hayo.energy.approximate_amount";
-    private static final String OVERCLOCK_USE_RATE = "hayo.energy.overclock_use_rate";
-    private static final String OVERCLOCK_TOTAL_COST = "hayo.energy.overclock_total_cost";
+public enum EnergyTexts {
+    ;
+    public static final String AMOUNT = "hayo.energy.amount";
+    public static final String AMOUNT_AND_CAPACITY = "hayo.energy.amount_and_capacity";
+    public static final String AMOUNT_PER_TICK = "hayo.energy.amount_per_tick";
+    public static final String AVERAGE_AMOUNT_PER_TICK = "hayo.energy.average_amount_per_tick";
+    public static final String AVERAGE_INPUT_PER_TICK = "hayo.energy.average_input_per_tick";
+    public static final String AVERAGE_OUTPUT_PER_TICK = "hayo.energy.average_output_per_tick";
+    public static final String MAX_AMOUNT = "hayo.energy.max_amount";
+    public static final String MAX_AMOUNT_PER_TICK = "hayo.energy.max_amount_per_tick";
+    public static final String AMOUNT_AND_PERCENTAGE = "hayo.energy.amount_and_percentage";
+    public static final String AMOUNT_WITH_CAPACITY_AND_PERCENTAGE = "hayo.energy.amount_with_capacity_and_percentage";
+    public static final String DURATION_AT_AMOUNT_PER_TICK = "hayo.energy.duration_at_amount_per_tick";
+    public static final String FUEL_VALUE = "hayo.energy.fuel_value";
+    public static final String CONVERSION = "hayo.energy.conversion_rate";
+    public static final String APPROXIMATE_AMOUNT = "hayo.energy.approximate_amount";
+    public static final String OVERCLOCK_USE_RATE = "hayo.energy.overclock_use_rate";
+    public static final String OVERCLOCK_TOTAL_COST = "hayo.energy.overclock_total_cost";
 
     private static final DecimalFormat LARGE_AMOUNTS_FORMAT;
 

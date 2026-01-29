@@ -1,32 +1,25 @@
 package io.github.reoseah.hayo.feature.cable;
 
-import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlock;
-import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlocks;
-import io.github.reoseah.hayo.feature.energy.blocks.ElectricCableBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.TransparentBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
-public class CableBlock extends TransparentBlock implements ElectricCableBlock {
-    public final int transferLimit;
+public class DataCableBlock extends Block {
     protected final VoxelShape[] shapes;
 
-    public CableBlock(int transferLimit, int radius, Properties settings) {
-        super(settings);
-        this.transferLimit = transferLimit;
+    public DataCableBlock(int radius, Properties properties) {
+        super(properties);
+
         this.shapes = CableShapes.getOrCreate(radius);
 
         this.registerDefaultState(this.defaultBlockState() //
@@ -71,43 +64,9 @@ public class CableBlock extends TransparentBlock implements ElectricCableBlock {
     protected boolean connectsTo(LevelReader level, BlockPos pos, Direction side) {
         var neighborState = level.getBlockState(pos.relative(side));
         var block = neighborState.getBlock();
-        if (block instanceof ElectricBlock electricBlock) {
-            return electricBlock.connectsToCables(neighborState, level, pos.relative(side), side);
+        if (block instanceof DataCableBlock dataCable) {
+            return true; // TODO
         }
         return false;
-    }
-
-    @Override
-    public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
-        super.destroy(level, pos, state);
-        if (level instanceof ServerLevel serverLevel) {
-            ElectricBlocks.remove(serverLevel, pos);
-        }
-    }
-
-    @Override
-    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
-        super.playerDestroy(level, player, pos, state, blockEntity, tool);
-        if (level instanceof ServerLevel serverLevel) {
-            ElectricBlocks.remove(serverLevel, pos);
-        }
-    }
-
-    @Override
-    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
-        super.onPlace(state, level, pos, oldState, movedByPiston);
-        if (level instanceof ServerLevel serverLevel) {
-            ElectricBlocks.addOrUpdate(serverLevel, pos);
-        }
-    }
-
-    @Override
-    protected boolean skipRendering(BlockState state, BlockState adjacentState, Direction direction) {
-        return state.getValue(CableShapes.getSideProperty(direction)) && adjacentState.is(this);
-    }
-
-    @Override
-    public int getTransferLimit(BlockState state) {
-        return this.transferLimit;
     }
 }

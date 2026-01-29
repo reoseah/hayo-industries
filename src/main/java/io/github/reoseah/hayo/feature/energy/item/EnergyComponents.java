@@ -1,12 +1,17 @@
 package io.github.reoseah.hayo.feature.energy.item;
 
 import com.mojang.serialization.Codec;
+import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -18,7 +23,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumMap;
 import java.util.function.Consumer;
 
-public class EnergyComponents {
+public enum EnergyComponents {
+    ;
+
     /// Provides energy capacity and transfer rate that an item should have.
     ///
     /// Note: for "energy storages" in more narrow sense (batteries, energy crystals)
@@ -316,5 +323,42 @@ public class EnergyComponents {
         }
 
         return totalDistributed;
+    }
+
+    public static void initialize() {
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_storage"), EnergyComponents.ENERGY_STORAGE);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy"), EnergyComponents.ENERGY);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("battery"), EnergyComponents.BATTERY);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("charged_attributes"), EnergyComponents.CHARGED_ATTRIBUTES);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_tool"), EnergyComponents.ENERGY_TOOL);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_armor"), EnergyComponents.ENERGY_ARMOR);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_backpack"), EnergyComponents.ENERGY_BACKPACK);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("quantum_armor"), EnergyComponents.QUANTUM_ARMOR);
+
+        ServerTickEvents.END_LEVEL_TICK.register(EnergyComponents::tickPlayerInventories);
+    }
+
+    private static void tickPlayerInventories(ServerLevel level) {
+        for (var player : level.players()) {
+            var chestplate = player.getItemBySlot(EquipmentSlot.CHEST);
+            if (chestplate.has(EnergyComponents.ENERGY_BACKPACK)) {
+                var stats = chestplate.get(EnergyComponents.ENERGY_STORAGE);
+                if (stats == null) continue;
+
+                var limit = stats.transferLimit();
+                if (limit == 0) continue;
+
+                var energy = EnergyComponents.getEnergy(chestplate);
+                if (energy == 0) continue;
+
+                int moved = EnergyComponents.spreadEnergy(player, Math.min(energy, limit), EquipmentSlot.CHEST);
+                EnergyComponents.setEnergy(chestplate, energy - moved);
+
+                player.getInventory().setChanged();
+                if (player.isCreative()) {
+                    player.inventoryMenu.broadcastChanges();
+                }
+            }
+        }
     }
 }

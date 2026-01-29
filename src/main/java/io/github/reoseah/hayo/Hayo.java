@@ -2,12 +2,13 @@ package io.github.reoseah.hayo;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
+import io.github.reoseah.hayo.base.item.BlockItemWithTooltip;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlock;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlockEntity;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxMenu;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxScreen;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
-import io.github.reoseah.hayo.feature.cable.CableItem;
+import io.github.reoseah.hayo.feature.cable.DataCableBlock;
 import io.github.reoseah.hayo.feature.electric_beacon.*;
 import io.github.reoseah.hayo.feature.energy.ElectricShapedRecipe;
 import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlockManager;
@@ -82,7 +83,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
@@ -140,18 +140,22 @@ public class Hayo {
                     .initializer(ElectricBlockManager.ChunkData::new) //
                     .persistent(ElectricBlockManager.ChunkData.CODEC.codec()));
 
+    public static final TreeGrower RUBBER_TREE = new TreeGrower( //
+            "hayo:rubber_tree", //
+            0F, //
+            Optional.empty(), //
+            Optional.empty(), //
+            Optional.of(modKey(Registries.CONFIGURED_FEATURE, "rubber_tree")), //
+            Optional.empty(), //
+            Optional.empty(), //
+            Optional.empty());
+
     public static final TagKey<Item> COPPER_INGOTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"));
 
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modId("main"), TAB);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_storage"), EnergyComponents.ENERGY_STORAGE);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy"), EnergyComponents.ENERGY);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("battery"), EnergyComponents.BATTERY);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("charged_attributes"), EnergyComponents.CHARGED_ATTRIBUTES);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_tool"), EnergyComponents.ENERGY_TOOL);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_armor"), EnergyComponents.ENERGY_ARMOR);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_backpack"), EnergyComponents.ENERGY_BACKPACK);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("quantum_armor"), EnergyComponents.QUANTUM_ARMOR);
+
+        EnergyComponents.initialize();
 
         Blocks.initialize();
         Items.initialize();
@@ -169,13 +173,14 @@ public class Hayo {
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.ELECTRIC_SHAPED_CRAFTING);
 
-        BiomeModifications.create(Identifier.fromNamespaceAndPath("hayo", "features")) //
+        BiomeModifications.create(modId("rubber_trees")) //
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST) //
                                 .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA)) //
                                 .or(BiomeSelectors.tag(BiomeTags.IS_JUNGLE)) //
                                 .or(BiomeSelectors.includeByKey(Biomes.SWAMP)), //
-                        (selectionCtx, modificationCtx) -> {
-                            modificationCtx.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, modKey(Registries.PLACED_FEATURE, "rubber_tree_patch"));
+                        (selection, modification) -> {
+                            var feature = modKey(Registries.PLACED_FEATURE, "rubber_tree_patch");
+                            modification.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, feature);
                         });
 
         ServerChunkEvents.CHUNK_LOAD.register((level, chunk, generated) -> {
@@ -186,36 +191,7 @@ public class Hayo {
         });
         ServerTickEvents.END_LEVEL_TICK.register(level -> {
             ElectricBlockManager.get(level).onLevelTickEnd();
-            tickPlayerInventories(level);
         });
-    }
-
-    private static void tickPlayerInventories(ServerLevel level) {
-        for (var player : level.players()) {
-            var chestItem = player.getItemBySlot(EquipmentSlot.CHEST);
-            if (!chestItem.has(EnergyComponents.ENERGY_BACKPACK)) {
-                continue;
-            }
-            var chestStats = chestItem.get(EnergyComponents.ENERGY_STORAGE);
-            if (chestStats == null) {
-                continue;
-            }
-            var chestLimit = chestStats.transferLimit();
-            if (chestLimit == 0) {
-                continue;
-            }
-            var chestEnergy = EnergyComponents.getEnergy(chestItem);
-            if (chestEnergy == 0) {
-                continue;
-            }
-            int moved = EnergyComponents.spreadEnergy(player, Math.min(chestEnergy, chestLimit), EquipmentSlot.CHEST);
-            EnergyComponents.setEnergy(chestItem, chestEnergy - moved);
-
-            player.getInventory().setChanged();
-            if (player.isCreative()) {
-                player.inventoryMenu.broadcastChanges();
-            }
-        }
     }
 
     @Environment(EnvType.CLIENT)
@@ -253,7 +229,7 @@ public class Hayo {
 
         public static final CableBlock CABLE = register("cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final Block GLASS_FIBER = register("glass_fiber", properties -> /* TODO */ new Block(properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final DataCableBlock GLASS_FIBER = register("glass_fiber", properties -> new DataCableBlock(1, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final CableBlock ADVANCED_ENERGY_CONDUIT = register("advanced_energy_conduit", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
 
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
@@ -262,7 +238,6 @@ public class Hayo {
         public static final Block STRIPPED_RUBBER_LOG = register("stripped_rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block STRIPPED_RUBBER_WOOD = register("stripped_rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block RUBBER_LEAVES = register("rubber_leaves", properties -> new TintedParticleLeavesBlock(0.01F, properties), leavesProperties(SoundType.GRASS));
-        public static final TreeGrower RUBBER_TREE = new TreeGrower("hayo:rubber_tree", 0F, Optional.empty(), Optional.empty(), Optional.of(modKey(Registries.CONFIGURED_FEATURE, "rubber_tree")), Optional.empty(), Optional.empty(), Optional.empty());
         public static final Block RUBBER_SAPLING = register("rubber_sapling", properties -> new SaplingBlock(RUBBER_TREE, properties), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
 
         public static final BlockBehaviour.Properties RUBBER_PROPERTIES = BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava();
@@ -320,12 +295,13 @@ public class Hayo {
         public static final Item ADVANCED_ENERGY_STORAGE = registerBlock(Blocks.ADVANCED_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
         public static final Item ELECTRIC_BEACON = registerBlock(Blocks.ELECTRIC_BEACON, new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item CABLE = registerBlock(Blocks.CABLE, CableItem::new);
-        public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, CableItem::new);
+        public static final Item CABLE = registerBlock(Blocks.CABLE, BlockItemWithTooltip::new);
+        public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, BlockItemWithTooltip::new);
         public static final Item GLASS_FIBER = registerBlock(Blocks.GLASS_FIBER);
-        public static final Item ADVANCED_ENERGY_CONDUIT = registerBlock(Blocks.ADVANCED_ENERGY_CONDUIT, CableItem::new);
+        public static final Item ADVANCED_ENERGY_CONDUIT = registerBlock(Blocks.ADVANCED_ENERGY_CONDUIT, BlockItemWithTooltip::new);
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
+        public static final Item RESIN_YIELDING_RUBBER_LOG = registerBlock(Blocks.RESIN_YIELDING_RUBBER_LOG);
         public static final Item RUBBER_WOOD = registerBlock(Blocks.RUBBER_WOOD);
         public static final Item STRIPPED_RUBBER_LOG = registerBlock(Blocks.STRIPPED_RUBBER_LOG);
         public static final Item STRIPPED_RUBBER_WOOD = registerBlock(Blocks.STRIPPED_RUBBER_WOOD);
@@ -539,10 +515,11 @@ public class Hayo {
 
                 entries.accept(CABLE);
                 entries.accept(POWER_CABLE);
-                entries.accept(GLASS_FIBER, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(GLASS_FIBER);
                 entries.accept(ADVANCED_ENERGY_CONDUIT);
 
                 entries.accept(RUBBER_LOG);
+                entries.accept(RESIN_YIELDING_RUBBER_LOG);
                 entries.accept(RUBBER_WOOD);
                 entries.accept(STRIPPED_RUBBER_LOG);
                 entries.accept(STRIPPED_RUBBER_WOOD);
