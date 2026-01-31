@@ -229,8 +229,8 @@ public class Hayo {
 
         public static final CableBlock CABLE = register("cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final DataCableBlock GLASS_FIBER = register("glass_fiber", properties -> new DataCableBlock(1, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final CableBlock ADVANCED_ENERGY_CONDUIT = register("advanced_energy_conduit", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
+        public static final DataCableBlock GLASS_FIBER = register("glass_fiber", properties -> new DataCableBlock(1, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
         public static final Block RESIN_YIELDING_RUBBER_LOG = register("resin_yielding_rubber_log", ResinYieldingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
@@ -248,6 +248,7 @@ public class Hayo {
         public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINES);
         public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, MACHINES);
         public static final Block SILICON_BRONZE_BLOCK = register("silicon_bronze_block", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.COLOR_ORANGE));
+        public static final Block COMPOSITE_PLATE_BLOCK = register("composite_plate_block", Block::new, BlockBehaviour.Properties.of().strength(5F, 30F).sound(SoundType.METAL).mapColor(MapColor.COLOR_GREEN));
         public static final Block RAW_SILICON_BLOCK = register("raw_silicon_block", Block::new, BlockBehaviour.Properties.of().strength(3F).mapColor(MapColor.COLOR_BLACK));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
@@ -297,8 +298,8 @@ public class Hayo {
 
         public static final Item CABLE = registerBlock(Blocks.CABLE, BlockItemWithTooltip::new);
         public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, BlockItemWithTooltip::new);
-        public static final Item GLASS_FIBER = registerBlock(Blocks.GLASS_FIBER);
         public static final Item ADVANCED_ENERGY_CONDUIT = registerBlock(Blocks.ADVANCED_ENERGY_CONDUIT, BlockItemWithTooltip::new);
+        public static final Item GLASS_FIBER = registerBlock(Blocks.GLASS_FIBER);
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
         public static final Item RESIN_YIELDING_RUBBER_LOG = registerBlock(Blocks.RESIN_YIELDING_RUBBER_LOG);
@@ -314,6 +315,7 @@ public class Hayo {
         public static final Item MACHINE_BLOCK = registerBlock(Blocks.MACHINE_BLOCK);
         public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
         public static final Item SILICON_BRONZE_BLOCK = registerBlock(Blocks.SILICON_BRONZE_BLOCK);
+        public static final Item COMPOSITE_PLATE_BLOCK = registerBlock(Blocks.COMPOSITE_PLATE_BLOCK);
         public static final Item RAW_SILICON_BLOCK = registerBlock(Blocks.RAW_SILICON_BLOCK);
 
         public static final Item CHIPBOARD = registerBlock(Blocks.CHIPBOARD);
@@ -532,6 +534,7 @@ public class Hayo {
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);
                 entries.accept(SILICON_BRONZE_BLOCK);
+                entries.accept(COMPOSITE_PLATE_BLOCK);
                 entries.accept(RAW_SILICON_BLOCK);
                 entries.accept(CHIPBOARD);
                 entries.accept(CHIPBOARD_DOOR);

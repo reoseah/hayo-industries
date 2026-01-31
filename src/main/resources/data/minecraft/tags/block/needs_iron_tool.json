@@ -1,5 +1,6 @@
 {
   "values": [
-    "#hayo:machines"
+    "#hayo:machines",
+    "hayo:composite_plate_block"
   ]
 }
