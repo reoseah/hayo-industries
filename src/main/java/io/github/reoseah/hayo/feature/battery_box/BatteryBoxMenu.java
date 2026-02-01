@@ -15,6 +15,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class BatteryBoxMenu extends HayoContainerMenu {
+    public static final int DATA_SLOTS = 8;
+
     protected final ContainerData data;
 
     protected BatteryBoxMenu(int containerId, Container container, ContainerData data, Inventory inventory) {
@@ -35,22 +37,18 @@ public class BatteryBoxMenu extends HayoContainerMenu {
     }
 
     public BatteryBoxMenu(int containerId, Inventory inventory) {
-        this(containerId, new SimpleContainer(7), createData(), inventory);
+        this(containerId, new SimpleContainer(BatteryBoxBlockEntity.SLOTS), new SimpleContainerData(DATA_SLOTS), inventory);
     }
 
     public BatteryBoxMenu(int containerId, BatteryBoxBlockEntity entity, Inventory inventory) {
         this(containerId, entity, createData(entity), inventory);
     }
 
-    protected static ContainerData createData() {
-        return new SimpleContainerData(8);
-    }
-
     protected static ContainerData createData(BatteryBoxBlockEntity entity) {
         return new ContainerData() {
             @Override
             public int getCount() {
-                return 8;
+                return DATA_SLOTS;
             }
 
             @Override
