@@ -45,6 +45,7 @@ import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlo
 import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlockEntity;
 import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorMenu;
 import io.github.reoseah.hayo.feature.processing_machines.matter_generator.*;
+import io.github.reoseah.hayo.feature.quantum_armor.QuantumArmorRenderer;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
 import io.github.reoseah.hayo.feature.wrench.WrenchItem;
@@ -57,8 +58,10 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ChunkSectionLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
@@ -69,6 +72,7 @@ import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
@@ -151,6 +155,8 @@ public class Hayo {
 
     public static final TagKey<Item> COPPER_INGOTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"));
 
+    public static final ModelLayerLocation QUANTUM_ARMOR = new ModelLayerLocation(modId("quantum_armor"), "main");
+
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modId("main"), TAB);
 
@@ -203,6 +209,9 @@ public class Hayo {
         MenuTypes.initializeClient();
         Particles.initializeClient();
         CustomPayloads.initializeClient();
+
+        ModelLayerRegistry.registerModelLayer(QUANTUM_ARMOR, QuantumArmorRenderer.QuantumGlowModel::createLayerDefinition);
+        ArmorRenderer.register(QuantumArmorRenderer::new, Items.QUANTUM_CHESTPLATE);
     }
 
     public static Identifier modId(String path) {

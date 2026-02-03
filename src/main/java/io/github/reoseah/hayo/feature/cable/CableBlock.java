@@ -103,7 +103,7 @@ public class CableBlock extends TransparentBlock implements ElectricCableBlock {
 
     @Override
     protected boolean skipRendering(BlockState state, BlockState adjacentState, Direction direction) {
-        return state.getValue(CableShapes.getSideProperty(direction)) && adjacentState.is(this);
+        return false;
     }
 
     @Override

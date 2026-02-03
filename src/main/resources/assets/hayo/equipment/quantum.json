@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "hayo:quantum"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "hayo:quantum"
+      }
+    ]
+  }
+}
