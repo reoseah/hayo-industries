@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    " # ",
+    "###",
     "CRC",
-    " F "
+    "#F#"
   ],
   "key": {
-    "#": "hayo:machine_block",
+    "#": "hayo:refined_iron_ingot",
     "C": "hayo:cable",
     "R": "minecraft:redstone",
     "F": "minecraft:furnace"

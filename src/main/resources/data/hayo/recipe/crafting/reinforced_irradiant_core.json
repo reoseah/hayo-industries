@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "RGR",
+    "L#L",
+    "RDR"
+  ],
+  "key": {
+    "#": "hayo:dense_refined_iron_plate",
+    "R": "minecraft:redstone",
+    "G": "minecraft:glowstone_dust",
+    "D": "minecraft:diamond",
+    "L": "minecraft:lapis_lazuli"
+  },
+  "result": {
+    "id": "hayo:reinforced_irradiant_core"
+  }
+}

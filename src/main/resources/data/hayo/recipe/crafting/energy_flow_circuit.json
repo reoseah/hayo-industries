@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": "hayo:energy_crystal",
+    "#": "minecraft:diamond",
     "X": "hayo:circuit",
     "G": "minecraft:glowstone_dust",
     "L": "minecraft:lapis_lazuli"

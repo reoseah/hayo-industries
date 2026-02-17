@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "hayo:item/refined_iron_foil"
+    "layer0": "hayo:item/reinforced_irradiant_core"
   }
 }

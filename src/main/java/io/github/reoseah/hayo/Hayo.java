@@ -452,7 +452,7 @@ public class Hayo {
                     .component(EnergyComponents.ENERGY_BACKPACK, Unit.INSTANCE);
         }
 
-        public static final Item BATTERY_PACK = registerItem("battery_pack", ElectricItem::new, createBatteryPackProperties(60, 32));
+        public static final Item BATTERY_PACK = registerItem("battery_pack", ElectricItem::new, createBatteryPackProperties(60_000, 32));
         public static final Item ADVANCED_BATTERY_PACK = registerItem("advanced_battery_pack", ElectricItem::new, createBatteryPackProperties(300_000, 128));
 
         private static Item.Properties createBatteryProperties(int capacity, int transferLimit) {
@@ -482,7 +482,6 @@ public class Hayo {
 
         public static final Item STICKY_RESIN = registerItem("sticky_resin");
         public static final Item RUBBER = registerItem("rubber");
-        public static final Item REFINED_IRON_FOIL = registerItem("refined_iron_foil");
         public static final Item COPPER_WIRE = registerItem("copper_wire");
         public static final Item GLASS_FIBER = registerItem("glass_fiber");
         public static final Item CIRCUIT = registerItem("circuit");
@@ -497,6 +496,8 @@ public class Hayo {
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
         public static final Item CANISTER = registerItem("canister");
+        public static final Item DENSE_REFINED_IRON_PLATE = registerItem("dense_refined_iron_plate");
+        public static final Item REINFORCED_IRRADIANT_CORE = registerItem("reinforced_irradiant_core");
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
@@ -617,7 +618,6 @@ public class Hayo {
 
                 entries.accept(STICKY_RESIN);
                 entries.accept(RUBBER);
-                entries.accept(REFINED_IRON_FOIL);
                 entries.accept(COPPER_WIRE);
                 entries.accept(GLASS_FIBER);
                 entries.accept(CIRCUIT);
@@ -633,6 +633,8 @@ public class Hayo {
                 entries.accept(QUANTUM_PLATE);
                 entries.accept(COMPRESSED_PLANTS);
                 entries.accept(CANISTER);
+                entries.accept(DENSE_REFINED_IRON_PLATE);
+                entries.accept(REINFORCED_IRRADIANT_CORE);
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);

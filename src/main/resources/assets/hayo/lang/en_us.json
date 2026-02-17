@@ -60,7 +60,6 @@
   "item.hayo.quantum_boots": "QuantumArmor Boots",
   "item.hayo.battery_pack": "Battery Pack",
   "item.hayo.advanced_battery_pack": "Advanced Battery Pack",
-  "item.hayo.canister": "Canister",
   "item.hayo.wood_dust": "Sawdust",
   "item.hayo.stone_dust": "Stone Dust",
   "item.hayo.coal_dust": "Coal Dust",
@@ -76,7 +75,6 @@
   "item.hayo.rubber": "Rubber",
   "item.hayo.raw_silicon": "Raw Silicon",
   "item.hayo.refined_iron_ingot": "Refined Iron Ingot",
-  "item.hayo.refined_iron_foil": "Refined Iron Foil",
   "item.hayo.copper_wire": "Copper Wire",
   "item.hayo.glass_fiber": "Glass Fiber",
   "item.hayo.mixed_metal_ingot": "Mixed Metal Ingot",
@@ -86,6 +84,9 @@
   "item.hayo.forcicium_sunnarium_complex": "Forcicium-Sunnarium Complex",
   "item.hayo.quantum_plate": "Enhanced Energy Shielding",
   "item.hayo.compressed_plants": "Compressed Plants",
+  "item.hayo.canister": "Canister",
+  "item.hayo.dense_refined_iron_plate": "Dense Iron Plate",
+  "item.hayo.reinforced_irradiant_core": "Reinforced Irradiant Core",
   "item.hayo.circuit": "Circuit",
   "item.hayo.electric_motor": "Electric Motor",
   "item.hayo.data_circuit": "Data Circuit",
@@ -169,8 +170,7 @@
   "hayo.distance.blocks_vertically": "%s blocks vertical range",
   "hayo.distance.blocks": "%s blocks",
   "hayo.distance.percentage": "%s%% range",
-  "hayo.use_rate_scales_with_heat": "Scale energy use with heat",
-  "hayo.heat.max": "%s max. heat",
-  "hayo.heat.amount_per_tick_when_active": "%s heat/t when active",
-  "hayo.heat.amount_per_tick_when_inactive": "%s heat/t if not active"
+  "hayo.use_rate_scales_with_heat": "Final energy usage scales with Heat",
+  "hayo.heat.max": "%s Heat capacity",
+  "hayo.heat.amount_per_tick_when_active": "%s Heat per tick when active, -4 when not"
 }

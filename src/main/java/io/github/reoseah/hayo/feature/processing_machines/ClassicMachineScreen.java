@@ -34,7 +34,7 @@ public class ClassicMachineScreen extends HayoContainerScreen<MachineMenu> {
             HayoGuiSprites.drawSlot(graphics, screen.leftPos + slot.x - 1, screen.topPos + slot.y - 1);
         }
 
-        HayoGuiSprites.drawOutputSlot(graphics, screen.leftPos + screen.menu.slots.get(2).x - 5, screen.topPos + screen.menu.slots.get(2).y - 5);
+        HayoGuiSprites.drawOutputSlot(graphics, screen.leftPos + screen.menu.slots.get(2).x - 4, screen.topPos + screen.menu.slots.get(2).y - 4);
 
         for (var slot : screen.menu.slots.subList(3, 7)) {
             HayoGuiSprites.drawUpgradeSlot(graphics, screen.leftPos + slot.x - 1, screen.topPos + slot.y - 1);
@@ -98,10 +98,9 @@ public class ClassicMachineScreen extends HayoContainerScreen<MachineMenu> {
                 return tooltip;
             } else {
                 tooltip.add(Component.translatable("hayo.use_rate_scales_with_heat").withStyle(ChatFormatting.DARK_AQUA));
-                tooltip.add(EnergyTexts.overclockUseRate(300).withStyle(ChatFormatting.DARK_AQUA));
                 tooltip.add(Component.translatable("hayo.heat.max", 10000).withStyle(ChatFormatting.DARK_AQUA));
                 tooltip.add(Component.translatable("hayo.heat.amount_per_tick_when_active", "+1").withStyle(ChatFormatting.DARK_AQUA));
-                tooltip.add(Component.translatable("hayo.heat.amount_per_tick_when_inactive", "-4").withStyle(ChatFormatting.DARK_AQUA));
+                tooltip.add(EnergyTexts.overclockUseRate(300).withStyle(ChatFormatting.DARK_AQUA));
             }
         }
         return tooltip;
