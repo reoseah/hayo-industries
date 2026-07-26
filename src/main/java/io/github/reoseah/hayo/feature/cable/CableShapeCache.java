@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public enum CableShapes {
+public enum CableShapeCache {
     ;
 
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
@@ -20,21 +20,10 @@ public enum CableShapes {
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
     public static final BooleanProperty WEST = BlockStateProperties.WEST;
 
-    private static final IntObjectMap<VoxelShape[]> SHAPE_CACHE = new IntObjectHashMap<>();
-
-    public static BooleanProperty getSideProperty(Direction side) {
-        return switch (side) {
-            case NORTH -> NORTH;
-            case SOUTH -> SOUTH;
-            case WEST -> WEST;
-            case EAST -> EAST;
-            case DOWN -> DOWN;
-            case UP -> UP;
-        };
-    }
+    private static final IntObjectMap<VoxelShape[]> SHAPES_BY_RADIUS = new IntObjectHashMap<>();
 
     public static VoxelShape[] getOrCreate(int radius) {
-        return SHAPE_CACHE.computeIfAbsent(radius, (r) -> {
+        return SHAPES_BY_RADIUS.computeIfAbsent(radius, (r) -> {
             var shapes = new VoxelShape[64];
 
             float min = 8 - r;
@@ -59,6 +48,17 @@ public enum CableShapes {
             }
             return shapes;
         });
+    }
+
+    public static BooleanProperty getSideProperty(Direction side) {
+        return switch (side) {
+            case NORTH -> NORTH;
+            case SOUTH -> SOUTH;
+            case WEST -> WEST;
+            case EAST -> EAST;
+            case DOWN -> DOWN;
+            case UP -> UP;
+        };
     }
 
     public static int getIndex(BlockState state) {

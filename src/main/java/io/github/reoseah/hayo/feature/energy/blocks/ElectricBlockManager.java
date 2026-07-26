@@ -271,6 +271,7 @@ public class ElectricBlockManager extends SavedData {
         visited.put(start, new PosData(0, null, level.getBlockState(start)));
 
         if (sendingFace != null) {
+            // TODO refactor this
             queue.removeFirst();
             var pos = start.relative(sendingFace);
             visitReceiverOrCableAt(level, queue, visited, pos, sendingFace, 1);

@@ -56,7 +56,7 @@
               "axis": "y"
             }
           },
-          "weight": 40
+          "weight": 80
         },
         {
           "data": {
@@ -66,7 +66,7 @@
               "has_resin": "false"
             }
           },
-          "weight": 15
+          "weight": 20
         },
         {
           "data": {

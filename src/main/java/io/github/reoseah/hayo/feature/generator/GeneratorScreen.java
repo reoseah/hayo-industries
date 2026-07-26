@@ -74,7 +74,7 @@ public class GeneratorScreen extends HayoContainerScreen<GeneratorMenu> {
             var energyValue = fuelValues.burnDuration(stack) * GeneratorBlockEntity.ENERGY_PER_FUEL_TICK;
 
             var tooltip = super.getTooltipFromContainerItem(stack);
-            tooltip.add(EnergyTexts.fuelValue(energyValue).withStyle(ChatFormatting.DARK_AQUA));
+            tooltip.add(EnergyTexts.approximateAmount(energyValue).withStyle(ChatFormatting.DARK_AQUA));
             return tooltip;
         }
         return super.getTooltipFromContainerItem(stack);

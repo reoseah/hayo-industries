@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/// Default translation keys and formatting for HAYO energy,
+/// Translation keys and formatting for HAYO energy,
 /// generally identified with lowercase epsilon "ε".
 public enum EnergyTexts {
     ;
@@ -22,11 +22,10 @@ public enum EnergyTexts {
     public static final String AMOUNT_AND_PERCENTAGE = "hayo.energy.amount_and_percentage";
     public static final String AMOUNT_WITH_CAPACITY_AND_PERCENTAGE = "hayo.energy.amount_with_capacity_and_percentage";
     public static final String DURATION_AT_AMOUNT_PER_TICK = "hayo.energy.duration_at_amount_per_tick";
-    public static final String FUEL_VALUE = "hayo.energy.fuel_value";
-    public static final String CONVERSION = "hayo.energy.conversion_rate";
+    public static final String CONVERSION = "hayo.energy.conversion_per_tick";
     public static final String APPROXIMATE_AMOUNT = "hayo.energy.approximate_amount";
-    public static final String OVERCLOCK_USE_RATE = "hayo.energy.overclock_use_rate";
-    public static final String OVERCLOCK_TOTAL_COST = "hayo.energy.overclock_total_cost";
+    public static final String MAX_PERCENTAGE_PER_TICK = "hayo.energy.max_percentage_per_tick";
+    public static final String PERCENTAGE_PER_RECIPE = "hayo.energy.percentage_per_recipe";
 
     private static final DecimalFormat LARGE_AMOUNTS_FORMAT;
 
@@ -49,7 +48,7 @@ public enum EnergyTexts {
         return amount < 10000 ? String.valueOf(amount) : LARGE_AMOUNTS_FORMAT.format(amount);
     }
 
-    /// E.g.: `1000 ε`, after 10000 group with commas - `1,000,000 ε`.
+    /// E.g.: `1000 ε`, after 10,000 group with commas - `1,000,000 ε`.
     public static MutableComponent amount(long amount) {
         return Component.translatable(AMOUNT, formatAmount(amount));
     }
@@ -110,23 +109,18 @@ public enum EnergyTexts {
         return Component.translatable(CONVERSION, formatAmount(amount));
     }
 
-    /// E.g.: "≈ 1000 ε", used by Generator in tooltip over the fuel gauge
+    /// E.g.: "≈ 1000 ε", used by Generator in tooltips
     public static MutableComponent approximateAmount(long amount) {
         return Component.translatable(APPROXIMATE_AMOUNT, formatAmount(amount));
     }
 
-    /// E.g.: "1000 ε fuel value", used by Generator in item tooltips
-    public static MutableComponent fuelValue(long amount) {
-        return Component.translatable(FUEL_VALUE, formatAmount(amount));
-    }
-
     /// E.g.: "+100% ε/t", used by machines in Overclock Upgrade tooltip
-    public static MutableComponent overclockUseRate(long percentage) {
-        return Component.translatable(OVERCLOCK_USE_RATE, (percentage > 0 ? "+" : "") + percentage);
+    public static MutableComponent maxPercentagePerTick(long percentage) {
+        return Component.translatable(MAX_PERCENTAGE_PER_TICK, (percentage > 0 ? "+" : "") + percentage);
     }
 
     /// E.g.: "+25% ε per recipe", used by machines in Overclock Upgrade tooltip
-    public static MutableComponent overclockTotalCost(long percentage) {
-        return Component.translatable(OVERCLOCK_TOTAL_COST, (percentage > 0 ? "+" : "") + percentage);
+    public static MutableComponent percentagePerRecipe(long percentage) {
+        return Component.translatable(PERCENTAGE_PER_RECIPE, (percentage > 0 ? "+" : "") + percentage);
     }
 }

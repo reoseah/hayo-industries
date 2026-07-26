@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "hayo:refined_iron_ingot",
+    "R": "hayo:rubber",
+    "C": "minecraft:copper_ingot"
+  },
+  "pattern": [
+    "R#R",
+    "CCC",
+    "R#R"
+  ],
+  "result": {
+    "count": 3,
+    "id": "hayo:advanced_energy_conduit"
+  }
+}

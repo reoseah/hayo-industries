@@ -27,25 +27,25 @@ public class CableBlock extends TransparentBlock implements ElectricCableBlock {
     public CableBlock(int transferLimit, int radius, Properties settings) {
         super(settings);
         this.transferLimit = transferLimit;
-        this.shapes = CableShapes.getOrCreate(radius);
+        this.shapes = CableShapeCache.getOrCreate(radius);
 
         this.registerDefaultState(this.defaultBlockState() //
-                .setValue(CableShapes.DOWN, false) //
-                .setValue(CableShapes.UP, false) //
-                .setValue(CableShapes.NORTH, false) //
-                .setValue(CableShapes.SOUTH, false) //
-                .setValue(CableShapes.EAST, false) //
-                .setValue(CableShapes.WEST, false));
+                .setValue(CableShapeCache.DOWN, false) //
+                .setValue(CableShapeCache.UP, false) //
+                .setValue(CableShapeCache.NORTH, false) //
+                .setValue(CableShapeCache.SOUTH, false) //
+                .setValue(CableShapeCache.EAST, false) //
+                .setValue(CableShapeCache.WEST, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(CableShapes.DOWN, CableShapes.UP, CableShapes.NORTH, CableShapes.SOUTH, CableShapes.EAST, CableShapes.WEST);
+        builder.add(CableShapeCache.DOWN, CableShapeCache.UP, CableShapeCache.NORTH, CableShapeCache.SOUTH, CableShapeCache.EAST, CableShapeCache.WEST);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return this.shapes[CableShapes.getIndex(state)];
+        return this.shapes[CableShapeCache.getIndex(state)];
     }
 
     @Override
@@ -55,17 +55,17 @@ public class CableBlock extends TransparentBlock implements ElectricCableBlock {
 
     public BlockState getStateForPos(Level level, BlockPos pos) {
         return this.defaultBlockState() //
-                .setValue(CableShapes.DOWN, this.connectsTo(level, pos, Direction.DOWN)) //
-                .setValue(CableShapes.UP, this.connectsTo(level, pos, Direction.UP)) //
-                .setValue(CableShapes.WEST, this.connectsTo(level, pos, Direction.WEST)) //
-                .setValue(CableShapes.EAST, this.connectsTo(level, pos, Direction.EAST)) //
-                .setValue(CableShapes.NORTH, this.connectsTo(level, pos, Direction.NORTH)) //
-                .setValue(CableShapes.SOUTH, this.connectsTo(level, pos, Direction.SOUTH));
+                .setValue(CableShapeCache.DOWN, this.connectsTo(level, pos, Direction.DOWN)) //
+                .setValue(CableShapeCache.UP, this.connectsTo(level, pos, Direction.UP)) //
+                .setValue(CableShapeCache.WEST, this.connectsTo(level, pos, Direction.WEST)) //
+                .setValue(CableShapeCache.EAST, this.connectsTo(level, pos, Direction.EAST)) //
+                .setValue(CableShapeCache.NORTH, this.connectsTo(level, pos, Direction.NORTH)) //
+                .setValue(CableShapeCache.SOUTH, this.connectsTo(level, pos, Direction.SOUTH));
     }
 
     @Override
     protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
-        return state.setValue(CableShapes.getSideProperty(direction), this.connectsTo(level, pos, direction));
+        return state.setValue(CableShapeCache.getSideProperty(direction), this.connectsTo(level, pos, direction));
     }
 
     protected boolean connectsTo(LevelReader level, BlockPos pos, Direction side) {

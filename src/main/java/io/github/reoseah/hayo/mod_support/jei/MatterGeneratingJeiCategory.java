@@ -33,7 +33,7 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
 
     @Override
     public Component getTitle() {
-        return Component.translatable("hayo.matter_generating");
+        return Component.translatable("hayo.recipe_type.matter_generating");
     }
 
     @Override

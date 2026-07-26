@@ -3,6 +3,7 @@ package io.github.reoseah.hayo;
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.base.item.BlockItemWithTooltip;
+import io.github.reoseah.hayo.base.item.UpgradeItem;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlock;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlockEntity;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxMenu;
@@ -126,6 +127,14 @@ import java.util.function.Function;
 import static net.minecraft.world.level.block.Blocks.leavesProperties;
 import static net.minecraft.world.level.block.Blocks.logProperties;
 
+// TODO: make upgrade tooltips always visible and in style of tool stats:
+//   Installed in machine: <- light gray
+//    +100% Max Energy Consumption <- cyan
+//    +100% Energy Capacity
+
+// TODO: rename Battery Box to Battery Buffer?
+// TODO: rearrange creative tab entries
+// TODO: make resin rubber log "eject" resin item instead of placing it directly into player inventory
 public class Hayo {
     public static final String MOD_ID = "hayo";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -499,11 +508,46 @@ public class Hayo {
         public static final Item DENSE_REFINED_IRON_PLATE = registerItem("dense_refined_iron_plate");
         public static final Item REINFORCED_IRRADIANT_CORE = registerItem("reinforced_irradiant_core");
 
-        public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
-        public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
-        public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
-        public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
-        public static final Item INDUCTION_UPGRADE = registerItem("induction_upgrade", new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+        public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", props -> new UpgradeItem(props, List.of(Component.translatable("hayo.upgrades.crafting_speed", "+100%"), Component.translatable("hayo.upgrades.energy_usage", "+100%"))), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+        public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", props -> new UpgradeItem(props, List.of(Component.translatable("hayo.upgrades.energy_capacity", "+10000"))), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+
+        public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", //
+                props -> new UpgradeItem( //
+                        props, //
+                        Component.translatable("block.hayo.electric_furnace"), //
+                        List.of( //
+                                Component.translatable("hayo.upgrades.use_blasting_recipes"), //
+                                Component.translatable("hayo.upgrades.crafting_speed", "+100%"), //
+                                Component.translatable("hayo.upgrades.energy_usage", "+100%") //
+                        ) //
+                ), //
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16) //
+        );
+        public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", //
+                props -> new UpgradeItem( //
+                        props, //
+                        Component.translatable("block.hayo.electric_furnace"), //
+                        List.of( //
+                                Component.translatable("hayo.upgrades.use_smoking_recipes"), //
+                                Component.translatable("hayo.upgrades.crafting_speed", "+100%"), //
+                                Component.translatable("hayo.upgrades.energy_usage", "+100%") //
+                        ) //
+                ), //
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+        public static final Item INDUCTION_UPGRADE = registerItem("induction_upgrade", //
+                props -> new UpgradeItem( //
+                        props, //
+                        Component.translatable("block.hayo.electric_furnace"), //
+                        List.of( //
+                                Component.translatable("hayo.upgrades.scaling_with_heat"), //
+                                Component.translatable("hayo.upgrades.heat_capacity", 10000), //
+                                Component.translatable("hayo.upgrades.heat_when_active", "+1"), //
+                                Component.translatable("hayo.upgrades.heat_when_idle", "-4"), //
+                                Component.translatable("hayo.upgrades.crafting_speed", "+300%"), //
+                                Component.translatable("hayo.upgrades.energy_usage", "+300%") //
+                        ) //
+                ), //
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static void initialize() {
             CreativeModeTabEvents.modifyOutputEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
