@@ -211,7 +211,7 @@ public class ElectricBlockManager extends SavedData {
                 }
                 chunkValues.lastDestructionProgressMap = destructionProgressMap;
                 if (!destructionProgressMap.isEmpty()) {
-                    PlayerLookup.tracking(this.level, chunkPos).forEach(serverPlayer -> ServerPlayNetworking.send(serverPlayer, new OverloadCablePayload(chunkPos, destructionProgressMap)));
+                    PlayerLookup.tracking(this.level, chunkPos).forEach(serverPlayer -> ServerPlayNetworking.send(serverPlayer, new CableBreakPayload(chunkPos, destructionProgressMap)));
                 }
             }
         }

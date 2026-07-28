@@ -11,11 +11,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.ChunkPos;
 
-public record OverloadCablePayload(ChunkPos chunkPos,
-                                   Object2IntMap<BlockPos> destructionProgress) implements CustomPacketPayload {
-    public static final StreamCodec<FriendlyByteBuf, OverloadCablePayload> STREAM_CODEC = CustomPacketPayload.codec(OverloadCablePayload::write, OverloadCablePayload::read);
+public record CableBreakPayload(ChunkPos chunkPos,
+                                Object2IntMap<BlockPos> destructionProgress) implements CustomPacketPayload {
+    public static final StreamCodec<FriendlyByteBuf, CableBreakPayload> STREAM_CODEC = CustomPacketPayload.codec(CableBreakPayload::write, CableBreakPayload::read);
 
-    public static void receive(OverloadCablePayload payload, ClientPlayNetworking.Context context) {
+    public static void receive(CableBreakPayload payload, ClientPlayNetworking.Context context) {
         var level = context.client().level;
 
         for (var destructionEntry : payload.destructionProgress().object2IntEntrySet()) {
@@ -36,11 +36,11 @@ public record OverloadCablePayload(ChunkPos chunkPos,
         }
     }
 
-    public static OverloadCablePayload read(FriendlyByteBuf buffer) {
+    public static CableBreakPayload read(FriendlyByteBuf buffer) {
         var chunkPos = ChunkPos.STREAM_CODEC.decode(buffer);
         var destructionProgress = readBlockPosToIntMap(buffer, chunkPos);
 
-        return new OverloadCablePayload(chunkPos, destructionProgress);
+        return new CableBreakPayload(chunkPos, destructionProgress);
     }
 
     private void write(FriendlyByteBuf buf) {
@@ -83,6 +83,6 @@ public record OverloadCablePayload(ChunkPos chunkPos,
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return Hayo.CustomPayloads.OVERLOAD_CABLE;
+        return Hayo.CustomPayloads.CABLE_BREAK_PROGRESS;
     }
 }

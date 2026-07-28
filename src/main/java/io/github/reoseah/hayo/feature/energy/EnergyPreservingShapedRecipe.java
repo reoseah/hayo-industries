@@ -11,21 +11,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 
-public class ElectricShapedRecipe extends ShapedRecipe {
-    public static final MapCodec<ElectricShapedRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance //
+public class EnergyPreservingShapedRecipe extends ShapedRecipe {
+    public static final MapCodec<EnergyPreservingShapedRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance //
             .group(Codec.STRING.optionalFieldOf("group", "").forGetter(ShapedRecipe::group), //
                     CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(ShapedRecipe::category), //
                     ShapedRecipePattern.MAP_CODEC.forGetter(recipe -> recipe.pattern), //
                     ItemStackTemplate.CODEC.fieldOf("result").forGetter(o -> o.result), //
                     Codec.BOOL.optionalFieldOf("show_notification", true).forGetter(ShapedRecipe::showNotification) //
             ) //
-            .apply(instance, ElectricShapedRecipe::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ElectricShapedRecipe> STREAM_CODEC = StreamCodec.of( //
-            ElectricShapedRecipe::toNetwork, //
-            ElectricShapedRecipe::fromNetwork //
+            .apply(instance, EnergyPreservingShapedRecipe::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, EnergyPreservingShapedRecipe> STREAM_CODEC = StreamCodec.of( //
+            EnergyPreservingShapedRecipe::toNetwork, //
+            EnergyPreservingShapedRecipe::fromNetwork //
     );
 
-    public ElectricShapedRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStackTemplate result, boolean showNotification) {
+    public EnergyPreservingShapedRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStackTemplate result, boolean showNotification) {
         // TODO: change JSON shape to match vanilla recipes?
         super(new CommonInfo(showNotification), new CraftingBookInfo(category, group), pattern, result);
     }
@@ -48,19 +48,19 @@ public class ElectricShapedRecipe extends ShapedRecipe {
 
     @Override
     public RecipeSerializer<ShapedRecipe> getSerializer() {
-        return (RecipeSerializer<ShapedRecipe>) (RecipeSerializer<?>) Hayo.RecipeSerializers.ELECTRIC_SHAPED_CRAFTING;
+        return (RecipeSerializer<ShapedRecipe>) (RecipeSerializer<?>) Hayo.RecipeSerializers.ENERGY_PRESERVING_CRAFTING;
     }
 
-    private static ElectricShapedRecipe fromNetwork(RegistryFriendlyByteBuf input) {
+    private static EnergyPreservingShapedRecipe fromNetwork(RegistryFriendlyByteBuf input) {
         var group = input.readUtf();
         var category = input.readEnum(CraftingBookCategory.class);
         var pattern = ShapedRecipePattern.STREAM_CODEC.decode(input);
         var result = ItemStackTemplate.STREAM_CODEC.decode(input);
         boolean showNotification = input.readBoolean();
-        return new ElectricShapedRecipe(group, category, pattern, result, showNotification);
+        return new EnergyPreservingShapedRecipe(group, category, pattern, result, showNotification);
     }
 
-    private static void toNetwork(RegistryFriendlyByteBuf output, ElectricShapedRecipe recipe) {
+    private static void toNetwork(RegistryFriendlyByteBuf output, EnergyPreservingShapedRecipe recipe) {
         output.writeUtf(recipe.group());
         output.writeEnum(recipe.category());
         ShapedRecipePattern.STREAM_CODEC.encode(output, recipe.pattern);

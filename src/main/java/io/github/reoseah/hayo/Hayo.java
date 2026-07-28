@@ -10,9 +10,9 @@ import io.github.reoseah.hayo.feature.battery_box.BatteryBoxMenu;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxScreen;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.electric_beacon.*;
-import io.github.reoseah.hayo.feature.energy.ElectricShapedRecipe;
+import io.github.reoseah.hayo.feature.energy.EnergyPreservingShapedRecipe;
+import io.github.reoseah.hayo.feature.energy.blocks.CableBreakPayload;
 import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlockManager;
-import io.github.reoseah.hayo.feature.energy.blocks.OverloadCablePayload;
 import io.github.reoseah.hayo.feature.energy.item.*;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageMenu;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageScreen;
@@ -179,7 +179,7 @@ public class Hayo {
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.COMPRESSING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.EXTRACTING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.ELECTRIC_SHAPED_CRAFTING);
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.ENERGY_PRESERVING_CRAFTING);
 
         BiomeModifications.create(modId("rubber_trees")) //
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST) //
@@ -204,8 +204,6 @@ public class Hayo {
 
     @Environment(EnvType.CLIENT)
     public static void initializeClient() {
-//        ChunkSectionLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.CHIPBOARD_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU, Blocks.ELECTRIC_BEACON);
-
         BlockColorRegistry.register((state, level, pos, tintValues) -> tintValues.add(level != null && pos != null ? BiomeColors.getAverageFoliageColor(level, pos) : 0xff48b518), Blocks.RUBBER_LEAVES);
 
         RangeSelectItemModelProperties.ID_MAPPER.put(modId("energy"), EnergyModelProperty.MAP_CODEC);
@@ -832,11 +830,12 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
+        public static final RecipeSerializer<EnergyPreservingShapedRecipe> ENERGY_PRESERVING_CRAFTING = register("energy_preserving_crafting", new RecipeSerializer<>(EnergyPreservingShapedRecipe.CODEC, EnergyPreservingShapedRecipe.STREAM_CODEC));
+
         public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", ClassicMachineRecipe.createCodec(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.createCodec(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", ClassicMachineRecipe.createCodec(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
-        public static final RecipeSerializer<ElectricShapedRecipe> ELECTRIC_SHAPED_CRAFTING = register("electric_shaped_crafting", new RecipeSerializer<>(ElectricShapedRecipe.CODEC, ElectricShapedRecipe.STREAM_CODEC));
 
         public static void initialize() {
         }
@@ -863,15 +862,15 @@ public class Hayo {
     }
 
     public static class CustomPayloads {
-        public static final CustomPacketPayload.Type<OverloadCablePayload> OVERLOAD_CABLE = new CustomPacketPayload.Type<>(modId("overload_cable"));
+        public static final CustomPacketPayload.Type<CableBreakPayload> CABLE_BREAK_PROGRESS = new CustomPacketPayload.Type<>(modId("cable_break_progress"));
 
         public static void initialize() {
-            PayloadTypeRegistry.clientboundPlay().register(OVERLOAD_CABLE, OverloadCablePayload.STREAM_CODEC);
+            PayloadTypeRegistry.clientboundPlay().register(CABLE_BREAK_PROGRESS, CableBreakPayload.STREAM_CODEC);
         }
 
         @Environment(EnvType.CLIENT)
         public static void initializeClient() {
-            ClientPlayNetworking.registerGlobalReceiver(OVERLOAD_CABLE, OverloadCablePayload::receive);
+            ClientPlayNetworking.registerGlobalReceiver(CABLE_BREAK_PROGRESS, CableBreakPayload::receive);
         }
     }
 }
