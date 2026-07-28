@@ -24,8 +24,6 @@ public enum EnergyTexts {
     public static final String DURATION_AT_AMOUNT_PER_TICK = "hayo.energy.duration_at_amount_per_tick";
     public static final String CONVERSION = "hayo.energy.conversion_per_tick";
     public static final String APPROXIMATE_AMOUNT = "hayo.energy.approximate_amount";
-    public static final String MAX_PERCENTAGE_PER_TICK = "hayo.energy.max_percentage_per_tick";
-    public static final String PERCENTAGE_PER_RECIPE = "hayo.energy.percentage_per_recipe";
 
     private static final DecimalFormat LARGE_AMOUNTS_FORMAT;
 
@@ -112,15 +110,5 @@ public enum EnergyTexts {
     /// E.g.: "≈ 1000 ε", used by Generator in tooltips
     public static MutableComponent approximateAmount(long amount) {
         return Component.translatable(APPROXIMATE_AMOUNT, formatAmount(amount));
-    }
-
-    /// E.g.: "+100% ε/t", used by machines in Overclock Upgrade tooltip
-    public static MutableComponent maxPercentagePerTick(long percentage) {
-        return Component.translatable(MAX_PERCENTAGE_PER_TICK, (percentage > 0 ? "+" : "") + percentage);
-    }
-
-    /// E.g.: "+25% ε per recipe", used by machines in Overclock Upgrade tooltip
-    public static MutableComponent percentagePerRecipe(long percentage) {
-        return Component.translatable(PERCENTAGE_PER_RECIPE, (percentage > 0 ? "+" : "") + percentage);
     }
 }

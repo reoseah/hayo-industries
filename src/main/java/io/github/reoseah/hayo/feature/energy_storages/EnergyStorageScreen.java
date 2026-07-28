@@ -4,7 +4,7 @@ import io.github.reoseah.hayo.base.client.HayoContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -17,8 +17,8 @@ public class EnergyStorageScreen extends HayoContainerScreen<EnergyStorageMenu> 
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        super.renderBg(graphics, partialTick, mouseX, mouseY);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
         int x = this.leftPos;
         int y = this.topPos;
@@ -33,7 +33,7 @@ public class EnergyStorageScreen extends HayoContainerScreen<EnergyStorageMenu> 
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.isHovering(89, 17, 17, 55, mouseX, mouseY)) {
             int storedEnergy = this.menu.getStoredEnergy();
             int capacity = this.menu.getEnergyCapacity();
@@ -49,6 +49,6 @@ public class EnergyStorageScreen extends HayoContainerScreen<EnergyStorageMenu> 
             return;
         }
 
-        super.renderTooltip(graphics, mouseX, mouseY);
+        super.extractTooltip(graphics, mouseX, mouseY);
     }
 }

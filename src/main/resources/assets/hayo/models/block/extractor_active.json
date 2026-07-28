@@ -12,8 +12,8 @@
     "down": "hayo:block/machine_bottom",
     "up": "hayo:block/extractor_top",
     "north": "hayo:block/extractor_front_active",
-    "east": "hayo:block/machine_side",
+    "east": "hayo:block/extractor_side_active",
     "south": "hayo:block/machine_side_with_vents",
-    "west": "hayo:block/machine_side"
+    "west": "hayo:block/extractor_side_active"
   }
 }

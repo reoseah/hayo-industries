@@ -4,7 +4,7 @@ import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.client.HayoContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -23,7 +23,9 @@ public class ElectricBeaconScreen extends HayoContainerScreen<ElectricBeaconMenu
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
+
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 
         HayoGuiSprites.drawSlot(graphics, this.leftPos + this.menu.slots.getFirst().x - 1, this.topPos + this.menu.slots.getFirst().y - 1);
@@ -55,7 +57,7 @@ public class ElectricBeaconScreen extends HayoContainerScreen<ElectricBeaconMenu
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.isHovering(170, 68, 14, 14, mouseX, mouseY)) {
             graphics.setTooltipForNextFrame(this.font, List.of(EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), 10000)), Optional.empty(), mouseX, mouseY);
             return;
@@ -74,7 +76,7 @@ public class ElectricBeaconScreen extends HayoContainerScreen<ElectricBeaconMenu
                 }
             }
         }
-        super.renderTooltip(graphics, mouseX, mouseY);
+        super.extractTooltip(graphics, mouseX, mouseY);
     }
 
     @Override

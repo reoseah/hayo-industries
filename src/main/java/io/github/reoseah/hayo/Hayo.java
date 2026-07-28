@@ -26,26 +26,26 @@ import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
 import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
+import io.github.reoseah.hayo.feature.machines.ClassicMachineRecipe;
+import io.github.reoseah.hayo.feature.machines.ClassicMachineScreen;
+import io.github.reoseah.hayo.feature.machines.MachineMenu;
+import io.github.reoseah.hayo.feature.machines.compressor.CompressingRecipe;
+import io.github.reoseah.hayo.feature.machines.compressor.CompressorBlock;
+import io.github.reoseah.hayo.feature.machines.compressor.CompressorBlockEntity;
+import io.github.reoseah.hayo.feature.machines.compressor.CompressorMenu;
+import io.github.reoseah.hayo.feature.machines.electric_furnace.ElectricFurnaceBlock;
+import io.github.reoseah.hayo.feature.machines.electric_furnace.ElectricFurnaceBlockEntity;
+import io.github.reoseah.hayo.feature.machines.electric_furnace.ElectricFurnaceMenu;
+import io.github.reoseah.hayo.feature.machines.extractor.ExtractingRecipe;
+import io.github.reoseah.hayo.feature.machines.extractor.ExtractorBlock;
+import io.github.reoseah.hayo.feature.machines.extractor.ExtractorBlockEntity;
+import io.github.reoseah.hayo.feature.machines.extractor.ExtractorMenu;
+import io.github.reoseah.hayo.feature.machines.macerator.MaceratingRecipe;
+import io.github.reoseah.hayo.feature.machines.macerator.MaceratorBlock;
+import io.github.reoseah.hayo.feature.machines.macerator.MaceratorBlockEntity;
+import io.github.reoseah.hayo.feature.machines.macerator.MaceratorMenu;
+import io.github.reoseah.hayo.feature.machines.matter_generator.*;
 import io.github.reoseah.hayo.feature.ore_crops.FerruBlock;
-import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineRecipe;
-import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineScreen;
-import io.github.reoseah.hayo.feature.processing_machines.MachineMenu;
-import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressingRecipe;
-import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlock;
-import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.compressor.CompressorMenu;
-import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlock;
-import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceMenu;
-import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractingRecipe;
-import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorBlock;
-import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.extractor.ExtractorMenu;
-import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratingRecipe;
-import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlock;
-import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorBlockEntity;
-import io.github.reoseah.hayo.feature.processing_machines.macerator.MaceratorMenu;
-import io.github.reoseah.hayo.feature.processing_machines.matter_generator.*;
 import io.github.reoseah.hayo.feature.quantum_armor.QuantumArmorRenderer;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
@@ -61,7 +61,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ChunkSectionLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
@@ -75,7 +74,6 @@ import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
@@ -127,11 +125,6 @@ import java.util.function.Function;
 import static net.minecraft.world.level.block.Blocks.leavesProperties;
 import static net.minecraft.world.level.block.Blocks.logProperties;
 
-// TODO: make upgrade tooltips always visible and in style of tool stats:
-//   Installed in machine: <- light gray
-//    +100% Max Energy Consumption <- cyan
-//    +100% Energy Capacity
-
 // TODO: rename Battery Box to Battery Buffer?
 // TODO: rearrange creative tab entries
 // TODO: make resin rubber log "eject" resin item instead of placing it directly into player inventory
@@ -141,7 +134,8 @@ public class Hayo {
 
     public static final CreativeModeTab TAB = FabricCreativeModeTab.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
 
-    public static final SavedDataType<ElectricBlockManager> ELECTRIC_DATA = new SavedDataType<>("HayoElectricData", //
+    public static final SavedDataType<ElectricBlockManager> ELECTRIC_DATA = new SavedDataType<>(
+            modId("electric_data"), //
             ElectricBlockManager::new, //
             MapCodec.unitCodec(ElectricBlockManager::new), //
             null);
@@ -210,8 +204,9 @@ public class Hayo {
 
     @Environment(EnvType.CLIENT)
     public static void initializeClient() {
-        ChunkSectionLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.CHIPBOARD_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU, Blocks.ELECTRIC_BEACON);
-        BlockColorRegistry.register((state, level, pos, seed) -> level != null && pos != null ? BiomeColors.getAverageFoliageColor(level, pos) : 0xff48b518, Blocks.RUBBER_LEAVES);
+//        ChunkSectionLayerMap.putBlocks(ChunkSectionLayer.CUTOUT, Blocks.REINFORCED_GLASS, Blocks.REINFORCED_DOOR, Blocks.CHIPBOARD_DOOR, Blocks.RUBBER_LEAVES, Blocks.RUBBER_SAPLING, Blocks.FERRU, Blocks.ELECTRIC_BEACON);
+
+        BlockColorRegistry.register((state, level, pos, tintValues) -> tintValues.add(level != null && pos != null ? BiomeColors.getAverageFoliageColor(level, pos) : 0xff48b518), Blocks.RUBBER_LEAVES);
 
         RangeSelectItemModelProperties.ID_MAPPER.put(modId("energy"), EnergyModelProperty.MAP_CODEC);
 
@@ -508,7 +503,11 @@ public class Hayo {
         public static final Item DENSE_REFINED_IRON_PLATE = registerItem("dense_refined_iron_plate");
         public static final Item REINFORCED_IRRADIANT_CORE = registerItem("reinforced_irradiant_core");
 
-        public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", props -> new UpgradeItem(props, List.of(Component.translatable("hayo.upgrades.crafting_speed", "+100%"), Component.translatable("hayo.upgrades.energy_usage", "+100%"))), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+        public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", props -> new UpgradeItem(props, List.of( //
+                Component.translatable("hayo.upgrades.crafting_speed", "+100%"), //
+                Component.translatable("hayo.upgrades.energy_usage", "+100%"), //
+                Component.translatable("hayo.upgrades.recipe_cost", "+25%") //
+        )), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", props -> new UpgradeItem(props, List.of(Component.translatable("hayo.upgrades.energy_capacity", "+10000"))), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", //
@@ -833,11 +832,11 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
-        public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", new ClassicMachineRecipe.Serializer<>(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", new ClassicMachineRecipe.Serializer<>(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", new ClassicMachineRecipe.Serializer<>(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new MatterGeneratingRecipe.Serializer());
-        public static final RecipeSerializer<ElectricShapedRecipe> ELECTRIC_SHAPED_CRAFTING = register("electric_shaped_crafting", new ElectricShapedRecipe.Serializer());
+        public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", ClassicMachineRecipe.createCodec(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.createCodec(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", ClassicMachineRecipe.createCodec(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
+        public static final RecipeSerializer<ElectricShapedRecipe> ELECTRIC_SHAPED_CRAFTING = register("electric_shaped_crafting", new RecipeSerializer<>(ElectricShapedRecipe.CODEC, ElectricShapedRecipe.STREAM_CODEC));
 
         public static void initialize() {
         }

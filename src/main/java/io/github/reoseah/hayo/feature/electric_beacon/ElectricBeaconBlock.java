@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlocks;
 import io.github.reoseah.hayo.feature.energy.blocks.ElectricReceiverBlock;
-import io.github.reoseah.hayo.feature.processing_machines.matter_generator.MatterGeneratorBlock;
+import io.github.reoseah.hayo.feature.machines.matter_generator.MatterGeneratorBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;

@@ -12,12 +12,22 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 
 public class ElectricShapedRecipe extends ShapedRecipe {
-    public ElectricShapedRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStackTemplate result, boolean showNotification) {
-        super(group, category, pattern, result, showNotification);
-    }
+    public static final MapCodec<ElectricShapedRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance //
+            .group(Codec.STRING.optionalFieldOf("group", "").forGetter(ShapedRecipe::group), //
+                    CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(ShapedRecipe::category), //
+                    ShapedRecipePattern.MAP_CODEC.forGetter(recipe -> recipe.pattern), //
+                    ItemStackTemplate.CODEC.fieldOf("result").forGetter(o -> o.result), //
+                    Codec.BOOL.optionalFieldOf("show_notification", true).forGetter(ShapedRecipe::showNotification) //
+            ) //
+            .apply(instance, ElectricShapedRecipe::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ElectricShapedRecipe> STREAM_CODEC = StreamCodec.of( //
+            ElectricShapedRecipe::toNetwork, //
+            ElectricShapedRecipe::fromNetwork //
+    );
 
-    public ElectricShapedRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStackTemplate result) {
-        super(group, category, pattern, result);
+    public ElectricShapedRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStackTemplate result, boolean showNotification) {
+        // TODO: change JSON shape to match vanilla recipes?
+        super(new CommonInfo(showNotification), new CraftingBookInfo(category, group), pattern, result);
     }
 
     @Override
@@ -37,49 +47,24 @@ public class ElectricShapedRecipe extends ShapedRecipe {
     }
 
     @Override
-    public RecipeSerializer<? extends ShapedRecipe> getSerializer() {
-        return Hayo.RecipeSerializers.ELECTRIC_SHAPED_CRAFTING;
+    public RecipeSerializer<ShapedRecipe> getSerializer() {
+        return (RecipeSerializer<ShapedRecipe>) (RecipeSerializer<?>) Hayo.RecipeSerializers.ELECTRIC_SHAPED_CRAFTING;
     }
 
-    public static class Serializer implements RecipeSerializer<ElectricShapedRecipe> {
-        public static final MapCodec<ElectricShapedRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance //
-                .group(Codec.STRING.optionalFieldOf("group", "").forGetter(ShapedRecipe::group), //
-                        CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(ShapedRecipe::category), //
-                        ShapedRecipePattern.MAP_CODEC.forGetter(recipe -> recipe.pattern), //
-                        ItemStackTemplate.CODEC.fieldOf("result").forGetter(o -> o.result), //
-                        Codec.BOOL.optionalFieldOf("show_notification", true).forGetter(ShapedRecipe::showNotification) //
-                ) //
-                .apply(instance, ElectricShapedRecipe::new));
-        public static final StreamCodec<RegistryFriendlyByteBuf, ElectricShapedRecipe> STREAM_CODEC = StreamCodec.of( //
-                ElectricShapedRecipe.Serializer::toNetwork, //
-                ElectricShapedRecipe.Serializer::fromNetwork //
-        );
+    private static ElectricShapedRecipe fromNetwork(RegistryFriendlyByteBuf input) {
+        var group = input.readUtf();
+        var category = input.readEnum(CraftingBookCategory.class);
+        var pattern = ShapedRecipePattern.STREAM_CODEC.decode(input);
+        var result = ItemStackTemplate.STREAM_CODEC.decode(input);
+        boolean showNotification = input.readBoolean();
+        return new ElectricShapedRecipe(group, category, pattern, result, showNotification);
+    }
 
-        @Override
-        public MapCodec<ElectricShapedRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ElectricShapedRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-
-        private static ElectricShapedRecipe fromNetwork(RegistryFriendlyByteBuf input) {
-            var group = input.readUtf();
-            var category = input.readEnum(CraftingBookCategory.class);
-            var pattern = ShapedRecipePattern.STREAM_CODEC.decode(input);
-            var result = ItemStackTemplate.STREAM_CODEC.decode(input);
-            boolean showNotification = input.readBoolean();
-            return new ElectricShapedRecipe(group, category, pattern, result, showNotification);
-        }
-
-        private static void toNetwork(RegistryFriendlyByteBuf output, ElectricShapedRecipe recipe) {
-            output.writeUtf(recipe.group());
-            output.writeEnum(recipe.category());
-            ShapedRecipePattern.STREAM_CODEC.encode(output, recipe.pattern);
-            ItemStackTemplate.STREAM_CODEC.encode(output, recipe.result);
-            output.writeBoolean(recipe.showNotification());
-        }
+    private static void toNetwork(RegistryFriendlyByteBuf output, ElectricShapedRecipe recipe) {
+        output.writeUtf(recipe.group());
+        output.writeEnum(recipe.category());
+        ShapedRecipePattern.STREAM_CODEC.encode(output, recipe.pattern);
+        ItemStackTemplate.STREAM_CODEC.encode(output, recipe.result);
+        output.writeBoolean(recipe.showNotification());
     }
 }

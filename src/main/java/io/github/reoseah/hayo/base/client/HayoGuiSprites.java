@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.base.client;
 
 import io.github.reoseah.hayo.Hayo;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -10,7 +10,7 @@ public class HayoGuiSprites {
     public static final Identifier ENERGY_STORAGE = Hayo.modId("energy_storage");
     public static final Identifier ENERGY_STORAGE_OVERLAY = Hayo.modId("energy_storage_overlay");
 
-    public static void drawEnergyStorage(GuiGraphics graphics, int x, int y, int amount, int capacity) {
+    public static void drawEnergyStorage(GuiGraphicsExtractor graphics, int x, int y, int amount, int capacity) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_STORAGE, x, y, 18, 56);
 
         if (amount > 0 && capacity > 0) {
@@ -22,7 +22,7 @@ public class HayoGuiSprites {
     public static final Identifier MACHINE_ENERGY = Hayo.modId("machine_energy");
     public static final Identifier MACHINE_ENERGY_OVERLAY = Hayo.modId("machine_energy_overlay");
 
-    public static void drawMachineEnergy(GuiGraphics graphics, int x, int y, int energy, int capacity) {
+    public static void drawMachineEnergy(GuiGraphicsExtractor graphics, int x, int y, int energy, int capacity) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, MACHINE_ENERGY, x, y, 14, 14);
 
         if (energy > 0 && capacity > 0) {
@@ -34,7 +34,7 @@ public class HayoGuiSprites {
     public static final Identifier FUEL = Hayo.modId("fuel");
     public static final Identifier FUEL_OVERLAY = Hayo.modId("fuel_overlay");
 
-    public static void drawFuel(GuiGraphics graphics, int x, int y, int fuelLeft, int fuelTotal) {
+    public static void drawFuel(GuiGraphicsExtractor graphics, int x, int y, int fuelLeft, int fuelTotal) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FUEL, x, y, 14, 14);
 
         if (fuelLeft > 0 && fuelTotal > 0) {
@@ -46,33 +46,33 @@ public class HayoGuiSprites {
     public static final Identifier SMALL_ARROW_RIGHT = Hayo.modId("small_arrow_right");
     public static final Identifier SMALL_ARROW_LEFT = Hayo.modId("small_arrow_left");
 
-    public static void drawSmallArrowRight(GuiGraphics graphics, int x, int y) {
+    public static void drawSmallArrowRight(GuiGraphicsExtractor graphics, int x, int y) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SMALL_ARROW_RIGHT, x, y, 9, 18);
     }
 
-    public static void drawSmallArrowLeft(GuiGraphics graphics, int x, int y) {
+    public static void drawSmallArrowLeft(GuiGraphicsExtractor graphics, int x, int y) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SMALL_ARROW_LEFT, x, y, 9, 18);
     }
 
     public static final Identifier SLOT = Hayo.modId("slots/default");
 
-    public static void drawSlot(GuiGraphics graphics, int x, int y) {
+    public static void drawSlot(GuiGraphicsExtractor graphics, int x, int y) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT, x, y, 18, 18);
     }
 
     public static final Identifier UPGRADE_SLOT = Hayo.modId("slots/upgrade");
 
-    public static void drawUpgradeSlot(GuiGraphics graphics, int x, int y) {
+    public static void drawUpgradeSlot(GuiGraphicsExtractor graphics, int x, int y) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, UPGRADE_SLOT, x, y, 18, 18);
     }
 
     public static final Identifier OUTPUT_SLOT = Hayo.modId("slots/output");
 
-    public static void drawOutputSlot(GuiGraphics graphics, int x, int y) {
+    public static void drawOutputSlot(GuiGraphicsExtractor graphics, int x, int y) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, OUTPUT_SLOT, x, y, 24, 24);
     }
 
-    public static void drawRecipeArrow(GuiGraphics graphics, int x, int y, RecipeArrow arrowType, int currentProgress, int totalProgress) {
+    public static void drawRecipeArrow(GuiGraphicsExtractor graphics, int x, int y, RecipeArrow arrowType, int currentProgress, int totalProgress) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, arrowType.background, x, y, 24, 16);
 
         if (currentProgress > 0 && totalProgress > 0) {
@@ -103,7 +103,7 @@ public class HayoGuiSprites {
     public static final Identifier SCROLLER = Hayo.modId("scroller/default");
     public static final Identifier SCROLLER_DISABLED = Hayo.modId("scroller/disabled");
 
-    public static void drawScroller(GuiGraphics graphics, int x, int y, boolean disabled) {
+    public static void drawScroller(GuiGraphicsExtractor graphics, int x, int y, boolean disabled) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, disabled ? SCROLLER_DISABLED : SCROLLER, x, y, 12, 15);
     }
 

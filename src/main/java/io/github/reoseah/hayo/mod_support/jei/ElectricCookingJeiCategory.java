@@ -2,7 +2,7 @@ package io.github.reoseah.hayo.mod_support.jei;
 
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
-import io.github.reoseah.hayo.feature.processing_machines.electric_furnace.ElectricFurnaceBlockEntity;
+import io.github.reoseah.hayo.feature.machines.electric_furnace.ElectricFurnaceBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,7 +13,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
@@ -71,14 +71,14 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
     }
 
     @Override
-    public void draw(RecipeHolder<? extends AbstractCookingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<? extends AbstractCookingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         HayoGuiSprites.drawMachineEnergy(graphics, 1, 20, 10, 14);
 
         int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(holder.value());
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ENERGY_USE_RATE / 24)) % 24d);
         HayoGuiSprites.drawRecipeArrow(graphics, 24, 4, HayoGuiSprites.RecipeArrow.DEFAULT, progress, 24);
 
-        graphics.drawString(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
+        graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
     }
 
     @Override

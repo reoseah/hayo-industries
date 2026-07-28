@@ -119,3 +119,60 @@ publishing {
 
     repositories {}
 }
+
+import groovy.json.JsonSlurper
+
+tasks.register("findUnusedTranslations") {
+    group = "verification"
+    description = "Finds translation keys that are probably unused."
+
+    doLast {
+        File langFile = file("src/main/resources/assets/hayo/lang/en_us.json")
+
+        if (!langFile.exists()) {
+            throw new GradleException("Translation file not found: $langFile")
+        }
+
+        Map<String, Object> translations =
+                new JsonSlurper().parse(langFile) as Map<String, Object>
+
+        List<File> sourceFiles = fileTree("src/main") {
+            include "**/*.java"
+            include "**/*.kt"
+        }.files as List
+
+        String source = sourceFiles.collect { it.getText("UTF-8") }.join("\n")
+
+        List<String> ignorePrefixes = [
+                "block.",
+                "item.",
+                "tag.item."
+        ]
+
+        List<String> unused = []
+
+        translations.keySet().each { key ->
+
+            if (ignorePrefixes.any { key.startsWith(it) }) {
+                return
+            }
+
+            if (!source.contains("\"${key}\"") &&
+                    !source.contains("'${key}'") &&
+                    !source.contains(key)) {
+
+                unused << key
+            }
+        }
+
+        unused.sort()
+
+        println ""
+        println "Potentially unused translation keys (${unused.size()}):"
+        println "-------------------------------------------"
+
+        unused.each {
+            println it
+        }
+    }
+}

@@ -28,7 +28,7 @@ public enum EnergyComponents {
 
     /// Provides energy capacity and transfer rate that an item should have.
     ///
-    /// Note: for "energy storages" in more narrow sense (batteries, energy crystals)
+    /// Note: for "energy storages" in a more narrow sense (batteries, energy crystals)
     /// you'd also want to add [#BATTERY] to your item.
     public static final DataComponentType<EnergyStorage> ENERGY_STORAGE = DataComponentType.<EnergyStorage>builder() //
             .persistent(EnergyStorage.CODEC) //
@@ -52,7 +52,7 @@ public enum EnergyComponents {
             .build();
 
     /// Contains attributes that an item should have when charged and energy required for that.
-    /// Use this for electric tools, weapons or armor. Energy should probably match attack cost
+    /// Use this for electrical tools, weapons or armor. Energy should probably match attack cost
     /// in [#ENERGY_TOOL] for weapons or damage cost in [#ENERGY_ARMOR] for armor.
     public static final DataComponentType<ChargedAttributes> CHARGED_ATTRIBUTES = DataComponentType.<ChargedAttributes>builder() //
             .persistent(ChargedAttributes.CODEC) //
@@ -65,7 +65,7 @@ public enum EnergyComponents {
             .networkSynchronized(EnergyTool.STREAM_CODEC) //
             .build();
 
-    /// Contains amount of energy removed from item when equipped to armor slots. Supplements default
+    /// Contains the amount of energy removed from an item when equipped with armor slots. Supplements default
     /// armor and equippable components. Calculations are the same as for vanilla armor damage, but instead
     /// of `n` points of durability removed, `n * energyArmor.energyPerDamage` is taken from energy.
     public static final DataComponentType<EnergyArmor> ENERGY_ARMOR = DataComponentType.<EnergyArmor>builder() //

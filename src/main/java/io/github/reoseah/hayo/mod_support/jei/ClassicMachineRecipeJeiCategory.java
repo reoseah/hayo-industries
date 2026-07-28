@@ -2,18 +2,17 @@ package io.github.reoseah.hayo.mod_support.jei;
 
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
-import io.github.reoseah.hayo.feature.processing_machines.ClassicMachineRecipe;
+import io.github.reoseah.hayo.feature.machines.ClassicMachineRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -67,43 +66,52 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
         var recipe = holder.value();
         builder.addSlot(RecipeIngredientRole.INPUT, 1, 1) //
                 .setStandardSlotBackground() //
-                .add(recipe.input());
+                .add(recipe.input);
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 61, 5) //
                 .setOutputSlotBackground() //
-                .add(recipe.result().create());
-        if (recipe.extraChance() > 0) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 1).setStandardSlotBackground().add(recipe.result().create().copyWithCount(1));
+                .add(recipe.result.create());
+        if (recipe.extraChance > 0) {
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 1)
+                    .setStandardSlotBackground()
+                    .add(recipe.result.create().copyWithCount(1));
         }
     }
 
     @Override
-    public void draw(RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView slots, GuiGraphics graphics, double mouseX, double mouseY) {
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<? extends ClassicMachineRecipe> holder, IFocusGroup focuses) {
         var recipe = holder.value();
-        HayoGuiSprites.drawMachineEnergy(graphics, 1, 20, 10, 14);
+        
 
-        int energyCost = recipe.getEnergyCost();
-        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / this.energyUseRate / 24)) % 24d);
-        HayoGuiSprites.drawRecipeArrow(graphics, 24, 4, this.arrowType, progress, 24);
-
-        var font = Minecraft.getInstance().font;
-
-        graphics.drawString(font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
-        if (recipe.extraChance() > 0) {
-            var extraChance = Component.translatable("hayo.chance.percentage", String.format("%.0f", 100 * recipe.extraChance()));
-            graphics.drawString(font, extraChance, 85, 24, 0xFF404040, false);
-        }
     }
+
+    //    @Override
+//    public void draw(RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView slots, GuiGraphics graphics, double mouseX, double mouseY) {
+//        var recipe = holder.value();
+//        HayoGuiSprites.drawMachineEnergy(graphics, 1, 20, 10, 14);
+//
+//        int energyCost = recipe.energyCost;
+//        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / this.energyUseRate / 24)) % 24d);
+//        HayoGuiSprites.drawRecipeArrow(graphics, 24, 4, this.arrowType, progress, 24);
+//
+//        var font = Minecraft.getInstance().font;
+//
+//        graphics.drawString(font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
+//        if (recipe.extraChance > 0) {
+//            var extraChance = Component.translatable("hayo.chance.percentage", String.format("%.0f", 100 * recipe.extraChance));
+//            graphics.drawString(font, extraChance, 85, 24, 0xFF404040, false);
+//        }
+//    }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView slots, double mouseX, double mouseY) {
         if (mouseX >= 1 && mouseX <= 1 + 14 && mouseY >= 20 && mouseY <= 20 + 14 //
                 || mouseX > 24 && mouseX <= 24 + 24 && mouseY > 4 && mouseY <= 4 + 16) {
             var recipe = holder.value();
-            float duration = Mth.positiveCeilDiv(recipe.getEnergyCost(), this.energyUseRate) / 20F;
+            float duration = Mth.positiveCeilDiv(recipe.energyCost, this.energyUseRate) / 20F;
 
             tooltip.addAll(List.of( //
-                    EnergyTexts.amount(recipe.getEnergyCost()), //
+                    EnergyTexts.amount(recipe.energyCost), //
                     EnergyTexts.durationAtAmountPerTick(duration, this.energyUseRate).withStyle(ChatFormatting.GRAY)));
         }
     }
