@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
-import io.github.reoseah.hayo.feature.energy.EnergyGuiSprites;
-import io.github.reoseah.hayo.feature.energy.EnergyTexts;
+import io.github.reoseah.hayo.feature.electric_blocks.EnergyGuiSprites;
+import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

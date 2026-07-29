@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy.item;
+package io.github.reoseah.hayo.feature.electric_items;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

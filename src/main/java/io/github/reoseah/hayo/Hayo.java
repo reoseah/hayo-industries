@@ -9,10 +9,10 @@ import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlockEntity;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxMenu;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxScreen;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
-import io.github.reoseah.hayo.feature.energy.EnergyPreservingShapedRecipe;
-import io.github.reoseah.hayo.feature.energy.blocks.CableBreakPayload;
-import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlockManager;
-import io.github.reoseah.hayo.feature.energy.item.*;
+import io.github.reoseah.hayo.feature.electric_items.*;
+import io.github.reoseah.hayo.feature.electric_items.EnergyPreservingShapedRecipe;
+import io.github.reoseah.hayo.feature.electric_blocks.CableBreakPayload;
+import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageMenu;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageScreen;
 import io.github.reoseah.hayo.feature.energy_storages.advanced.AdvancedEnergyStorageBlock;
@@ -58,7 +58,6 @@ import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockTintsFactory;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
@@ -69,7 +68,6 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.BiomeColors;
@@ -353,7 +351,7 @@ public class Hayo {
             return new Item.Properties() //
                     .stacksTo(1) //
                     .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
-                    .component(EnergyComponents.BATTERY, Unit.INSTANCE);
+                    .component(EnergyComponents.CAN_DISCHARGE, Unit.INSTANCE);
         }
         public static final Item BATTERY = registerItem("battery", ElectricItem::new, createBatteryProperties(10_000, 32));
         public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", ElectricItem::new, createBatteryProperties(100_000, 128));
@@ -403,7 +401,7 @@ public class Hayo {
                                     .setAsset(modKey(EquipmentAssets.ROOT_ID, "battery_pack")) //
                                     .build()) //
                     .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
-                    .component(EnergyComponents.ENERGY_BACKPACK, Unit.INSTANCE);
+                    .component(EnergyComponents.CHARGES_INVENTORY, Unit.INSTANCE);
         }
         public static final Item BATTERY_PACK = registerItem("battery_pack", ElectricItem::new, createBatteryPackProperties(60_000, 32));
         public static final Item ADVANCED_BATTERY_PACK = registerItem("advanced_battery_pack", ElectricItem::new, createBatteryPackProperties(300_000, 128));

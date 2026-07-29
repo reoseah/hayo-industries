@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy.blocks;
+package io.github.reoseah.hayo.feature.electric_blocks;
 
 import net.minecraft.world.level.block.state.BlockState;
 

@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy.blocks;
+package io.github.reoseah.hayo.feature.electric_blocks;
 
 import io.github.reoseah.hayo.Hayo;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;

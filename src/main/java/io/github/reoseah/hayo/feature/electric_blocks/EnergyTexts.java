@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy;
+package io.github.reoseah.hayo.feature.electric_blocks;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

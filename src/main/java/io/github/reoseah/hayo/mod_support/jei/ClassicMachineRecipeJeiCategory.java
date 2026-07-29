@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.mod_support.jei;
 
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
-import io.github.reoseah.hayo.feature.energy.EnergyGuiSprites;
-import io.github.reoseah.hayo.feature.energy.EnergyTexts;
+import io.github.reoseah.hayo.feature.electric_blocks.EnergyGuiSprites;
+import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;

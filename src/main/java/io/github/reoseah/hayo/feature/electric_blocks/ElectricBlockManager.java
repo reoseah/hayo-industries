@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy.blocks;
+package io.github.reoseah.hayo.feature.electric_blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

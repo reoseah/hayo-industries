@@ -1,10 +1,9 @@
-package io.github.reoseah.hayo.feature.energy;
+package io.github.reoseah.hayo.feature.electric_items;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;

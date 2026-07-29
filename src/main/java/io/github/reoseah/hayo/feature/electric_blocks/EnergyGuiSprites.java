@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy;
+package io.github.reoseah.hayo.feature.electric_blocks;
 
 import io.github.reoseah.hayo.Hayo;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

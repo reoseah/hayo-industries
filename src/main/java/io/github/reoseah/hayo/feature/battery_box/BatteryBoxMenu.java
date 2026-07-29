@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.battery_box;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.energy.EnergyGuiSprites;
-import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
+import io.github.reoseah.hayo.feature.electric_blocks.EnergyGuiSprites;
+import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;

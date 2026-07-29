@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy.item;
+package io.github.reoseah.hayo.feature.electric_items;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -38,12 +38,13 @@ public class ElectricItem extends Item {
         return EnergyComponents.defaultBarColor(stack);
     }
 
+    // TODO: move this to mixins, so the components can be applied to any item and work correctly
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
         boolean correct = super.isCorrectToolForDrops(stack, state);
         var energyTool = stack.get(EnergyComponents.ENERGY_TOOL);
         if (energyTool != null) {
-            return correct && EnergyComponents.getEnergy(stack) > energyTool.miningEnergy();
+            return correct && EnergyComponents.getEnergy(stack) > energyTool.destroyEnergy();
         }
         return correct;
     }
@@ -52,7 +53,7 @@ public class ElectricItem extends Item {
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entity) {
         var energyTool = stack.get(EnergyComponents.ENERGY_TOOL);
         if (energyTool != null) {
-            return EnergyComponents.tryRemoveEnergy(energyTool.miningEnergy(), stack);
+            return EnergyComponents.tryRemoveEnergy(energyTool.destroyEnergy(), stack);
         }
         return super.mineBlock(stack, level, state, pos, entity);
     }
@@ -72,8 +73,8 @@ public class ElectricItem extends Item {
         if (energyTool != null) {
             var energy = stack.getOrDefault(EnergyComponents.ENERGY, 0);
 
-            if (energy >= energyTool.miningEnergy() && this.isCorrectToolForDrops(stack, state)) {
-                return energyTool.chargedMiningSpeed();
+            if (energy >= energyTool.destroyEnergy() && this.isCorrectToolForDrops(stack, state)) {
+                return energyTool.destroySpeedOverride();
             }
         }
         return super.getDestroySpeed(stack, state);

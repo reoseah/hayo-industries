@@ -2,8 +2,8 @@ package io.github.reoseah.hayo.feature.machines.matter_generator;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
-import io.github.reoseah.hayo.feature.energy.EnergyGuiSprites;
-import io.github.reoseah.hayo.feature.energy.EnergyTexts;
+import io.github.reoseah.hayo.feature.electric_blocks.EnergyGuiSprites;
+import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

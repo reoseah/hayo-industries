@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
-import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
+import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

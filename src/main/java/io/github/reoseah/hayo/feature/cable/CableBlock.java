@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.cable;
 
-import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlock;
-import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlocks;
-import io.github.reoseah.hayo.feature.energy.blocks.ElectricCableBlock;
+import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlock;
+import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlocks;
+import io.github.reoseah.hayo.feature.electric_blocks.ElectricCableBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

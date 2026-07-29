@@ -1,6 +1,6 @@
 package io.github.reoseah.hayo.feature.machines;
 
-import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
+import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;

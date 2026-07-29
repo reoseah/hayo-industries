@@ -1,8 +1,8 @@
-package io.github.reoseah.hayo.feature.energy.item;
+package io.github.reoseah.hayo.feature.electric_items;
 
 import com.mojang.serialization.Codec;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.energy.EnergyTexts;
+import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
@@ -26,54 +26,38 @@ import java.util.function.Consumer;
 public enum EnergyComponents {
     ;
 
-    /// Provides energy capacity and transfer rate that an item should have.
-    ///
-    /// Note: for "energy storages" in a more narrow sense (batteries, energy crystals)
-    /// you'd also want to add [#BATTERY] to your item.
     public static final DataComponentType<EnergyStorage> ENERGY_STORAGE = DataComponentType.<EnergyStorage>builder() //
             .persistent(EnergyStorage.CODEC) //
             .networkSynchronized(EnergyStorage.STREAM_CODEC) //
             .build();
 
-    /// Stores amount of energy in an item.
-    ///
-    /// Do not set values of this component directly, use [#setEnergy] or other
-    /// methods in this class, so that [#CHARGED_ATTRIBUTES] can be applied or removed correctly.
     public static final DataComponentType<Integer> ENERGY = DataComponentType.<Integer>builder() //
             .persistent(Codec.INT) //
             .networkSynchronized(ByteBufCodecs.VAR_INT) //
             .ignoreSwapAnimation() //
             .build();
 
-    /// Marks an item as capable to charge machines, energy storages, etc.
-    public static final DataComponentType<Unit> BATTERY = DataComponentType.<Unit>builder() //
+    public static final DataComponentType<Unit> CAN_DISCHARGE = DataComponentType.<Unit>builder() //
             .persistent(Unit.CODEC) //
             .networkSynchronized(Unit.STREAM_CODEC) //
             .build();
 
-    /// Contains attributes that an item should have when charged and energy required for that.
-    /// Use this for electrical tools, weapons or armor. Energy should probably match attack cost
-    /// in [#ENERGY_TOOL] for weapons or damage cost in [#ENERGY_ARMOR] for armor.
     public static final DataComponentType<ChargedAttributes> CHARGED_ATTRIBUTES = DataComponentType.<ChargedAttributes>builder() //
             .persistent(ChargedAttributes.CODEC) //
             .networkSynchronized(ChargedAttributes.STREAM_CODEC) //
             .build();
 
-    /// Supplements default tool attribute with energy cost and charged mining speed.
     public static final DataComponentType<EnergyTool> ENERGY_TOOL = DataComponentType.<EnergyTool>builder() //
             .persistent(EnergyTool.CODEC) //
             .networkSynchronized(EnergyTool.STREAM_CODEC) //
             .build();
 
-    /// Contains the amount of energy removed from an item when equipped with armor slots. Supplements default
-    /// armor and equippable components. Calculations are the same as for vanilla armor damage, but instead
-    /// of `n` points of durability removed, `n * energyArmor.energyPerDamage` is taken from energy.
     public static final DataComponentType<EnergyArmor> ENERGY_ARMOR = DataComponentType.<EnergyArmor>builder() //
             .persistent(EnergyArmor.CODEC) //
             .networkSynchronized(EnergyArmor.STREAM_CODEC) //
             .build();
 
-    public static final DataComponentType<Unit> ENERGY_BACKPACK = DataComponentType.<Unit>builder() //
+    public static final DataComponentType<Unit> CHARGES_INVENTORY = DataComponentType.<Unit>builder() //
             .persistent(Unit.CODEC) //
             .networkSynchronized(Unit.STREAM_CODEC) //
             .build();
@@ -92,7 +76,7 @@ public enum EnergyComponents {
     }
 
     public static boolean canDischargeInMachine(ItemStack stack) {
-        return stack.has(ENERGY_STORAGE) && stack.has(BATTERY);
+        return stack.has(ENERGY_STORAGE) && stack.has(CAN_DISCHARGE);
     }
 
     public static int getEnergy(ItemStack stack) {
@@ -153,7 +137,7 @@ public enum EnergyComponents {
     ///
     /// @return energy that was removed from the item, you probably want to add it to your energy storage
     public static int discharge(int amount, ItemStack stack) {
-        if (!stack.has(BATTERY)) {
+        if (!stack.has(CAN_DISCHARGE)) {
             return 0;
         }
         var storage = stack.get(ENERGY_STORAGE);
@@ -169,7 +153,7 @@ public enum EnergyComponents {
         return change;
     }
 
-    /// Removes the specified amount of energy from item and returns true,
+    /// Removes the specified amount of energy from an item and returns true,
     /// otherwise returns false.
     public static boolean tryRemoveEnergy(int amount, ItemStack stack) {
         if (stack.getCount() > 1) {
@@ -328,11 +312,11 @@ public enum EnergyComponents {
     public static void initialize() {
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_storage"), EnergyComponents.ENERGY_STORAGE);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy"), EnergyComponents.ENERGY);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("battery"), EnergyComponents.BATTERY);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("can_discharge"), EnergyComponents.CAN_DISCHARGE);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("charged_attributes"), EnergyComponents.CHARGED_ATTRIBUTES);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_tool"), EnergyComponents.ENERGY_TOOL);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_armor"), EnergyComponents.ENERGY_ARMOR);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_backpack"), EnergyComponents.ENERGY_BACKPACK);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("charges_inventory"), EnergyComponents.CHARGES_INVENTORY);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("quantum_armor"), EnergyComponents.QUANTUM_ARMOR);
 
         ServerTickEvents.END_LEVEL_TICK.register(EnergyComponents::tickPlayerInventories);
@@ -341,7 +325,7 @@ public enum EnergyComponents {
     private static void tickPlayerInventories(ServerLevel level) {
         for (var player : level.players()) {
             var chestplate = player.getItemBySlot(EquipmentSlot.CHEST);
-            if (chestplate.has(EnergyComponents.ENERGY_BACKPACK)) {
+            if (chestplate.has(EnergyComponents.CHARGES_INVENTORY)) {
                 var stats = chestplate.get(EnergyComponents.ENERGY_STORAGE);
                 if (stats == null) continue;
 

@@ -3,7 +3,7 @@ package io.github.reoseah.hayo.feature.generator;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
 import io.github.reoseah.hayo.base.block.entity.HayoContainerBlockEntity;
-import io.github.reoseah.hayo.feature.energy.blocks.ElectricBlocks;
+import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

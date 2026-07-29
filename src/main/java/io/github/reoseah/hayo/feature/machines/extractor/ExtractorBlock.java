@@ -3,7 +3,7 @@ package io.github.reoseah.hayo.feature.machines.extractor;
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
-import io.github.reoseah.hayo.feature.energy.blocks.ElectricReceiverBlock;
+import io.github.reoseah.hayo.feature.electric_blocks.ElectricReceiverBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
