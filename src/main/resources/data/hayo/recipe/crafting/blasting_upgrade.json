@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": "hayo:circuit",
-    "X": "hayo:cable",
+    "X": "hayo:power_cable",
     "I": "#c:ingots/iron",
     "S": "minecraft:smooth_stone"
   },

@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": "hayo:circuit",
-    "X": "hayo:cable",
+    "X": "hayo:power_cable",
     "M": "hayo:electric_motor"
   },
   "result": {

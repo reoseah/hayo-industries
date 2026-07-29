@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:cable"
+          "name": "hayo:high_current_power_cable"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/cable"
+  "random_sequence": "hayo:blocks/high_current_power_cable"
 }

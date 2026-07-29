@@ -9,11 +9,10 @@
     "#c:dusts/coal",
     "#c:dusts/coal",
     "#c:dusts/coal",
-    "#c:dusts/redstone",
-    "hayo:sticky_resin"
+    "#c:dusts/coal"
   ],
   "result": {
     "count": 1,
-    "id": "hayo:carbon_redstone_matrix"
+    "id": "hayo:carbon_mesh"
   }
 }

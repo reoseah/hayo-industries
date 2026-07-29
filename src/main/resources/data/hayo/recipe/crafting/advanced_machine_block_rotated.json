@@ -8,7 +8,7 @@
   ],
   "key": {
     "#": "hayo:machine_block",
-    "C": "hayo:conductive_carbon",
+    "C": "hayo:carbon_plate",
     "A": "hayo:composite_plate"
   },
   "result": {

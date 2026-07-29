@@ -1,14 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "hayo:cable",
-    "hayo:cable",
-    "hayo:cable",
-    "hayo:cable"
+  "key": {
+    "#": "#c:ingots/copper",
+    "X": "hayo:rubber"
+  },
+  "pattern": [
+    "XXX",
+    "###",
+    "XXX"
   ],
   "result": {
-    "count": 1,
+    "count": 6,
     "id": "hayo:power_cable"
   }
 }

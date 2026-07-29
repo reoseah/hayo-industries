@@ -2,15 +2,19 @@
   "parent": "block/block",
   "textures": {
     "particle": "#end",
-    "side": "hayo:block/cable_side",
+    "side": "hayo:block/power_cable",
     "end": "hayo:block/power_cable_end"
   },
   "elements": [
     {
-      "from": [ 5, 0, 5 ],
-      "to": [ 11, 5, 11 ],
+      "from": [ 5.99, 0, 5.99 ],
+      "to": [ 10.01, 6, 10.01 ],
       "faces": {
-        "down": { "texture": "#end", "cullface": "down" },
+        "down": {
+          "texture": "#end",
+          "uv": [ 6, 6, 10, 10],
+          "cullface": "down"
+        },
         "north": { "texture": "#side" },
         "south": { "texture": "#side" },
         "east": { "texture": "#side" },

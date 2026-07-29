@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "#": "hayo:energy_crystal",
-    "X": "hayo:conductive_carbon"
+    "X": "hayo:carbon_plate"
   },
   "pattern": [
     "X X",

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/conductive_carbon"
+    "model": "hayo:item/high_current_power_cable"
   }
 }

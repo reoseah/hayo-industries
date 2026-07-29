@@ -8,7 +8,7 @@
   ],
   "key": {
     "#": "hayo:circuit",
-    "X": "hayo:cable",
+    "X": "hayo:power_cable",
     "I": "#c:ingots/copper",
     "A": "hayo:advanced_machine_block"
   },

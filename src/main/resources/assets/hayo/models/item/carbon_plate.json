@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "hayo:item/conductive_carbon"
+    "layer0": "hayo:item/carbon_plate"
   }
 }

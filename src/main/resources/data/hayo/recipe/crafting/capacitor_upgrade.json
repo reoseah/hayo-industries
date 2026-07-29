@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": "hayo:circuit",
-    "X": "hayo:cable",
+    "X": "hayo:power_cable",
     "B": "hayo:battery"
   },
   "result": {

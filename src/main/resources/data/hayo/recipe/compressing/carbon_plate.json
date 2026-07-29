@@ -1,9 +1,9 @@
 {
   "type": "hayo:compressing",
-  "ingredient": "hayo:carbon_redstone_matrix",
+  "ingredient": "hayo:carbon_mesh",
   "processing_energy": 480,
   "result": {
-    "id": "hayo:conductive_carbon",
+    "id": "hayo:carbon_plate",
     "count": 1
   }
 }

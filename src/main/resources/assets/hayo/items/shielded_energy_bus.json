@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/carbon_redstone_matrix"
+    "model": "hayo:item/shielded_energy_bus"
   }
 }

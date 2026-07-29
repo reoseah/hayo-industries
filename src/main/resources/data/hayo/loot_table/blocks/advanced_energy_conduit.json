@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:advanced_energy_conduit"
+          "name": "hayo:shielded_energy_bus"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/advanced_energy_conduit"
+  "random_sequence": "hayo:blocks/shielded_energy_bus"
 }

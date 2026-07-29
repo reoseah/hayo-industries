@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": "hayo:machine_block",
-    "C": "hayo:cable",
+    "C": "hayo:power_cable",
     "R": "minecraft:redstone",
     "X": "hayo:circuit"
   },

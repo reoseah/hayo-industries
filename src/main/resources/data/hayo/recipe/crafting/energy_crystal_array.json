@@ -9,7 +9,7 @@
   "key": {
     "#": "hayo:advanced_machine_block",
     "E": "hayo:energy_crystal",
-    "C": "hayo:power_cable",
+    "C": "hayo:high_current_power_cable",
     "G": "minecraft:gold_ingot"
   },
   "result": {

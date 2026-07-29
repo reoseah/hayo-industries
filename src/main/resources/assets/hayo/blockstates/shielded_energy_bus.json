@@ -2,16 +2,16 @@
   "multipart": [
     {
       "when": { "down": true, "up": true, "north": false, "south": false, "west": false, "east": false },
-      "apply": { "model": "hayo:block/advanced_energy_conduit_straight" }
+      "apply": { "model": "hayo:block/shielded_energy_bus_straight" }
     },
 
     {
       "when": { "down": false, "up": false, "north": true, "south": true, "west": false, "east": false },
-      "apply": { "model": "hayo:block/advanced_energy_conduit_straight", "x": 90 }
+      "apply": { "model": "hayo:block/shielded_energy_bus_straight", "x": 90 }
     },
     {
       "when": { "down": false, "up": false, "north": false, "south": false, "west": true, "east": true },
-      "apply": { "model": "hayo:block/advanced_energy_conduit_straight", "x": 90, "y": 90 }
+      "apply": { "model": "hayo:block/shielded_energy_bus_straight", "x": 90, "y": 90 }
     },
 
     {
@@ -31,7 +31,7 @@
           { "north": true, "south": true, "west": true, "east": true }
         ]
       },
-      "apply": { "model": "hayo:block/advanced_energy_conduit_center" }
+      "apply": { "model": "hayo:block/shielded_energy_bus_center" }
     },
 
     {
@@ -49,7 +49,7 @@
           }
         ]
       },
-      "apply": { "model": "hayo:block/advanced_energy_conduit_connection" }
+      "apply": { "model": "hayo:block/shielded_energy_bus_connection" }
     },
     {
       "when": {
@@ -66,7 +66,7 @@
           }
         ]
       },
-      "apply": { "model": "hayo:block/advanced_energy_conduit_connection", "uvlock": true, "x": 180 }
+      "apply": { "model": "hayo:block/shielded_energy_bus_connection", "uvlock": true, "x": 180 }
     },
     {
       "when": {
@@ -83,7 +83,7 @@
           }
         ]
       },
-      "apply": { "model": "hayo:block/advanced_energy_conduit_connection", "uvlock": true, "x": 90, "y": 180 }
+      "apply": { "model": "hayo:block/shielded_energy_bus_connection", "uvlock": true, "x": 90, "y": 180 }
     },
     {
       "when": {
@@ -100,7 +100,7 @@
           }
         ]
       },
-      "apply": { "model": "hayo:block/advanced_energy_conduit_connection", "uvlock": true, "x": 90 }
+      "apply": { "model": "hayo:block/shielded_energy_bus_connection", "uvlock": true, "x": 90 }
     },
     {
       "when": {
@@ -117,7 +117,7 @@
           }
         ]
       },
-      "apply": { "model": "hayo:block/advanced_energy_conduit_connection", "uvlock": true, "x": 90, "y": 90 }
+      "apply": { "model": "hayo:block/shielded_energy_bus_connection", "uvlock": true, "x": 90, "y": 90 }
     },
     {
       "when": {
@@ -134,7 +134,7 @@
           }
         ]
       },
-      "apply": { "model": "hayo:block/advanced_energy_conduit_connection", "uvlock": true, "x": 90, "y": 270 }
+      "apply": { "model": "hayo:block/shielded_energy_bus_connection", "uvlock": true, "x": 90, "y": 270 }
     }
   ]
 }

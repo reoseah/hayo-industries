@@ -58,6 +58,7 @@ import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockTintsFactory;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
@@ -68,6 +69,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.BiomeColors;
@@ -225,9 +227,9 @@ public class Hayo {
         public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
         public static final Block ADVANCED_ENERGY_STORAGE = register("advanced_energy_storage", AdvancedEnergyStorageBlock::new, MACHINES);
 
-        public static final CableBlock CABLE = register("cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final CableBlock ADVANCED_ENERGY_CONDUIT = register("advanced_energy_conduit", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
+        public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final CableBlock HIGH_CURRENT_POWER_CABLE = register("high_current_power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final CableBlock SHIELDED_ENERGY_BUS = register("shielded_energy_bus", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
 
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
         public static final Block RESIN_YIELDING_RUBBER_LOG = register("resin_yielding_rubber_log", ResinYieldingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
@@ -258,7 +260,6 @@ public class Hayo {
         public static final Block REINFORCED_STONE_SLAB = register("reinforced_stone_slab", SlabBlock::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
 
-
         public static void initialize() {
             StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
             StrippableBlockRegistry.register(RUBBER_WOOD, STRIPPED_RUBBER_WOOD);
@@ -281,19 +282,21 @@ public class Hayo {
     public static class Items {
         private static final HolderGetter<Block> BLOCK_LOOKUP = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
 
-        public static final Item GENERATOR = registerBlock(Blocks.GENERATOR);
         public static final Item ELECTRIC_FURNACE = registerBlock(Blocks.ELECTRIC_FURNACE);
         public static final Item MACERATOR = registerBlock(Blocks.MACERATOR);
         public static final Item COMPRESSOR = registerBlock(Blocks.COMPRESSOR);
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
         public static final Item MATTER_GENERATOR = registerBlock(Blocks.MATTER_GENERATOR, new Item.Properties().rarity(Rarity.EPIC));
+
+        public static final Item GENERATOR = registerBlock(Blocks.GENERATOR);
+
         public static final Item BATTERY_BOX = registerBlock(Blocks.BATTERY_BOX);
         public static final Item ENERGY_CRYSTAL_ARRAY = registerBlock(Blocks.ENERGY_CRYSTAL_ARRAY, new Item.Properties().rarity(Rarity.RARE));
         public static final Item ADVANCED_ENERGY_STORAGE = registerBlock(Blocks.ADVANCED_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item CABLE = registerBlock(Blocks.CABLE, BlockItemWithTooltip::new);
-        public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, BlockItemWithTooltip::new);
-        public static final Item ADVANCED_ENERGY_CONDUIT = registerBlock(Blocks.ADVANCED_ENERGY_CONDUIT, BlockItemWithTooltip::new);
+        public static final Item CABLE = registerBlock(Blocks.POWER_CABLE, BlockItemWithTooltip::new);
+        public static final Item POWER_CABLE = registerBlock(Blocks.HIGH_CURRENT_POWER_CABLE, BlockItemWithTooltip::new);
+        public static final Item SHIELDED_ENERGY_BUS = registerBlock(Blocks.SHIELDED_ENERGY_BUS, BlockItemWithTooltip::new);
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
         public static final Item RESIN_YIELDING_RUBBER_LOG = registerBlock(Blocks.RESIN_YIELDING_RUBBER_LOG);
@@ -346,6 +349,12 @@ public class Hayo {
         );
         public static final Item FLAK_CHESTPLATE = registerItem("flak_chestplate", Item::new, new Item.Properties().humanoidArmor(FLAK_ARMOR, ArmorType.CHESTPLATE).stacksTo(1));
 
+        private static Item.Properties createBatteryProperties(int capacity, int transferLimit) {
+            return new Item.Properties() //
+                    .stacksTo(1) //
+                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
+                    .component(EnergyComponents.BATTERY, Unit.INSTANCE);
+        }
         public static final Item BATTERY = registerItem("battery", ElectricItem::new, createBatteryProperties(10_000, 32));
         public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", ElectricItem::new, createBatteryProperties(100_000, 128));
 
@@ -386,15 +395,18 @@ public class Hayo {
                 .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 80, 160)) //
                 .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.tool(8, -3, 160)));
 
-        public static final Item BATTERY_PACK = registerItem("battery_pack", ElectricItem::new, createBatteryPackProperties(60_000, 32));
-        public static final Item ADVANCED_BATTERY_PACK = registerItem("advanced_battery_pack", ElectricItem::new, createBatteryPackProperties(300_000, 128));
-
-        private static Item.Properties createBatteryProperties(int capacity, int transferLimit) {
+        private static Item.Properties createBatteryPackProperties(int capacity, int transferLimit) {
             return new Item.Properties() //
                     .stacksTo(1) //
+                    .component(DataComponents.EQUIPPABLE, //
+                            Equippable.builder(ArmorType.CHESTPLATE.getSlot()) //
+                                    .setAsset(modKey(EquipmentAssets.ROOT_ID, "battery_pack")) //
+                                    .build()) //
                     .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
-                    .component(EnergyComponents.BATTERY, Unit.INSTANCE);
+                    .component(EnergyComponents.ENERGY_BACKPACK, Unit.INSTANCE);
         }
+        public static final Item BATTERY_PACK = registerItem("battery_pack", ElectricItem::new, createBatteryPackProperties(60_000, 32));
+        public static final Item ADVANCED_BATTERY_PACK = registerItem("advanced_battery_pack", ElectricItem::new, createBatteryPackProperties(300_000, 128));
 
         private static Item.Properties nanoArmorProperties(ArmorType type, int armor) {
             return new Item.Properties() //
@@ -431,18 +443,6 @@ public class Hayo {
         public static final Item QUANTUM_LEGGINGS = registerItem("quantum_leggings", ElectricItem::new, quantumArmorProperties(ArmorType.LEGGINGS, 6));
         public static final Item QUANTUM_BOOTS = registerItem("quantum_boots", ElectricItem::new, quantumArmorProperties(ArmorType.BOOTS, 3));
 
-        private static Item.Properties createBatteryPackProperties(int capacity, int transferLimit) {
-            return new Item.Properties() //
-                    .stacksTo(1) //
-                    .component(DataComponents.EQUIPPABLE, //
-                            Equippable.builder(ArmorType.CHESTPLATE.getSlot()) //
-                                    .setAsset(modKey(EquipmentAssets.ROOT_ID, "battery_pack")) //
-                                    .build()) //
-                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
-                    .component(EnergyComponents.ENERGY_BACKPACK, Unit.INSTANCE);
-        }
-
-
         public static final Item WOOD_DUST = registerItem("wood_dust");
         public static final Item STONE_DUST = registerItem("stone_dust");
         public static final Item COAL_DUST = registerItem("coal_dust");
@@ -467,8 +467,8 @@ public class Hayo {
         public static final Item ENERGY_FLOW_CIRCUIT = registerItem("energy_flow_circuit", new Item.Properties().rarity(Rarity.RARE));
         public static final Item MIXED_METAL_INGOT = registerItem("mixed_metal_ingot");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
-        public static final Item CARBON_REDSTONE_MATRIX = registerItem("carbon_redstone_matrix");
-        public static final Item CONDUCTIVE_CARBON = registerItem("conductive_carbon", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item CARBON_MESH = registerItem("carbon_mesh");
+        public static final Item CARBON_PLATE = registerItem("carbon_plate", new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
@@ -480,7 +480,6 @@ public class Hayo {
                         Component.empty(), //
                         Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY), //
                         Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.energy_usage", "+100%").withStyle(ChatFormatting.DARK_AQUA), //
                         Component.translatable("hayo.upgrades.recipe_cost", "+25%").withStyle(ChatFormatting.DARK_AQUA) //
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
@@ -498,8 +497,7 @@ public class Hayo {
                         Component.empty(), //
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.electric_furnace")).withStyle(ChatFormatting.GRAY), //
                         Component.translatable("hayo.upgrades.use_blasting_recipes").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.energy_usage", "+100%").withStyle(ChatFormatting.DARK_AQUA) //
+                        Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA) //
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16) //
         );
         public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", //
@@ -508,8 +506,7 @@ public class Hayo {
                         Component.empty(), //
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.electric_furnace")).withStyle(ChatFormatting.GRAY), //
                         Component.translatable("hayo.upgrades.use_smoking_recipes").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.energy_usage", "+100%").withStyle(ChatFormatting.DARK_AQUA) //
+                        Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA) //
                 ), //
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
         public static final Item INDUCTION_UPGRADE = registerItem("induction_upgrade", //
@@ -521,8 +518,7 @@ public class Hayo {
                         Component.translatable("hayo.upgrades.heat_capacity", 10000).withStyle(ChatFormatting.DARK_AQUA), //
                         Component.translatable("hayo.upgrades.heat_when_active", "+1").withStyle(ChatFormatting.DARK_AQUA), //
                         Component.translatable("hayo.upgrades.heat_when_idle", "-4").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.energy_usage", "+300%").withStyle(ChatFormatting.DARK_AQUA) //
+                        Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA) //
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static void initialize() {
@@ -541,7 +537,7 @@ public class Hayo {
 
                 entries.accept(CABLE);
                 entries.accept(POWER_CABLE);
-                entries.accept(ADVANCED_ENERGY_CONDUIT);
+                entries.accept(SHIELDED_ENERGY_BUS);
 
                 entries.accept(RUBBER_LOG);
                 entries.accept(RESIN_YIELDING_RUBBER_LOG);
@@ -624,8 +620,8 @@ public class Hayo {
 
                 entries.accept(MIXED_METAL_INGOT);
                 entries.accept(COMPOSITE_PLATE);
-                entries.accept(CARBON_REDSTONE_MATRIX);
-                entries.accept(CONDUCTIVE_CARBON);
+                entries.accept(CARBON_MESH);
+                entries.accept(CARBON_PLATE);
                 entries.accept(COMPRESSED_PLANTS);
                 entries.accept(CANISTER);
 

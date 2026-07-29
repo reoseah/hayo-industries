@@ -8,7 +8,7 @@
   ],
   "key": {
     "#": "hayo:machine_block",
-    "C": "hayo:cable",
+    "C": "hayo:power_cable",
     "X": "hayo:circuit",
     "P": "minecraft:piston"
   },
