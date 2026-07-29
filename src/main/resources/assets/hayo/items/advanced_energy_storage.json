@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/advanced_energy_storage"
+    "model": "hayo:block/advanced_energy_storage_horizontal"
   }
 }

@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "hayo:item/dense_refined_iron_plate"
-  }
-}

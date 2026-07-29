@@ -1,16 +1,12 @@
 package io.github.reoseah.hayo.feature.machines;
 
-import io.github.reoseah.hayo.base.HayoContainerMenu;
 import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -18,11 +14,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public abstract class MachineMenu extends HayoContainerMenu {
+public abstract class MachineMenu extends AbstractContainerMenu {
+    protected final Container container;
     protected final ContainerData data;
 
     protected MachineMenu(MenuType<?> type, int menuId, Container container, ContainerData data, Inventory inventory) {
-        super(type, menuId, container);
+        super(type, menuId);
+
+        this.container = container;
 
         this.data = data;
         this.addDataSlots(this.data);
@@ -39,13 +38,6 @@ public abstract class MachineMenu extends HayoContainerMenu {
         menu.addSlot(new TagFilteredSlot(container, 6, 152, 62, validUpgrades));
 
         menu.addStandardInventorySlots(inventory, 8, 84);
-    }
-
-    public static void addMatterGeneratorSlots(MachineMenu menu, Container container, Inventory inventory) {
-        menu.addSlot(new Slot(container, 0, 56, 34));
-        menu.addSlot(new ResultSlot(container, 1, 116, 26));
-
-        menu.addStandardInventorySlots(inventory, 8, 110);
     }
 
     public static ContainerData createData(MachineBlockEntity<?, ?> entity) {
@@ -81,19 +73,24 @@ public abstract class MachineMenu extends HayoContainerMenu {
         return new SimpleContainerData(9);
     }
 
+    @Override
+    public boolean stillValid(Player player) {
+        return this.container.stillValid(player);
+    }
+
     public float getRecipeDuration() {
         return Mth.ceil(this.getRecipeTotalEnergy() / (float) this.getEnergyUseRate()) / 20F;
     }
 
     protected static @NotNull ItemStack quickMoveClassicMachineStack(MachineMenu menu, //
-                                                                     Player player, //
-                                                                     int index, //
-                                                                     int inputSlots,
-                                                                     int batterySlots,
-                                                                     int outputSlots,
-                                                                     int upgradeSlots,
-                                                                     @Nullable Predicate<ItemStack> inputs,
-                                                                     @Nullable TagKey<Item> validUpgrades) {
+            Player player, //
+            int index, //
+            int inputSlots,
+            int batterySlots,
+            int outputSlots,
+            int upgradeSlots,
+            @Nullable Predicate<ItemStack> inputs,
+            @Nullable TagKey<Item> validUpgrades) {
         var slot = menu.slots.get(index);
         var stack = slot.getItem();
         if (stack.isEmpty()) {

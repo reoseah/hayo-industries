@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo.mod_support.jei;
 
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
+import io.github.reoseah.hayo.feature.energy.EnergyGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import io.github.reoseah.hayo.feature.machines.electric_furnace.ElectricFurnaceBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -72,7 +73,7 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
 
     @Override
     public void draw(RecipeHolder<? extends AbstractCookingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        HayoGuiSprites.drawMachineEnergy(graphics, 1, 20, 10, 14);
+        EnergyGuiSprites.energySmall(graphics, 1, 20, 10, 14);
 
         int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(holder.value());
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ENERGY_USE_RATE / 24)) % 24d);

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/resin_yielding_rubber_log"
+    "model": "hayo:block/rubber_log_with_resin"
   }
 }

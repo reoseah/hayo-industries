@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/rubber_slab"
+    "model": "hayo:block/rubber_slab"
   }
 }

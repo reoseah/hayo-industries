@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/raw_silicon_block"
+    "model": "hayo:block/raw_silicon_block"
   }
 }

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/energy_crystal_array"
+    "model": "hayo:block/energy_crystal_array_horizontal"
   }
 }

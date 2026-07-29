@@ -3,12 +3,14 @@ package io.github.reoseah.hayo.feature.machines.matter_generator;
 import com.google.common.base.Predicates;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.machines.MachineMenu;
+import io.github.reoseah.hayo.feature.machines.ResultSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
@@ -29,7 +31,10 @@ public class MatterGeneratorMenu extends MachineMenu {
     protected MatterGeneratorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
         super(Hayo.MenuTypes.MATTER_GENERATOR, menuId, container, data, inventory);
 
-        addMatterGeneratorSlots(this, container, inventory);
+        this.addSlot(new Slot(container, 0, 56, 34));
+        this.addSlot(new ResultSlot(container, 1, 116, 26));
+
+        this.addStandardInventorySlots(inventory, 8, 110);
 
         var level = inventory.player.level();
         this.recipes = level.recipeAccess().getSynchronizedRecipes().getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING) //
@@ -93,10 +98,6 @@ public class MatterGeneratorMenu extends MachineMenu {
 
     public int getSelectedRecipeIdx() {
         return this.selectedIdx.get();
-    }
-
-    public RecipeHolder<MatterGeneratingRecipe> getSelectedRecipe() {
-        return this.recipes.get(this.getSelectedRecipeIdx());
     }
 
     public boolean clickMenuButton(Player player, int buttonId) {

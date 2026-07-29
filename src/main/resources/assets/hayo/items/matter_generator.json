@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/matter_generator"
+    "model": "hayo:block/matter_generator"
   }
 }

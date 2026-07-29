@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/macerator"
+    "model": "hayo:block/macerator"
   }
 }

@@ -1,22 +1,25 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
-import io.github.reoseah.hayo.base.HayoContainerMenu;
 import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class EnergyStorageMenu extends HayoContainerMenu {
+public abstract class EnergyStorageMenu extends AbstractContainerMenu {
     protected static final int DATA_SLOTS = 4;
 
+    protected final Container container;
     protected final ContainerData data;
 
     protected EnergyStorageMenu(MenuType<?> type, int menuId, Container container, ContainerData data, Inventory inventory) {
-        super(type, menuId, container);
+        super(type, menuId);
+
+        this.container = container;
 
         this.data = data;
         this.addDataSlots(this.data);
@@ -49,6 +52,11 @@ public abstract class EnergyStorageMenu extends HayoContainerMenu {
             public void set(int index, int value) {
             }
         };
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return this.container.stillValid(player);
     }
 
     @Override

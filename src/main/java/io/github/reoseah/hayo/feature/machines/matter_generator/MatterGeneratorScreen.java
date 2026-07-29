@@ -1,11 +1,12 @@
 package io.github.reoseah.hayo.feature.machines.matter_generator;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.client.HayoContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
+import io.github.reoseah.hayo.feature.energy.EnergyGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -16,11 +17,17 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.List;
 import java.util.Optional;
 
-public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMenu> {
+public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGeneratorMenu> {
     public static final Identifier BACKGROUND = Hayo.modId("textures/gui/container/matter_generator.png");
 
     public static final int RECIPE_COLUMNS = 8;
     public static final int RECIPE_ROWS = 2;
+    public static final Identifier RECIPE = Hayo.modId("recipe_button/default");
+    public static final Identifier RECIPE_SELECTED = Hayo.modId("recipe_button/selected");
+    public static final Identifier RECIPE_HIGHLIGHTED = Hayo.modId("recipe_button/highlighted");
+    public static final Identifier RECIPE_DISABLED = Hayo.modId("recipe_button/disabled");
+    public static final Identifier SCROLLER = Hayo.modId("scroller/default");
+    public static final Identifier SCROLLER_DISABLED = Hayo.modId("scroller/disabled");
 
     private static final int SCROLLER_HEIGHT = 15;
     private static final int SCROLLER_FULL_HEIGHT = 36;
@@ -31,6 +38,16 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
 
     public MatterGeneratorScreen(MatterGeneratorMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, 176, 192);
+    }
+
+    public static void drawScroller(GuiGraphicsExtractor graphics, int x, int y, boolean disabled) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, disabled ? SCROLLER_DISABLED : SCROLLER, x, y, 12, 15);
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 
     @Override
@@ -44,7 +61,7 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
         HayoGuiSprites.drawSlot(graphics, x + this.menu.slots.get(0).x - 1, y + this.menu.slots.get(0).y - 1);
         HayoGuiSprites.drawOutputSlot(graphics, x + this.menu.slots.get(1).x - 4, y + this.menu.slots.get(1).y - 4);
 
-        HayoGuiSprites.drawMachineEnergy(graphics, x + 57, y + 17, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
+        EnergyGuiSprites.energySmall(graphics, x + 57, y + 17, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
         HayoGuiSprites.drawRecipeArrow(graphics, x + 80, y + 25, HayoGuiSprites.RecipeArrow.DEFAULT, this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
 
         this.drawRecipeButtons(graphics, mouseX, mouseY);
@@ -59,11 +76,11 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
             int x = this.leftPos + 9 + (pos % RECIPE_COLUMNS) * 18;
             int y = this.topPos + 59 + (pos / RECIPE_COLUMNS) * 18;
 
-            var sprite = HayoGuiSprites.RECIPE;
+            var sprite = RECIPE;
             if (i == this.menu.getSelectedRecipeIdx()) {
-                sprite = HayoGuiSprites.RECIPE_SELECTED;
+                sprite = RECIPE_SELECTED;
             } else if (mouseX >= x && mouseY >= y && mouseX < x + 18 && mouseY < y + 18) {
-                sprite = HayoGuiSprites.RECIPE_HIGHLIGHTED;
+                sprite = RECIPE_HIGHLIGHTED;
             }
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, y, 18, 18);
 
@@ -76,12 +93,12 @@ public class MatterGeneratorScreen extends HayoContainerScreen<MatterGeneratorMe
         boolean disabled = this.menu.recipes.size() <= RECIPE_ROWS * RECIPE_COLUMNS;
 
         if (disabled) {
-            HayoGuiSprites.drawScroller(graphics, this.leftPos + 156, this.topPos + 59, true);
+            drawScroller(graphics, this.leftPos + 156, this.topPos + 59, true);
             return;
         }
 
         int scrollerY = 59 + (int) (this.scrollOffset * (SCROLLER_FULL_HEIGHT - SCROLLER_HEIGHT));
-        HayoGuiSprites.drawScroller(graphics, this.leftPos + 156, this.topPos + scrollerY, false);
+        drawScroller(graphics, this.leftPos + 156, this.topPos + scrollerY, false);
     }
 
     @Override

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/generator"
+    "model": "hayo:block/generator"
   }
 }

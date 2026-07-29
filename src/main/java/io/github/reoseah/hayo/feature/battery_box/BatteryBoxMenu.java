@@ -1,26 +1,29 @@
 package io.github.reoseah.hayo.feature.battery_box;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.HayoContainerMenu;
-import io.github.reoseah.hayo.base.client.HayoGuiSprites;
+import io.github.reoseah.hayo.feature.energy.EnergyGuiSprites;
 import io.github.reoseah.hayo.feature.energy.item.EnergyComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public class BatteryBoxMenu extends HayoContainerMenu {
+public class BatteryBoxMenu extends AbstractContainerMenu {
     public static final int DATA_SLOTS = 8;
 
+    protected final Container container;
     protected final ContainerData data;
 
     protected BatteryBoxMenu(int containerId, Container container, ContainerData data, Inventory inventory) {
-        super(Hayo.MenuTypes.BATTERY_BOX, containerId, container);
+        super(Hayo.MenuTypes.BATTERY_BOX, containerId);
+
+        this.container = container;
 
         this.data = data;
         this.addDataSlots(this.data);
@@ -70,6 +73,11 @@ public class BatteryBoxMenu extends HayoContainerMenu {
             public void set(int index, int value) {
             }
         };
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return this.container.stillValid(player);
     }
 
     @Override
@@ -152,7 +160,7 @@ public class BatteryBoxMenu extends HayoContainerMenu {
 
         @Override
         public Identifier getNoItemIcon() {
-            return HayoGuiSprites.BATTERY_SLOT_ICON;
+            return EnergyGuiSprites.BATTERY_SLOT_ICON;
         }
     }
 }

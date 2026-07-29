@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 
 public class ExtractorMenu extends MachineMenu {
     public ExtractorMenu(int menuId, Inventory inventory) {
@@ -27,11 +28,12 @@ public class ExtractorMenu extends MachineMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveClassicMachineStack(this, player, index, 1, 1, 1, 4, this::isRecipeInput, Hayo.ItemTags.EXTRACTOR_UPGRADES);
-    }
-
-    protected boolean isRecipeInput(ItemStack stack) {
-        // TODO: synchronize recipe inputs, quick move only valid inputs
-        return true;
+        return quickMoveClassicMachineStack(this, player, index, 1, 1, 1, 4, //
+                stack -> player.level() //
+                        .recipeAccess() //
+                        .getSynchronizedRecipes() //
+                        .getFirstMatch(Hayo.RecipeTypes.EXTRACTING, new SingleRecipeInput(stack), player.level()) //
+                        .isPresent(), //
+                Hayo.ItemTags.EXTRACTOR_UPGRADES);
     }
 }

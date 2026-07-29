@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": "hayo:forcicium_sunnarium_complex",
+    "#": "hayo:nether_star_dust",
     "X": "#c:dusts/diamond",
     "P": "hayo:composite_plate"
   },

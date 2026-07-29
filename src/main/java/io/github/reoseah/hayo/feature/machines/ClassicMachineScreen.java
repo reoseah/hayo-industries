@@ -1,12 +1,13 @@
 package io.github.reoseah.hayo.feature.machines;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.client.HayoContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
+import io.github.reoseah.hayo.feature.energy.EnergyGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -16,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 import java.util.Optional;
 
-public class ClassicMachineScreen extends HayoContainerScreen<MachineMenu> {
+public class ClassicMachineScreen extends AbstractContainerScreen<MachineMenu> {
     public static final Identifier BACKGROUND = Hayo.modId("textures/gui/container/machine.png");
 
     protected final HayoGuiSprites.RecipeArrow arrow;
@@ -43,13 +44,19 @@ public class ClassicMachineScreen extends HayoContainerScreen<MachineMenu> {
     }
 
     @Override
+    public void init() {
+        super.init();
+        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
+    }
+
+    @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, ClassicMachineScreen.BACKGROUND, this.leftPos, this.topPos, 0F, 0F, this.imageWidth, this.imageHeight, 256, 256);
 
         drawClassicSlots(this, graphics);
-        HayoGuiSprites.drawMachineEnergy(graphics, this.leftPos + 48, this.topPos + 37, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
+        EnergyGuiSprites.energySmall(graphics, this.leftPos + 48, this.topPos + 37, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
         HayoGuiSprites.drawRecipeArrow(graphics, this.leftPos + 70, this.topPos + 36, this.arrow, this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
     }
 

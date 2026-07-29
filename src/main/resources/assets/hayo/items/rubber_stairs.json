@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/rubber_stairs"
+    "model": "hayo:block/rubber_stairs"
   }
 }

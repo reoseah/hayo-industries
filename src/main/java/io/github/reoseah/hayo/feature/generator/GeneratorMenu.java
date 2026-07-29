@@ -1,19 +1,20 @@
 package io.github.reoseah.hayo.feature.generator;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.HayoContainerMenu;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class GeneratorMenu extends HayoContainerMenu {
+public class GeneratorMenu extends AbstractContainerMenu {
     protected final Level level;
+    protected final Container container;
     protected final ContainerData data;
 
     public GeneratorMenu(int menuId, Inventory inventory) {
@@ -51,8 +52,9 @@ public class GeneratorMenu extends HayoContainerMenu {
     }
 
     protected GeneratorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
-        super(Hayo.MenuTypes.GENERATOR, menuId, container);
+        super(Hayo.MenuTypes.GENERATOR, menuId);
 
+        this.container = container;
         this.level = inventory.player.level();
 
         this.data = data;
@@ -60,6 +62,11 @@ public class GeneratorMenu extends HayoContainerMenu {
 
         this.addSlot(new Slot(container, 0, 62, 54));
         this.addStandardInventorySlots(inventory, 8, 84);
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return this.container.stillValid(player);
     }
 
     @Override

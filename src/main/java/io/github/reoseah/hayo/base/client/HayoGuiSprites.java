@@ -7,42 +7,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class HayoGuiSprites {
-    public static final Identifier ENERGY_STORAGE = Hayo.modId("energy_storage");
-    public static final Identifier ENERGY_STORAGE_OVERLAY = Hayo.modId("energy_storage_overlay");
-
-    public static void drawEnergyStorage(GuiGraphicsExtractor graphics, int x, int y, int amount, int capacity) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_STORAGE, x, y, 18, 56);
-
-        if (amount > 0 && capacity > 0) {
-            var height = Mth.clamp(1 + (48 - 1) * amount / capacity, 1, 48);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_STORAGE_OVERLAY, 10, 48, 0, 48 - height, x + 4, y + 4 + 48 - height, 10, height);
-        }
-    }
-
-    public static final Identifier MACHINE_ENERGY = Hayo.modId("machine_energy");
-    public static final Identifier MACHINE_ENERGY_OVERLAY = Hayo.modId("machine_energy_overlay");
-
-    public static void drawMachineEnergy(GuiGraphicsExtractor graphics, int x, int y, int energy, int capacity) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, MACHINE_ENERGY, x, y, 14, 14);
-
-        if (energy > 0 && capacity > 0) {
-            var height = Mth.clamp(1 + (14 - 1) * energy / capacity, 1, 14);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, MACHINE_ENERGY_OVERLAY, 14, 14, 0, 14 - height, x, y + 14 - height, 14, height);
-        }
-    }
-
-    public static final Identifier FUEL = Hayo.modId("fuel");
-    public static final Identifier FUEL_OVERLAY = Hayo.modId("fuel_overlay");
-
-    public static void drawFuel(GuiGraphicsExtractor graphics, int x, int y, int fuelLeft, int fuelTotal) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FUEL, x, y, 14, 14);
-
-        if (fuelLeft > 0 && fuelTotal > 0) {
-            var height = Mth.clamp(1 + (14 - 1) * fuelLeft / fuelTotal, 1, 14);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FUEL_OVERLAY, 14, 14, 0, 14 - height, x, y + 14 - height, 14, height);
-        }
-    }
-
     public static final Identifier SMALL_ARROW_RIGHT = Hayo.modId("small_arrow_right");
     public static final Identifier SMALL_ARROW_LEFT = Hayo.modId("small_arrow_left");
 
@@ -94,20 +58,4 @@ public class HayoGuiSprites {
             this.overlay = overlay;
         }
     }
-
-    public static final Identifier RECIPE = Hayo.modId("recipe_button/default");
-    public static final Identifier RECIPE_SELECTED = Hayo.modId("recipe_button/selected");
-    public static final Identifier RECIPE_HIGHLIGHTED = Hayo.modId("recipe_button/highlighted");
-    public static final Identifier RECIPE_DISABLED = Hayo.modId("recipe_button/disabled");
-
-    public static final Identifier SCROLLER = Hayo.modId("scroller/default");
-    public static final Identifier SCROLLER_DISABLED = Hayo.modId("scroller/disabled");
-
-    public static void drawScroller(GuiGraphicsExtractor graphics, int x, int y, boolean disabled) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, disabled ? SCROLLER_DISABLED : SCROLLER, x, y, 12, 15);
-    }
-
-    public static final Identifier SLOT_CONNECTION_9_WIDE = Hayo.modId("slot_connection_9_wide");
-
-    public static final Identifier BATTERY_SLOT_ICON = Hayo.modId("slot_icons/battery");
 }

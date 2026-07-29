@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/machine_block"
+    "model": "hayo:block/machine_block"
   }
 }

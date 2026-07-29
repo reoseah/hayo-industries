@@ -25,19 +25,16 @@ import java.util.logging.Logger;
 public class ElectricBlockManager extends SavedData {
     public static final Logger LOGGER = Logger.getLogger("Hayo/ElectricBlockManager");
 
-    protected ServerLevel level;
+    protected final ServerLevel level;
     protected final Map<ChunkPos, ChunkTickValues> tickData = new HashMap<>();
     protected final Map<BlockPos, SenderState> senders = new HashMap<>();
 
-    public ElectricBlockManager setLevelIfAbsent(ServerLevel level) {
-        if (this.level == null) {
-            this.level = level;
-        }
-        return this;
+    public ElectricBlockManager(ServerLevel level) {
+        this.level = level;
     }
 
     public static ElectricBlockManager get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(Hayo.ELECTRIC_DATA).setLevelIfAbsent(level);
+        return level.getAttachedOrCreate(Hayo.ELECTRIC_DATA, () -> new ElectricBlockManager(level));
     }
 
     public int sendEnergy(int amount, BlockPos pos, @Nullable Direction sendingFace) {

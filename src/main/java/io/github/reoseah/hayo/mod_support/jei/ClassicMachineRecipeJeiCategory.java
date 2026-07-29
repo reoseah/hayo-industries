@@ -1,20 +1,23 @@
 package io.github.reoseah.hayo.mod_support.jei;
 
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
+import io.github.reoseah.hayo.feature.energy.EnergyGuiSprites;
 import io.github.reoseah.hayo.feature.energy.EnergyTexts;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.List;
@@ -64,9 +67,15 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<? extends ClassicMachineRecipe> holder, IFocusGroup focuses) {
         var recipe = holder.value();
-        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1) //
-                .setStandardSlotBackground() //
-                .add(recipe.input);
+        if (recipe.inputCount == 1) {
+            builder.addSlot(RecipeIngredientRole.INPUT, 1, 1) //
+                    .setStandardSlotBackground() //
+                    .add(recipe.input);
+        } else {
+            builder.addSlot(RecipeIngredientRole.INPUT, 1, 1) //
+                    .setStandardSlotBackground() //
+                    .addItemStacks(recipe.input.items().map(item -> new ItemStack(item, recipe.inputCount)).toList());
+        }
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 61, 5) //
                 .setOutputSlotBackground() //
@@ -79,29 +88,22 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
     }
 
     @Override
-    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<? extends ClassicMachineRecipe> holder, IFocusGroup focuses) {
+    public void draw(RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         var recipe = holder.value();
-        
+        EnergyGuiSprites.energySmall(graphics, 1, 20, 10, 14);
 
+        int energyCost = recipe.energyCost;
+        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / this.energyUseRate / 24)) % 24d);
+        HayoGuiSprites.drawRecipeArrow(graphics, 24, 4, this.arrowType, progress, 24);
+
+        var font = Minecraft.getInstance().font;
+
+        graphics.text(font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
+        if (recipe.extraChance > 0) {
+            var extraChance = Component.translatable("hayo.chance.percentage", String.format("%.0f", 100 * recipe.extraChance));
+            graphics.text(font, extraChance, 85, 24, 0xFF404040, false);
+        }
     }
-
-    //    @Override
-//    public void draw(RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView slots, GuiGraphics graphics, double mouseX, double mouseY) {
-//        var recipe = holder.value();
-//        HayoGuiSprites.drawMachineEnergy(graphics, 1, 20, 10, 14);
-//
-//        int energyCost = recipe.energyCost;
-//        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / this.energyUseRate / 24)) % 24d);
-//        HayoGuiSprites.drawRecipeArrow(graphics, 24, 4, this.arrowType, progress, 24);
-//
-//        var font = Minecraft.getInstance().font;
-//
-//        graphics.drawString(font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
-//        if (recipe.extraChance > 0) {
-//            var extraChance = Component.translatable("hayo.chance.percentage", String.format("%.0f", 100 * recipe.extraChance));
-//            graphics.drawString(font, extraChance, 85, 24, 0xFF404040, false);
-//        }
-//    }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView slots, double mouseX, double mouseY) {

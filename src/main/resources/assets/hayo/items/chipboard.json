@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/chipboard"
+    "model": "hayo:block/chipboard"
   }
 }

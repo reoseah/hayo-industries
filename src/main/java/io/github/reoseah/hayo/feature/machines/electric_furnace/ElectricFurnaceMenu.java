@@ -72,11 +72,7 @@ public class ElectricFurnaceMenu extends MachineMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveClassicMachineStack(this, player, index, 1, 1, 1, 4, this::isRecipeInput, Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES);
-    }
-
-    protected boolean isRecipeInput(ItemStack stack) {
-        return this.recipeInputs.get(this.getRecipeMode()).test(stack);
+        return quickMoveClassicMachineStack(this, player, index, 1, 1, 1, 4, stack -> this.recipeInputs.get(this.getRecipeMode()).test(stack), Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES);
     }
 
     public static class ElectricFurnaceUpgradeSlot extends TagFilteredSlot {

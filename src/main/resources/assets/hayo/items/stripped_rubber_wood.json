@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/stripped_rubber_wood"
+    "model": "hayo:block/stripped_rubber_wood"
   }
 }
