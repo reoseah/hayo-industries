@@ -80,9 +80,10 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
         builder.addSlot(RecipeIngredientRole.OUTPUT, 61, 5) //
                 .setOutputSlotBackground() //
                 .add(recipe.result.create());
-        if (recipe.extraChance > 0) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 1)
-                    .setStandardSlotBackground()
+        if (recipe.extraResultChance > 0) {
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 1) //
+                    .setStandardSlotBackground() //
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.translatable("hayo.chance.words", recipe.extraResultChance * 100).withStyle(ChatFormatting.YELLOW)))
                     .add(recipe.result.create().copyWithCount(1));
         }
     }
@@ -99,8 +100,8 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
         var font = Minecraft.getInstance().font;
 
         graphics.text(font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
-        if (recipe.extraChance > 0) {
-            var extraChance = Component.translatable("hayo.chance.percentage", String.format("%.0f", 100 * recipe.extraChance));
+        if (recipe.extraResultChance > 0) {
+            var extraChance = Component.translatable("hayo.chance.percentage", String.format("%.0f", 100 * recipe.extraResultChance));
             graphics.text(font, extraChance, 85, 24, 0xFF404040, false);
         }
     }
@@ -113,8 +114,8 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
             float duration = Mth.positiveCeilDiv(recipe.energyCost, this.energyUseRate) / 20F;
 
             tooltip.addAll(List.of( //
-                    EnergyTexts.amount(recipe.energyCost), //
-                    EnergyTexts.durationAtAmountPerTick(duration, this.energyUseRate).withStyle(ChatFormatting.GRAY)));
+                    Component.translatable("hayo.duration.seconds", duration), //
+                    Component.translatable("hayo.energy.amount_and_amount_per_tick", recipe.energyCost, this.energyUseRate).withStyle(ChatFormatting.GRAY)));
         }
     }
 }

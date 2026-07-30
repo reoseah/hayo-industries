@@ -134,6 +134,8 @@
   "hayo.energy.percentage_per_recipe": "%s%% ε per recipe",
   "hayo.energy.duration_at_amount_per_tick": "%s s using %s ε/t",
   "hayo.chance.percentage": "%s%%",
+  "hayo.chance.words": "%s%% Chance",
+  "hayo.duration.seconds": "%s s",
   "hayo.recipe_type.macerating": "Macerating",
   "hayo.recipe_type.compressing": "Compressing",
   "hayo.recipe_type.extracting": "Extracting",

@@ -2,14 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "LCL",
+    "LLL",
     "X#X"
   ],
   "key": {
     "#": "hayo:circuit",
     "X": "hayo:power_cable",
-    "L": "#minecraft:logs",
-    "C": "#minecraft:stone_tool_materials"
+    "L": "#minecraft:logs"
   },
   "result": {
     "id": "hayo:smoking_upgrade",

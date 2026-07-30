@@ -62,7 +62,7 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
         }
 
         var recipeOutput = recipe.value().assemble(input);
-        if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraChance > 0) {
+        if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             recipeOutput.setCount(recipeOutput.getCount() + 1);
         }
         return canInsertToSlot(items, recipeOutput, OUTPUT_SLOT);
@@ -77,8 +77,8 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
             inputStack.shrink(1);
         }
         var recipeOutput = recipe.value().assemble(input);
-        if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraChance > 0) {
-            if (this.level.getRandom().nextFloat() < machineRecipe.extraChance) {
+        if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
+            if (this.level.getRandom().nextFloat() < machineRecipe.extraResultChance) {
                 recipeOutput.setCount(recipeOutput.getCount() + 1);
             }
         }

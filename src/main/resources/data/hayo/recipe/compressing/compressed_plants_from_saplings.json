@@ -1,0 +1,8 @@
+{
+  "type": "hayo:compressing",
+  "ingredient": "#minecraft:saplings",
+  "input_count": 4,
+  "result": {
+    "id": "hayo:compressed_plants"
+  }
+}

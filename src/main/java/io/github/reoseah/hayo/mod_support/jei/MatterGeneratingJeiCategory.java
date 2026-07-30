@@ -84,8 +84,8 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
             float duration = Mth.positiveCeilDiv(recipe.energyCost(), MatterGeneratorBlockEntity.ENERGY_USE_RATE) / 20F;
 
             tooltip.addAll(List.of( //
-                    EnergyTexts.amount(recipe.energyCost()), //
-                    EnergyTexts.durationAtAmountPerTick(duration, MatterGeneratorBlockEntity.ENERGY_USE_RATE).withStyle(ChatFormatting.GRAY)));
+                    Component.translatable("hayo.duration.seconds", duration), //
+                    Component.translatable("hayo.energy.amount_and_amount_per_tick", recipe.energyCost(), ENERGY_USE_RATE).withStyle(ChatFormatting.GRAY)));
         }
     }
 }

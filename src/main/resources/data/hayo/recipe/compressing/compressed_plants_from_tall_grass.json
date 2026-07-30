@@ -1,0 +1,12 @@
+{
+  "type": "hayo:compressing",
+  "ingredient": [
+    "minecraft:tall_grass",
+    "minecraft:large_fern",
+    "minecraft:tall_dry_grass"
+  ],
+  "input_count": 16,
+  "result": {
+    "id": "hayo:compressed_plants"
+  }
+}

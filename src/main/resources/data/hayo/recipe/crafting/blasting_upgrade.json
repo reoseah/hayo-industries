@@ -2,6 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
+    "III",
     "ISI",
     "X#X"
   ],

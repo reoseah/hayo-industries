@@ -7,6 +7,8 @@ import io.github.reoseah.hayo.feature.machines.electric_furnace.ElectricFurnaceB
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback;
+import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -62,13 +64,13 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<? extends AbstractCookingRecipe> recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<? extends AbstractCookingRecipe> holder, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 1, 1) //
                 .setStandardSlotBackground() //
-                .add(recipe.value().input());
+                .add(holder.value().input());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 61, 5) //
                 .setOutputSlotBackground() //
-                .add(recipe.value().result().create());
+                .add(holder.value().result().create());
     }
 
     @Override
@@ -88,13 +90,17 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
                 || mouseX > 24 && mouseX <= 24 + 24 && mouseY > 4 && mouseY <= 4 + 16) {
             var recipe = holder.value();
 
+            int energyUseRate = ENERGY_USE_RATE;
+            if (this.type != (Object) HayoJeiPlugin.ELECTRIC_SMELTING) {
+                energyUseRate *= 2;
+            }
+
             int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(recipe);
-            int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ENERGY_USE_RATE / 24)) % 24d);
-            float duration = Mth.positiveCeilDiv(energyCost, ENERGY_USE_RATE) / 20F;
+            float duration = Mth.positiveCeilDiv(energyCost, energyUseRate) / 20F;
 
             tooltip.addAll(List.of( //
-                    EnergyTexts.amount(energyCost), //
-                    EnergyTexts.durationAtAmountPerTick(duration, ENERGY_USE_RATE).withStyle(ChatFormatting.GRAY)));
+                    Component.translatable("hayo.duration.seconds", duration), //
+                    Component.translatable("hayo.energy.amount_and_amount_per_tick", energyCost, energyUseRate).withStyle(ChatFormatting.GRAY)));
         }
     }
 }

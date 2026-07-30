@@ -15,19 +15,20 @@ public abstract class ClassicMachineRecipe implements Recipe<SingleRecipeInput> 
     public final Ingredient input;
     public final int inputCount;
     public final ItemStackTemplate result;
+    public final float extraResultChance;
     public final int energyCost;
-    public final float extraChance;
 
-    public ClassicMachineRecipe(Ingredient input, //
+    protected ClassicMachineRecipe( //
+            Ingredient input, //
             int inputCount, //
             ItemStackTemplate result, //
-            int energyCost, //
-            float extraChance) {
+            float extraResultChance, //
+            int energyCost) {
         this.input = input;
         this.inputCount = inputCount;
         this.result = result;
         this.energyCost = energyCost;
-        this.extraChance = extraChance;
+        this.extraResultChance = extraResultChance;
     }
 
     @Override
@@ -68,7 +69,7 @@ public abstract class ClassicMachineRecipe implements Recipe<SingleRecipeInput> 
 
     @FunctionalInterface
     public interface Factory<R extends ClassicMachineRecipe> {
-        R create(Ingredient input, int inputCount, ItemStackTemplate result, int processingEnergy, float extraChance);
+        R create(Ingredient input, int inputCount, ItemStackTemplate result, float extraResultChance, int energyCost);
     }
 
     public static <R extends ClassicMachineRecipe> RecipeSerializer<R> createCodec(Factory<R> factory, int defaultEnergy) {
@@ -77,8 +78,8 @@ public abstract class ClassicMachineRecipe implements Recipe<SingleRecipeInput> 
                         Ingredient.CODEC.fieldOf("ingredient").forGetter(recipe -> recipe.input), //
                         Codec.INT.fieldOf("input_count").orElse(1).forGetter(recipe -> recipe.inputCount), //
                         ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result), //
-                        Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(recipe -> recipe.energyCost), //
-                        Codec.FLOAT.fieldOf("extra_chance").orElse(0F).forGetter(recipe -> recipe.extraChance) //
+                        Codec.FLOAT.fieldOf("extra_result_chance").orElse(0F).forGetter(recipe -> recipe.extraResultChance), //
+                        Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(recipe -> recipe.energyCost) //
                 ).apply(instance, factory::create));
 
         var streamCodec = StreamCodec.composite( //
@@ -88,10 +89,10 @@ public abstract class ClassicMachineRecipe implements Recipe<SingleRecipeInput> 
                 recipe -> recipe.inputCount, //
                 ItemStackTemplate.STREAM_CODEC, //
                 recipe -> recipe.result, //
-                ByteBufCodecs.INT, //
-                recipe -> recipe.energyCost, //
                 ByteBufCodecs.FLOAT, //
-                recipe -> recipe.extraChance, //
+                recipe -> recipe.extraResultChance, //
+                ByteBufCodecs.INT,
+                recipe -> recipe.energyCost, //
                 factory::create);
 
         return new RecipeSerializer<>(codec, streamCodec);

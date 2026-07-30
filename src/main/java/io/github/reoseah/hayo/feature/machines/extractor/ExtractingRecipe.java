@@ -9,8 +9,8 @@ public class ExtractingRecipe extends ClassicMachineRecipe {
     private static final int DEFAULT_DURATION_SECONDS = 15;
     public static final int DEFAULT_ENERGY = DEFAULT_DURATION_SECONDS * ExtractorBlockEntity.ENERGY_USE_RATE * 20;
 
-    public ExtractingRecipe(Ingredient input, int inputCount, ItemStackTemplate result, int processingEnergy, float extraChance) {
-        super(input, inputCount, result, processingEnergy, extraChance);
+    public ExtractingRecipe(Ingredient input, int inputCount, ItemStackTemplate result, float extraResultChance, int processingEnergy) {
+        super(input, inputCount, result, extraResultChance, processingEnergy);
     }
 
     @Override

@@ -6,5 +6,5 @@
     "id": "minecraft:glowstone_dust",
     "count": 3
   },
-  "extra_chance": 0.75
+  "extra_result_chance": 0.75
 }

@@ -1,0 +1,8 @@
+{
+  "type": "hayo:compressing",
+  "ingredient": "#minecraft:small_flowers",
+  "input_count": 16,
+  "result": {
+    "id": "hayo:compressed_plants"
+  }
+}

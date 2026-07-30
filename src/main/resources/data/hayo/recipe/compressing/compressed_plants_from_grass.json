@@ -1,0 +1,14 @@
+{
+  "type": "hayo:compressing",
+  "ingredient": [
+    "minecraft:short_grass",
+    "minecraft:fern",
+    "minecraft:seagrass",
+    "minecraft:short_dry_grass",
+    "minecraft:bush"
+  ],
+  "input_count": 32,
+  "result": {
+    "id": "hayo:compressed_plants"
+  }
+}

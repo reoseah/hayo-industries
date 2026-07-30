@@ -9,8 +9,8 @@ public class MaceratingRecipe extends ClassicMachineRecipe {
     private static final int DEFAULT_DURATION_SECONDS = 10;
     public static final int DEFAULT_ENERGY = DEFAULT_DURATION_SECONDS * MaceratorBlockEntity.ENERGY_USE_RATE * 20;
 
-    public MaceratingRecipe(Ingredient input, int inputCount, ItemStackTemplate result, int processingEnergy, float extraChance) {
-        super(input, inputCount, result, processingEnergy, extraChance);
+    public MaceratingRecipe(Ingredient input, int inputCount, ItemStackTemplate result, float extraResultChance, int processingEnergy) {
+        super(input, inputCount, result, extraResultChance, processingEnergy);
     }
 
     @Override
