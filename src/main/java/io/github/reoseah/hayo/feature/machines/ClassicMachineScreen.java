@@ -81,11 +81,32 @@ public class ClassicMachineScreen extends AbstractContainerScreen<MachineMenu> {
     protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
         var tooltip = super.getTooltipFromContainerItem(stack);
 
+        // TODO: un-hardcode, use the item tags that BEs have to derive this
         if ((stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE) || stack.is(Hayo.Items.INDUCTION_UPGRADE)) //
                 && this.menu.getType() != Hayo.MenuTypes.ELECTRIC_FURNACE) {
             tooltip.add(Component.empty());
             tooltip.add(Component.translatable("hayo.cannot_install_in_this_machine").withStyle(ChatFormatting.RED));
             return tooltip;
+        } else if (stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE)) {
+            boolean hoveringInstalledUpgrade = false;
+            boolean similarUpgradeInstalled = false;
+
+            for (var upgradeSlot = 3; upgradeSlot <= 7; upgradeSlot++) {
+                var machineUpgrade = this.menu.getSlot(upgradeSlot).getItem();
+                if (stack == machineUpgrade) {
+                    hoveringInstalledUpgrade = true;
+                    break;
+                }
+
+                if (machineUpgrade.is(Hayo.Items.BLASTING_UPGRADE) || machineUpgrade.is(Hayo.Items.SMOKING_UPGRADE)) {
+                    similarUpgradeInstalled = true;
+                }
+            }
+
+            if (!hoveringInstalledUpgrade && similarUpgradeInstalled) {
+                tooltip.add(Component.empty());
+                tooltip.add(Component.translatable("hayo.conflicts_with_installed_upgrade").withStyle(ChatFormatting.RED));
+            }
         }
         return tooltip;
     }

@@ -1,0 +1,9 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": "minecraft:rotten_flesh",
+  "input_count": 2,
+  "processing_energy": 600,
+  "result": {
+    "id": "hayo:nutrient_paste"
+  }
+}

@@ -23,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ElectricBlockManager extends SavedData {
-    public static final Logger LOGGER = Logger.getLogger("Hayo/ElectricBlockManager");
+    public static final Logger LOGGER = Logger.getLogger("ElectricBlockManager");
 
     protected final ServerLevel level;
     protected final Map<ChunkPos, ChunkTickValues> tickData = new HashMap<>();
@@ -34,7 +34,7 @@ public class ElectricBlockManager extends SavedData {
     }
 
     public static ElectricBlockManager get(ServerLevel level) {
-        return level.getAttachedOrCreate(Hayo.ELECTRIC_DATA, () -> new ElectricBlockManager(level));
+        return level.getAttachedOrCreate(Hayo.ELECTRIC_BLOCKS, () -> new ElectricBlockManager(level));
     }
 
     public int sendEnergy(int amount, BlockPos pos, @Nullable Direction sendingFace) {

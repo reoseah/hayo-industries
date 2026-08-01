@@ -9,10 +9,9 @@ import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlockEntity;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxMenu;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxScreen;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
-import io.github.reoseah.hayo.feature.electric_items.*;
-import io.github.reoseah.hayo.feature.electric_items.EnergyPreservingShapedRecipe;
 import io.github.reoseah.hayo.feature.electric_blocks.CableBreakPayload;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
+import io.github.reoseah.hayo.feature.electric_items.*;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageMenu;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageScreen;
 import io.github.reoseah.hayo.feature.energy_storages.advanced.AdvancedEnergyStorageBlock;
@@ -86,12 +85,17 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -121,15 +125,13 @@ import static net.minecraft.world.level.block.Blocks.leavesProperties;
 import static net.minecraft.world.level.block.Blocks.logProperties;
 
 // TODO: rename Battery Box to Battery Buffer?
-// TODO: rearrange creative tab entries
-// TODO: make resin rubber log "eject" resin item instead of placing it directly into player inventory
 public class Hayo {
     public static final String MOD_ID = "hayo";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static final CreativeModeTab TAB = FabricCreativeModeTab.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
 
-    public static final AttachmentType<ElectricBlockManager> ELECTRIC_DATA = AttachmentRegistry.create(modId("electric_blocks"));
+    public static final AttachmentType<ElectricBlockManager> ELECTRIC_BLOCKS = AttachmentRegistry.create(modId("electric_blocks"));
 
     public static final AttachmentType<ElectricBlockManager.ChunkData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create( //
             modId("electric_blocks"), //
@@ -146,8 +148,6 @@ public class Hayo {
             Optional.empty(), //
             Optional.empty(), //
             Optional.empty());
-
-    public static final TagKey<Item> COPPER_INGOTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"));
 
     public static final ModelLayerLocation QUANTUM_ARMOR = new ModelLayerLocation(modId("quantum_armor"), "main");
 
@@ -322,6 +322,7 @@ public class Hayo {
         public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
         public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
 
+        private static final TagKey<Item> COPPER_INGOTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"));
         public static final Item WRENCH = registerItem("wrench", WrenchItem::new, new Item.Properties() //
                 .stacksTo(1) //
                 .equippable(EquipmentSlot.MAINHAND) //
@@ -353,6 +354,7 @@ public class Hayo {
                     .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
                     .component(EnergyComponents.CAN_DISCHARGE, Unit.INSTANCE);
         }
+
         public static final Item BATTERY = registerItem("battery", ElectricItem::new, createBatteryProperties(10_000, 32));
         public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", ElectricItem::new, createBatteryProperties(100_000, 128));
 
@@ -403,6 +405,7 @@ public class Hayo {
                     .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
                     .component(EnergyComponents.CHARGES_INVENTORY, Unit.INSTANCE);
         }
+
         public static final Item BATTERY_PACK = registerItem("battery_pack", ElectricItem::new, createBatteryPackProperties(60_000, 32));
         public static final Item ADVANCED_BATTERY_PACK = registerItem("advanced_battery_pack", ElectricItem::new, createBatteryPackProperties(300_000, 128));
 
@@ -461,6 +464,7 @@ public class Hayo {
         public static final Item RUBBER = registerItem("rubber");
         public static final Item COPPER_WIRE = registerItem("copper_wire");
         public static final Item CIRCUIT = registerItem("circuit");
+        public static final Item ADVANCED_CIRCUIT = registerItem("advanced_circuit");
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item ENERGY_FLOW_CIRCUIT = registerItem("energy_flow_circuit", new Item.Properties().rarity(Rarity.RARE));
         public static final Item MIXED_METAL_INGOT = registerItem("mixed_metal_ingot");
@@ -471,6 +475,12 @@ public class Hayo {
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
         public static final Item CANISTER = registerItem("canister");
+        public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food( //
+                new FoodProperties(4, 8F, false), //
+                Consumable.builder().onConsume( //
+                        new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.HUNGER, 300), 0.15F) //
+                ).build()) //
+        );
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", //
                 props -> new ItemWithTooltip( //
@@ -487,6 +497,18 @@ public class Hayo {
                         Component.empty(), //
                         Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY), //
                         Component.translatable("hayo.upgrades.energy_capacity", "+10000").withStyle(ChatFormatting.DARK_AQUA) //
+                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+
+        public static final Item ADVANCED_OVERHAUL_UPGRADE = registerItem("advanced_overhaul_upgrade", //
+                props -> new ItemWithTooltip( //
+                        props, //
+                        Component.empty(), //
+                        Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY), //
+                        Component.translatable("hayo.upgrades.gibbl_scaling").withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.gibbl_capacity", 10000).withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.gibbl_when_active", "+1").withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.gibbl_when_idle", "-4").withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA) //
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", //
@@ -613,6 +635,7 @@ public class Hayo {
                 entries.accept(RUBBER);
                 entries.accept(COPPER_WIRE);
                 entries.accept(CIRCUIT);
+                entries.accept(ADVANCED_CIRCUIT);
                 entries.accept(ELECTRIC_MOTOR);
                 entries.accept(ENERGY_FLOW_CIRCUIT);
 
@@ -622,9 +645,11 @@ public class Hayo {
                 entries.accept(CARBON_PLATE);
                 entries.accept(COMPRESSED_PLANTS);
                 entries.accept(CANISTER);
+                entries.accept(NUTRIENT_PASTE);
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
+                entries.accept(ADVANCED_OVERHAUL_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
                 entries.accept(INDUCTION_UPGRADE);

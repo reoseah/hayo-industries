@@ -3,6 +3,7 @@ package io.github.reoseah.hayo.feature.rubber_tree;
 import io.github.reoseah.hayo.Hayo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class ResinYieldingLogBlock extends Block {
@@ -61,13 +63,16 @@ public class ResinYieldingLogBlock extends Block {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (state.getValue(HAS_RESIN)) {
-            // TODO: play sound
+            var side = level.getBlockState(pos).getValue(FACING);
+            if (side == hitResult.getDirection()) {
+                level.setBlockAndUpdate(pos, state.setValue(HAS_RESIN, false));
+                // TODO: play sound
 
-            level.setBlockAndUpdate(pos, state.setValue(HAS_RESIN, false));
-            if (!player.getInventory().add(new ItemStack(Hayo.Items.STICKY_RESIN))) {
-                player.drop(new ItemStack(Hayo.Items.STICKY_RESIN), false);
+                var position = Vec3.atCenterOf(pos).add(side.getStepX() * 0.7, 0, side.getStepZ() * 0.7);
+                DefaultDispenseItemBehavior.spawnItem(level, new ItemStack(Hayo.Items.STICKY_RESIN), 6, side, position);
+
+                return InteractionResult.SUCCESS;
             }
-            return InteractionResult.SUCCESS;
         }
 
         return super.useWithoutItem(state, level, pos, player, hitResult);

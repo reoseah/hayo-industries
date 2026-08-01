@@ -1,0 +1,17 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": [
+    "minecraft:cooked_porkchop",
+    "minecraft:porkchop",
+    "minecraft:cooked_beef",
+    "minecraft:beef",
+    "minecraft:cooked_chicken",
+    "minecraft:chicken",
+    "minecraft:cooked_mutton",
+    "minecraft:mutton"
+  ],
+  "processing_energy": 600,
+  "result": {
+    "id": "hayo:nutrient_paste"
+  }
+}
