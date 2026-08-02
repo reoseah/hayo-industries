@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -20,7 +19,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class CableBlock extends TransparentBlock implements ElectricCableBlock {
+public class CableBlock extends Block implements ElectricCableBlock {
     public final int transferLimit;
     protected final VoxelShape[] shapes;
 
@@ -99,11 +98,6 @@ public class CableBlock extends TransparentBlock implements ElectricCableBlock {
         if (level instanceof ServerLevel serverLevel) {
             ElectricBlocks.addOrUpdate(serverLevel, pos);
         }
-    }
-
-    @Override
-    protected boolean skipRendering(BlockState state, BlockState adjacentState, Direction direction) {
-        return false;
     }
 
     @Override

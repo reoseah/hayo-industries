@@ -2,7 +2,6 @@
   "values": [
     "#hayo:processing_machine_upgrades",
     "hayo:blasting_upgrade",
-    "hayo:smoking_upgrade",
-    "hayo:induction_upgrade"
+    "hayo:smoking_upgrade"
   ]
 }

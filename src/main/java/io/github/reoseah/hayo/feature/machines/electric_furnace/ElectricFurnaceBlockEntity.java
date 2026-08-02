@@ -137,7 +137,7 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
         this.hasInductionUpgrade = false;
         for (int i = FIRST_UPGRADE_SLOT; i <= LAST_UPGRADE_SLOT; i++) {
             var stack = this.stacks.get(i);
-            if (stack.is(Hayo.Items.INDUCTION_UPGRADE)) {
+            if (stack.is(Hayo.Items.STREAMLINE_OVERHAUL_UPGRADE)) {
                 this.hasInductionUpgrade = true;
                 break;
             }

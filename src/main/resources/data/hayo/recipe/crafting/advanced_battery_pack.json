@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": "hayo:energy_crystal",
-    "C": "hayo:energy_flow_circuit",
+    "C": "hayo:advanced_circuit",
     "X": "hayo:battery_pack"
   },
   "result": {

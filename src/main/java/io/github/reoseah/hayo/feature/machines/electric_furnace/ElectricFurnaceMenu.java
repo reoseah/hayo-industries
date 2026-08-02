@@ -95,12 +95,12 @@ public class ElectricFurnaceMenu extends MachineMenu {
                 }
             }
 
-            if (stack.is(Hayo.Items.INDUCTION_UPGRADE)) {
+            if (stack.is(Hayo.Items.STREAMLINE_OVERHAUL_UPGRADE)) {
                 for (int i = ClassicMachineBlockEntity.FIRST_UPGRADE_SLOT; i <= ClassicMachineBlockEntity.LAST_UPGRADE_SLOT; i++) {
                     if (i == this.index) continue;
 
                     var upgrade = this.container.getItem(i);
-                    if (upgrade.is(Hayo.Items.INDUCTION_UPGRADE)) {
+                    if (upgrade.is(Hayo.Items.STREAMLINE_OVERHAUL_UPGRADE)) {
                         return false;
                     }
                 }

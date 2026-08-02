@@ -1,6 +1,5 @@
 package io.github.reoseah.hayo.feature.electric_blocks;
 
-import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -12,14 +11,14 @@ public interface ElectricReceiverBlock extends ElectricBlock {
     }
 
     default int getReceivableEnergy(ServerLevel level, BlockPos pos, Direction side) {
-        if (level.getBlockEntity(pos) instanceof ElectricBlockEntity entity) {
+        if (level.getBlockEntity(pos) instanceof SimpleElectricBlockEntity entity) {
             return entity.getReceivableEnergy();
         }
         return 0;
     }
 
     default int receiveEnergy(int amount, ServerLevel level, BlockPos pos, Direction side) {
-        if (level.getBlockEntity(pos) instanceof ElectricBlockEntity entity) {
+        if (level.getBlockEntity(pos) instanceof SimpleElectricBlockEntity entity) {
             return entity.receiveEnergy(amount);
         }
         return 0;

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "#": "hayo:advanced_machine_block",
-    "X": "hayo:energy_flow_circuit",
+    "X": "hayo:advanced_circuit",
     "G": "minecraft:glowstone_dust"
   },
   "pattern": [

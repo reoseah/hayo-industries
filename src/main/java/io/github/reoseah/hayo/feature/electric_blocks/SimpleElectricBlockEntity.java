@@ -1,5 +1,6 @@
-package io.github.reoseah.hayo.base.block.entity;
+package io.github.reoseah.hayo.feature.electric_blocks;
 
+import io.github.reoseah.hayo.base.block.entity.HayoContainerBlockEntity;
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -9,13 +10,15 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 
-public abstract class ElectricBlockEntity extends HayoContainerBlockEntity {
+public abstract class SimpleElectricBlockEntity extends HayoContainerBlockEntity {
     @Getter
     protected int storedEnergy;
+    /// Energy accepted, limits energy input per tick to 32/128/512/whatever.
+    /// Classes extending this should reset this every tick by calling [#resetEnergyPerTick].
     @Getter
     protected int inputPerTick;
 
-    public ElectricBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public SimpleElectricBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 

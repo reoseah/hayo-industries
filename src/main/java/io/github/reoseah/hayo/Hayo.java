@@ -464,9 +464,8 @@ public class Hayo {
         public static final Item RUBBER = registerItem("rubber");
         public static final Item COPPER_WIRE = registerItem("copper_wire");
         public static final Item CIRCUIT = registerItem("circuit");
-        public static final Item ADVANCED_CIRCUIT = registerItem("advanced_circuit");
+        public static final Item ADVANCED_CIRCUIT = registerItem("advanced_circuit", new Item.Properties().rarity(Rarity.RARE));
         public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
-        public static final Item ENERGY_FLOW_CIRCUIT = registerItem("energy_flow_circuit", new Item.Properties().rarity(Rarity.RARE));
         public static final Item MIXED_METAL_INGOT = registerItem("mixed_metal_ingot");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item CARBON_MESH = registerItem("carbon_mesh");
@@ -499,7 +498,7 @@ public class Hayo {
                         Component.translatable("hayo.upgrades.energy_capacity", "+10000").withStyle(ChatFormatting.DARK_AQUA) //
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
-        public static final Item ADVANCED_OVERHAUL_UPGRADE = registerItem("advanced_overhaul_upgrade", //
+        public static final Item STREAMLINE_OVERHAUL_UPGRADE = registerItem("streamline_overhaul_upgrade", //
                 props -> new ItemWithTooltip( //
                         props, //
                         Component.empty(), //
@@ -529,17 +528,6 @@ public class Hayo {
                         Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA) //
                 ), //
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
-        public static final Item INDUCTION_UPGRADE = registerItem("induction_upgrade", //
-                props -> new ItemWithTooltip( //
-                        props, //
-                        Component.empty(), //
-                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.electric_furnace")).withStyle(ChatFormatting.GRAY), //
-                        Component.translatable("hayo.upgrades.scaling_with_heat").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.heat_capacity", 10000).withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.heat_when_active", "+1").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.heat_when_idle", "-4").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA) //
-                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static void initialize() {
             CreativeModeTabEvents.modifyOutputEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
@@ -637,7 +625,6 @@ public class Hayo {
                 entries.accept(CIRCUIT);
                 entries.accept(ADVANCED_CIRCUIT);
                 entries.accept(ELECTRIC_MOTOR);
-                entries.accept(ENERGY_FLOW_CIRCUIT);
 
                 entries.accept(MIXED_METAL_INGOT);
                 entries.accept(COMPOSITE_PLATE);
@@ -649,10 +636,9 @@ public class Hayo {
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
-                entries.accept(ADVANCED_OVERHAUL_UPGRADE);
+                entries.accept(STREAMLINE_OVERHAUL_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
-                entries.accept(INDUCTION_UPGRADE);
             });
         }
 

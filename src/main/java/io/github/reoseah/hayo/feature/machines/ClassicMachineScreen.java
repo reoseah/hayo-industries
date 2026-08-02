@@ -63,7 +63,10 @@ public class ClassicMachineScreen extends AbstractContainerScreen<MachineMenu> {
     @Override
     protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.isHovering(48, 37, 14, 14, mouseX, mouseY)) {
-            graphics.setTooltipForNextFrame(this.font, List.of(EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), this.menu.getEnergyCapacity())), Optional.empty(), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(this.font, List.of( //
+                    EnergyTexts.amountAndCapacity(this.menu.getStoredEnergy(), this.menu.getEnergyCapacity()), //
+                    Component.translatable("hayo.machine.crafting_speed", this.menu.getEnergyUseRate()).withStyle(ChatFormatting.GRAY)
+            ), Optional.empty(), mouseX, mouseY);
             return;
         }
         if (this.isHovering(70, 36, 24, 16, mouseX, mouseY) && this.menu.getRecipeTotalEnergy() > 0) {
@@ -82,7 +85,7 @@ public class ClassicMachineScreen extends AbstractContainerScreen<MachineMenu> {
         var tooltip = super.getTooltipFromContainerItem(stack);
 
         // TODO: un-hardcode, use the item tags that BEs have to derive this
-        if ((stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE) || stack.is(Hayo.Items.INDUCTION_UPGRADE)) //
+        if ((stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE)) //
                 && this.menu.getType() != Hayo.MenuTypes.ELECTRIC_FURNACE) {
             tooltip.add(Component.empty());
             tooltip.add(Component.translatable("hayo.cannot_install_in_this_machine").withStyle(ChatFormatting.RED));

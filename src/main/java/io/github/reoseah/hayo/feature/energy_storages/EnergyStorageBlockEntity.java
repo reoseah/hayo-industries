@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
 import io.github.reoseah.hayo.base.block.DirectionalMachineBlock;
-import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
+import io.github.reoseah.hayo.feature.electric_blocks.SimpleElectricBlockEntity;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlocks;
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public abstract class EnergyStorageBlockEntity extends ElectricBlockEntity implements WorldlyContainer {
+public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity implements WorldlyContainer {
     public static final int DISCHARGE_SLOT = 0, CHARGE_SLOT = 1, SLOTS = 2;
 
     @Getter

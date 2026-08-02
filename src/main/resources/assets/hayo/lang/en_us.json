@@ -76,7 +76,6 @@
   "item.hayo.circuit": "Circuit",
   "item.hayo.advanced_circuit": "Advanced Circuit",
   "item.hayo.electric_motor": "Electric Motor",
-  "item.hayo.energy_flow_circuit": "Energy Flow Circuit",
   "item.hayo.mixed_metal_ingot": "Mixed Metal Ingot",
   "item.hayo.composite_plate": "Composite Plating",
   "item.hayo.carbon_mesh": "Carbon Mesh",
@@ -87,7 +86,7 @@
   "item.hayo.nutrient_paste": "Nutrient Paste",
   "item.hayo.overclock_upgrade": "Overclock Upgrade",
   "item.hayo.capacitor_upgrade": "Capacitor Upgrade",
-  "item.hayo.advanced_overhaul_upgrade": "Advanced Overhaul Upgrade",
+  "item.hayo.streamline_overhaul_upgrade": "Streamline Overhaul Upgrade",
   "item.hayo.blasting_upgrade": "Blast Smelting Upgrade",
   "item.hayo.smoking_upgrade": "Artificial Smoking Upgrade",
   "item.hayo.induction_upgrade": "Inductive Heating Upgrade",
@@ -163,5 +162,6 @@
   "hayo.upgrades.gibbl_scaling": " Crafting speed scales with Gibbl",
   "hayo.upgrades.gibbl_capacity": " %s Gibbl capacity",
   "hayo.upgrades.gibbl_when_active": "%s Gibbl/tick when active",
-  "hayo.upgrades.gibbl_when_idle": "%s Gibbl/tick when idle"
+  "hayo.upgrades.gibbl_when_idle": "%s Gibbl/tick when idle",
+  "hayo.machine.crafting_speed": "%s ε/t Crafting Speed"
 }

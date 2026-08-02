@@ -2,7 +2,7 @@ package io.github.reoseah.hayo.feature.battery_box;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
-import io.github.reoseah.hayo.base.block.entity.ElectricBlockEntity;
+import io.github.reoseah.hayo.feature.electric_blocks.SimpleElectricBlockEntity;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlocks;
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
 import lombok.Getter;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import org.jspecify.annotations.Nullable;
 
-public class BatteryBoxBlockEntity extends ElectricBlockEntity implements WorldlyContainer {
+public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements WorldlyContainer {
     public static final int BATTERY_SLOTS = 6, CHARGING_SLOT = 6, SLOTS = 7;
 
     @Getter

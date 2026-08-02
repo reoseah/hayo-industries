@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "NLN",
+    "G#G",
+    "NLN"
+  ],
+  "key": {
+    "#": "hayo:circuit",
+    "G": "minecraft:glowstone_dust",
+    "L": "minecraft:lapis_lazuli",
+    "N": "#c:nuggets/gold"
+  },
+  "result": {
+    "id": "hayo:advanced_circuit"
+  }
+}
