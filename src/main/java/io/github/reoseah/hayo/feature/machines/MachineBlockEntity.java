@@ -28,7 +28,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     protected @Nullable RecipeHolder<R> lastRecipe;
 
     @Getter
-    protected int recipeUsedEnergy;
+    protected int progressEnergy;
 
     @Getter
     protected float extraCraftingSpeed = 0;
@@ -47,13 +47,13 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     }
 
     public void tickRecipe(ServerLevel level, BlockPos pos, BlockState state) {
-        boolean wasProcessing = this.recipeUsedEnergy > 0;
+        boolean wasProcessing = this.progressEnergy > 0;
         boolean madeProgress = false;
 
         var input = this.createRecipeInput();
         if (input.isEmpty()) {
-            if (this.recipeUsedEnergy > 0) {
-                this.recipeUsedEnergy = 0;
+            if (this.progressEnergy > 0) {
+                this.progressEnergy = 0;
                 this.setChanged();
             }
         } else {
@@ -61,33 +61,35 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
             int recipeTotalEnergy = this.getRecipeTotalEnergy(recipeHolder);
             if (this.hasEnoughEnergyToProgress() && this.canCraft(level.registryAccess(), recipeHolder, input)) {
-                int usable = Math.min(Math.min(recipeTotalEnergy - this.recipeUsedEnergy, this.getEnergyUseRate()), this.storedEnergy);
+                int usable = Math.min(Math.min(recipeTotalEnergy - this.progressEnergy, this.getEnergyUseRate()), this.storedEnergy);
 
                 this.storedEnergy -= usable;
-                this.recipeUsedEnergy += usable;
+                this.progressEnergy += usable;
                 madeProgress = true;
 
-                if (this.recipeUsedEnergy >= recipeTotalEnergy) {
+                if (this.progressEnergy >= recipeTotalEnergy) {
                     this.craft(level.registryAccess(), recipeHolder, input);
                     this.resetRecipeProgress();
                 }
 
                 this.setChanged();
-            } else {
-                this.recipeUsedEnergy = Mth.clamp(this.recipeUsedEnergy - 2 * this.getEnergyUseRate(), 0, recipeTotalEnergy);
+            } else if (this.progressEnergy > 0) {
+                this.progressEnergy = Mth.clamp(this.progressEnergy - 2 * this.getEnergyUseRate(), 0, recipeTotalEnergy);
                 this.setChanged();
             }
         }
 
-        boolean isProcessing = this.recipeUsedEnergy > 0;
+        boolean isProcessing = this.progressEnergy > 0;
         if (wasProcessing != isProcessing) {
             level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, isProcessing));
         }
 
         if (madeProgress && this.hasInductionUpgrade && this.inductionHeat < MAX_INDUCTION_HEAT) {
             this.inductionHeat += 1;
+            this.setChanged();
         } else if (!madeProgress && this.hasInductionUpgrade && this.inductionHeat > 0) {
             this.inductionHeat = Math.max(0, this.inductionHeat - 4);
+            this.setChanged();
         }
     }
 
@@ -144,10 +146,26 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     }
 
     @Override
+    protected void inventoryChanged(int slot) {
+        super.inventoryChanged(slot);
+        if (this.level instanceof ServerLevel) {
+            if (this.isInputSlot(slot)) {
+                if (this.lastRecipe != null && !this.lastRecipe.value().matches(this.createRecipeInput(), this.level)) {
+                    this.resetRecipeProgress();
+                }
+                return;
+            } else if (slot >= this.getFirstUpgradeSlot() && slot <= this.getLastUpgradeSlot()) {
+                this.updateUpgradeState();
+                return;
+            }
+        }
+    }
+
+    @Override
     @MustBeInvokedByOverriders
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("recipe_used_energy", this.recipeUsedEnergy);
+        output.putInt("recipe_used_energy", this.progressEnergy);
         if (this.hasInductionUpgrade) {
             output.putInt("induction_heat", this.inductionHeat);
         }
@@ -157,33 +175,11 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     @MustBeInvokedByOverriders
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.recipeUsedEnergy = input.getIntOr("recipe_used_energy", 0);
+        this.progressEnergy = input.getIntOr("recipe_used_energy", 0);
+        this.updateUpgradeState();
         if (this.hasInductionUpgrade) {
             this.inductionHeat = input.getIntOr("induction_heat", 0);
         }
-        this.updateUpgradeState();
-    }
-
-    @Override
-    public void setItem(int slot, ItemStack stack) {
-        if (this.level instanceof ServerLevel) {
-            if (this.isInputSlot(slot)) {
-                var oldStack = this.stacks.get(slot);
-
-                super.setItem(slot, stack);
-
-                if (!ItemStack.isSameItemSameComponents(stack, oldStack)) {
-                    this.resetRecipeProgress();
-                }
-                return;
-            } else if (slot >= this.getFirstUpgradeSlot() && slot <= this.getLastUpgradeSlot()) {
-                super.setItem(slot, stack);
-
-                this.updateUpgradeState();
-                return;
-            }
-        }
-        super.setItem(slot, stack);
     }
 
     public @Nullable RecipeHolder<R> findMatchingRecipe(ServerLevel level, I input) {
@@ -241,14 +237,8 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     }
 
     protected void resetRecipeProgress() {
-        if (this.level instanceof ServerLevel serverLevel) {
-            var recipeHolder = this.findMatchingRecipe(serverLevel, this.createRecipeInput());
-            if (recipeHolder != null) {
-                this.recipeUsedEnergy = 0;
-            } else {
-                this.recipeUsedEnergy = 0;
-            }
-        }
+        this.progressEnergy = 0;
+        this.lastRecipe = null;
     }
 
     protected static boolean canInsertToSlot(NonNullList<ItemStack> stacks, ItemStack stack, int slot) {

@@ -2,7 +2,7 @@ package io.github.reoseah.hayo.feature.generator;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
-import io.github.reoseah.hayo.base.block.entity.HayoContainerBlockEntity;
+import io.github.reoseah.hayo.base.block.entity.SimpleContainerBlockEntity;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
-public class GeneratorBlockEntity extends HayoContainerBlockEntity implements WorldlyContainer {
+public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer {
     public static final int FUEL_CONSUMPTION_RATE = 2;
     public static final int ENERGY_PER_FUEL_TICK = 5;
     public static final int GENERATION_RATE = FUEL_CONSUMPTION_RATE * ENERGY_PER_FUEL_TICK;

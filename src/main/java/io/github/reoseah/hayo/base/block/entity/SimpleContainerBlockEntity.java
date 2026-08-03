@@ -21,16 +21,21 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class HayoContainerBlockEntity extends BlockEntity implements Container, Nameable, MenuProvider {
+public abstract class SimpleContainerBlockEntity extends BlockEntity implements Container, Nameable, MenuProvider {
     protected final NonNullList<ItemStack> stacks;
     protected @Nullable Component customName;
 
-    public HayoContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+    public SimpleContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
         this.stacks = this.createInventory();
     }
 
     protected abstract NonNullList<ItemStack> createInventory();
+
+    @MustBeInvokedByOverriders
+    protected void inventoryChanged(int slot) {
+        this.setChanged();
+    }
 
     @Override
     @MustBeInvokedByOverriders
@@ -72,19 +77,21 @@ public abstract class HayoContainerBlockEntity extends BlockEntity implements Co
     @Override
     public ItemStack removeItem(int slot, int amount) {
         var stack = ContainerHelper.removeItem(this.stacks, slot, amount);
-        this.setChanged();
+        this.inventoryChanged(slot);
         return stack;
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
-        return ContainerHelper.takeItem(this.stacks, slot);
+        var stack = ContainerHelper.takeItem(this.stacks, slot);
+        this.inventoryChanged(slot);
+        return stack;
     }
 
     @Override
     public void setItem(int slot, ItemStack stack) {
         this.stacks.set(slot, stack);
-        this.setChanged();
+        this.inventoryChanged(slot);
     }
 
     @Override

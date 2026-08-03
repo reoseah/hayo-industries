@@ -25,7 +25,6 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
         super(type, pos, state);
     }
 
-
     @Override
     public int getSlotCount() {
         return SLOTS;
