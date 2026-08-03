@@ -3,7 +3,6 @@ package io.github.reoseah.hayo.feature.machines.matter_generator;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.machines.MachineBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -13,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -33,7 +31,7 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, MatterGeneratorBlockEntity entity) {
         entity.chargeFromSlot(BATTERY_SLOT);
-        tickProcessing((ServerLevel) level, pos, state, entity);
+        entity.tickRecipe((ServerLevel) level, pos, state);
         entity.resetEnergyPerTick();
     }
 
@@ -54,7 +52,7 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
 
     @Override
     protected int getDefaultEnergyCost(RecipeHolder<MatterGeneratingRecipe> holder) {
-        return holder.value().energyCost();
+        return holder == null ? 1_000_000 : holder.value().energyCost();
     }
 
     @Override
@@ -78,17 +76,12 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
     }
 
     @Override
-    protected int getMinEnergyUseRate() {
-        return 0;
-    }
-
-    @Override
     protected int getEnergyTransferLimit() {
         return TRANSFER_LIMIT;
     }
 
     @Override
-    protected EmptyRecipeInput getRecipeInput(NonNullList<ItemStack> items) {
+    protected EmptyRecipeInput createRecipeInput() {
         return EmptyRecipeInput.INSTANCE;
     }
 
@@ -117,16 +110,16 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
     }
 
     @Override
-    protected boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<MatterGeneratingRecipe> recipe, EmptyRecipeInput recipeInput, NonNullList<ItemStack> items) {
-        return recipe != null && canInsertToSlot(items, recipe.value().result().create(), OUTPUT_SLOT);
+    protected boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<MatterGeneratingRecipe> recipe, EmptyRecipeInput recipeInput) {
+        return recipe != null && canInsertToSlot(this.stacks, recipe.value().result().create(), OUTPUT_SLOT);
     }
 
     @Override
-    protected void craft(RegistryAccess registryAccess, RecipeHolder<MatterGeneratingRecipe> recipe, EmptyRecipeInput input, NonNullList<ItemStack> items) {
+    protected void craft(RegistryAccess registryAccess, RecipeHolder<MatterGeneratingRecipe> recipe, EmptyRecipeInput input) {
         var recipeOutput = recipe.value().assemble(input);
-        var outputStack = items.get(OUTPUT_SLOT);
+        var outputStack = this.stacks.get(OUTPUT_SLOT);
         if (outputStack.isEmpty()) {
-            items.set(OUTPUT_SLOT, recipeOutput);
+            this.stacks.set(OUTPUT_SLOT, recipeOutput);
         } else {
             outputStack.grow(recipeOutput.getCount());
         }

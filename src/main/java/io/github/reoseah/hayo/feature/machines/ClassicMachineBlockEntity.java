@@ -3,7 +3,6 @@ package io.github.reoseah.hayo.feature.machines;
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +25,7 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
         super(type, pos, state);
     }
 
+
     @Override
     public int getSlotCount() {
         return SLOTS;
@@ -47,12 +47,12 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     }
 
     @Override
-    public SingleRecipeInput getRecipeInput(NonNullList<ItemStack> items) {
-        return new SingleRecipeInput(items.get(INPUT_SLOT));
+    public SingleRecipeInput createRecipeInput() {
+        return new SingleRecipeInput(this.stacks.get(INPUT_SLOT));
     }
 
     @Override
-    public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
+    public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, SingleRecipeInput input) {
         if (recipe == null || input.isEmpty()) {
             return false;
         }
@@ -65,12 +65,12 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
         if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             recipeOutput.setCount(recipeOutput.getCount() + 1);
         }
-        return canInsertToSlot(items, recipeOutput, OUTPUT_SLOT);
+        return canInsertToSlot(this.stacks, recipeOutput, OUTPUT_SLOT);
     }
 
     @Override
-    public void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, SingleRecipeInput input, NonNullList<ItemStack> items) {
-        var inputStack = items.get(INPUT_SLOT);
+    public void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, SingleRecipeInput input) {
+        var inputStack = this.stacks.get(INPUT_SLOT);
         if (recipe.value() instanceof ClassicMachineRecipe machineRecipe) {
             inputStack.shrink(machineRecipe.inputCount);
         } else {
@@ -83,9 +83,9 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
             }
         }
 
-        var outputStack = items.get(OUTPUT_SLOT);
+        var outputStack = this.stacks.get(OUTPUT_SLOT);
         if (outputStack.isEmpty()) {
-            items.set(OUTPUT_SLOT, recipeOutput);
+            this.stacks.set(OUTPUT_SLOT, recipeOutput);
         } else {
             outputStack.grow(recipeOutput.getCount());
         }
@@ -114,4 +114,5 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction side) {
         return side != Direction.UP;
     }
+
 }

@@ -21,12 +21,6 @@
     "client": [
       "io.github.reoseah.hayo.Hayo::initializeClient"
     ],
-    "rei_common": [
-      "io.github.reoseah.hayo.mod_support.roughlyenoughitems.HayoReiCommon"
-    ],
-    "rei_client": [
-      "io.github.reoseah.hayo.mod_support.roughlyenoughitems.HayoReiClient"
-    ],
     "jei_mod_plugin": [
       "io.github.reoseah.hayo.mod_support.jei.HayoJeiPlugin"
     ]

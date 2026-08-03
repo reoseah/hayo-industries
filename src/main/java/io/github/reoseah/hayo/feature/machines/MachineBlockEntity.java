@@ -1,13 +1,11 @@
 package io.github.reoseah.hayo.feature.machines;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.SimpleElectricBlockEntity;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -17,80 +15,87 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeInput> extends SimpleElectricBlockEntity {
-    @Getter
-    private int recipeUsedEnergy;
-    @Getter
-    private int recipeTotalEnergy;
-    private int capacityFromUpgrades = 0;
-    @Getter
-    private int overclockCount = 0;
+    public static final int MAX_INDUCTION_HEAT = 10_000;
 
-    @Nullable
-    private ResourceKey<Recipe<?>> lastRecipe;
+    @Getter
+    protected @Nullable RecipeHolder<R> lastRecipe;
+
+    @Getter
+    protected int recipeUsedEnergy;
+
+    @Getter
+    protected float extraCraftingSpeed = 0;
+    @Getter
+    protected float extraRecipeCost = 0;
+    @Getter
+    protected int extraCapacity = 0;
+
+    @Getter
+    protected boolean hasInductionUpgrade = false;
+    @Getter
+    protected int inductionHeat = 0;
 
     public MachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
-    public static <R extends Recipe<I>, I extends RecipeInput> boolean tickProcessing(ServerLevel level, BlockPos pos, BlockState state, MachineBlockEntity<R, I> entity) {
-        boolean wasProcessing = entity.recipeUsedEnergy > 0;
+    public void tickRecipe(ServerLevel level, BlockPos pos, BlockState state) {
+        boolean wasProcessing = this.recipeUsedEnergy > 0;
         boolean madeProgress = false;
 
-        var input = entity.getRecipeInput(entity.stacks);
+        var input = this.createRecipeInput();
         if (input.isEmpty()) {
-            if (entity.recipeUsedEnergy > 0) {
-                entity.recipeUsedEnergy = entity.recipeTotalEnergy = 0;
-                entity.setChanged();
+            if (this.recipeUsedEnergy > 0) {
+                this.recipeUsedEnergy = 0;
+                this.setChanged();
             }
         } else {
-            var recipeHolder = entity.findMatchingRecipe(level, input);
+            var recipeHolder = this.findMatchingRecipe(level, input);
 
-            int minEnergyUseRate = entity.getMinEnergyUseRate();
-            if (entity.storedEnergy >= minEnergyUseRate //
-                    && entity.canCraft(level.registryAccess(), recipeHolder, input, entity.stacks)) {
-                int usable = Math.min(Mth.clamp(entity.recipeTotalEnergy - entity.recipeUsedEnergy, minEnergyUseRate, entity.getEnergyUseRate()), entity.storedEnergy);
+            int recipeTotalEnergy = this.getRecipeTotalEnergy(recipeHolder);
+            if (this.hasEnoughEnergyToProgress() && this.canCraft(level.registryAccess(), recipeHolder, input)) {
+                int usable = Math.min(Math.min(recipeTotalEnergy - this.recipeUsedEnergy, this.getEnergyUseRate()), this.storedEnergy);
 
-                entity.storedEnergy -= usable;
-                entity.recipeUsedEnergy += usable;
+                this.storedEnergy -= usable;
+                this.recipeUsedEnergy += usable;
                 madeProgress = true;
 
-                if (entity.recipeUsedEnergy >= entity.recipeTotalEnergy) {
-                    entity.craft(level.registryAccess(), recipeHolder, input, entity.stacks);
-                    entity.resetRecipeProgress();
+                if (this.recipeUsedEnergy >= recipeTotalEnergy) {
+                    this.craft(level.registryAccess(), recipeHolder, input);
+                    this.resetRecipeProgress();
                 }
 
-                entity.setChanged();
+                this.setChanged();
             } else {
-                entity.recipeUsedEnergy = Mth.clamp(entity.recipeUsedEnergy - 2 * minEnergyUseRate, 0, entity.recipeTotalEnergy);
-                entity.setChanged();
+                this.recipeUsedEnergy = Mth.clamp(this.recipeUsedEnergy - 2 * this.getEnergyUseRate(), 0, recipeTotalEnergy);
+                this.setChanged();
             }
         }
 
-        boolean isProcessing = entity.recipeUsedEnergy > 0;
+        boolean isProcessing = this.recipeUsedEnergy > 0;
         if (wasProcessing != isProcessing) {
-            level.setBlockAndUpdate(pos, state.setValue(OrientableMachineBlock.LIT, isProcessing));
+            level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, isProcessing));
         }
 
-        return madeProgress;
+        if (madeProgress && this.hasInductionUpgrade && this.inductionHeat < MAX_INDUCTION_HEAT) {
+            this.inductionHeat += 1;
+        } else if (!madeProgress && this.hasInductionUpgrade && this.inductionHeat > 0) {
+            this.inductionHeat = Math.max(0, this.inductionHeat - 4);
+        }
     }
-
-    protected int getMinEnergyUseRate() {
-        return this.getEnergyUseRate();
-    }
-
-    protected abstract RecipeType<R> getRecipeType();
 
     protected abstract int getDefaultCapacity();
 
     protected abstract int getDefaultEnergyUseRate();
 
-    protected abstract int getDefaultEnergyCost(RecipeHolder<R> holder);
+    protected abstract int getDefaultEnergyCost(@Nullable RecipeHolder<R> holder);
 
     protected abstract int getSlotCount();
 
@@ -100,23 +105,37 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected abstract int getLastUpgradeSlot();
 
-    protected abstract I getRecipeInput(NonNullList<ItemStack> items);
+    protected abstract RecipeType<R> getRecipeType();
 
-    protected abstract boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, I recipeInput, NonNullList<ItemStack> items);
+    protected abstract I createRecipeInput();
 
-    protected abstract void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, I input, NonNullList<ItemStack> items);
+    protected abstract boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, I recipeInput);
+
+    protected abstract void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, I input);
 
     @Override
     public int getEnergyCapacity() {
-        return this.getDefaultCapacity() + this.capacityFromUpgrades;
+        return this.getDefaultCapacity() + this.extraCapacity;
+    }
+
+    protected boolean hasEnoughEnergyToProgress() {
+        return this.storedEnergy >= this.getEnergyUseRate();
     }
 
     public int getEnergyUseRate() {
-        return this.getDefaultEnergyUseRate() * (1 + this.overclockCount);
+        int useRate = (int) (this.getDefaultEnergyUseRate() * (1 + this.extraCraftingSpeed));
+        if (this.hasInductionUpgrade) {
+            return 1 + ((useRate - 1) * this.inductionHeat / MAX_INDUCTION_HEAT);
+        }
+        return useRate;
     }
 
     public int getRecipeTotalEnergy(RecipeHolder<R> holder) {
-        return this.getDefaultEnergyCost(holder) * (100 + 25 * this.overclockCount) / 100;
+        return (int) (this.getDefaultEnergyCost(holder) * (1 + this.extraRecipeCost));
+    }
+
+    public int getLastOrDefaultRecipeEnergy() {
+        return this.getRecipeTotalEnergy(this.lastRecipe);
     }
 
     @Override
@@ -129,7 +148,9 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putInt("recipe_used_energy", this.recipeUsedEnergy);
-        output.putInt("recipe_total_energy", this.recipeTotalEnergy);
+        if (this.hasInductionUpgrade) {
+            output.putInt("induction_heat", this.inductionHeat);
+        }
     }
 
     @Override
@@ -137,14 +158,15 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.recipeUsedEnergy = input.getIntOr("recipe_used_energy", 0);
-        this.recipeTotalEnergy = input.getIntOr("recipe_total_energy", 0);
-
+        if (this.hasInductionUpgrade) {
+            this.inductionHeat = input.getIntOr("induction_heat", 0);
+        }
         this.updateUpgradeState();
     }
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        if (this.level instanceof ServerLevel serverLevel) {
+        if (this.level instanceof ServerLevel) {
             if (this.isInputSlot(slot)) {
                 var oldStack = this.stacks.get(slot);
 
@@ -168,71 +190,76 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         var recipeManager = level.recipeAccess();
         var optional = recipeManager.getRecipeFor(this.getRecipeType(), input, level, this.lastRecipe);
         if (optional.isPresent()) {
-            this.lastRecipe = optional.get().id();
+            this.lastRecipe = optional.get();
         }
         return optional.orElse(null);
     }
 
     @MustBeInvokedByOverriders
     protected void updateUpgradeState() {
-        int capacityFromUpgrades = 0;
-        int overclockCount = 0;
+        float extraCraftingSpeed = 0;
+        float extraRecipeCost = 0;
+        int extraCapacity = 0;
+        boolean hasInductionUpgrade = false;
 
-        int first = this.getFirstUpgradeSlot();
-        int last = this.getLastUpgradeSlot();
-        for (int i = first; i <= last; i++) {
+        int firstSlot = this.getFirstUpgradeSlot();
+        int lastSlot = this.getLastUpgradeSlot();
+        for (int i = firstSlot; i <= lastSlot; i++) {
             var stack = this.stacks.get(i);
             if (stack.is(Hayo.Items.CAPACITOR_UPGRADE)) {
-                capacityFromUpgrades += 10000;
-            } else if (stack.is(Hayo.Items.OVERCLOCK_UPGRADE)) {
-                overclockCount += 1;
+                extraCapacity += 10000;
+            }
+            if (stack.is(Hayo.Items.OVERCLOCK_UPGRADE)) {
+                extraCraftingSpeed += 1;
+                extraRecipeCost += 0.25F;
             }
         }
 
-        this.capacityFromUpgrades = capacityFromUpgrades;
+        for (int i = firstSlot; i <= lastSlot; i++) {
+            var stack = this.stacks.get(i);
+            if (stack.is(Hayo.Items.STREAMLINE_OVERHAUL_UPGRADE)) {
+                hasInductionUpgrade = true;
+                extraCraftingSpeed += 3;
+                break;
+            }
+        }
+        this.extraCapacity = extraCapacity;
         if (this.storedEnergy > this.getEnergyCapacity()) {
             this.storedEnergy = this.getEnergyCapacity();
         }
-        if (overclockCount != this.overclockCount) {
-            this.overclockCount = overclockCount;
-            this.updateRecipeCost();
+
+        this.extraCraftingSpeed = extraCraftingSpeed;
+
+        if (extraRecipeCost != this.extraRecipeCost) {
+            this.extraRecipeCost = extraRecipeCost;
+            this.resetRecipeProgress();
+        }
+        if (hasInductionUpgrade != this.hasInductionUpgrade) {
+            this.hasInductionUpgrade = hasInductionUpgrade;
+            this.inductionHeat = 0;
         }
     }
 
     protected void resetRecipeProgress() {
         if (this.level instanceof ServerLevel serverLevel) {
-            var input = this.getRecipeInput(this.stacks);
-            var recipeHolder = this.findMatchingRecipe(serverLevel, input);
+            var recipeHolder = this.findMatchingRecipe(serverLevel, this.createRecipeInput());
             if (recipeHolder != null) {
-                this.recipeTotalEnergy = this.getRecipeTotalEnergy(recipeHolder);
                 this.recipeUsedEnergy = 0;
             } else {
-                this.recipeUsedEnergy = this.recipeTotalEnergy = 0;
+                this.recipeUsedEnergy = 0;
             }
         }
     }
 
-    protected void updateRecipeCost() {
-        if (this.level instanceof ServerLevel serverLevel) {
-            var input = this.getRecipeInput(this.stacks);
-            var recipeHolder = this.findMatchingRecipe(serverLevel, input);
-            if (recipeHolder != null) {
-                this.recipeTotalEnergy = this.getRecipeTotalEnergy(recipeHolder);
-            } else {
-                this.recipeTotalEnergy = 0;
-            }
-        }
-    }
-
-    protected static boolean canInsertToSlot(NonNullList<ItemStack> items, ItemStack recipeOutput, int slot) {
-        var outputStack = items.get(slot);
-        if (outputStack.isEmpty()) {
+    protected static boolean canInsertToSlot(NonNullList<ItemStack> stacks, ItemStack stack, int slot) {
+        var currentStack = stacks.get(slot);
+        if (currentStack.isEmpty()) {
             return true;
         }
-        if (!ItemStack.isSameItemSameComponents(outputStack, recipeOutput)) {
+        if (!ItemStack.isSameItemSameComponents(currentStack, stack)) {
             return false;
         }
 
-        return outputStack.getCount() + recipeOutput.getCount() <= recipeOutput.getMaxStackSize();
+        return currentStack.getCount() + stack.getCount() <= stack.getMaxStackSize();
     }
 }

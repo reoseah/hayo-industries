@@ -25,7 +25,7 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, CompressorBlockEntity entity) {
         entity.chargeFromSlot(BATTERY_SLOT);
-        tickProcessing((ServerLevel) level, pos, state, entity);
+        entity.tickRecipe((ServerLevel) level, pos, state);
         entity.resetEnergyPerTick();
     }
 
@@ -50,8 +50,8 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
     }
 
     @Override
-    public int getDefaultEnergyCost(RecipeHolder<CompressingRecipe> recipe) {
-        return recipe.value().energyCost;
+    public int getDefaultEnergyCost(RecipeHolder<CompressingRecipe> holder) {
+        return holder == null ? CompressingRecipe.DEFAULT_ENERGY : holder.value().energyCost;
     }
 
     @Override

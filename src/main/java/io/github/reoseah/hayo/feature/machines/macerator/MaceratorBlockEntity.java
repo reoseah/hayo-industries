@@ -25,7 +25,7 @@ public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRe
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, MaceratorBlockEntity entity) {
         entity.chargeFromSlot(BATTERY_SLOT);
-        tickProcessing((ServerLevel) level, pos, state, entity);
+        entity.tickRecipe((ServerLevel) level, pos, state);
         entity.resetEnergyPerTick();
     }
 
@@ -50,8 +50,8 @@ public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRe
     }
 
     @Override
-    public int getDefaultEnergyCost(RecipeHolder<MaceratingRecipe> recipe) {
-        return recipe.value().energyCost;
+    public int getDefaultEnergyCost(RecipeHolder<MaceratingRecipe> holder) {
+        return holder == null ? MaceratingRecipe.DEFAULT_ENERGY : holder.value().energyCost;
     }
 
     @Override

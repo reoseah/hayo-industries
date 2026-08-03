@@ -56,8 +56,8 @@ public abstract class MachineMenu extends AbstractContainerMenu {
                     case 3 -> entity.getEnergyCapacity() >>> 16;
                     case 4 -> entity.getRecipeUsedEnergy() & 0xFFFF;
                     case 5 -> entity.getRecipeUsedEnergy() >>> 16;
-                    case 6 -> entity.getRecipeTotalEnergy() & 0xFFFF;
-                    case 7 -> entity.getRecipeTotalEnergy() >>> 16;
+                    case 6 -> entity.getLastOrDefaultRecipeEnergy() & 0xFFFF;
+                    case 7 -> entity.getLastOrDefaultRecipeEnergy() >>> 16;
                     case 8 -> entity.getEnergyUseRate();
                     default -> 0;
                 };

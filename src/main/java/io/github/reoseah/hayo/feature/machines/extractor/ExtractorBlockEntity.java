@@ -25,7 +25,7 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ExtractingRe
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, ExtractorBlockEntity entity) {
         entity.chargeFromSlot(BATTERY_SLOT);
-        tickProcessing((ServerLevel) level, pos, state, entity);
+        entity.tickRecipe((ServerLevel) level, pos, state);
         entity.resetEnergyPerTick();
     }
 
@@ -50,8 +50,8 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ExtractingRe
     }
 
     @Override
-    public int getDefaultEnergyCost(RecipeHolder<ExtractingRecipe> recipe) {
-        return recipe.value().energyCost;
+    public int getDefaultEnergyCost(RecipeHolder<ExtractingRecipe> holder) {
+        return holder == null ? ExtractingRecipe.DEFAULT_ENERGY : holder.value().energyCost;
     }
 
     @Override

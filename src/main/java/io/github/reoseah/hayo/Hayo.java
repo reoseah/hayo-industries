@@ -62,6 +62,7 @@ import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
@@ -76,7 +77,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -733,6 +736,11 @@ public class Hayo {
             var type = new MenuType<>(constructor, FeatureFlags.VANILLA_SET);
 
             return Registry.register(BuiltInRegistries.MENU, key, type);
+        }
+
+        private static <T extends AbstractContainerMenu, D> ExtendedMenuType<T, D> register(String name, ExtendedMenuType.ExtendedFactory<T, D> constructor, StreamCodec<? super RegistryFriendlyByteBuf, D> codec) {
+            var type = new ExtendedMenuType<>(constructor, codec);
+            return Registry.register(BuiltInRegistries.MENU, modId(name), type);
         }
 
         public static void initializeClient() {

@@ -48,7 +48,7 @@ public class ElectricFurnaceMenu extends MachineMenu {
 
         var level = inventory.player.level();
         this.recipeInputs = Map.of( //
-                ElectricFurnaceMode.NORMAL, level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT), //
+                ElectricFurnaceMode.SMELTING, level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT), //
                 ElectricFurnaceMode.BLASTING, level.recipeAccess().propertySet(RecipePropertySet.BLAST_FURNACE_INPUT), //
                 ElectricFurnaceMode.SMOKING, level.recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT));
     }

@@ -4,7 +4,7 @@ import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 
 public enum ElectricFurnaceMode {
-    NORMAL(RecipeType.SMELTING), BLASTING(RecipeType.BLASTING), SMOKING(RecipeType.SMOKING);
+    SMELTING(RecipeType.SMELTING), BLASTING(RecipeType.BLASTING), SMOKING(RecipeType.SMOKING);
 
     public final RecipeType<? extends AbstractCookingRecipe> recipeType;
 
