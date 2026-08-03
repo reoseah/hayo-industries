@@ -1,8 +1,10 @@
 package io.github.reoseah.hayo.feature.electric_blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.reoseah.hayo.Hayo;
+import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -15,22 +17,52 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ElectricBlockManager extends SavedData {
+public class ElectricBlockManager {
     public static final Logger LOGGER = Logger.getLogger("HAYO/ElectricBlockManager");
 
     protected final ServerLevel level;
+    // TODO: maybe merge this and the persisted data (electric block positions)
+    //   can save manually in chunk load/unload events instead of Fabric attachments on chunks
     protected final Map<ChunkPos, ChunkTickValues> tickData = new HashMap<>();
-    protected final Map<BlockPos, SenderState> senders = new HashMap<>();
+    protected final Map<Pair<BlockPos, @Nullable Direction>, List<ReceiverPath>> pathCache = new HashMap<>();
 
     public ElectricBlockManager(ServerLevel level) {
         this.level = level;
+    }
+
+    public static int trySendToAllSides(int amount, ServerLevel level, BlockPos pos) {
+        return trySend(amount, level, pos, null);
+    }
+
+    public static int trySend(int amount, ServerLevel level, BlockPos pos, @Nullable Direction direction) {
+        try {
+            return ElectricBlockManager.get(level).sendEnergy(amount, pos, direction);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error while trying to send energy", e);
+            return 0;
+        }
+    }
+
+    public static void addOrUpdate(ServerLevel level, BlockPos pos) {
+        try {
+            ElectricBlockManager.get(level).addOrUpdate(pos);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error while adding or updating electric block", e);
+        }
+    }
+
+    public static void remove(ServerLevel level, BlockPos pos) {
+        try {
+            ElectricBlockManager.get(level).remove(pos);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error while removing electric block", e);
+        }
     }
 
     public static ElectricBlockManager get(ServerLevel level) {
@@ -38,15 +70,17 @@ public class ElectricBlockManager extends SavedData {
     }
 
     public int sendEnergy(int amount, BlockPos pos, @Nullable Direction sendingFace) {
-        var senderState = this.senders.get(pos);
-        if (senderState == null || senderState.sendingFace != sendingFace) {
-            this.senders.put(pos, senderState = new SenderState(discoverReceivers(this.level, pos, sendingFace), sendingFace));
+        var key = Pair.of(pos, sendingFace);
+
+        var paths = this.pathCache.get(key);
+        if (paths == null) {
+            this.pathCache.put(key, paths = discoverReceivers(this.level, pos, sendingFace));
         }
 
         int totalReceivable = 0;
         var receivables = new Object2IntArrayMap<ReceiverPath>();
 
-        for (var iterator = senderState.receivers.iterator(); iterator.hasNext(); ) {
+        for (var iterator = paths.iterator(); iterator.hasNext(); ) {
             var path = iterator.next();
             var state = this.level.getBlockState(path.receiver);
 
@@ -66,7 +100,7 @@ public class ElectricBlockManager extends SavedData {
 
         int totalSent = 0;
         if (amount >= totalReceivable) {
-            for (var path : senderState.receivers) {
+            for (var path : paths) {
                 var state = this.level.getBlockState(path.receiver);
 
                 if (state.getBlock() instanceof ElectricReceiverBlock receiver) {
@@ -80,9 +114,10 @@ public class ElectricBlockManager extends SavedData {
                 }
             }
         } else {
+            // TODO: copy logic from EnergyComponents#spreadEnergy ensuring all offered energy gets used up
             var offer = Mth.ceil(amount / (float) receivables.size());
 
-            for (var path : senderState.receivers) {
+            for (var path : paths) {
                 var state = this.level.getBlockState(path.receiver);
 
                 if (state.getBlock() instanceof ElectricReceiverBlock receiver) {
@@ -107,7 +142,7 @@ public class ElectricBlockManager extends SavedData {
     }
 
     public void addOrUpdate(BlockPos pos) {
-        deleteReachableSenders(this.level, pos, this.senders);
+        deleteReachableSenders(this.level, pos, this.pathCache);
 
         var chunkData = this.level.getChunk(pos).getAttachedOrCreate(Hayo.CHUNK_ELECTRIC_DATA);
         var state = this.level.getBlockState(pos);
@@ -125,7 +160,7 @@ public class ElectricBlockManager extends SavedData {
     }
 
     public void remove(BlockPos pos) {
-        deleteReachableSenders(this.level, pos, this.senders);
+        deleteReachableSenders(this.level, pos, this.pathCache);
 
         var chunkData = this.level.getChunk(pos).getAttached(Hayo.CHUNK_ELECTRIC_DATA);
         if (chunkData != null) {
@@ -235,7 +270,6 @@ public class ElectricBlockManager extends SavedData {
     }
 
     public void onChunkUnload(LevelChunk chunk) {
-        // wrapping in try-catch because if something errors the chunk won't be saved
         try {
             this.tickData.remove(chunk.getPos());
 
@@ -246,15 +280,19 @@ public class ElectricBlockManager extends SavedData {
 
             for (var pos : data.electricBlocks) {
                 // TODO: probably more efficient to make one BFS search,
-                //    with `query.addAll(data.electricBlocks)` instead of BFS for every pos
-                this.remove(pos);
+                //    i.e. `query.addAll(data.ElectricBlockManager)` at the start instead of doing BFS for every pos
+                deleteReachableSenders(this.level, pos, this.pathCache);
+
+                var chunkValues = this.tickData.get(ChunkPos.containing(pos));
+                if (chunkValues != null) {
+                    chunkValues.cableCurrent.removeInt(pos);
+                    chunkValues.ticksAboveMaxCurrent.removeInt(pos);
+                }
             }
         } catch (Exception e) {
+            // wrapping in try-catch, otherwise whole chunk won't get saved if something errors
             LOGGER.log(Level.SEVERE, "Error while updating internal state for unloaded chunk", e);
         }
-    }
-
-    public record SenderState(List<ReceiverPath> receivers, @Nullable Direction sendingFace) {
     }
 
     public record ReceiverPath(BlockPos receiver, Direction receivingFace, List<BlockPos> cables) {
@@ -268,7 +306,7 @@ public class ElectricBlockManager extends SavedData {
         visited.put(start, new PosData(0, null, level.getBlockState(start)));
 
         if (sendingFace != null) {
-            // TODO refactor this
+            // TODO refactor this?
             queue.removeFirst();
             var pos = start.relative(sendingFace);
             visitReceiverOrCableAt(level, queue, visited, pos, sendingFace, 1);
@@ -340,7 +378,7 @@ public class ElectricBlockManager extends SavedData {
     private record PosData(int distance, Direction direction, BlockState state) {
     }
 
-    public static void deleteReachableSenders(ServerLevel level, BlockPos start, Map<BlockPos, ?> data) {
+    public static void deleteReachableSenders(ServerLevel level, BlockPos start, Map<Pair<BlockPos, @Nullable Direction>, ?> data) {
         var queue = new ArrayDeque<BlockPos>();
         queue.add(start);
 
@@ -368,7 +406,9 @@ public class ElectricBlockManager extends SavedData {
 
                 visited.add(pos);
                 if (state.getBlock() instanceof ElectricSenderBlock) {
-                    data.remove(pos);
+                    for (var side : Direction.values()) {
+                        data.remove(Pair.of(pos, side));
+                    }
                 }
                 if (state.getBlock() instanceof ElectricCableBlock) {
                     queue.add(pos);
@@ -377,27 +417,40 @@ public class ElectricBlockManager extends SavedData {
         }
     }
 
+    // TODO: doesn't need relatively large BlockPos instances, a position inside a chunk can be represented with a single int
     public static class ChunkData {
         public static final MapCodec<ChunkData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance //
-                .group(BlockPos.CODEC.listOf().fieldOf("electric_blocks").forGetter(data -> data.electricBlocks)) //
+                .group(BlockPos.CODEC.listOf().fieldOf("electric_blocks").forGetter(data -> ImmutableList.copyOf(data.electricBlocks))) //
                 .apply(instance, ChunkData::new));
 
-        // doesn't need to be full BlockPos instance, knowing a chunk position it should be possible to
-        // represent any position within as a `short` or at least an `int` with bit fiddling...
-        protected final ArrayList<BlockPos> electricBlocks;
+        protected final Set<BlockPos> electricBlocks;
 
         public ChunkData() {
-            this.electricBlocks = new ArrayList<>();
+            this.electricBlocks = new HashSet<>();
         }
 
         public ChunkData(List<BlockPos> electricBlocks) {
-            this.electricBlocks = new ArrayList<>(electricBlocks);
+            this.electricBlocks = new HashSet<>(electricBlocks);
         }
     }
 
     public static class ChunkTickValues {
+        // TODO 2: even better might be to do ECS-like sparse set, since these are mostly iterated in sequence:
+        //   ```java
+        //     /// An index that was freed last, or -1
+        //     int lastFreeIdx = -1;
+        //     /// For "live" ids, contains corresponding dense idx that stores data,
+        //     /// "freed" id point to another freed id, forming a kind of linked list
+        //     int[] denseIndicesOrNextFreeIdx = new int[...];
+        //     int[] ticksAboveMaxCurrentByDenseIdx = new int[...]
+        //     /// positions inside chunk, i.e. 4 bits for X and Z and rest for Y
+        //     int[] packedBlockPosesByDenseIdx = new int[...]
+        //   ```
         public final Object2IntMap<BlockPos> cableCurrent = new Object2IntOpenHashMap<>();
         public final Object2IntMap<BlockPos> ticksAboveMaxCurrent = new Object2IntOpenHashMap<>();
+        // TODO: this can be removed and code using it rewritten
+        //  currently it serves to only send break-cable-progress packets when the "visible" state changes
+        //  but it should be derivable from ticksAboveMaxCurrent values in one step
         public Object2IntOpenHashMap<BlockPos> lastDestructionProgressMap = new Object2IntOpenHashMap<>();
     }
 }

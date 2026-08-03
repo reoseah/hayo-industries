@@ -1,8 +1,8 @@
 package io.github.reoseah.hayo.feature.energy_storages;
 
 import io.github.reoseah.hayo.base.block.DirectionalMachineBlock;
+import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.electric_blocks.SimpleElectricBlockEntity;
-import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlocks;
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -47,7 +47,7 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
 
         if (entity.storedEnergy > 0) {
             int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - entity.outputPerTick);
-            int transfer = ElectricBlocks.trySend(limit, (ServerLevel) level, pos, state.getValue(DirectionalMachineBlock.FACING));
+            int transfer = ElectricBlockManager.trySend(limit, (ServerLevel) level, pos, state.getValue(DirectionalMachineBlock.FACING));
             if (transfer > 0) {
                 entity.storedEnergy -= transfer;
                 entity.outputPerTick += transfer;

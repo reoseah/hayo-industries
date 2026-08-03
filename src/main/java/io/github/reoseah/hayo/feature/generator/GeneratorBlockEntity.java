@@ -3,7 +3,7 @@ package io.github.reoseah.hayo.feature.generator;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
 import io.github.reoseah.hayo.base.block.entity.SimpleContainerBlockEntity;
-import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlocks;
+import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,7 +60,7 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
 
         if (entity.storedEnergy > 0) {
             int sendable = Math.min(entity.storedEnergy, TRANSFER_LIMIT);
-            int sent = ElectricBlocks.trySendToAllSides(sendable, (ServerLevel) level, pos);
+            int sent = ElectricBlockManager.trySendToAllSides(sendable, (ServerLevel) level, pos);
             if (sent > 0) {
                 entity.storedEnergy -= sent;
                 entity.setChanged();
