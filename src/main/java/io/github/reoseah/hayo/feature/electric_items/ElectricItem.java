@@ -1,5 +1,7 @@
 package io.github.reoseah.hayo.feature.electric_items;
 
+import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,8 +21,14 @@ public class ElectricItem extends Item {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
-        EnergyComponents.defaultTooltip(stack, tooltipAdder);
+    public void appendHoverText(
+            ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
+        builder.accept(EnergyTexts.amountAndCapacity(EnergyComponents.getEnergy(stack), EnergyComponents.getCapacity(stack)).withStyle(ChatFormatting.GRAY));
+
+        var energyTool = stack.get(EnergyComponents.ENERGY_TOOL);
+        if (energyTool != null) {
+            builder.accept(Component.translatable("hayo.energy.amount_per_use", energyTool.destroyEnergy()).withStyle(ChatFormatting.GRAY));
+        }
     }
 
     @Override

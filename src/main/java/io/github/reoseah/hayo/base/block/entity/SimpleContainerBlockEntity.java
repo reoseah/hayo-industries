@@ -25,12 +25,10 @@ public abstract class SimpleContainerBlockEntity extends BlockEntity implements 
     protected final NonNullList<ItemStack> stacks;
     protected @Nullable Component customName;
 
-    public SimpleContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
-        super(type, pos, blockState);
-        this.stacks = this.createInventory();
+    public SimpleContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, NonNullList<ItemStack> initialStacks) {
+        super(type, pos, state);
+        this.stacks = initialStacks;
     }
-
-    protected abstract NonNullList<ItemStack> createInventory();
 
     @MustBeInvokedByOverriders
     protected void inventoryChanged(int slot) {

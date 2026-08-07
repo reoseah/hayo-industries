@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/shielded_energy_bus"
+    "model": "hayo:item/energy_bus"
   }
 }

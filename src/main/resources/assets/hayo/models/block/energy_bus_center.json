@@ -2,15 +2,15 @@
   "parent": "block/block",
   "textures": {
     "particle": "#texture",
-    "texture": "hayo:block/shielded_energy_bus",
-    "end": "hayo:block/advanced_energy_storage_output"
+    "texture": "hayo:block/energy_bus"
   },
   "elements": [
     {
-      "from": [ 3, 0, 3 ],
-      "to": [ 13, 3, 13 ],
+      "from": [ 3, 3, 3 ],
+      "to": [ 13, 13, 13 ],
       "faces": {
-        "down": { "texture": "#end", "cullface": "down" },
+        "up": { "texture": "#texture" },
+        "down": { "texture": "#texture" },
         "north": { "texture": "#texture" },
         "south": { "texture": "#texture" },
         "east": { "texture": "#texture" },

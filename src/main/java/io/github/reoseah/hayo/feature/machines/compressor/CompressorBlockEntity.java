@@ -35,12 +35,12 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
     }
 
     @Override
-    public int getDefaultEnergyUseRate() {
+    public int getBaseEnergyUseRate() {
         return ENERGY_USE_RATE;
     }
 
     @Override
-    public int getDefaultCapacity() {
+    public int getBaseEnergyCapacity() {
         return CAPACITY;
     }
 
@@ -50,7 +50,7 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
     }
 
     @Override
-    public int getDefaultEnergyCost(RecipeHolder<CompressingRecipe> holder) {
+    public int getBaseEnergyCost(@Nullable RecipeHolder<CompressingRecipe> holder) {
         return holder == null ? CompressingRecipe.DEFAULT_ENERGY : holder.value().energyCost;
     }
 

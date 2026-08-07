@@ -88,7 +88,7 @@ public class ClassicMachineScreen extends AbstractContainerScreen<MachineMenu> {
         if ((stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE)) //
                 && this.menu.getType() != Hayo.MenuTypes.ELECTRIC_FURNACE) {
             tooltip.add(Component.empty());
-            tooltip.add(Component.translatable("hayo.cannot_install_in_this_machine").withStyle(ChatFormatting.RED));
+            tooltip.add(Component.translatable("hayo.machine.not_compatible_uprade").withStyle(ChatFormatting.RED));
             return tooltip;
         } else if (stack.is(Hayo.Items.BLASTING_UPGRADE) || stack.is(Hayo.Items.SMOKING_UPGRADE)) {
             boolean hoveringInstalledUpgrade = false;
@@ -108,7 +108,7 @@ public class ClassicMachineScreen extends AbstractContainerScreen<MachineMenu> {
 
             if (!hoveringInstalledUpgrade && similarUpgradeInstalled) {
                 tooltip.add(Component.empty());
-                tooltip.add(Component.translatable("hayo.conflicts_with_installed_upgrade").withStyle(ChatFormatting.RED));
+                tooltip.add(Component.translatable("hayo.machine.conflicts_with_installed_upgrade").withStyle(ChatFormatting.RED));
             }
         }
         return tooltip;

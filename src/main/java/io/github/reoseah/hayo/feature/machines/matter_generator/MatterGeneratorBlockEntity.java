@@ -3,6 +3,7 @@ package io.github.reoseah.hayo.feature.machines.matter_generator;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.machines.MachineBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -12,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -26,7 +28,7 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
     protected @Nullable Identifier selectedRecipeId;
 
     public MatterGeneratorBlockEntity(BlockPos pos, BlockState state) {
-        super(Hayo.BlockEntityTypes.MATTER_GENERATOR, pos, state);
+        super(Hayo.BlockEntityTypes.MATTER_GENERATOR, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, MatterGeneratorBlockEntity entity) {
@@ -41,23 +43,18 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
     }
 
     @Override
-    protected int getDefaultCapacity() {
+    protected int getBaseEnergyCapacity() {
         return CAPACITY;
     }
 
     @Override
-    protected int getDefaultEnergyUseRate() {
+    protected int getBaseEnergyUseRate() {
         return ENERGY_USE_RATE;
     }
 
     @Override
-    protected int getDefaultEnergyCost(RecipeHolder<MatterGeneratingRecipe> holder) {
+    protected int getBaseEnergyCost(RecipeHolder<MatterGeneratingRecipe> holder) {
         return holder == null ? 1_000_000 : holder.value().energyCost();
-    }
-
-    @Override
-    protected int getSlotCount() {
-        return SLOTS;
     }
 
     @Override
@@ -81,6 +78,11 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
     }
 
     @Override
+    protected boolean hasEnoughEnergyToProgress() {
+        return this.storedEnergy >= 1;
+    }
+
+    @Override
     protected EmptyRecipeInput createRecipeInput() {
         return EmptyRecipeInput.INSTANCE;
     }
@@ -99,11 +101,16 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
 
     @SuppressWarnings("unchecked")
     @Override
-    public @Nullable RecipeHolder<MatterGeneratingRecipe> findMatchingRecipe(ServerLevel level, EmptyRecipeInput input) {
+    public @Nullable RecipeHolder<MatterGeneratingRecipe> updateMatchingRecipe(ServerLevel level, EmptyRecipeInput input) {
         if (this.selectedRecipeId == null) {
             return null;
         }
-        return (RecipeHolder<MatterGeneratingRecipe>) level.recipeAccess() //
+        if (this.lastRecipe != null && this.lastRecipe.value().getType() == Hayo.RecipeTypes.MATTER_GENERATING) {
+            if (this.lastRecipe.value().matches(input, level)) {
+                return this.lastRecipe;
+            }
+        }
+        return this.lastRecipe = (RecipeHolder<MatterGeneratingRecipe>) level.recipeAccess() //
                 .byKey(ResourceKey.create(Registries.RECIPE, this.selectedRecipeId)) //
                 .filter(holder -> holder.value().getType() == Hayo.RecipeTypes.MATTER_GENERATING) //
                 .orElse(null);

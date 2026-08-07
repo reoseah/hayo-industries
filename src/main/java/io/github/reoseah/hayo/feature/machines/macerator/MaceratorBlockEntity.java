@@ -35,12 +35,12 @@ public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRe
     }
 
     @Override
-    public int getDefaultEnergyUseRate() {
+    public int getBaseEnergyUseRate() {
         return ENERGY_USE_RATE;
     }
 
     @Override
-    public int getDefaultCapacity() {
+    public int getBaseEnergyCapacity() {
         return CAPACITY;
     }
 
@@ -50,7 +50,7 @@ public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRe
     }
 
     @Override
-    public int getDefaultEnergyCost(RecipeHolder<MaceratingRecipe> holder) {
+    public int getBaseEnergyCost(RecipeHolder<MaceratingRecipe> holder) {
         return holder == null ? MaceratingRecipe.DEFAULT_ENERGY : holder.value().energyCost;
     }
 

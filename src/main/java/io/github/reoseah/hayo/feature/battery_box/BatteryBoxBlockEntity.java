@@ -38,7 +38,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
     protected boolean batteryCountChanged = false;
 
     public BatteryBoxBlockEntity(BlockPos pos, BlockState state) {
-        super(Hayo.BlockEntityTypes.BATTERY_BOX, pos, state);
+        super(Hayo.BlockEntityTypes.BATTERY_BOX, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, BatteryBoxBlockEntity entity) {
@@ -73,11 +73,6 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
         }
 
         entity.resetEnergyPerTick();
-    }
-
-    @Override
-    protected NonNullList<ItemStack> createInventory() {
-        return NonNullList.withSize(SLOTS, ItemStack.EMPTY);
     }
 
     @Override

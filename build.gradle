@@ -56,10 +56,6 @@ dependencies {
 
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    // FIXME REI not available for the snapshot yet
-    //  edit: adding just api, have to disable transitive dependencies because api still brings in a lot of not available things
-    //  edit 2: nope, still doesn't work because it's not remapped, get things like "Item in not assignable to class_123",
-    //          excluding `mod_compat/roughlyenoughitems` package for now
 //    api ("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") {
 //        transitive = false
 //    }
@@ -70,13 +66,13 @@ dependencies {
     implementation("mezz.jei:jei-${project.minecraft_version}-fabric:+")
 }
 
-sourceSets {
-    main {
-        java {
-            exclude 'io/github/reoseah/hayo/mod_support/roughlyenoughitems/**'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            exclude 'io/github/reoseah/hayo/mod_support/roughlyenoughitems/**'
+//        }
+//    }
+//}
 
 loom {
     accessWidenerPath = file("src/main/resources/hayo.classtweaker")
@@ -152,7 +148,6 @@ tasks.register("findUnusedTranslations") {
         List<String> unused = []
 
         translations.keySet().each { key ->
-
             if (ignorePrefixes.any { key.startsWith(it) }) {
                 return
             }
@@ -167,12 +162,62 @@ tasks.register("findUnusedTranslations") {
 
         unused.sort()
 
-        println ""
-        println "Potentially unused translation keys (${unused.size()}):"
-        println "-------------------------------------------"
+        println "\nPotentially unused translation keys (${unused.size()}):"
 
         unused.each {
             println it
+        }
+    }
+}
+
+tasks.register("checkBlockstateLootTables") {
+    group = "verification"
+    description = "Checks that every blockstate has a matching loot table and vice versa."
+
+    doLast {
+        def modid = "hayo"
+
+        def blockstatesDir = file("src/main/resources/assets/${modid}/blockstates")
+        def lootTablesDir = file("src/main/resources/data/${modid}/loot_table/blocks")
+
+        if (!blockstatesDir.exists()) {
+            throw new GradleException("Blockstates directory does not exist: $blockstatesDir")
+        }
+
+        if (!lootTablesDir.exists()) {
+            throw new GradleException("Loot tables directory does not exist: $lootTablesDir")
+        }
+
+        def blockstates = blockstatesDir.listFiles()
+                .findAll { it.isFile() && it.name.endsWith(".json") }
+                .collect { it.name[0..-6] } // remove ".json"
+                .toSet()
+
+        def lootTables = lootTablesDir.listFiles()
+                .findAll { it.isFile() && it.name.endsWith(".json") }
+                .collect { it.name[0..-6] }
+                .toSet()
+
+        def missingLootTables = blockstates - lootTables
+        def missingBlockstates = lootTables - blockstates
+
+        if (missingLootTables.empty && missingBlockstates.empty) {
+            println "\nBlockstates and loot tables match."
+            return
+        }
+
+        if (!missingLootTables.empty) {
+            println "\nMissing loot tables:"
+            missingLootTables.sort().each {
+                println "  $it"
+            }
+        }
+
+        if (!missingBlockstates.empty) {
+            println "\nMissing blockstates:"
+            missingBlockstates.sort().each {
+                println "  $it"
+            }
         }
     }
 }

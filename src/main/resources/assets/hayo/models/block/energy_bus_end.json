@@ -2,13 +2,13 @@
   "parent": "block/block",
   "textures": {
     "particle": "#side",
-    "side": "hayo:block/power_cable",
-    "end": "hayo:block/high_current_power_cable_end"
+    "side": "hayo:block/energy_bus",
+    "end": "hayo:block/advanced_energy_storage_output"
   },
   "elements": [
     {
-      "from": [ 5, 5, 5 ],
-      "to": [ 11, 11, 11 ],
+      "from": [ 3, 3, 3 ],
+      "to": [ 13, 13, 13 ],
       "faces": {
         "north": { "texture": "#side" },
         "south": { "texture": "#side" },

@@ -6,7 +6,7 @@
     "#X#"
   ],
   "key": {
-    "#": "minecraft:diamond",
+    "#": "#hayo:diamond_or_diamond_dusts",
     "X": "hayo:drill"
   },
   "result": {

@@ -42,8 +42,8 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     @Getter
     protected int inductionHeat = 0;
 
-    public MachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    protected MachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, NonNullList<ItemStack> stacks) {
+        super(type, pos, state, stacks);
     }
 
     public void tickRecipe(ServerLevel level, BlockPos pos, BlockState state) {
@@ -57,7 +57,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
                 this.setChanged();
             }
         } else {
-            var recipeHolder = this.findMatchingRecipe(level, input);
+            var recipeHolder = this.updateMatchingRecipe(level, input);
 
             int recipeTotalEnergy = this.getRecipeTotalEnergy(recipeHolder);
             if (this.hasEnoughEnergyToProgress() && this.canCraft(level.registryAccess(), recipeHolder, input)) {
@@ -93,13 +93,11 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         }
     }
 
-    protected abstract int getDefaultCapacity();
+    protected abstract int getBaseEnergyCapacity();
 
-    protected abstract int getDefaultEnergyUseRate();
+    protected abstract int getBaseEnergyUseRate();
 
-    protected abstract int getDefaultEnergyCost(@Nullable RecipeHolder<R> holder);
-
-    protected abstract int getSlotCount();
+    protected abstract int getBaseEnergyCost(@Nullable RecipeHolder<R> holder);
 
     protected abstract boolean isInputSlot(int slot);
 
@@ -117,7 +115,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     @Override
     public int getEnergyCapacity() {
-        return this.getDefaultCapacity() + this.extraCapacity;
+        return this.getBaseEnergyCapacity() + this.extraCapacity;
     }
 
     protected boolean hasEnoughEnergyToProgress() {
@@ -125,7 +123,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     }
 
     public int getEnergyUseRate() {
-        int useRate = (int) (this.getDefaultEnergyUseRate() * (1 + this.extraCraftingSpeed));
+        int useRate = (int) (this.getBaseEnergyUseRate() * (1 + this.extraCraftingSpeed));
         if (this.hasInductionUpgrade) {
             return 1 + ((useRate - 1) * this.inductionHeat / MAX_INDUCTION_HEAT);
         }
@@ -133,16 +131,11 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     }
 
     public int getRecipeTotalEnergy(RecipeHolder<R> holder) {
-        return (int) (this.getDefaultEnergyCost(holder) * (1 + this.extraRecipeCost));
+        return (int) (this.getBaseEnergyCost(holder) * (1 + this.extraRecipeCost));
     }
 
     public int getLastOrDefaultRecipeEnergy() {
         return this.getRecipeTotalEnergy(this.lastRecipe);
-    }
-
-    @Override
-    protected NonNullList<ItemStack> createInventory() {
-        return NonNullList.withSize(this.getSlotCount(), ItemStack.EMPTY);
     }
 
     @Override
@@ -182,11 +175,11 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         }
     }
 
-    public @Nullable RecipeHolder<R> findMatchingRecipe(ServerLevel level, I input) {
+    public @Nullable RecipeHolder<R> updateMatchingRecipe(ServerLevel level, I input) {
         var recipeManager = level.recipeAccess();
         var optional = recipeManager.getRecipeFor(this.getRecipeType(), input, level, this.lastRecipe);
-        if (optional.isPresent()) {
-            this.lastRecipe = optional.get();
+        if (optional.orElse(null) != this.lastRecipe) {
+            this.lastRecipe = optional.orElse(null);
         }
         return optional.orElse(null);
     }

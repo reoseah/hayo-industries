@@ -35,12 +35,12 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ExtractingRe
     }
 
     @Override
-    public int getDefaultEnergyUseRate() {
+    public int getBaseEnergyUseRate() {
         return ENERGY_USE_RATE;
     }
 
     @Override
-    public int getDefaultCapacity() {
+    public int getBaseEnergyCapacity() {
         return CAPACITY;
     }
 
@@ -50,7 +50,7 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ExtractingRe
     }
 
     @Override
-    public int getDefaultEnergyCost(RecipeHolder<ExtractingRecipe> holder) {
+    public int getBaseEnergyCost(RecipeHolder<ExtractingRecipe> holder) {
         return holder == null ? ExtractingRecipe.DEFAULT_ENERGY : holder.value().energyCost;
     }
 

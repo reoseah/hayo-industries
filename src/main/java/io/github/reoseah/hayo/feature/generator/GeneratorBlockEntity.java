@@ -38,7 +38,7 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
     protected int fuelEnergyTotal;
 
     public GeneratorBlockEntity(BlockPos pos, BlockState state) {
-        super(Hayo.BlockEntityTypes.GENERATOR, pos, state);
+        super(Hayo.BlockEntityTypes.GENERATOR, pos, state, NonNullList.withSize(1, ItemStack.EMPTY));
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, GeneratorBlockEntity entity) {
@@ -81,11 +81,6 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player player) {
         return new GeneratorMenu(menuId, this, playerInventory);
-    }
-
-    @Override
-    protected NonNullList<ItemStack> createInventory() {
-        return NonNullList.withSize(1, ItemStack.EMPTY);
     }
 
     @Override

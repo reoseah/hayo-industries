@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "hayo:item/shielded_energy_bus"
+    "layer0": "hayo:item/energy_bus"
   }
 }

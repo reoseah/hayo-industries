@@ -1,0 +1,207 @@
+{
+  "multipart": [
+    {
+      "when": { "down": false, "up": false, "north": false, "south": false, "west": false, "east": false },
+      "apply": { "model": "hayo:block/energy_bus" }
+    },
+
+    {
+      "when": { "down": true, "up": true, "north": false, "south": false, "west": false, "east": false },
+      "apply": { "model": "hayo:block/energy_bus_straight" }
+    },
+
+    {
+      "when": { "down": false, "up": false, "north": true, "south": true, "west": false, "east": false },
+      "apply": { "model": "hayo:block/energy_bus_straight", "x": 90 }
+    },
+    {
+      "when": { "down": false, "up": false, "north": false, "south": false, "west": true, "east": true },
+      "apply": { "model": "hayo:block/energy_bus_straight", "x": 90, "y": 90 }
+    },
+
+    {
+      "when": { "down": true, "up": false, "north": false, "south": false, "west": false, "east": false },
+      "apply": { "model": "hayo:block/energy_bus_end" }
+    },
+    {
+      "when": { "down": false, "up": true, "north": false, "south": false, "west": false, "east": false },
+      "apply": { "model": "hayo:block/energy_bus_end", "uvlock": true, "x": 180 }
+    },
+    {
+      "when": { "down": false, "up": false, "north": true, "south": false, "west": false, "east": false },
+      "apply": { "model": "hayo:block/energy_bus_end", "uvlock": true, "x": 90, "y": 180 }
+    },
+    {
+      "when": { "down": false, "up": false, "north": false, "south": true, "west": false, "east": false },
+      "apply": { "model": "hayo:block/energy_bus_end", "uvlock": true, "x": 90}
+    },
+    {
+      "when": { "down": false, "up": false, "north": false, "south": false, "west": true, "east": false },
+      "apply": { "model": "hayo:block/energy_bus_end", "uvlock": true, "x": 90, "y": 90}
+    },
+    {
+      "when": { "down": false, "up": false, "north": false, "south": false, "west": false, "east": true },
+      "apply": { "model": "hayo:block/energy_bus_end", "uvlock": true, "x": 90, "y": 270}
+    },
+
+
+    {
+      "when": {
+        "OR": [
+          {
+            "AND": [
+              { "down": true, "up": false },
+              { "OR": [ { "north": true }, { "south": true }, { "west": true }, { "east": true } ]}
+            ]
+          },
+          {
+            "AND": [
+              { "down": false, "up": true },
+              { "OR": [ { "north": true }, { "south": true }, { "west": true }, { "east": true } ]}
+            ]
+          },
+
+          {
+            "AND": [
+              { "north": true, "south": false },
+              { "OR": [ { "down": true }, { "up": true }, { "west": true }, { "east": true } ]}
+            ]
+          },
+          {
+            "AND": [
+              { "north": false, "south": true },
+              { "OR": [ { "down": true }, { "up": true }, { "west": true }, { "east": true } ]}
+            ]
+          },
+
+          {
+            "AND": [
+              { "west": true, "east": false },
+              { "OR": [ { "down": true }, { "up": true }, { "north": true }, { "south": true } ]}
+            ]
+          },
+          {
+            "AND": [
+              { "west": false, "east": true },
+              { "OR": [ { "down": true }, { "up": true }, { "north": true }, { "south": true } ]}
+            ]
+          },
+
+          { "down": true, "up": true, "north": true, "south": true, "west": false, "east": false },
+          { "down": true, "up": true, "north": true, "south": true, "west": false, "east": true },
+          { "down": true, "up": true, "north": true, "south": true, "west": true, "east": false },
+          { "down": true, "up": true, "north": false, "south": false, "west": true, "east": true },
+          { "down": true, "up": true, "north": false, "south": true, "west": true, "east": true },
+          { "down": true, "up": true, "north": true, "south": false, "west": true, "east": true },
+          { "down": false, "up": false, "north": true, "south": true, "west": true, "east": true },
+          { "down": false, "up": true, "north": true, "south": true, "west": true, "east": true },
+          { "down": true, "up": false, "north": true, "south": true, "west": true, "east": true }
+        ]
+      },
+      "apply": { "model": "hayo:block/energy_bus_center" }
+    },
+
+    {
+      "when": {
+        "AND": [
+          { "down": true },
+          {
+            "OR": [
+              { "up": false },
+              { "north": true },
+              { "south": true },
+              { "west": true },
+              { "east": true }
+            ]
+          }
+        ]
+      },
+      "apply": { "model": "hayo:block/energy_bus_connection" }
+    },
+    {
+      "when": {
+        "AND": [
+          { "up": true },
+          {
+            "OR": [
+              { "down": false },
+              { "north": true },
+              { "south": true },
+              { "west": true },
+              { "east": true }
+            ]
+          }
+        ]
+      },
+      "apply": { "model": "hayo:block/energy_bus_connection", "uvlock": true, "x": 180 }
+    },
+    {
+      "when": {
+        "AND": [
+          { "north": true },
+          {
+            "OR": [
+              { "down": true },
+              { "up": true },
+              { "south": false },
+              { "west": true },
+              { "east": true }
+            ]
+          }
+        ]
+      },
+      "apply": { "model": "hayo:block/energy_bus_connection", "uvlock": true, "x": 90, "y": 180 }
+    },
+    {
+      "when": {
+        "AND": [
+          { "south": true },
+          {
+            "OR": [
+              { "down": true },
+              { "up": true },
+              { "north": false },
+              { "west": true },
+              { "east": true }
+            ]
+          }
+        ]
+      },
+      "apply": { "model": "hayo:block/energy_bus_connection", "uvlock": true, "x": 90 }
+    },
+    {
+      "when": {
+        "AND": [
+          { "west": true },
+          {
+            "OR": [
+              { "down": true },
+              { "up": true },
+              { "north": true },
+              { "south": true },
+              { "east": false }
+            ]
+          }
+        ]
+      },
+      "apply": { "model": "hayo:block/energy_bus_connection", "uvlock": true, "x": 90, "y": 90 }
+    },
+    {
+      "when": {
+        "AND": [
+          { "east": true },
+          {
+            "OR": [
+              { "down": true },
+              { "up": true },
+              { "north": true },
+              { "south": true },
+              { "west": false }
+            ]
+          }
+        ]
+      },
+      "apply": { "model": "hayo:block/energy_bus_connection", "uvlock": true, "x": 90, "y": 270 }
+    }
+  ]
+}

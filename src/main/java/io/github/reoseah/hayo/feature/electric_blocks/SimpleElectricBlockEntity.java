@@ -4,6 +4,8 @@ import io.github.reoseah.hayo.base.block.entity.SimpleContainerBlockEntity;
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -18,8 +20,8 @@ public abstract class SimpleElectricBlockEntity extends SimpleContainerBlockEnti
     @Getter
     protected int inputPerTick;
 
-    public SimpleElectricBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public SimpleElectricBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, NonNullList<ItemStack> stacks) {
+        super(type, pos, state, stacks);
     }
 
     protected abstract int getEnergyCapacity();
@@ -54,11 +56,13 @@ public abstract class SimpleElectricBlockEntity extends SimpleContainerBlockEnti
 
     public int receiveEnergy(int amount) {
         int change = Math.min(amount, this.getReceivableEnergy());
-        if (change > 0) {
-            this.storedEnergy += change;
-            this.inputPerTick += change;
-            this.setChanged();
+        if (change <= 0) {
+            return 0;
         }
+        this.storedEnergy += change;
+        this.inputPerTick += change;
+        this.setChanged();
+
         return change;
     }
 

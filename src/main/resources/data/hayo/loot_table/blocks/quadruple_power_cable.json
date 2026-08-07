@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:shielded_energy_bus"
+          "name": "hayo:quadruple_power_cable"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/shielded_energy_bus"
+  "random_sequence": "hayo:blocks/quadruple_power_cable"
 }

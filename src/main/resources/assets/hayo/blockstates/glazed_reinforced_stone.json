@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "hayo:block/glazed_reinforced_stone"
+      },
+      {
+        "model": "hayo:block/glazed_reinforced_stone",
+        "y": 90
+      },
+      {
+        "model": "hayo:block/glazed_reinforced_stone",
+        "y": 180
+      },
+      {
+        "model": "hayo:block/glazed_reinforced_stone",
+        "y": 270
+      }
+    ]
+  }
+}

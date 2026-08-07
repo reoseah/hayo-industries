@@ -28,7 +28,7 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
     protected float averageOutputPerTick;
 
     public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+        super(type, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, EnergyStorageBlockEntity entity) {
@@ -56,11 +56,6 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
         }
 
         entity.resetEnergyPerTick();
-    }
-
-    @Override
-    protected NonNullList<ItemStack> createInventory() {
-        return NonNullList.withSize(SLOTS, ItemStack.EMPTY);
     }
 
     @Override

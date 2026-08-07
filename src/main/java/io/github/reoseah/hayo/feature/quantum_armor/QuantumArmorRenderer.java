@@ -38,35 +38,6 @@ public class QuantumArmorRenderer implements ArmorRenderer {
 
     @Override
     public void render(PoseStack poseStack, SubmitNodeCollector nodeCollector, ItemStack stack, HumanoidRenderState state, EquipmentSlot slot, int light, HumanoidModel<HumanoidRenderState> contextModel) {
-//        ArmorRenderer.submitTransformCopyingModel( //
-//                contextModel, //
-//                state, //
-//                this.armorModel, //
-//                state, //
-//                true, //
-//                nodeCollector, //
-//                poseStack, //
-//                contextModel.renderType(REGULAR_TEXTURE), //
-//                light, //
-//                OverlayTexture.NO_OVERLAY, //
-//                0xFFFFFFFF, //
-//                null, //
-//                0, //
-//                null);
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
         RenderType renderType = contextModel.renderType(REGULAR_TEXTURE);
         nodeCollector.submitModel(this.armorModel, state, poseStack, renderType, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF, null, 0, null);
 

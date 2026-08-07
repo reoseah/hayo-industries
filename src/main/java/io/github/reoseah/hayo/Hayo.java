@@ -110,6 +110,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
@@ -217,20 +218,21 @@ public class Hayo {
     }
 
     public static class Blocks {
-        private static final BlockBehaviour.Properties MACHINES = BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.METAL);
-        public static final Block GENERATOR = register("generator", GeneratorBlock::new, MACHINES);
-        public static final Block ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlock::new, MACHINES);
-        public static final Block MACERATOR = register("macerator", MaceratorBlock::new, MACHINES);
-        public static final Block COMPRESSOR = register("compressor", CompressorBlock::new, MACHINES);
-        public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, MACHINES);
-        public static final Block MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlock::new, MACHINES);
-        public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, MACHINES);
-        public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINES);
-        public static final Block ADVANCED_ENERGY_STORAGE = register("advanced_energy_storage", AdvancedEnergyStorageBlock::new, MACHINES);
+        private static final BlockBehaviour.Properties MACHINE_PROPS = BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.METAL);
+        private static final BlockBehaviour.Properties LIT_MACHINE_PROPS = BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.METAL).lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 14 : 0);
+        public static final Block GENERATOR = register("generator", GeneratorBlock::new, LIT_MACHINE_PROPS);
+        public static final Block ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlock::new, LIT_MACHINE_PROPS);
+        public static final Block MACERATOR = register("macerator", MaceratorBlock::new, LIT_MACHINE_PROPS);
+        public static final Block COMPRESSOR = register("compressor", CompressorBlock::new, LIT_MACHINE_PROPS);
+        public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, LIT_MACHINE_PROPS);
+        public static final Block MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlock::new, LIT_MACHINE_PROPS);
+        public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
+        public static final Block ENERGY_CRYSTAL_ARRAY = register("energy_crystal_array", EnergyCrystalArrayBlock::new, MACHINE_PROPS);
+        public static final Block ADVANCED_ENERGY_STORAGE = register("advanced_energy_storage", AdvancedEnergyStorageBlock::new, MACHINE_PROPS);
 
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final CableBlock HIGH_CURRENT_POWER_CABLE = register("high_current_power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final CableBlock SHIELDED_ENERGY_BUS = register("shielded_energy_bus", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
+        public static final CableBlock QUADRUPLE_POWER_CABLE = register("quadruple_power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final CableBlock ENERGY_BUS = register("energy_bus", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
 
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
         public static final Block RESIN_YIELDING_RUBBER_LOG = register("resin_yielding_rubber_log", ResinYieldingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
@@ -245,8 +247,8 @@ public class Hayo {
         public static final Block RUBBER_STAIRS = register("rubber_stairs", props -> new StairBlock(RUBBER_PLANKS.defaultBlockState(), props), RUBBER_PROPERTIES);
         public static final Block RUBBER_SLAB = register("rubber_slab", SlabBlock::new, RUBBER_PROPERTIES);
 
-        public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINES);
-        public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, MACHINES);
+        public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINE_PROPS);
+        public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, BlockBehaviour.Properties.of().strength(15F).sound(SoundType.METAL).mapColor(MapColor.METAL));
         public static final Block SILICON_BRONZE_BLOCK = register("silicon_bronze_block", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.COLOR_ORANGE));
         public static final Block COMPOSITE_PLATE_BLOCK = register("composite_plate_block", Block::new, BlockBehaviour.Properties.of().strength(5F, 30F).sound(SoundType.METAL).mapColor(MapColor.COLOR_GREEN));
         public static final Block RAW_SILICON_BLOCK = register("raw_silicon_block", Block::new, BlockBehaviour.Properties.of().strength(3F).mapColor(MapColor.COLOR_BLACK));
@@ -259,6 +261,7 @@ public class Hayo {
         public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.GLASS));
         public static final Block REINFORCED_STONE_STAIRS = register("reinforced_stone_stairs", props -> new StairBlock(REINFORCED_STONE.defaultBlockState(), props), REINFORCED_BLOCKS);
         public static final Block REINFORCED_STONE_SLAB = register("reinforced_stone_slab", SlabBlock::new, REINFORCED_BLOCKS);
+        public static final Block GLAZED_REINFORCED_STONE = register("glazed_reinforced_stone", Block::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
 
         public static void initialize() {
@@ -296,8 +299,8 @@ public class Hayo {
         public static final Item ADVANCED_ENERGY_STORAGE = registerBlock(Blocks.ADVANCED_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item CABLE = registerBlock(Blocks.POWER_CABLE, BlockItemWithTooltip::new);
-        public static final Item POWER_CABLE = registerBlock(Blocks.HIGH_CURRENT_POWER_CABLE, BlockItemWithTooltip::new);
-        public static final Item SHIELDED_ENERGY_BUS = registerBlock(Blocks.SHIELDED_ENERGY_BUS, BlockItemWithTooltip::new);
+        public static final Item POWER_CABLE = registerBlock(Blocks.QUADRUPLE_POWER_CABLE, BlockItemWithTooltip::new);
+        public static final Item ENERGY_BUS = registerBlock(Blocks.ENERGY_BUS, BlockItemWithTooltip::new);
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
         public static final Item RESIN_YIELDING_RUBBER_LOG = registerBlock(Blocks.RESIN_YIELDING_RUBBER_LOG);
@@ -323,6 +326,7 @@ public class Hayo {
         public static final Item REINFORCED_GLASS = registerBlock(Blocks.REINFORCED_GLASS);
         public static final Item REINFORCED_STONE_STAIRS = registerBlock(Blocks.REINFORCED_STONE_STAIRS);
         public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
+        public static final Item GLAZED_REINFORCED_STONE = registerBlock(Blocks.GLAZED_REINFORCED_STONE);
         public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
 
         private static final TagKey<Item> COPPER_INGOTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"));
@@ -506,10 +510,10 @@ public class Hayo {
                         props, //
                         Component.empty(), //
                         Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY), //
-                        Component.translatable("hayo.upgrades.gibbl_scaling").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.gibbl_capacity", 10000).withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.gibbl_when_active", "+1").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.gibbl_when_idle", "-4").withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.heat_scaling").withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.heat_capacity", 10000).withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.heat_when_active", "+1").withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.heat_when_idle", "-4").withStyle(ChatFormatting.DARK_AQUA), //
                         Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA) //
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
@@ -548,7 +552,7 @@ public class Hayo {
 
                 entries.accept(CABLE);
                 entries.accept(POWER_CABLE);
-                entries.accept(SHIELDED_ENERGY_BUS);
+                entries.accept(ENERGY_BUS);
 
                 entries.accept(RUBBER_LOG);
                 entries.accept(RESIN_YIELDING_RUBBER_LOG);
@@ -571,6 +575,7 @@ public class Hayo {
                 entries.accept(REINFORCED_STONE);
                 entries.accept(REINFORCED_STONE_STAIRS);
                 entries.accept(REINFORCED_STONE_SLAB);
+                entries.accept(GLAZED_REINFORCED_STONE);
                 entries.accept(REINFORCED_GLASS);
                 entries.accept(REINFORCED_DOOR);
 

@@ -1,7 +1,7 @@
 {
   "values": [
     "#hayo:machines",
-    "hayo:shielded_energy_bus",
+    "hayo:energy_bus",
     "hayo:composite_plate_block"
   ]
 }

@@ -2,7 +2,7 @@
   "parent": "block/block",
   "textures": {
     "particle": "#texture",
-    "texture": "hayo:block/high_current_power_cable_end"
+    "texture": "hayo:block/quadruple_power_cable_end"
   },
   "elements": [
     {

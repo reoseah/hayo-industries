@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:item/high_current_power_cable"
+    "model": "hayo:item/quadruple_power_cable"
   }
 }

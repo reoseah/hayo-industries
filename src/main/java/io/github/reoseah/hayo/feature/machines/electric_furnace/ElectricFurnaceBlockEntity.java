@@ -55,12 +55,12 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
     }
 
     @Override
-    public int getDefaultEnergyUseRate() {
+    public int getBaseEnergyUseRate() {
         return ENERGY_USE_RATE;
     }
 
     @Override
-    public int getDefaultCapacity() {
+    public int getBaseEnergyCapacity() {
         return CAPACITY;
     }
 
@@ -70,7 +70,7 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
     }
 
     @Override
-    public int getDefaultEnergyCost(RecipeHolder<AbstractCookingRecipe> holder) {
+    public int getBaseEnergyCost(RecipeHolder<AbstractCookingRecipe> holder) {
         return energyCostFromCookingTime(holder == null ? AbstractFurnaceBlockEntity.BURN_TIME_STANDARD : holder.value().cookingTime());
     }
 

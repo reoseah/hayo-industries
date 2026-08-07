@@ -3,6 +3,7 @@ package io.github.reoseah.hayo.feature.machines;
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
@@ -21,13 +22,8 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     public static final int FIRST_UPGRADE_SLOT = 3;
     public static final int LAST_UPGRADE_SLOT = 6;
 
-    public ClassicMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
-    }
-
-    @Override
-    public int getSlotCount() {
-        return SLOTS;
+    protected ClassicMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
     }
 
     @Override

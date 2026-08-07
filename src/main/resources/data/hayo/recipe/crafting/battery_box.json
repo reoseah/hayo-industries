@@ -3,11 +3,12 @@
   "category": "misc",
   "key": {
     "#": "#minecraft:wooden_tool_materials",
-    "C": "hayo:circuit"
+    "C": "hayo:circuit",
+    "P": "hayo:power_cable"
   },
   "pattern": [
     "#C#",
-    "   ",
+    "PPP",
     "###"
   ],
   "result": {

@@ -1,0 +1,21 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "#texture",
+    "texture": "hayo:block/energy_bus",
+    "end": "hayo:block/advanced_energy_storage_output"
+  },
+  "elements": [
+    {
+      "from": [ 3, 0, 3 ],
+      "to": [ 13, 3, 13 ],
+      "faces": {
+        "down": { "texture": "#end", "cullface": "down" },
+        "north": { "texture": "#texture" },
+        "south": { "texture": "#texture" },
+        "east": { "texture": "#texture" },
+        "west": { "texture": "#texture" }
+      }
+    }
+  ]
+}

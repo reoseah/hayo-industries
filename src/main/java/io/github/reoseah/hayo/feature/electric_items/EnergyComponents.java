@@ -2,14 +2,11 @@ package io.github.reoseah.hayo.feature.electric_items;
 
 import com.mojang.serialization.Codec;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -21,7 +18,6 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
-import java.util.function.Consumer;
 
 public enum EnergyComponents {
     ;
@@ -209,10 +205,6 @@ public enum EnergyComponents {
         return Mth.hsvToRgb(hue, saturation, 1.0F);
     }
 
-    public static void defaultTooltip(ItemStack stack, Consumer<Component> tooltipAdder) {
-        tooltipAdder.accept(EnergyTexts.amountAndCapacity(getEnergy(stack), getCapacity(stack)).withStyle(ChatFormatting.GRAY));
-    }
-
     public static int moveEnergy(ItemStack source, ItemStack target) {
         var sourceStorage = source.get(ENERGY_STORAGE);
         var targetStorage = target.get(ENERGY_STORAGE);
@@ -324,19 +316,19 @@ public enum EnergyComponents {
 
     private static void tickPlayerInventories(ServerLevel level) {
         for (var player : level.players()) {
-            var chestplate = player.getItemBySlot(EquipmentSlot.CHEST);
-            if (chestplate.has(EnergyComponents.CHARGES_INVENTORY)) {
-                var stats = chestplate.get(EnergyComponents.ENERGY_STORAGE);
+            var chest = player.getItemBySlot(EquipmentSlot.CHEST);
+            if (chest.has(EnergyComponents.CHARGES_INVENTORY)) {
+                var stats = chest.get(EnergyComponents.ENERGY_STORAGE);
                 if (stats == null) continue;
 
                 var limit = stats.transferLimit();
                 if (limit == 0) continue;
 
-                var energy = EnergyComponents.getEnergy(chestplate);
+                var energy = EnergyComponents.getEnergy(chest);
                 if (energy == 0) continue;
 
                 int moved = EnergyComponents.spreadEnergy(player, Math.min(energy, limit), EquipmentSlot.CHEST);
-                EnergyComponents.setEnergy(chestplate, energy - moved);
+                EnergyComponents.setEnergy(chest, energy - moved);
 
                 player.getInventory().setChanged();
                 if (player.isCreative()) {
