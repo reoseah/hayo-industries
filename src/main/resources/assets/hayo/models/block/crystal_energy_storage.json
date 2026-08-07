@@ -3,6 +3,6 @@
   "textures": {
     "bottom": "hayo:block/advanced_machine",
     "side": "hayo:block/advanced_machine",
-    "top": "hayo:block/energy_crystal_array_output"
+    "top": "hayo:block/crystal_energy_storage_output"
   }
 }

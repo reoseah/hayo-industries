@@ -2,7 +2,7 @@ package io.github.reoseah.hayo.feature.machines.macerator;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
+import io.github.reoseah.hayo.base.block.HorizontalDirectionalElectricalBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricReceiverBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,9 +13,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-public class MaceratorBlock extends OrientableMachineBlock implements ElectricReceiverBlock {
+public class MaceratorBlock extends HorizontalDirectionalElectricalBlock implements ElectricReceiverBlock {
     public static final MapCodec<MaceratorBlock> CODEC = simpleCodec(MaceratorBlock::new);
 
     public MaceratorBlock(Properties properties) {

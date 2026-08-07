@@ -12,7 +12,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class CompressorBlockEntity extends ClassicMachineBlockEntity<CompressingRecipe> {
     public static final int TRANSFER_LIMIT = 32;

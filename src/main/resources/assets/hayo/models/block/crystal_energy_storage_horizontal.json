@@ -8,10 +8,10 @@
     }
   },
   "textures": {
-    "particle": "hayo:block/energy_crystal_array_output",
+    "particle": "hayo:block/crystal_energy_storage_output",
     "down": "hayo:block/advanced_machine",
     "up": "hayo:block/advanced_machine",
-    "north": "hayo:block/energy_crystal_array_output",
+    "north": "hayo:block/crystal_energy_storage_output",
     "east": "hayo:block/advanced_machine",
     "south": "hayo:block/advanced_machine",
     "west": "hayo:block/advanced_machine"

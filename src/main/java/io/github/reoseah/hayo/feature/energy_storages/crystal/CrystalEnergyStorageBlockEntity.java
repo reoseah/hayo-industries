@@ -1,4 +1,4 @@
-package io.github.reoseah.hayo.feature.energy_storages.crystal_array;
+package io.github.reoseah.hayo.feature.energy_storages.crystal;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageBlockEntity;
@@ -9,24 +9,24 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-public class EnergyCrystalArrayBlockEntity extends EnergyStorageBlockEntity implements MenuProvider {
+public class CrystalEnergyStorageBlockEntity extends EnergyStorageBlockEntity implements MenuProvider<BlockPos> {
     public static final int CAPACITY = 400_000;
     public static final int TRANSFER_LIMIT = 128;
 
-    public EnergyCrystalArrayBlockEntity(BlockPos pos, BlockState state) {
-        super(Hayo.BlockEntityTypes.ENERGY_CRYSTAL_ARRAY, pos, state);
+    public CrystalEnergyStorageBlockEntity(BlockPos pos, BlockState state) {
+        super(Hayo.BlockEntityTypes.CRYSTAL_ENERGY_STORAGE, pos, state);
     }
 
     @Override
     public Component getDefaultName() {
-        return Component.translatable("block.hayo.energy_crystal_array");
+        return Component.translatable("block.hayo.crystal_energy_storage");
     }
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player player) {
-        return new EnergyCrystalArrayMenu(menuId, this, playerInventory);
+        return new CrystalEnergyStorageMenu(menuId, this, playerInventory);
     }
 
     @Override

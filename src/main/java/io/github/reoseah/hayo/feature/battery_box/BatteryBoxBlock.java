@@ -2,7 +2,7 @@ package io.github.reoseah.hayo.feature.battery_box;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
+import io.github.reoseah.hayo.base.block.HorizontalDirectionalElectricalBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricReceiverBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricSenderBlock;
 import net.minecraft.core.BlockPos;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jspecify.annotations.Nullable;
 
-public class BatteryBoxBlock extends OrientableMachineBlock implements ElectricReceiverBlock, ElectricSenderBlock {
+public class BatteryBoxBlock extends HorizontalDirectionalElectricalBlock implements ElectricReceiverBlock, ElectricSenderBlock {
     public static final MapCodec<BatteryBoxBlock> CODEC = simpleCodec(BatteryBoxBlock::new);
     public static final IntegerProperty BATTERIES = IntegerProperty.create("batteries", 0, 6);
 

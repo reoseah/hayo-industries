@@ -18,7 +18,7 @@ public class WrenchItem extends Item {
         var pos = context.getClickedPos();
         var state = level.getBlockState(pos);
 
-        if (state.is(Hayo.HBlockTags.WRENCHABLE)) {
+        if (state.is(Hayo.HBlockTags.ROTATABLE_WITH_WRENCH)) {
             if (state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
                 var currentFacing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
                 var playerFacing = context.getClickedFace().getAxis() != Direction.Axis.Y //

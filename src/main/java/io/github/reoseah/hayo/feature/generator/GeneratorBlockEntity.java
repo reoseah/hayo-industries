@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.generator;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
+import io.github.reoseah.hayo.base.block.HorizontalDirectionalElectricalBlock;
 import io.github.reoseah.hayo.base.block.entity.SimpleContainerBlockEntity;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import lombok.Getter;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer {
     public static final int FUEL_CONSUMPTION_RATE = 2;
@@ -69,7 +69,7 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
 
         boolean isBurning = entity.fuelEnergyLeft > 0;
         if (isBurning != wasBurning) {
-            level.setBlockAndUpdate(pos, state.setValue(OrientableMachineBlock.LIT, isBurning));
+            level.setBlockAndUpdate(pos, state.setValue(HorizontalDirectionalElectricalBlock.LIT, isBurning));
         }
     }
 

@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Consumer;
 
-public class ElectricItem extends Item {
-    public ElectricItem(Properties properties) {
+public class SimpleElectricItem extends Item {
+    public SimpleElectricItem(Properties properties) {
         super(properties);
     }
 

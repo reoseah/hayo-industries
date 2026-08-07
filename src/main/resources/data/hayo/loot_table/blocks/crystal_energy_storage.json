@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:energy_crystal_array"
+          "name": "hayo:crystal_energy_storage"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/energy_crystal_array"
+  "random_sequence": "hayo:blocks/crystal_energy_storage"
 }

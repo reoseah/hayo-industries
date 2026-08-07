@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -24,13 +23,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-public abstract class OrientableMachineBlock extends BaseEntityBlock implements ElectricBlock {
+public abstract class HorizontalDirectionalElectricalBlock extends BaseEntityBlock implements ElectricBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    protected OrientableMachineBlock(BlockBehaviour.Properties properties) {
+    protected HorizontalDirectionalElectricalBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
@@ -60,7 +59,7 @@ public abstract class OrientableMachineBlock extends BaseEntityBlock implements 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide()) {
-            MenuProvider factory = state.getMenuProvider(level, pos);
+            var factory = state.getMenuProvider(level, pos);
             if (factory == null) {
                 return InteractionResult.PASS;
             }

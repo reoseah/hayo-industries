@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.battery_box;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.block.OrientableMachineBlock;
+import io.github.reoseah.hayo.base.block.HorizontalDirectionalElectricalBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.electric_blocks.SimpleElectricBlockEntity;
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
@@ -63,7 +63,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
 
         if (entity.storedEnergy > 0) {
             int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - entity.outputPerTick);
-            int transfer = ElectricBlockManager.trySend(limit, (ServerLevel) level, pos, state.getValue(OrientableMachineBlock.FACING));
+            int transfer = ElectricBlockManager.trySend(limit, (ServerLevel) level, pos, state.getValue(HorizontalDirectionalElectricalBlock.FACING));
             if (transfer > 0) {
                 entity.extractFromBatteries(transfer);
                 entity.storedEnergy -= transfer;

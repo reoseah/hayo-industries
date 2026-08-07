@@ -85,7 +85,7 @@
               "has_resin": "false"
             }
           },
-          "weight": 15
+          "weight": 7.5
         },
         {
           "data": {
@@ -95,7 +95,7 @@
               "has_resin": "false"
             }
           },
-          "weight": 15
+          "weight": 7.5
         },
         {
           "data": {
@@ -105,7 +105,7 @@
               "has_resin": "false"
             }
           },
-          "weight": 15
+          "weight": 7.5
         },
         {
           "data": {
@@ -115,7 +115,47 @@
               "has_resin": "false"
             }
           },
-          "weight": 15
+          "weight": 7.5
+        },
+        {
+          "data": {
+            "Name": "hayo:resin_yielding_rubber_log",
+            "Properties": {
+              "facing": "north",
+              "has_resin": "true"
+            }
+          },
+          "weight": 7.5
+        },
+        {
+          "data": {
+            "Name": "hayo:resin_yielding_rubber_log",
+            "Properties": {
+              "facing": "south",
+              "has_resin": "true"
+            }
+          },
+          "weight": 7.5
+        },
+        {
+          "data": {
+            "Name": "hayo:resin_yielding_rubber_log",
+            "Properties": {
+              "facing": "east",
+              "has_resin": "true"
+            }
+          },
+          "weight": 7.5
+        },
+        {
+          "data": {
+            "Name": "hayo:resin_yielding_rubber_log",
+            "Properties": {
+              "facing": "west",
+              "has_resin": "true"
+            }
+          },
+          "weight": 7.5
         }
       ]
     }

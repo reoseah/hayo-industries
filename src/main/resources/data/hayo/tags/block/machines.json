@@ -8,7 +8,7 @@
     "hayo:extractor",
     "hayo:compressor",
     "hayo:matter_generator",
-    "hayo:energy_crystal_array",
+    "hayo:crystal_energy_storage",
     "hayo:advanced_energy_storage"
   ]
 }
