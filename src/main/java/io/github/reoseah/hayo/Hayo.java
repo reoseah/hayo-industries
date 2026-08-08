@@ -1,7 +1,8 @@
 package io.github.reoseah.hayo;
 
 import com.mojang.serialization.MapCodec;
-import io.github.reoseah.hayo.base.HayoContainerScreen;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.base.item.BlockItemWithTooltip;
 import io.github.reoseah.hayo.base.item.ItemWithTooltip;
@@ -13,14 +14,10 @@ import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.CableBreakPayload;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.electric_items.*;
-import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageMenu;
-import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageScreen;
-import io.github.reoseah.hayo.feature.energy_storages.advanced.AdvancedEnergyStorageBlock;
-import io.github.reoseah.hayo.feature.energy_storages.advanced.AdvancedEnergyStorageBlockEntity;
-import io.github.reoseah.hayo.feature.energy_storages.advanced.AdvancedEnergyStorageMenu;
-import io.github.reoseah.hayo.feature.energy_storages.crystal.CrystalEnergyStorageBlock;
-import io.github.reoseah.hayo.feature.energy_storages.crystal.CrystalEnergyStorageBlockEntity;
-import io.github.reoseah.hayo.feature.energy_storages.crystal.CrystalEnergyStorageMenu;
+import io.github.reoseah.hayo.feature.energy_storages.AdvancedEnergyStorageBlock;
+import io.github.reoseah.hayo.feature.energy_storages.AdvancedEnergyStorageBlockEntity;
+import io.github.reoseah.hayo.feature.energy_storages.CrystalEnergyStorageBlock;
+import io.github.reoseah.hayo.feature.energy_storages.CrystalEnergyStorageBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
@@ -730,12 +727,10 @@ public class Hayo {
         public static final MenuType<MachineMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
         public static final MenuType<MachineMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
         public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
-        public static final MenuType<EnergyStorageMenu> CRYSTAL_ENERGY_STORAGE = register("crystal_energy_storage", CrystalEnergyStorageMenu::new);
-        public static final MenuType<EnergyStorageMenu> ADVANCED_ENERGY_STORAGE = register("advanced_energy_storage", AdvancedEnergyStorageMenu::new);
         public static final MenuType<BatteryBoxMenu> BATTERY_BOX = register("battery_box", BatteryBoxMenu::new);
 
         @SuppressWarnings("DataFlowIssue")
-        public static final MenuType<AbstractContainerMenu> BLOCK_POS_MENU = register("block_pos_menu", (containerId, inventory, pos) -> {
+        public static final ExtendedMenuType<UniversalContainerMenu, BlockPos> UNIVERSAL = register("universal", (containerId, inventory, pos) -> {
             var level = inventory.player.level();
             var blockState = level.getBlockState(pos);
             var provider = blockState.getMenuProvider(level, pos);
@@ -743,7 +738,7 @@ public class Hayo {
                 return null;
             }
 
-            return provider.createMenu(containerId, inventory, inventory.player);
+            return (UniversalContainerMenu) provider.createMenu(containerId, inventory, inventory.player);
         }, BlockPos.STREAM_CODEC);
 
         public static void initialize() {
@@ -769,11 +764,8 @@ public class Hayo {
             MenuScreens.register(EXTRACTOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.EXTRACTOR));
             MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
             MenuScreens.register(BATTERY_BOX, BatteryBoxScreen::new);
-            MenuScreens.register(CRYSTAL_ENERGY_STORAGE, EnergyStorageScreen::new);
-            MenuScreens.register(ADVANCED_ENERGY_STORAGE, EnergyStorageScreen::new);
 
-            // assuming all such menus use configurable screen
-            MenuScreens.register(BLOCK_POS_MENU, HayoContainerScreen::new);
+            MenuScreens.register(UNIVERSAL, UniversalContainerScreen::new);
         }
     }
 

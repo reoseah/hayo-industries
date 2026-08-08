@@ -1,11 +1,10 @@
-package io.github.reoseah.hayo.feature.energy_storages.crystal;
+package io.github.reoseah.hayo.feature.energy_storages;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.DirectionalElectricalBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricReceiverBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricSenderBlock;
-import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,10 +16,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class CrystalEnergyStorageBlock extends DirectionalElectricalBlock implements ElectricReceiverBlock, ElectricSenderBlock {
-    public static final MapCodec<CrystalEnergyStorageBlock> CODEC = simpleCodec(CrystalEnergyStorageBlock::new);
+public class AdvancedEnergyStorageBlock extends DirectionalElectricalBlock implements ElectricReceiverBlock, ElectricSenderBlock {
+    public static final MapCodec<AdvancedEnergyStorageBlock> CODEC = simpleCodec(AdvancedEnergyStorageBlock::new);
 
-    public CrystalEnergyStorageBlock(Properties properties) {
+    public AdvancedEnergyStorageBlock(Properties properties) {
         super(properties);
     }
 
@@ -31,13 +30,13 @@ public class CrystalEnergyStorageBlock extends DirectionalElectricalBlock implem
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CrystalEnergyStorageBlockEntity(pos, state);
+        return new AdvancedEnergyStorageBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, Hayo.BlockEntityTypes.CRYSTAL_ENERGY_STORAGE, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
+        return createTickerHelper(type, Hayo.BlockEntityTypes.ADVANCED_ENERGY_STORAGE, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
     }
 
     @Override

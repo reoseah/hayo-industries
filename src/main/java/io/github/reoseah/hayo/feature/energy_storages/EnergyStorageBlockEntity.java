@@ -4,27 +4,40 @@ import io.github.reoseah.hayo.base.block.DirectionalElectricalBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.electric_blocks.SimpleElectricBlockEntity;
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
+import io.github.reoseah.hayo.feature.universal_screen.SpriteElement;
+import io.github.reoseah.hayo.feature.universal_screen.StorageEnergyBar;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
 import lombok.Getter;
+import lombok.Setter;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity implements WorldlyContainer {
+public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity implements WorldlyContainer, ExtendedMenuProvider<BlockPos> {
     public static final int DISCHARGE_SLOT = 0, CHARGE_SLOT = 1, SLOTS = 2;
 
     @Getter
+    @Setter
     protected float averageInputPerTick;
     @Getter
     protected int outputPerTick;
     @Getter
+    @Setter
     protected float averageOutputPerTick;
 
     public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -83,5 +96,55 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
         return slot == DISCHARGE_SLOT ? EnergyComponents.canDischargeInMachine(stack) : EnergyComponents.canChargeInMachine(stack);
+    }
+
+    @Override
+    public BlockPos getScreenOpeningData(ServerPlayer player) {
+        return this.worldPosition;
+    }
+
+    @Override
+    public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player player) {
+        return new UniversalContainerMenu(menuId, this).setCenterTitle(true) //
+                .attachDataSlots(new EnergyStorageData(this)) //
+                .attachSlot(new Slot(this, DISCHARGE_SLOT, 62, 18)) //
+                .attachSlot(new Slot(this, CHARGE_SLOT, 62, 54)) //
+                .appendStandardInventorySlots(playerInventory) //
+                .addQuickMoveRule(DISCHARGE_SLOT, DISCHARGE_SLOT + 1, EnergyComponents::canDischargeInMachine) //
+                .addQuickMoveRule(CHARGE_SLOT, CHARGE_SLOT + 1, EnergyComponents::canChargeInMachine) //
+                .addElement(new StorageEnergyBar(88, 16, this::getStoredEnergy, this::getEnergyCapacity, this::getAverageInputPerTick, this::getAverageOutputPerTick)) //
+                .addElement(SpriteElement.smallArrowRight(79, 17)) //
+                .addElement(SpriteElement.smallArrowLeft(79, 53));
+    }
+
+    public record EnergyStorageData(EnergyStorageBlockEntity entity) implements ContainerData {
+        private static final int DATA_SLOTS = 4;
+
+        @Override
+        public int getCount() {
+            return DATA_SLOTS;
+        }
+
+        @Override
+        public int get(int index) {
+            return switch (index) {
+                case 0 -> this.entity.getStoredEnergy() & 0xFFFF;
+                case 1 -> this.entity.getStoredEnergy() >>> 16;
+                case 2 -> Math.round(this.entity.getAverageInputPerTick() * 10);
+                case 3 -> Math.round(this.entity.getAverageOutputPerTick() * 10);
+                default -> 0;
+            };
+        }
+
+        @Override
+        public void set(int index, int value) {
+            switch (index) {
+                case 0 -> this.entity.setStoredEnergy(this.entity.getStoredEnergy() & 0xFFFF_0000 | (value & 0xFFFF));
+                case 1 ->
+                        this.entity.setStoredEnergy(this.entity.getStoredEnergy() & 0xFFFF | ((value & 0xFFFF) << 16));
+                case 2 -> this.entity.setAverageInputPerTick(value / 10F);
+                case 3 -> this.entity.setAverageOutputPerTick(value / 10F);
+            }
+        }
     }
 }

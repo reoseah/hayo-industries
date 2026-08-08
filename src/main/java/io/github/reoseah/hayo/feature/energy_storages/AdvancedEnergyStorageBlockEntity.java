@@ -1,17 +1,12 @@
-package io.github.reoseah.hayo.feature.energy_storages.advanced;
+package io.github.reoseah.hayo.feature.energy_storages;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageBlockEntity;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jspecify.annotations.Nullable;
 
-public class AdvancedEnergyStorageBlockEntity extends EnergyStorageBlockEntity implements MenuProvider {
+public class AdvancedEnergyStorageBlockEntity extends EnergyStorageBlockEntity implements ExtendedMenuProvider<BlockPos> {
     public static final int CAPACITY = 4_000_000;
     public static final int TRANSFER_LIMIT = 512;
 
@@ -24,10 +19,6 @@ public class AdvancedEnergyStorageBlockEntity extends EnergyStorageBlockEntity i
         return Component.translatable("block.hayo.advanced_energy_storage");
     }
 
-    @Override
-    public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player player) {
-        return new AdvancedEnergyStorageMenu(menuId, this, playerInventory);
-    }
 
     @Override
     protected int getEnergyCapacity() {

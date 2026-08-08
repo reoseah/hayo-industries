@@ -1,11 +1,10 @@
-package io.github.reoseah.hayo.feature.energy_storages.advanced;
+package io.github.reoseah.hayo.feature.energy_storages;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.base.block.DirectionalElectricalBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricReceiverBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricSenderBlock;
-import io.github.reoseah.hayo.feature.energy_storages.EnergyStorageBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,10 +16,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class AdvancedEnergyStorageBlock extends DirectionalElectricalBlock implements ElectricReceiverBlock, ElectricSenderBlock {
-    public static final MapCodec<AdvancedEnergyStorageBlock> CODEC = simpleCodec(AdvancedEnergyStorageBlock::new);
+public class CrystalEnergyStorageBlock extends DirectionalElectricalBlock implements ElectricReceiverBlock, ElectricSenderBlock {
+    public static final MapCodec<CrystalEnergyStorageBlock> CODEC = simpleCodec(CrystalEnergyStorageBlock::new);
 
-    public AdvancedEnergyStorageBlock(Properties properties) {
+    public CrystalEnergyStorageBlock(Properties properties) {
         super(properties);
     }
 
@@ -31,7 +30,7 @@ public class AdvancedEnergyStorageBlock extends DirectionalElectricalBlock imple
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new AdvancedEnergyStorageBlockEntity(pos, state);
+        return new CrystalEnergyStorageBlockEntity(pos, state);
     }
 
     @Nullable

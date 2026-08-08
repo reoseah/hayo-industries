@@ -2,13 +2,10 @@ package io.github.reoseah.hayo.base.block;
 
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
-import io.github.reoseah.hayo.feature.energy_storages.crystal.CrystalEnergyStorageBlockEntity;
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
