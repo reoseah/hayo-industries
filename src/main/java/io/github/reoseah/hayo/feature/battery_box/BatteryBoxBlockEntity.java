@@ -5,31 +5,41 @@ import io.github.reoseah.hayo.base.block.HorizontalDirectionalElectricalBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.electric_blocks.SimpleElectricBlockEntity;
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
+import io.github.reoseah.hayo.feature.universal_screen.SpriteElement;
+import io.github.reoseah.hayo.feature.universal_screen.StorageEnergyBar;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
 import lombok.Getter;
+import lombok.Setter;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import org.jspecify.annotations.Nullable;
 
-public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements WorldlyContainer {
+public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements WorldlyContainer, ExtendedMenuProvider<BlockPos> {
     public static final int BATTERY_SLOTS = 6, CHARGING_SLOT = 6, SLOTS = 7;
 
     @Getter
+    @Setter
     protected float averageInputPerTick;
     @Getter
     protected int outputPerTick;
     @Getter
+    @Setter
     protected float averageOutputPerTick;
 
     protected int capacity = 0;
@@ -147,8 +157,29 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
     }
 
     @Override
+    public BlockPos getScreenOpeningData(ServerPlayer player) {
+        return this.worldPosition;
+    }
+
+    @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new BatteryBoxMenu(containerId, this, inventory);
+        return new UniversalContainerMenu(containerId, this) //
+                .addSlotChainable(new BatteryBoxSlot(this, 0, 26, 27)) //
+                .addSlotChainable(new BatteryBoxSlot(this, 1, 44, 27)) //
+                .addSlotChainable(new BatteryBoxSlot(this, 2, 62, 27)) //
+                .addSlotChainable(new BatteryBoxSlot(this, 3, 26, 45)) //
+                .addSlotChainable(new BatteryBoxSlot(this, 4, 44, 45)) //
+                .addSlotChainable(new BatteryBoxSlot(this, 5, 62, 45)) //
+                .addSlotChainable(new Slot(this, 6, 124, 36)) //
+                .addStandardInventorySlotsChainable(inventory) //
+                .addQuickMoveRule(0, 6, stack -> stack.is(Hayo.ItemTags.BATTERY_BOX_BATTERIES)) //
+                .addQuickMoveRule(6, 7, EnergyComponents::canChargeInMachine) //
+                .addDataSlotsChainable(new BatteryBoxData(this)) //
+                .addElement(new StorageEnergyBar(88, 16, this::getStoredEnergy, this::getEnergyCapacity, this::getAverageInputPerTick, this::getAverageOutputPerTick)) //
+                .addElement(SpriteElement.outputSlot(120, 32)) //
+                .addElement(SpriteElement.slotConnection9Wide(78, 34)) //
+                .addElement(SpriteElement.slotConnection9Wide(78, 52)) //
+                .addElement(SpriteElement.smallArrowRight(108, 35));
     }
 
     @Override
@@ -220,6 +251,38 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
                 if (leftToExtract == 0) {
                     break;
                 }
+            }
+        }
+    }
+
+
+    public record BatteryBoxData(BatteryBoxBlockEntity entity) implements ContainerData {
+        public static final int DATA_SLOTS = 8;
+
+        @Override
+        public int getCount() {
+            return DATA_SLOTS;
+        }
+
+        @Override
+        public int get(int index) {
+            return switch (index) {
+                case 0 -> this.entity.storedEnergy & 0xFFFF;
+                case 1 -> this.entity.storedEnergy >>> 16;
+                case 2 -> Math.round(this.entity.averageInputPerTick * 10);
+                case 3 -> Math.round(this.entity.averageOutputPerTick * 10);
+                default -> 0;
+            };
+        }
+
+        @Override
+        public void set(int index, int value) {
+            value &= 0xFFFF;
+            switch (index) {
+                case 0 -> this.entity.storedEnergy = this.entity.storedEnergy & 0xFFFF_0000 | value;
+                case 1 -> this.entity.storedEnergy = this.entity.storedEnergy & 0xFFFF | (value << 16);
+                case 2 -> this.entity.averageInputPerTick = value / 10F;
+                case 3 -> this.entity.averageOutputPerTick = value / 10F;
             }
         }
     }

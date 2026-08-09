@@ -1,15 +1,11 @@
 package io.github.reoseah.hayo;
 
 import com.mojang.serialization.MapCodec;
-import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
-import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerScreen;
 import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.base.item.BlockItemWithTooltip;
 import io.github.reoseah.hayo.base.item.ItemWithTooltip;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlock;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlockEntity;
-import io.github.reoseah.hayo.feature.battery_box.BatteryBoxMenu;
-import io.github.reoseah.hayo.feature.battery_box.BatteryBoxScreen;
 import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.CableBreakPayload;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
@@ -20,8 +16,6 @@ import io.github.reoseah.hayo.feature.energy_storages.CrystalEnergyStorageBlock;
 import io.github.reoseah.hayo.feature.energy_storages.CrystalEnergyStorageBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
-import io.github.reoseah.hayo.feature.generator.GeneratorMenu;
-import io.github.reoseah.hayo.feature.generator.GeneratorScreen;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineRecipe;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineScreen;
 import io.github.reoseah.hayo.feature.machines.MachineMenu;
@@ -44,6 +38,8 @@ import io.github.reoseah.hayo.feature.machines.matter_generator.*;
 import io.github.reoseah.hayo.feature.quantum_armor.QuantumArmorRenderer;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerScreen;
 import io.github.reoseah.hayo.feature.wrench.WrenchItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -680,7 +676,6 @@ public class Hayo {
 
         public static Item registerItem(String name, Function<Item.Properties, Item> constructor, Item.Properties properties) {
             var key = ResourceKey.create(Registries.ITEM, modId(name));
-
             return Registry.register(BuiltInRegistries.ITEM, key, constructor.apply(properties.setId(key)));
         }
     }
@@ -713,21 +708,17 @@ public class Hayo {
         }
 
         public static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<T> constructor, Block... blocks) {
-            var key = ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, modId(name));
             var type = FabricBlockEntityTypeBuilder.create(constructor, blocks).build();
-
-            return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, key, type);
+            return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, modId(name), type);
         }
     }
 
     public static class MenuTypes {
-        public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
         public static final MenuType<MachineMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
         public static final MenuType<MachineMenu> MACERATOR = register("macerator", MaceratorMenu::new);
         public static final MenuType<MachineMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
         public static final MenuType<MachineMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
         public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
-        public static final MenuType<BatteryBoxMenu> BATTERY_BOX = register("battery_box", BatteryBoxMenu::new);
 
         @SuppressWarnings("DataFlowIssue")
         public static final ExtendedMenuType<UniversalContainerMenu, BlockPos> UNIVERSAL = register("universal", (containerId, inventory, pos) -> {
@@ -745,25 +736,19 @@ public class Hayo {
         }
 
         public static <T extends AbstractContainerMenu> MenuType<T> register(String name, MenuType.MenuSupplier<T> constructor) {
-            var key = ResourceKey.create(Registries.MENU, modId(name));
-            var type = new MenuType<>(constructor, FeatureFlags.VANILLA_SET);
-
-            return Registry.register(BuiltInRegistries.MENU, key, type);
+            return Registry.register(BuiltInRegistries.MENU, modId(name), new MenuType<>(constructor, FeatureFlags.VANILLA_SET));
         }
 
         private static <T extends AbstractContainerMenu, D> ExtendedMenuType<T, D> register(String name, ExtendedMenuType.ExtendedFactory<T, D> constructor, StreamCodec<? super RegistryFriendlyByteBuf, D> codec) {
-            var type = new ExtendedMenuType<>(constructor, codec);
-            return Registry.register(BuiltInRegistries.MENU, modId(name), type);
+            return Registry.register(BuiltInRegistries.MENU, modId(name), new ExtendedMenuType<>(constructor, codec));
         }
 
         public static void initializeClient() {
-            MenuScreens.register(GENERATOR, GeneratorScreen::new);
             MenuScreens.register(ELECTRIC_FURNACE, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.DEFAULT));
             MenuScreens.register(MACERATOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.MACERATOR));
             MenuScreens.register(COMPRESSOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.COMPRESSOR));
             MenuScreens.register(EXTRACTOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.EXTRACTOR));
             MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
-            MenuScreens.register(BATTERY_BOX, BatteryBoxScreen::new);
 
             MenuScreens.register(UNIVERSAL, UniversalContainerScreen::new);
         }
@@ -776,10 +761,9 @@ public class Hayo {
         }
 
         public static <T extends FoliagePlacer> FoliagePlacerType<T> register(String name, MapCodec<T> codec) {
-            var key = ResourceKey.create(Registries.FOLIAGE_PLACER_TYPE, modId(name));
             var type = new FoliagePlacerType<>(codec);
 
-            return Registry.register(BuiltInRegistries.FOLIAGE_PLACER_TYPE, key, type);
+            return Registry.register(BuiltInRegistries.FOLIAGE_PLACER_TYPE, modId(name), type);
         }
     }
 
@@ -819,7 +803,6 @@ public class Hayo {
             return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, modId(name), serializer);
         }
     }
-
 
     public static class CustomPayloads {
         public static final CustomPacketPayload.Type<CableBreakPayload> CABLE_BREAK_PROGRESS = new CustomPacketPayload.Type<>(modId("cable_break_progress"));

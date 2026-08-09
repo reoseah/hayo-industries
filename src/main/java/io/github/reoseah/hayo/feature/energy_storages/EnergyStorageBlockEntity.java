@@ -106,10 +106,10 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
     @Override
     public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player player) {
         return new UniversalContainerMenu(menuId, this).setCenterTitle(true) //
-                .attachDataSlots(new EnergyStorageData(this)) //
-                .attachSlot(new Slot(this, DISCHARGE_SLOT, 62, 18)) //
-                .attachSlot(new Slot(this, CHARGE_SLOT, 62, 54)) //
-                .appendStandardInventorySlots(playerInventory) //
+                .addDataSlotsChainable(new EnergyStorageData(this)) //
+                .addSlotChainable(new Slot(this, DISCHARGE_SLOT, 62, 18)) //
+                .addSlotChainable(new Slot(this, CHARGE_SLOT, 62, 54)) //
+                .addStandardInventorySlotsChainable(playerInventory) //
                 .addQuickMoveRule(DISCHARGE_SLOT, DISCHARGE_SLOT + 1, EnergyComponents::canDischargeInMachine) //
                 .addQuickMoveRule(CHARGE_SLOT, CHARGE_SLOT + 1, EnergyComponents::canChargeInMachine) //
                 .addElement(new StorageEnergyBar(88, 16, this::getStoredEnergy, this::getEnergyCapacity, this::getAverageInputPerTick, this::getAverageOutputPerTick)) //
@@ -138,10 +138,10 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
 
         @Override
         public void set(int index, int value) {
+            value &= 0xFFFF;
             switch (index) {
-                case 0 -> this.entity.setStoredEnergy(this.entity.getStoredEnergy() & 0xFFFF_0000 | (value & 0xFFFF));
-                case 1 ->
-                        this.entity.setStoredEnergy(this.entity.getStoredEnergy() & 0xFFFF | ((value & 0xFFFF) << 16));
+                case 0 -> this.entity.setStoredEnergy(this.entity.getStoredEnergy() & 0xFFFF_0000 | value);
+                case 1 -> this.entity.setStoredEnergy(this.entity.getStoredEnergy() & 0xFFFF | (value << 16));
                 case 2 -> this.entity.setAverageInputPerTick(value / 10F);
                 case 3 -> this.entity.setAverageOutputPerTick(value / 10F);
             }

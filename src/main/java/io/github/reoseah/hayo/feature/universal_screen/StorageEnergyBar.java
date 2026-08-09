@@ -24,9 +24,13 @@ public record StorageEnergyBar(int x, int y, IntSupplier amount, IntSupplier cap
     public static final Identifier ENERGY_LARGE = Hayo.modId("energy_large");
     public static final Identifier ENERGY_LARGE_OVERLAY = Hayo.modId("energy_large_overlay");
 
+    public StorageEnergyBar(int x, int y, IntSupplier amount, IntSupplier capacity) {
+        this(x, y, amount, capacity, null, null);
+    }
+
     @Override
     @Environment(EnvType.CLIENT)
-    public void render(GuiGraphicsExtractor graphics, Font font, int left, int top, int mouseX, int mouseY, float partialTick) {
+    public void extract(GuiGraphicsExtractor graphics, Font font, int left, int top, int mouseX, int mouseY, float partialTick) {
         int amount = this.amount.getAsInt();
         int capacity = this.capacity.getAsInt();
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_LARGE, left + this.x, top + this.y, 18, 56);
@@ -39,7 +43,7 @@ public record StorageEnergyBar(int x, int y, IntSupplier amount, IntSupplier cap
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void renderTooltip(GuiGraphicsExtractor graphics, Font font, int left, int top, int mouseX, int mouseY) {
+    public void extractTooltip(GuiGraphicsExtractor graphics, Font font, int left, int top, int mouseX, int mouseY) {
         if (UniversalContainerMenu.GuiElement.isHovering(left, top, this.x, this.y, 18, 56, mouseX, mouseY)) {
             var tooltip = new ArrayList<Component>();
             int amount = this.amount.getAsInt();

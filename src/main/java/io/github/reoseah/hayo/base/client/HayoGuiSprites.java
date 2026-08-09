@@ -7,17 +7,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class HayoGuiSprites {
-    public static final Identifier SMALL_ARROW_RIGHT = Hayo.modId("small_arrow_right");
-    public static final Identifier SMALL_ARROW_LEFT = Hayo.modId("small_arrow_left");
-
-    public static void drawSmallArrowRight(GuiGraphicsExtractor graphics, int x, int y) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SMALL_ARROW_RIGHT, x, y, 9, 18);
-    }
-
-    public static void drawSmallArrowLeft(GuiGraphicsExtractor graphics, int x, int y) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SMALL_ARROW_LEFT, x, y, 9, 18);
-    }
-
     public static final Identifier SLOT = Hayo.modId("slots/default");
 
     public static void drawSlot(GuiGraphicsExtractor graphics, int x, int y) {

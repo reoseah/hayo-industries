@@ -40,14 +40,14 @@ public class UniversalContainerScreen extends AbstractContainerScreen<UniversalC
         }
 
         for (var element : this.menu.guiElements) {
-            element.render(graphics, this.font, this.leftPos, this.topPos, mouseX, mouseY, partialTick);
+            element.extract(graphics, this.font, this.leftPos, this.topPos, mouseX, mouseY, partialTick);
         }
     }
 
     @Override
     protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         for (var element : this.menu.guiElements) {
-            element.renderTooltip(graphics, this.font, this.leftPos, this.topPos, mouseX, mouseY);
+            element.extractTooltip(graphics, this.font, this.leftPos, this.topPos, mouseX, mouseY);
         }
 
         super.extractTooltip(graphics, mouseX, mouseY);

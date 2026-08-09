@@ -1,11 +1,22 @@
 package io.github.reoseah.hayo.feature.machines;
 
 import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
+import io.github.reoseah.hayo.feature.universal_screen.MachineEnergyBar;
+import io.github.reoseah.hayo.feature.universal_screen.SpriteElement;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -14,7 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends MachineBlockEntity<R, SingleRecipeInput> implements WorldlyContainer {
+public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends MachineBlockEntity<R, SingleRecipeInput> implements WorldlyContainer, ExtendedMenuProvider<BlockPos> {
     public static final int SLOTS = 7;
     public static final int INPUT_SLOT = 0;
     public static final int BATTERY_SLOT = 1;
@@ -45,6 +56,8 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     public SingleRecipeInput createRecipeInput() {
         return new SingleRecipeInput(this.stacks.get(INPUT_SLOT));
     }
+
+    protected abstract TagKey<Item> getUpgradeTag();
 
     @Override
     public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, SingleRecipeInput input) {
@@ -110,4 +123,27 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
         return side != Direction.UP;
     }
 
+    @Override
+    public BlockPos getScreenOpeningData(ServerPlayer player) {
+        return this.worldPosition;
+    }
+
+    @Override
+    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new UniversalContainerMenu(containerId, this) //
+                .addSlotChainable(new Slot(this, INPUT_SLOT, 47, 18)) //
+                .addSlotChainable(new Slot(this, BATTERY_SLOT, 47, 54)) //
+                .addSlotChainable(new ResultSlot(this, OUTPUT_SLOT, 107, 36)) //
+                .addSlotChainable(new TagFilteredSlot(this, 3, 152, 8, this.getUpgradeTag())) //
+                .addSlotChainable(new TagFilteredSlot(this, 4, 152, 26, this.getUpgradeTag())) //
+                .addSlotChainable(new TagFilteredSlot(this, 5, 152, 44, this.getUpgradeTag())) //
+                .addSlotChainable(new TagFilteredSlot(this, 6, 152, 62, this.getUpgradeTag())) //
+                .addStandardInventorySlotsChainable(inventory) //
+                .addElement(new MachineEnergyBar(48, 37, this::getStoredEnergy, this::getEnergyCapacity)) //
+                .addElement(SpriteElement.upgradeSlot(151, 7)) //
+                .addElement(SpriteElement.upgradeSlot(151, 25)) //
+                .addElement(SpriteElement.upgradeSlot(151, 43)) //
+                .addElement(SpriteElement.upgradeSlot(151, 61)) //
+                ;
+    }
 }

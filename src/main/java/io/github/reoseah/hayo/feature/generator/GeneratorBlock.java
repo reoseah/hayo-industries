@@ -45,8 +45,8 @@ public class GeneratorBlock extends HorizontalDirectionalElectricalBlock impleme
                 level.playLocalSound(x, y, z, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
             }
 
-            Direction direction = state.getValue(FACING);
-            Direction.Axis axis = direction.getAxis();
+            var direction = state.getValue(FACING);
+            var axis = direction.getAxis();
             double h = random.nextDouble() * 0.6 - 0.3;
             double dx = axis == Direction.Axis.X ? direction.getStepX() * 0.52 : h;
             double dy = random.nextDouble() * 9.0 / 16.0;

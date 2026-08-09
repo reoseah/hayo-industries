@@ -57,12 +57,12 @@ public class UniversalContainerMenu extends AbstractContainerMenu {
         return this;
     }
 
-    public UniversalContainerMenu attachDataSlots(ContainerData data) {
+    public UniversalContainerMenu addDataSlotsChainable(ContainerData data) {
         this.addDataSlots(data);
         return this;
     }
 
-    public UniversalContainerMenu attachSlot(Slot slot) {
+    public UniversalContainerMenu addSlotChainable(Slot slot) {
         this.addSlot(slot);
         return this;
     }
@@ -77,11 +77,11 @@ public class UniversalContainerMenu extends AbstractContainerMenu {
         }
     }
 
-    public UniversalContainerMenu appendStandardInventorySlots(Container inventory) {
-        return this.appendStandardInventorySlots(inventory, 8, 84);
+    public UniversalContainerMenu addStandardInventorySlotsChainable(Container inventory) {
+        return this.addStandardInventorySlotsChainable(inventory, 8, 84);
     }
 
-    public UniversalContainerMenu appendStandardInventorySlots(Container inventory, int x, int y) {
+    public UniversalContainerMenu addStandardInventorySlotsChainable(Container inventory, int x, int y) {
         int start = this.slots.size();
 
         this.addStandardInventorySlots(inventory, x, y);
@@ -166,7 +166,7 @@ public class UniversalContainerMenu extends AbstractContainerMenu {
 
     public interface GuiElement {
         @Environment(EnvType.CLIENT)
-        void render( //
+        void extract( //
                 GuiGraphicsExtractor graphics, //
                 Font font, //
                 int left, //
@@ -177,7 +177,7 @@ public class UniversalContainerMenu extends AbstractContainerMenu {
         );
 
         @Environment(EnvType.CLIENT)
-        default void renderTooltip( //
+        default void extractTooltip( //
                 GuiGraphicsExtractor graphics, //
                 Font font, //
                 int left, //

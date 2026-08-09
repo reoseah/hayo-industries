@@ -6,9 +6,11 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -75,13 +77,13 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
     }
 
     @Override
-    public Component getDefaultName() {
-        return Component.translatable("block.hayo.electric_furnace");
+    protected TagKey<Item> getUpgradeTag() {
+        return Hayo.ItemTags.ELECTRIC_FURNACE_UPGRADES;
     }
 
     @Override
-    public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory inventory, Player player) {
-        return new ElectricFurnaceMenu(menuId, this, inventory);
+    public Component getDefaultName() {
+        return Component.translatable("block.hayo.electric_furnace");
     }
 
     @Override
