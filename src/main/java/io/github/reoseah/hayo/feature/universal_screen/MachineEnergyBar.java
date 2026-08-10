@@ -1,12 +1,19 @@
 package io.github.reoseah.hayo.feature.universal_screen;
 
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.function.IntSupplier;
 
 public record MachineEnergyBar(int x, int y, IntSupplier amount,
@@ -24,6 +31,21 @@ public record MachineEnergyBar(int x, int y, IntSupplier amount,
         if (amount > 0 && capacity > 0) {
             var filled = Mth.clamp(1 + (14 - 1) * amount / capacity, 1, 14);
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_SMALL_OVERLAY, 14, 14, 0, 14 - filled, left + this.x, top + this.y + 14 - filled, 14, filled);
+        }
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void extractTooltip(GuiGraphicsExtractor graphics, Font font, int left, int top, int mouseX, int mouseY) {
+        if (UniversalContainerMenu.GuiElement.isHovering(left, top, this.x, this.y, 14, 14, mouseX, mouseY)) {
+            var tooltip = new ArrayList<Component>();
+            int amount = this.amount.getAsInt();
+            int capacity = this.capacity.getAsInt();
+
+            tooltip.add(EnergyTexts.amountAndPercentage(amount, capacity));
+            tooltip.add(EnergyTexts.maxAmount(capacity).withStyle(ChatFormatting.GRAY));
+
+            graphics.setTooltipForNextFrame(font, tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 }

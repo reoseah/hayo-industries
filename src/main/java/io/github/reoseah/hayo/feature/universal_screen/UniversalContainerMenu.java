@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo.feature.universal_screen;
 
 import io.github.reoseah.hayo.Hayo;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.fabricmc.api.EnvType;
@@ -13,18 +14,24 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @Accessors(chain = true)
 public class UniversalContainerMenu extends AbstractContainerMenu {
     protected final Container container;
+    @Getter
     protected SlotRange playerInventory;
     protected SlotRange playerMainInventory;
     protected SlotRange playerHotbar;
     protected final List<QuickMoveRule> quickMoveRules = new ArrayList<>();
+    @Getter
+    protected @Nullable RecipeTransferData recipeTransferData;
 
     protected int width = 176, height = 166;
     @Setter
@@ -196,6 +203,14 @@ public class UniversalContainerMenu extends AbstractContainerMenu {
 
     public UniversalContainerMenu addElement(GuiElement element) {
         this.guiElements.add(element);
+        return this;
+    }
+
+    public record RecipeTransferData(Supplier<RecipeType<?>> recipeType, int start, int end) {
+    }
+
+    public UniversalContainerMenu setRecipeTransferData(Supplier<RecipeType<?>> recipeType, int start, int end) {
+        this.recipeTransferData = new RecipeTransferData(recipeType, start, end);
         return this;
     }
 }

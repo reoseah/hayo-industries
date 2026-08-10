@@ -14,7 +14,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -56,8 +56,6 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     public SingleRecipeInput createRecipeInput() {
         return new SingleRecipeInput(this.stacks.get(INPUT_SLOT));
     }
-
-    protected abstract TagKey<Item> getUpgradeTag();
 
     @Override
     public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, SingleRecipeInput input) {
@@ -129,7 +127,7 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     }
 
     @Override
-    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+    public UniversalContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
         return new UniversalContainerMenu(containerId, this) //
                 .addSlotChainable(new Slot(this, INPUT_SLOT, 47, 18)) //
                 .addSlotChainable(new Slot(this, BATTERY_SLOT, 47, 54)) //
@@ -139,11 +137,68 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
                 .addSlotChainable(new TagFilteredSlot(this, 5, 152, 44, this.getUpgradeTag())) //
                 .addSlotChainable(new TagFilteredSlot(this, 6, 152, 62, this.getUpgradeTag())) //
                 .addStandardInventorySlotsChainable(inventory) //
+                .addQuickMoveRule(3, 7, stack -> stack.is(this.getUpgradeTag())) //
+                .addQuickMoveRule(INPUT_SLOT, INPUT_SLOT + 1, this::isRecipeInput) //
+                .addQuickMoveRule(BATTERY_SLOT, BATTERY_SLOT + 1, EnergyComponents::canDischargeInMachine) //
+                .setRecipeTransferData(this::getRecipeType, INPUT_SLOT, INPUT_SLOT + 1) //
+                .addDataSlotsChainable(new ClassicMachineData(this)) //
                 .addElement(new MachineEnergyBar(48, 37, this::getStoredEnergy, this::getEnergyCapacity)) //
+                .addElement(SpriteElement.outputSlot(103, 32)) //
                 .addElement(SpriteElement.upgradeSlot(151, 7)) //
                 .addElement(SpriteElement.upgradeSlot(151, 25)) //
                 .addElement(SpriteElement.upgradeSlot(151, 43)) //
-                .addElement(SpriteElement.upgradeSlot(151, 61)) //
-                ;
+                .addElement(SpriteElement.upgradeSlot(151, 61));
+    }
+
+    protected abstract TagKey<Item> getUpgradeTag();
+
+    protected boolean isRecipeInput(ItemStack stack) {
+        return this.level //
+                .recipeAccess() //
+                .getSynchronizedRecipes() //
+                .getFirstMatch(this.getRecipeType(), new SingleRecipeInput(stack), this.level) //
+                .isPresent();
+    }
+
+    protected int lastOrDefaultRecipeEnergy;
+
+    @Override
+    public int getLastOrDefaultRecipeEnergy() {
+        return this.level.isClientSide() ? this.lastOrDefaultRecipeEnergy : super.getLastOrDefaultRecipeEnergy();
+    }
+
+    public record ClassicMachineData(ClassicMachineBlockEntity<?> entity) implements ContainerData {
+        @Override
+        public int getCount() {
+            return 6;
+        }
+
+        @Override
+        public int get(int index) {
+            return switch (index) {
+                case 0 -> this.entity.storedEnergy & 0xFFFF;
+                case 1 -> this.entity.storedEnergy >>> 16;
+                case 2 -> this.entity.progressEnergy & 0xFFFF;
+                case 3 -> this.entity.progressEnergy >>> 16;
+                case 4 -> this.entity.getLastOrDefaultRecipeEnergy() & 0xFFFF;
+                case 5 -> this.entity.getLastOrDefaultRecipeEnergy() >>> 16;
+                default -> 0;
+            };
+        }
+
+        @Override
+        public void set(int index, int value) {
+            value &= 0xFFFF;
+            switch (index) {
+                case 0 -> this.entity.storedEnergy = this.entity.storedEnergy & 0xFFFF_0000 | value;
+                case 1 -> this.entity.storedEnergy = this.entity.storedEnergy & 0xFFFF | value << 16;
+                case 2 -> this.entity.progressEnergy = this.entity.progressEnergy & 0xFFFF_0000 | value;
+                case 3 -> this.entity.progressEnergy = this.entity.progressEnergy & 0xFFFF | value << 16;
+                case 4 ->
+                        this.entity.lastOrDefaultRecipeEnergy = this.entity.lastOrDefaultRecipeEnergy & 0xFFFF_0000 | value;
+                case 5 ->
+                        this.entity.lastOrDefaultRecipeEnergy = this.entity.lastOrDefaultRecipeEnergy & 0xFFFF | value << 16;
+            }
+        }
     }
 }

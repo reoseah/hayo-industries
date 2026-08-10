@@ -128,10 +128,10 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
         @Override
         public int get(int index) {
             return switch (index) {
-                case 0 -> this.entity.getStoredEnergy() & 0xFFFF;
-                case 1 -> this.entity.getStoredEnergy() >>> 16;
-                case 2 -> Math.round(this.entity.getAverageInputPerTick() * 10);
-                case 3 -> Math.round(this.entity.getAverageOutputPerTick() * 10);
+                case 0 -> this.entity.storedEnergy & 0xFFFF;
+                case 1 -> this.entity.storedEnergy >>> 16;
+                case 2 -> Math.round(this.entity.averageInputPerTick * 10);
+                case 3 -> Math.round(this.entity.averageOutputPerTick * 10);
                 default -> 0;
             };
         }
@@ -140,10 +140,10 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
         public void set(int index, int value) {
             value &= 0xFFFF;
             switch (index) {
-                case 0 -> this.entity.setStoredEnergy(this.entity.getStoredEnergy() & 0xFFFF_0000 | value);
-                case 1 -> this.entity.setStoredEnergy(this.entity.getStoredEnergy() & 0xFFFF | (value << 16));
-                case 2 -> this.entity.setAverageInputPerTick(value / 10F);
-                case 3 -> this.entity.setAverageOutputPerTick(value / 10F);
+                case 0 -> this.entity.storedEnergy = this.entity.storedEnergy & 0xFFFF_0000 | value;
+                case 1 -> this.entity.storedEnergy = this.entity.storedEnergy & 0xFFFF | value << 16;
+                case 2 -> this.entity.averageInputPerTick = value / 10F;
+                case 3 -> this.entity.averageOutputPerTick = value / 10F;
             }
         }
     }

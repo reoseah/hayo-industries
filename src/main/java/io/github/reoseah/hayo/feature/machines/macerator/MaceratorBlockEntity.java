@@ -2,19 +2,19 @@ package io.github.reoseah.hayo.feature.machines.macerator;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineBlockEntity;
+import io.github.reoseah.hayo.feature.universal_screen.RecipeProgressBar;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jspecify.annotations.Nullable;
 
 public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRecipe> {
     public static final int TRANSFER_LIMIT = 32;
@@ -64,5 +64,11 @@ public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRe
     @Override
     public Component getDefaultName() {
         return Component.translatable("block.hayo.macerator");
+    }
+
+    @Override
+    public UniversalContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return super.createMenu(containerId, inventory, player) //
+                .addElement(RecipeProgressBar.macerator(70, 36, this::getProgressEnergy, this::getLastOrDefaultRecipeEnergy));
     }
 }

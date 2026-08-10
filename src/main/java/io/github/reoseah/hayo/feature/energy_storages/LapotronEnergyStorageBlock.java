@@ -16,10 +16,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class AdvancedEnergyStorageBlock extends DirectionalElectricalBlock implements ElectricReceiverBlock, ElectricSenderBlock {
-    public static final MapCodec<AdvancedEnergyStorageBlock> CODEC = simpleCodec(AdvancedEnergyStorageBlock::new);
+public class LapotronEnergyStorageBlock extends DirectionalElectricalBlock implements ElectricReceiverBlock, ElectricSenderBlock {
+    public static final MapCodec<LapotronEnergyStorageBlock> CODEC = simpleCodec(LapotronEnergyStorageBlock::new);
 
-    public AdvancedEnergyStorageBlock(Properties properties) {
+    public LapotronEnergyStorageBlock(Properties properties) {
         super(properties);
     }
 
@@ -30,13 +30,13 @@ public class AdvancedEnergyStorageBlock extends DirectionalElectricalBlock imple
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new AdvancedEnergyStorageBlockEntity(pos, state);
+        return new LapotronEnergyStorageBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, Hayo.BlockEntityTypes.ADVANCED_ENERGY_STORAGE, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
+        return createTickerHelper(type, Hayo.BlockEntityTypes.LAPOTRON_ENERGY_STORAGE, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package io.github.reoseah.hayo;
 
 import com.mojang.serialization.MapCodec;
-import io.github.reoseah.hayo.base.client.HayoGuiSprites;
 import io.github.reoseah.hayo.base.item.BlockItemWithTooltip;
 import io.github.reoseah.hayo.base.item.ItemWithTooltip;
 import io.github.reoseah.hayo.feature.battery_box.BatteryBoxBlock;
@@ -10,30 +9,24 @@ import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.CableBreakPayload;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.electric_items.*;
-import io.github.reoseah.hayo.feature.energy_storages.AdvancedEnergyStorageBlock;
-import io.github.reoseah.hayo.feature.energy_storages.AdvancedEnergyStorageBlockEntity;
+import io.github.reoseah.hayo.feature.energy_storages.LapotronEnergyStorageBlock;
+import io.github.reoseah.hayo.feature.energy_storages.LapotronEnergyStorageBlockEntity;
 import io.github.reoseah.hayo.feature.energy_storages.CrystalEnergyStorageBlock;
 import io.github.reoseah.hayo.feature.energy_storages.CrystalEnergyStorageBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineRecipe;
-import io.github.reoseah.hayo.feature.machines.ClassicMachineScreen;
-import io.github.reoseah.hayo.feature.machines.MachineMenu;
 import io.github.reoseah.hayo.feature.machines.compressor.CompressingRecipe;
 import io.github.reoseah.hayo.feature.machines.compressor.CompressorBlock;
 import io.github.reoseah.hayo.feature.machines.compressor.CompressorBlockEntity;
-import io.github.reoseah.hayo.feature.machines.compressor.CompressorMenu;
 import io.github.reoseah.hayo.feature.machines.electric_furnace.ElectricFurnaceBlock;
 import io.github.reoseah.hayo.feature.machines.electric_furnace.ElectricFurnaceBlockEntity;
-import io.github.reoseah.hayo.feature.machines.electric_furnace.ElectricFurnaceMenu;
 import io.github.reoseah.hayo.feature.machines.extractor.ExtractingRecipe;
 import io.github.reoseah.hayo.feature.machines.extractor.ExtractorBlock;
 import io.github.reoseah.hayo.feature.machines.extractor.ExtractorBlockEntity;
-import io.github.reoseah.hayo.feature.machines.extractor.ExtractorMenu;
 import io.github.reoseah.hayo.feature.machines.macerator.MaceratingRecipe;
 import io.github.reoseah.hayo.feature.machines.macerator.MaceratorBlock;
 import io.github.reoseah.hayo.feature.machines.macerator.MaceratorBlockEntity;
-import io.github.reoseah.hayo.feature.machines.macerator.MaceratorMenu;
 import io.github.reoseah.hayo.feature.machines.matter_generator.*;
 import io.github.reoseah.hayo.feature.quantum_armor.QuantumArmorRenderer;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
@@ -123,6 +116,7 @@ import java.util.function.Function;
 import static net.minecraft.world.level.block.Blocks.leavesProperties;
 import static net.minecraft.world.level.block.Blocks.logProperties;
 
+// TODO: consider making batteries and what not "bundle-like" holders of the battery or energy crystal
 public class Hayo {
     public static final String MOD_ID = "hayo";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -213,7 +207,7 @@ public class Hayo {
 
     public static class Blocks {
         private static final BlockBehaviour.Properties MACHINE_PROPS = BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.METAL);
-        private static final BlockBehaviour.Properties LIT_MACHINE_PROPS = BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.METAL).lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 14 : 0);
+        private static final BlockBehaviour.Properties LIT_MACHINE_PROPS = BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.METAL).lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 11 : 0);
         public static final Block GENERATOR = register("generator", GeneratorBlock::new, LIT_MACHINE_PROPS);
         public static final Block ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlock::new, LIT_MACHINE_PROPS);
         public static final Block MACERATOR = register("macerator", MaceratorBlock::new, LIT_MACHINE_PROPS);
@@ -222,7 +216,7 @@ public class Hayo {
         public static final Block MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlock::new, LIT_MACHINE_PROPS);
         public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         public static final Block CRYSTAL_ENERGY_STORAGE = register("crystal_energy_storage", CrystalEnergyStorageBlock::new, MACHINE_PROPS);
-        public static final Block ADVANCED_ENERGY_STORAGE = register("advanced_energy_storage", AdvancedEnergyStorageBlock::new, MACHINE_PROPS);
+        public static final Block LAPOTRON_ENERGY_STORAGE = register("lapotron_energy_storage", LapotronEnergyStorageBlock::new, MACHINE_PROPS);
 
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final CableBlock QUADRUPLE_POWER_CABLE = register("quadruple_power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
@@ -290,7 +284,7 @@ public class Hayo {
 
         public static final Item BATTERY_BOX = registerBlock(Blocks.BATTERY_BOX);
         public static final Item CRYSTAL_ENERGY_STORAGE = registerBlock(Blocks.CRYSTAL_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
-        public static final Item ADVANCED_ENERGY_STORAGE = registerBlock(Blocks.ADVANCED_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
+        public static final Item LAPOTRON_ENERGY_STORAGE = registerBlock(Blocks.LAPOTRON_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item CABLE = registerBlock(Blocks.POWER_CABLE, BlockItemWithTooltip::new);
         public static final Item POWER_CABLE = registerBlock(Blocks.QUADRUPLE_POWER_CABLE, BlockItemWithTooltip::new);
@@ -358,6 +352,7 @@ public class Hayo {
 
         public static final Item BATTERY = registerItem("battery", SimpleElectricItem::new, createBatteryProperties(10_000, 32));
         public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", SimpleElectricItem::new, createBatteryProperties(100_000, 128));
+        public static final Item LAPOTRON_CRYSTAL = registerItem("lapotron_crystal", SimpleElectricItem::new, createBatteryProperties(1_000_000, 512).rarity(Rarity.RARE));
 
         public static final Item CHAINSAW = registerItem("chainsaw", SimpleElectricItem::new, new Item.Properties() //
                 .stacksTo(1) //
@@ -542,7 +537,7 @@ public class Hayo {
 
                 entries.accept(BATTERY_BOX);
                 entries.accept(CRYSTAL_ENERGY_STORAGE);
-                entries.accept(ADVANCED_ENERGY_STORAGE);
+                entries.accept(LAPOTRON_ENERGY_STORAGE);
 
                 entries.accept(CABLE);
                 entries.accept(POWER_CABLE);
@@ -582,17 +577,22 @@ public class Hayo {
                 entries.accept(FLAK_CHESTPLATE);
 
                 entries.accept(BATTERY);
-                entries.accept(EnergyComponents.withEnergy(BATTERY, 500), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withEnergy(BATTERY, 2000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withEnergy(BATTERY, 4000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withEnergy(BATTERY, 6000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withEnergy(BATTERY, 8000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+//                entries.accept(EnergyComponents.withEnergy(BATTERY, 500), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+//                entries.accept(EnergyComponents.withEnergy(BATTERY, 2000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+//                entries.accept(EnergyComponents.withEnergy(BATTERY, 4000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+//                entries.accept(EnergyComponents.withEnergy(BATTERY, 6000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+//                entries.accept(EnergyComponents.withEnergy(BATTERY, 8000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(BATTERY));
                 entries.accept(ENERGY_CRYSTAL);
-                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 5000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 30000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 70000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+//                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 5000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+//                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 30000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+//                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 70000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(ENERGY_CRYSTAL));
+                entries.accept(LAPOTRON_CRYSTAL);
+                entries.accept(EnergyComponents.withEnergy(LAPOTRON_CRYSTAL, 50000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withEnergy(LAPOTRON_CRYSTAL, 300000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withEnergy(LAPOTRON_CRYSTAL, 700000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(LAPOTRON_CRYSTAL));
 
                 entries.accept(CHAINSAW, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(CHAINSAW));
@@ -702,7 +702,7 @@ public class Hayo {
         public static final BlockEntityType<MatterGeneratorBlockEntity> MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlockEntity::new, Blocks.MATTER_GENERATOR);
         public static final BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX = register("battery_box", BatteryBoxBlockEntity::new, Blocks.BATTERY_BOX);
         public static final BlockEntityType<CrystalEnergyStorageBlockEntity> CRYSTAL_ENERGY_STORAGE = register("crystal_energy_storage", CrystalEnergyStorageBlockEntity::new, Blocks.CRYSTAL_ENERGY_STORAGE);
-        public static final BlockEntityType<AdvancedEnergyStorageBlockEntity> ADVANCED_ENERGY_STORAGE = register("advanced_energy_storage", AdvancedEnergyStorageBlockEntity::new, Blocks.ADVANCED_ENERGY_STORAGE);
+        public static final BlockEntityType<LapotronEnergyStorageBlockEntity> LAPOTRON_ENERGY_STORAGE = register("lapotron_energy_storage", LapotronEnergyStorageBlockEntity::new, Blocks.LAPOTRON_ENERGY_STORAGE);
 
         public static void initialize() {
         }
@@ -714,12 +714,6 @@ public class Hayo {
     }
 
     public static class MenuTypes {
-        public static final MenuType<MachineMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
-        public static final MenuType<MachineMenu> MACERATOR = register("macerator", MaceratorMenu::new);
-        public static final MenuType<MachineMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
-        public static final MenuType<MachineMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
-        public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
-
         @SuppressWarnings("DataFlowIssue")
         public static final ExtendedMenuType<UniversalContainerMenu, BlockPos> UNIVERSAL = register("universal", (containerId, inventory, pos) -> {
             var level = inventory.player.level();
@@ -731,6 +725,7 @@ public class Hayo {
 
             return (UniversalContainerMenu) provider.createMenu(containerId, inventory, inventory.player);
         }, BlockPos.STREAM_CODEC);
+        public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
 
         public static void initialize() {
         }
@@ -744,13 +739,9 @@ public class Hayo {
         }
 
         public static void initializeClient() {
-            MenuScreens.register(ELECTRIC_FURNACE, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.DEFAULT));
-            MenuScreens.register(MACERATOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.MACERATOR));
-            MenuScreens.register(COMPRESSOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.COMPRESSOR));
-            MenuScreens.register(EXTRACTOR, ClassicMachineScreen.withArrow(HayoGuiSprites.RecipeArrow.EXTRACTOR));
-            MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
-
             MenuScreens.register(UNIVERSAL, UniversalContainerScreen::new);
+
+            MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
         }
     }
 

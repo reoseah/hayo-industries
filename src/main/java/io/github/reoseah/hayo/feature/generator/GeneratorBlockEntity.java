@@ -57,7 +57,7 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
         }
 
         if (entity.fuelEnergyLeft > 0) {
-            var generation = Math.min(entity.fuelEnergyLeft, GENERATION_RATE);
+            var generation = Math.max(1, Math.min(Math.min(entity.fuelEnergyLeft, GENERATION_RATE), CAPACITY - entity.storedEnergy));
             entity.fuelEnergyLeft -= generation;
             entity.storedEnergy += generation;
             if (entity.storedEnergy > CAPACITY) {

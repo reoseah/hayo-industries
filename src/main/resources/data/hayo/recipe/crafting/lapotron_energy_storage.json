@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "LAL",
+    "L#L",
+    "LBL"
+  ],
+  "key": {
+    "#": "hayo:crystal_energy_storage",
+    "L": "hayo:lapotron_crystal",
+    "A": "hayo:advanced_circuit",
+    "B": "hayo:energy_bus"
+  },
+  "result": {
+    "id": "hayo:lapotron_energy_storage"
+  }
+}

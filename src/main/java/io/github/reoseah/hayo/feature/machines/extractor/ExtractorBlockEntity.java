@@ -2,6 +2,8 @@ package io.github.reoseah.hayo.feature.machines.extractor;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineBlockEntity;
+import io.github.reoseah.hayo.feature.universal_screen.RecipeProgressBar;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -63,5 +65,11 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ExtractingRe
     @Override
     public Component getDefaultName() {
         return Component.translatable("block.hayo.extractor");
+    }
+
+    @Override
+    public UniversalContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return super.createMenu(containerId, inventory, player) //
+                .addElement(RecipeProgressBar.extractor(70, 36, this::getProgressEnergy, this::getLastOrDefaultRecipeEnergy));
     }
 }

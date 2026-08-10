@@ -5,36 +5,36 @@
     "scale": 1,
     "fallback": {
       "type": "minecraft:model",
-      "model": "hayo:item/energy_crystal"
+      "model": "hayo:item/lapotron_crystal"
     },
     "entries": [
       {
         "model": {
           "type": "minecraft:model",
-          "model": "hayo:item/energy_crystal_charge1"
+          "model": "hayo:item/lapotron_crystal_charge1"
         },
-        "threshold": 5000
+        "threshold": 50000
       },
       {
         "model": {
           "type": "minecraft:model",
-          "model": "hayo:item/energy_crystal_charge2"
+          "model": "hayo:item/lapotron_crystal_charge2"
         },
-        "threshold": 30000
+        "threshold": 300000
       },
       {
         "model": {
           "type": "minecraft:model",
-          "model": "hayo:item/energy_crystal_charge3"
+          "model": "hayo:item/lapotron_crystal_charge3"
         },
-        "threshold": 70000
+        "threshold": 700000
       },
       {
         "model": {
           "type": "minecraft:model",
-          "model": "hayo:item/energy_crystal_charge4"
+          "model": "hayo:item/lapotron_crystal_charge4"
         },
-        "threshold": 95000
+        "threshold": 950000
       }
     ]
   }

@@ -141,16 +141,14 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     @Override
     protected void inventoryChanged(int slot) {
         super.inventoryChanged(slot);
-        if (this.level instanceof ServerLevel) {
-            if (this.isInputSlot(slot)) {
-                if (this.lastRecipe != null && !this.lastRecipe.value().matches(this.createRecipeInput(), this.level)) {
-                    this.resetRecipeProgress();
-                }
-                return;
-            } else if (slot >= this.getFirstUpgradeSlot() && slot <= this.getLastUpgradeSlot()) {
-                this.updateUpgradeState();
-                return;
+        if (this.isInputSlot(slot)) {
+            if (this.lastRecipe != null && !this.lastRecipe.value().matches(this.createRecipeInput(), this.level)) {
+                this.resetRecipeProgress();
             }
+            return;
+        } else if (slot >= this.getFirstUpgradeSlot() && slot <= this.getLastUpgradeSlot()) {
+            this.updateUpgradeState();
+            return;
         }
     }
 
@@ -227,6 +225,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
             this.hasInductionUpgrade = hasInductionUpgrade;
             this.inductionHeat = 0;
         }
+
     }
 
     protected void resetRecipeProgress() {

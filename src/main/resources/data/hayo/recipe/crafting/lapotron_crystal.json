@@ -1,0 +1,17 @@
+{
+  "type": "hayo:energy_preserving_crafting",
+  "category": "misc",
+  "key": {
+    "#": "hayo:energy_crystal",
+    "C": "hayo:advanced_circuit",
+    "L": "minecraft:lapis_lazuli"
+  },
+  "pattern": [
+    "LCL",
+    "L#L",
+    "LCL"
+  ],
+  "result": {
+    "id": "hayo:lapotron_crystal"
+  }
+}

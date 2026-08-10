@@ -27,19 +27,6 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         this.addDataSlots(this.data);
     }
 
-    public static void addClassicSlots(MachineMenu menu, Container container, Inventory inventory, TagKey<Item> validUpgrades) {
-        menu.addSlot(new Slot(container, 0, 47, 18));
-        menu.addSlot(new Slot(container, 1, 47, 54));
-        menu.addSlot(new ResultSlot(container, 2, 107, 36));
-
-        menu.addSlot(new TagFilteredSlot(container, 3, 152, 8, validUpgrades));
-        menu.addSlot(new TagFilteredSlot(container, 4, 152, 26, validUpgrades));
-        menu.addSlot(new TagFilteredSlot(container, 5, 152, 44, validUpgrades));
-        menu.addSlot(new TagFilteredSlot(container, 6, 152, 62, validUpgrades));
-
-        menu.addStandardInventorySlots(inventory, 8, 84);
-    }
-
     public static ContainerData createData(MachineBlockEntity<?, ?> entity) {
         return new ContainerData() {
             @Override

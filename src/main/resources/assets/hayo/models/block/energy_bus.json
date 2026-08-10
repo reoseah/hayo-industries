@@ -2,7 +2,7 @@
   "parent": "block/block",
   "textures": {
     "particle": "#texture",
-    "texture": "hayo:block/advanced_energy_storage_output"
+    "texture": "hayo:block/lapotron_energy_storage_output"
   },
   "elements": [
     {

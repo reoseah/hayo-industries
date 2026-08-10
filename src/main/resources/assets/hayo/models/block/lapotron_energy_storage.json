@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "bottom": "hayo:block/lapotron_energy_storage",
+    "side": "hayo:block/lapotron_energy_storage",
+    "top": "hayo:block/lapotron_energy_storage_output"
+  }
+}

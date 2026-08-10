@@ -2,6 +2,8 @@ package io.github.reoseah.hayo.feature.machines.electric_furnace;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineBlockEntity;
+import io.github.reoseah.hayo.feature.universal_screen.RecipeProgressBar;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -84,6 +86,12 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
     @Override
     public Component getDefaultName() {
         return Component.translatable("block.hayo.electric_furnace");
+    }
+
+    @Override
+    public UniversalContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return super.createMenu(containerId, inventory, player) //
+                .addElement(RecipeProgressBar.defaultArrow(70, 36, this::getProgressEnergy, this::getLastOrDefaultRecipeEnergy));
     }
 
     @Override

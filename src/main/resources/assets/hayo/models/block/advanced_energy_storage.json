@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_bottom_top",
-  "textures": {
-    "bottom": "hayo:block/advanced_energy_storage",
-    "side": "hayo:block/advanced_energy_storage",
-    "top": "hayo:block/advanced_energy_storage_output"
-  }
-}

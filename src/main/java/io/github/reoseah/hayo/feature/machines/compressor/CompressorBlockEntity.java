@@ -2,13 +2,14 @@ package io.github.reoseah.hayo.feature.machines.compressor;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineBlockEntity;
+import io.github.reoseah.hayo.feature.universal_screen.RecipeProgressBar;
+import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -64,5 +65,11 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
     @Override
     public Component getDefaultName() {
         return Component.translatable("block.hayo.compressor");
+    }
+
+    @Override
+    public UniversalContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return super.createMenu(containerId, inventory, player) //
+                .addElement(RecipeProgressBar.compressor(70, 36, this::getProgressEnergy, this::getLastOrDefaultRecipeEnergy));
     }
 }
