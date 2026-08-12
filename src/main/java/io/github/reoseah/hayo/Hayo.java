@@ -9,10 +9,10 @@ import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.CableBreakPayload;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.electric_items.*;
-import io.github.reoseah.hayo.feature.energy_storages.LapotronEnergyStorageBlock;
-import io.github.reoseah.hayo.feature.energy_storages.LapotronEnergyStorageBlockEntity;
 import io.github.reoseah.hayo.feature.energy_storages.CrystalEnergyStorageBlock;
 import io.github.reoseah.hayo.feature.energy_storages.CrystalEnergyStorageBlockEntity;
+import io.github.reoseah.hayo.feature.energy_storages.LapotronEnergyStorageBlock;
+import io.github.reoseah.hayo.feature.energy_storages.LapotronEnergyStorageBlockEntity;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlock;
 import io.github.reoseah.hayo.feature.generator.GeneratorBlockEntity;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineRecipe;
@@ -251,6 +251,7 @@ public class Hayo {
         public static final Block REINFORCED_STONE_SLAB = register("reinforced_stone_slab", SlabBlock::new, REINFORCED_BLOCKS);
         public static final Block GLAZED_REINFORCED_STONE = register("glazed_reinforced_stone", Block::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
+        public static final Block REINFORCED_TRAPDOOR = register("reinforced_trapdoor", props -> new TrapDoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
 
         public static void initialize() {
             StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
@@ -317,6 +318,7 @@ public class Hayo {
         public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
         public static final Item GLAZED_REINFORCED_STONE = registerBlock(Blocks.GLAZED_REINFORCED_STONE);
         public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
+        public static final Item REINFORCED_TRAPDOOR = registerBlock(Blocks.REINFORCED_TRAPDOOR);
 
         private static final TagKey<Item> COPPER_INGOTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"));
         public static final Item WRENCH = registerItem("wrench", WrenchItem::new, new Item.Properties() //
@@ -569,6 +571,7 @@ public class Hayo {
                 entries.accept(GLAZED_REINFORCED_STONE);
                 entries.accept(REINFORCED_GLASS);
                 entries.accept(REINFORCED_DOOR);
+                entries.accept(REINFORCED_TRAPDOOR);
 
                 entries.accept(WRENCH);
                 entries.accept(SILICON_BRONZE_SWORD);
@@ -596,6 +599,24 @@ public class Hayo {
                 entries.accept(EnergyComponents.withFullEnergy(BATTERY_PACK));
                 entries.accept(ADVANCED_BATTERY_PACK, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(ADVANCED_BATTERY_PACK));
+
+                entries.accept(NANO_HELMET, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(NANO_HELMET));
+                entries.accept(NANO_CHESTPLATE, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(NANO_CHESTPLATE));
+                entries.accept(NANO_LEGGINGS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(NANO_LEGGINGS));
+                entries.accept(NANO_BOOTS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(NANO_BOOTS));
+
+                entries.accept(QUANTUM_HELMET, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_HELMET));
+                entries.accept(QUANTUM_CHESTPLATE, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_CHESTPLATE));
+                entries.accept(QUANTUM_LEGGINGS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_LEGGINGS));
+                entries.accept(QUANTUM_BOOTS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_BOOTS));
 
                 entries.accept(WOOD_DUST);
                 entries.accept(STONE_DUST);

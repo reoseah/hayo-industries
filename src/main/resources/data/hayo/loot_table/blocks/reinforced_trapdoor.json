@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:reinforced_trapdoor"
+          "name": "hayo:chipboard"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/reinforced_trapdoor"
+  "random_sequence": "hayo:blocks/chipboard"
 }

@@ -2,11 +2,13 @@
   "values": [
     "#hayo:machines",
     "hayo:silicon_bronze_block",
+    "hayo:composite_plate_block",
     "hayo:raw_silicon_block",
     "hayo:reinforced_stone",
     "hayo:reinforced_glass",
     "hayo:reinforced_stone_stairs",
     "hayo:reinforced_stone_slab",
-    "hayo:reinforced_door"
+    "hayo:reinforced_door",
+    "hayo:reinforced_trapdoor"
   ]
 }
