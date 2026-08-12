@@ -10,9 +10,13 @@ import net.minecraft.resources.Identifier;
 
 public record SpriteElement(Identifier sprite, int x, int y, int width,
                             int height) implements UniversalContainerMenu.GuiElement {
-
+    public static final Identifier SLOT = Hayo.modId("slots/default");
     public static final Identifier OUTPUT_SLOT = Hayo.modId("slots/output");
     public static final Identifier UPGRADE_SLOT = Hayo.modId("slots/upgrade");
+
+    public static SpriteElement slot(int x, int y) {
+        return new SpriteElement(SLOT, x, y, 18, 18);
+    }
 
     public static SpriteElement outputSlot(int x, int y) {
         return new SpriteElement(OUTPUT_SLOT, x, y, 24, 24);

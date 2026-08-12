@@ -41,23 +41,23 @@ public class QuantumArmorRenderer implements ArmorRenderer {
         RenderType renderType = contextModel.renderType(REGULAR_TEXTURE);
         nodeCollector.submitModel(this.armorModel, state, poseStack, renderType, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF, null, 0, null);
 
-        var outlineLayer = getQuantumGlowRenderType(GLOW_TEXTURE);
-        ArmorRenderer.submitTransformCopyingModel(
-                contextModel, //
-                state, //
-                this.glowModel, //
-                state, //
-                true, //
-                nodeCollector, //
-                poseStack, //
-                outlineLayer, //
-                light, //
-                OverlayTexture.NO_OVERLAY, //
-                0xFFFFFFFF, //
-                null, //
-                0, //
-                null //
-        );
+//        var outlineLayer = getQuantumGlowRenderType(GLOW_TEXTURE);
+//        ArmorRenderer.submitTransformCopyingModel(
+//                contextModel, //
+//                state, //
+//                this.glowModel, //
+//                state, //
+//                true, //
+//                nodeCollector, //
+//                poseStack, //
+//                outlineLayer, //
+//                light, //
+//                OverlayTexture.NO_OVERLAY, //
+//                0xFFFFFFFF, //
+//                null, //
+//                0, //
+//                null //
+//        );
     }
 
     public static RenderType getQuantumGlowRenderType(Identifier texture) {

@@ -1,0 +1,7 @@
+{
+  "parent": "block/door_top_left_open",
+  "textures": {
+    "bottom": "hayo:block/rubber_door_bottom",
+    "top": "hayo:block/rubber_door_top"
+  }
+}

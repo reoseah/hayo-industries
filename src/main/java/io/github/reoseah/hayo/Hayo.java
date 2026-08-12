@@ -234,6 +234,7 @@ public class Hayo {
         public static final Block RUBBER_PLANKS = register("rubber_planks", Block::new, RUBBER_PROPERTIES);
         public static final Block RUBBER_STAIRS = register("rubber_stairs", props -> new StairBlock(RUBBER_PLANKS.defaultBlockState(), props), RUBBER_PROPERTIES);
         public static final Block RUBBER_SLAB = register("rubber_slab", SlabBlock::new, RUBBER_PROPERTIES);
+        public static final Block RUBBER_DOOR = register("rubber_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
 
         public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINE_PROPS);
         public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, BlockBehaviour.Properties.of().strength(15F).sound(SoundType.METAL).mapColor(MapColor.METAL));
@@ -300,6 +301,7 @@ public class Hayo {
         public static final Item RUBBER_PLANKS = registerBlock(Blocks.RUBBER_PLANKS);
         public static final Item RUBBER_STAIRS = registerBlock(Blocks.RUBBER_STAIRS);
         public static final Item RUBBER_SLAB = registerBlock(Blocks.RUBBER_SLAB);
+        public static final Item RUBBER_DOOR = registerBlock(Blocks.RUBBER_DOOR);
 
         public static final Item MACHINE_BLOCK = registerBlock(Blocks.MACHINE_BLOCK);
         public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
@@ -553,6 +555,7 @@ public class Hayo {
                 entries.accept(RUBBER_PLANKS);
                 entries.accept(RUBBER_STAIRS);
                 entries.accept(RUBBER_SLAB);
+                entries.accept(RUBBER_DOOR);
 
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);
@@ -577,21 +580,10 @@ public class Hayo {
                 entries.accept(FLAK_CHESTPLATE);
 
                 entries.accept(BATTERY);
-//                entries.accept(EnergyComponents.withEnergy(BATTERY, 500), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-//                entries.accept(EnergyComponents.withEnergy(BATTERY, 2000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-//                entries.accept(EnergyComponents.withEnergy(BATTERY, 4000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-//                entries.accept(EnergyComponents.withEnergy(BATTERY, 6000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-//                entries.accept(EnergyComponents.withEnergy(BATTERY, 8000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(BATTERY));
                 entries.accept(ENERGY_CRYSTAL);
-//                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 5000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-//                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 30000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-//                entries.accept(EnergyComponents.withEnergy(ENERGY_CRYSTAL, 70000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(ENERGY_CRYSTAL));
                 entries.accept(LAPOTRON_CRYSTAL);
-                entries.accept(EnergyComponents.withEnergy(LAPOTRON_CRYSTAL, 50000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withEnergy(LAPOTRON_CRYSTAL, 300000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withEnergy(LAPOTRON_CRYSTAL, 700000), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                 entries.accept(EnergyComponents.withFullEnergy(LAPOTRON_CRYSTAL));
 
                 entries.accept(CHAINSAW, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);

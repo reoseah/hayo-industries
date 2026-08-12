@@ -1,9 +1,10 @@
 package io.github.reoseah.hayo.feature.machines.matter_generator;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.client.HayoGuiSprites;
-import io.github.reoseah.hayo.feature.electric_blocks.EnergyGuiSprites;
+import io.github.reoseah.hayo.feature.universal_screen.MachineEnergyBar;
+import io.github.reoseah.hayo.mod_support.jei.RecipeArrow;
 import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
+import io.github.reoseah.hayo.feature.universal_screen.SpriteElement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -58,11 +59,11 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
         int y = this.topPos;
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x, y, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 
-        HayoGuiSprites.drawSlot(graphics, x + this.menu.slots.get(0).x - 1, y + this.menu.slots.get(0).y - 1);
-        HayoGuiSprites.drawOutputSlot(graphics, x + this.menu.slots.get(1).x - 4, y + this.menu.slots.get(1).y - 4);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SpriteElement.SLOT, x + this.menu.slots.get(0).x - 1, y + this.menu.slots.get(0).y - 1, 18, 18);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SpriteElement.OUTPUT_SLOT, x + this.menu.slots.get(1).x - 4, y + this.menu.slots.get(1).y - 4, 24, 24);
 
-        EnergyGuiSprites.energySmall(graphics, x + 57, y + 17, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
-        HayoGuiSprites.drawRecipeArrow(graphics, x + 80, y + 25, HayoGuiSprites.RecipeArrow.DEFAULT, this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
+        MachineEnergyBar.extract(graphics, x + 57, y + 17, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
+        RecipeArrow.extract(graphics, x + 80, y + 25, RecipeArrow.DEFAULT, this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
 
         this.drawRecipeButtons(graphics, mouseX, mouseY);
 

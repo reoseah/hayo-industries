@@ -1,10 +1,9 @@
 package io.github.reoseah.hayo.mod_support.jei;
 
-import io.github.reoseah.hayo.base.client.HayoGuiSprites;
-import io.github.reoseah.hayo.feature.electric_blocks.EnergyGuiSprites;
 import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
 import io.github.reoseah.hayo.feature.machines.matter_generator.MatterGeneratingRecipe;
 import io.github.reoseah.hayo.feature.machines.matter_generator.MatterGeneratorBlockEntity;
+import io.github.reoseah.hayo.feature.universal_screen.MachineEnergyBar;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -67,11 +66,11 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
 
     @Override
     public void draw(RecipeHolder<MatterGeneratingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        EnergyGuiSprites.energySmall(graphics, 3, 6, 10, 14);
+        MachineEnergyBar.extract(graphics, 3, 6, 10, 14);
 
         int energyCost = recipe.value().energyCost();
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ENERGY_USE_RATE / 24)) % 24d);
-        HayoGuiSprites.drawRecipeArrow(graphics, 22, 4, HayoGuiSprites.RecipeArrow.DEFAULT, progress, 24);
+        RecipeArrow.extract(graphics, 22, 4, RecipeArrow.DEFAULT, progress, 24);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 1, 28, 0xFF404040, false);
     }

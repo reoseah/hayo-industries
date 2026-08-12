@@ -1,9 +1,8 @@
 package io.github.reoseah.hayo.mod_support.jei;
 
-import io.github.reoseah.hayo.base.client.HayoGuiSprites;
-import io.github.reoseah.hayo.feature.electric_blocks.EnergyGuiSprites;
 import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineRecipe;
+import io.github.reoseah.hayo.feature.universal_screen.MachineEnergyBar;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -27,11 +26,11 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
 
     private final IRecipeType<? extends RecipeHolder<? extends ClassicMachineRecipe>> type;
     private final int energyUseRate;
-    private final HayoGuiSprites.RecipeArrow arrowType;
+    private final RecipeArrow arrowType;
     private final Component title;
     private final IDrawable icon;
 
-    public ClassicMachineRecipeJeiCategory(IRecipeType<? extends RecipeHolder<? extends ClassicMachineRecipe>> type, int energyUseRate, HayoGuiSprites.RecipeArrow arrowType, Component title, IDrawable icon) {
+    public ClassicMachineRecipeJeiCategory(IRecipeType<? extends RecipeHolder<? extends ClassicMachineRecipe>> type, int energyUseRate, RecipeArrow arrowType, Component title, IDrawable icon) {
         this.type = type;
         this.energyUseRate = energyUseRate;
         this.arrowType = arrowType;
@@ -91,11 +90,11 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
     @Override
     public void draw(RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         var recipe = holder.value();
-        EnergyGuiSprites.energySmall(graphics, 1, 20, 10, 14);
+        MachineEnergyBar.extract(graphics, 1, 20, 10, 14);
 
         int energyCost = recipe.energyCost;
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / this.energyUseRate / 24)) % 24d);
-        HayoGuiSprites.drawRecipeArrow(graphics, 24, 4, this.arrowType, progress, 24);
+        RecipeArrow.extract(graphics, 24, 4, this.arrowType, progress, 24);
 
         var font = Minecraft.getInstance().font;
 

@@ -12,11 +12,11 @@
 
     {
       "when": { "down": false, "up": false, "north": true, "south": true, "west": false, "east": false },
-      "apply": { "model": "hayo:block/energy_bus_straight", "x": 90 }
+      "apply": { "model": "hayo:block/energy_bus_straight_horizontal" }
     },
     {
       "when": { "down": false, "up": false, "north": false, "south": false, "west": true, "east": true },
-      "apply": { "model": "hayo:block/energy_bus_straight", "x": 90, "y": 90 }
+      "apply": { "model": "hayo:block/energy_bus_straight_horizontal", "y": 90 }
     },
 
     {

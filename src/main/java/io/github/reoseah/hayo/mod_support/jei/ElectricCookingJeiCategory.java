@@ -1,14 +1,11 @@
 package io.github.reoseah.hayo.mod_support.jei;
 
-import io.github.reoseah.hayo.base.client.HayoGuiSprites;
-import io.github.reoseah.hayo.feature.electric_blocks.EnergyGuiSprites;
 import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
 import io.github.reoseah.hayo.feature.machines.electric_furnace.ElectricFurnaceBlockEntity;
+import io.github.reoseah.hayo.feature.universal_screen.MachineEnergyBar;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback;
-import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -75,11 +72,11 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
 
     @Override
     public void draw(RecipeHolder<? extends AbstractCookingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        EnergyGuiSprites.energySmall(graphics, 1, 20, 10, 14);
+        MachineEnergyBar.extract(graphics, 1, 20, 10, 14);
 
         int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(holder.value());
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ENERGY_USE_RATE / 24)) % 24d);
-        HayoGuiSprites.drawRecipeArrow(graphics, 24, 4, HayoGuiSprites.RecipeArrow.DEFAULT, progress, 24);
+        RecipeArrow.extract(graphics, 24, 4, RecipeArrow.DEFAULT, progress, 24);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
     }
