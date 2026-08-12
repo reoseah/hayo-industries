@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "CXC",
-    "R#R"
+    " C ",
+    "WFW",
+    " # "
   ],
   "key": {
     "#": "hayo:machine_block",
-    "C": "hayo:power_cable",
-    "R": "minecraft:redstone",
-    "X": "hayo:circuit"
+    "C": "hayo:circuit",
+    "W": "hayo:copper_wire",
+    "F": "minecraft:furnace"
   },
   "result": {
-    "id": "hayo:electric_furnace",
-    "count": 1
+    "id": "hayo:electric_furnace"
   }
 }

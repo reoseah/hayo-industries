@@ -3,17 +3,16 @@
   "category": "misc",
   "pattern": [
     " C ",
-    "RPR",
-    " # "
+    "W#W",
+    " F "
   ],
   "key": {
     "#": "hayo:machine_block",
     "C": "hayo:circuit",
-    "P": "minecraft:piston",
-    "R": "minecraft:redstone"
+    "W": "hayo:copper_wire",
+    "F": "minecraft:furnace"
   },
   "result": {
-    "id": "hayo:compressor",
-    "count": 1
+    "id": "hayo:electric_furnace"
   }
 }

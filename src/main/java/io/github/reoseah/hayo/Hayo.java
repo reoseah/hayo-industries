@@ -124,7 +124,6 @@ public class Hayo {
     public static final CreativeModeTab TAB = FabricCreativeModeTab.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
 
     public static final AttachmentType<ElectricBlockManager> ELECTRIC_BLOCKS = AttachmentRegistry.create(modId("electric_blocks"));
-
     public static final AttachmentType<ElectricBlockManager.ChunkData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create( //
             modId("electric_blocks"), //
             builder -> builder //

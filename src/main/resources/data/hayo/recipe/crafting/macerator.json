@@ -2,18 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    " C ",
-    "RPR",
-    " # "
+    "FFF",
+    "M#M",
+    " C "
   ],
   "key": {
     "#": "hayo:machine_block",
     "C": "hayo:circuit",
-    "P": "minecraft:piston",
-    "R": "minecraft:redstone"
+    "M": "hayo:electric_motor",
+    "F": "minecraft:flint"
   },
   "result": {
-    "id": "hayo:compressor",
+    "id": "hayo:macerator",
     "count": 1
   }
 }
