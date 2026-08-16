@@ -17,13 +17,13 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ElectricBlockManager {
-    public static final Logger LOGGER = Logger.getLogger("HAYO/ElectricBlockManager");
+    public static final Logger LOGGER = LoggerFactory.getLogger("HAYO/ElectricBlockManager");
 
     protected final ServerLevel level;
     protected final Map<ChunkPos, TickData> tickData = new HashMap<>();
@@ -41,7 +41,7 @@ public class ElectricBlockManager {
         try {
             return ElectricBlockManager.get(level).sendEnergy(amount, pos, direction);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error while trying to send energy", e);
+            LOGGER.error("Error while trying to send energy", e);
             return 0;
         }
     }
@@ -50,7 +50,7 @@ public class ElectricBlockManager {
         try {
             ElectricBlockManager.get(level).addOrUpdate(pos);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error while adding or updating electric block", e);
+            LOGGER.error("Error while adding or updating electric block", e);
         }
     }
 
@@ -58,7 +58,7 @@ public class ElectricBlockManager {
         try {
             ElectricBlockManager.get(level).remove(pos);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error while removing electric block", e);
+            LOGGER.error("Error while removing electric block", e);
         }
     }
 
@@ -92,7 +92,7 @@ public class ElectricBlockManager {
                 targetsTotal += maxSendableAmount;
                 targets.put(path, new Target(receiver, maxSendableAmount));
             } else {
-                LOGGER.log(Level.WARNING, "Found stale cache entry at " + path.receiver + " while trying to send energy. A block was removed or replaced without updating energy grid. Removing entry...");
+                LOGGER.warn("Found stale cache entry at {} while trying to send energy. A block was removed or replaced without updating energy grid. Removing entry...", path.receiver);
                 iter.remove();
             }
         }
@@ -141,7 +141,6 @@ public class ElectricBlockManager {
             }
         }
 
-        assert totalSent <= amount;
         return totalSent;
     }
 
@@ -276,7 +275,7 @@ public class ElectricBlockManager {
                 }
             }));
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error while updating internal state for loaded chunk", e);
+            LOGGER.error("Error while updating internal state for loaded chunk", e);
         }
     }
 
@@ -291,7 +290,7 @@ public class ElectricBlockManager {
             this.deletePaths(data.electricBlocks);
         } catch (Exception e) {
             // wrapping in try-catch, otherwise whole chunk won't get saved if something errors
-            LOGGER.log(Level.SEVERE, "Error while updating internal state for unloaded chunk", e);
+            LOGGER.error("Error while updating internal state for unloaded chunk", e);
         }
     }
 
