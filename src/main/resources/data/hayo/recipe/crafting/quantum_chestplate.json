@@ -1,0 +1,17 @@
+{
+  "type": "hayo:energy_preserving_crafting",
+  "category": "misc",
+  "key": {
+    "#": "hayo:nano_chestplate",
+    "L": "hayo:lapotron_crystal",
+    "X": "hayo:quantum_plate"
+  },
+  "pattern": [
+    "X X",
+    "XLX",
+    "X#X"
+  ],
+  "result": {
+    "id": "hayo:quantum_chestplate"
+  }
+}

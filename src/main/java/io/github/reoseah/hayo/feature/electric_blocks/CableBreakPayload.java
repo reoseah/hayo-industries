@@ -12,13 +12,13 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.ChunkPos;
 
 public record CableBreakPayload(ChunkPos chunkPos,
-                                Object2IntMap<BlockPos> destructionProgress) implements CustomPacketPayload {
+                                Object2IntMap<BlockPos> destroyProgress) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, CableBreakPayload> STREAM_CODEC = CustomPacketPayload.codec(CableBreakPayload::write, CableBreakPayload::read);
 
     public static void receive(CableBreakPayload payload, ClientPlayNetworking.Context context) {
         var level = context.client().level;
 
-        for (var destructionEntry : payload.destructionProgress().object2IntEntrySet()) {
+        for (var destructionEntry : payload.destroyProgress().object2IntEntrySet()) {
             var pos = destructionEntry.getKey();
             var value = destructionEntry.getIntValue();
 
@@ -45,7 +45,7 @@ public record CableBreakPayload(ChunkPos chunkPos,
 
     private void write(FriendlyByteBuf buf) {
         ChunkPos.STREAM_CODEC.encode(buf, this.chunkPos);
-        writeBlockPosToIntMap(buf, this.chunkPos, this.destructionProgress);
+        writeBlockPosToIntMap(buf, this.chunkPos, this.destroyProgress);
     }
 
     private static void writeBlockPosToIntMap(FriendlyByteBuf buffer, ChunkPos chunkPos, Object2IntMap<BlockPos> values) {

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "DCD",
+    "A#A",
+    "DCD"
+  ],
+  "key": {
+    "#": "#c:dusts/nether_star",
+    "C": "hayo:composite_plate",
+    "A": "hayo:advanced_circuit",
+    "D": "minecraft:diamond"
+  },
+  "result": {
+    "id": "hayo:quantum_plate"
+  }
+}

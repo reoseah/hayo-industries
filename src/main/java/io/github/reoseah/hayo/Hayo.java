@@ -9,6 +9,7 @@ import io.github.reoseah.hayo.feature.cable.CableBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.CableBreakPayload;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricBlockManager;
 import io.github.reoseah.hayo.feature.electric_items.*;
+import io.github.reoseah.hayo.feature.emissive_armor.EmmissiveArmorRenderer;
 import io.github.reoseah.hayo.feature.energy_storages.CrystalEnergyStorageBlock;
 import io.github.reoseah.hayo.feature.energy_storages.CrystalEnergyStorageBlockEntity;
 import io.github.reoseah.hayo.feature.energy_storages.LapotronEnergyStorageBlock;
@@ -28,7 +29,6 @@ import io.github.reoseah.hayo.feature.machines.macerator.MaceratingRecipe;
 import io.github.reoseah.hayo.feature.machines.macerator.MaceratorBlock;
 import io.github.reoseah.hayo.feature.machines.macerator.MaceratorBlockEntity;
 import io.github.reoseah.hayo.feature.machines.matter_generator.*;
-import io.github.reoseah.hayo.feature.quantum_armor.QuantumArmorRenderer;
 import io.github.reoseah.hayo.feature.rubber_tree.ResinYieldingLogBlock;
 import io.github.reoseah.hayo.feature.rubber_tree.RubberFoliagePlacer;
 import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
@@ -44,7 +44,6 @@ import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
@@ -56,7 +55,6 @@ import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
 import net.minecraft.core.BlockPos;
@@ -71,7 +69,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -124,11 +122,11 @@ public class Hayo {
     public static final CreativeModeTab TAB = FabricCreativeModeTab.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
 
     public static final AttachmentType<ElectricBlockManager> ELECTRIC_BLOCKS = AttachmentRegistry.create(modId("electric_blocks"));
-    public static final AttachmentType<ElectricBlockManager.ChunkData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create( //
+    public static final AttachmentType<ElectricBlockManager.PersistentData> CHUNK_ELECTRIC_DATA = AttachmentRegistry.create( //
             modId("electric_blocks"), //
             builder -> builder //
-                    .initializer(ElectricBlockManager.ChunkData::new) //
-                    .persistent(ElectricBlockManager.ChunkData.CODEC.codec()));
+                    .initializer(ElectricBlockManager.PersistentData::new) //
+                    .persistent(ElectricBlockManager.PersistentData.CODEC.codec()));
 
     public static final TreeGrower RUBBER_TREE = new TreeGrower( //
             "hayo:rubber_tree", //
@@ -139,8 +137,6 @@ public class Hayo {
             Optional.empty(), //
             Optional.empty(), //
             Optional.empty());
-
-    public static final ModelLayerLocation QUANTUM_ARMOR = new ModelLayerLocation(modId("quantum_armor"), "main");
 
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modId("main"), TAB);
@@ -154,6 +150,7 @@ public class Hayo {
         FoliagePlacerTypes.initialize();
         RecipeTypes.initialize();
         RecipeSerializers.initialize();
+        SoundEvents.initialize();
 
         CustomPayloads.initialize();
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MACERATING);
@@ -173,6 +170,9 @@ public class Hayo {
                         });
 
         ServerChunkEvents.CHUNK_LOAD.register((level, chunk, generated) -> {
+            if (generated) {
+                return;
+            }
             ElectricBlockManager.get(level).onChunkLoad(chunk);
         });
         ServerChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
@@ -185,15 +185,17 @@ public class Hayo {
 
     @Environment(EnvType.CLIENT)
     public static void initializeClient() {
-        BlockColorRegistry.register((state, level, pos, tintValues) -> tintValues.add(level != null && pos != null ? BiomeColors.getAverageFoliageColor(level, pos) : 0xff48b518), Blocks.RUBBER_LEAVES);
+        BlockColorRegistry.register((_, level, pos, tintValues) -> tintValues.add(level != null && pos != null ? BiomeColors.getAverageFoliageColor(level, pos) : 0xff48b518), Blocks.RUBBER_LEAVES);
 
         RangeSelectItemModelProperties.ID_MAPPER.put(modId("energy"), EnergyModelProperty.MAP_CODEC);
 
         MenuTypes.initializeClient();
         CustomPayloads.initializeClient();
 
-        ModelLayerRegistry.registerModelLayer(QUANTUM_ARMOR, QuantumArmorRenderer.QuantumGlowModel::createLayerDefinition);
-        ArmorRenderer.register(QuantumArmorRenderer::new, Items.QUANTUM_CHESTPLATE);
+        ArmorRenderer.register(ctx -> new EmmissiveArmorRenderer(ctx, EmmissiveArmorRenderer.NANO, EmmissiveArmorRenderer.QUANTUM_OVERLAY), Items.NANO_HELMET, Items.NANO_CHESTPLATE, Items.NANO_BOOTS);
+        ArmorRenderer.register(ctx -> new EmmissiveArmorRenderer(ctx, EmmissiveArmorRenderer.LEGS_NANO, EmmissiveArmorRenderer.LEGS_QUANTUM_OVERLAY), Items.NANO_LEGGINGS);
+        ArmorRenderer.register(ctx -> new EmmissiveArmorRenderer(ctx, EmmissiveArmorRenderer.QUANTUM, EmmissiveArmorRenderer.QUANTUM_OVERLAY), Items.QUANTUM_HELMET, Items.QUANTUM_CHESTPLATE, Items.QUANTUM_BOOTS);
+        ArmorRenderer.register(ctx -> new EmmissiveArmorRenderer(ctx, EmmissiveArmorRenderer.LEGS_QUANTUM, EmmissiveArmorRenderer.LEGS_QUANTUM_OVERLAY), Items.QUANTUM_LEGGINGS);
     }
 
     public static Identifier modId(String path) {
@@ -342,7 +344,7 @@ public class Hayo {
         public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
 
         private static final ArmorMaterial FLAK_ARMOR = new ArmorMaterial( //
-                33, ArmorMaterials.makeDefense(3, 6, 8, 3, 11), 10, SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 0.0F, ItemTags.FLAK_MATERIALS, modKey(EquipmentAssets.ROOT_ID, "flak") //
+                33, ArmorMaterials.makeDefense(3, 6, 8, 3, 11), 10, net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 0.0F, ItemTags.FLAK_MATERIALS, modKey(EquipmentAssets.ROOT_ID, "flak") //
         );
         public static final Item FLAK_CHESTPLATE = registerItem("flak_chestplate", Item::new, new Item.Properties().humanoidArmor(FLAK_ARMOR, ArmorType.CHESTPLATE).stacksTo(1));
 
@@ -470,7 +472,7 @@ public class Hayo {
         public static final Item CARBON_MESH = registerItem("carbon_mesh");
         public static final Item CARBON_PLATE = registerItem("carbon_plate", new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
+        public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON).component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
         public static final Item CANISTER = registerItem("canister");
         public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food( //
@@ -644,6 +646,7 @@ public class Hayo {
                 entries.accept(COMPOSITE_PLATE);
                 entries.accept(CARBON_MESH);
                 entries.accept(CARBON_PLATE);
+                entries.accept(QUANTUM_PLATE);
                 entries.accept(COMPRESSED_PLANTS);
                 entries.accept(CANISTER);
                 entries.accept(NUTRIENT_PASTE);
@@ -804,6 +807,18 @@ public class Hayo {
 
         private static <T extends Recipe<?>> RecipeSerializer<T> register(String name, RecipeSerializer<T> serializer) {
             return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, modId(name), serializer);
+        }
+    }
+
+    public static final class SoundEvents {
+        public static final SoundEvent STICKY_RESIN_GATHER = register("sticky_resin_gather");
+        public static final SoundEvent WRENCH = register("wrench");
+
+        public static void initialize() {
+        }
+
+        private static SoundEvent register(String name) {
+            return Registry.register(BuiltInRegistries.SOUND_EVENT, modId(name), SoundEvent.createVariableRangeEvent(modId(name)));
         }
     }
 

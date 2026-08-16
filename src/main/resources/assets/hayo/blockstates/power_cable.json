@@ -2,7 +2,7 @@
   "multipart": [
     {
       "when": { "down": false, "up": false, "north": false, "south": false, "west": false, "east": false },
-      "apply": { "model": "hayo:block/power_cable_center" }
+      "apply": { "model": "hayo:block/power_cable" }
     },
     {
       "when": {

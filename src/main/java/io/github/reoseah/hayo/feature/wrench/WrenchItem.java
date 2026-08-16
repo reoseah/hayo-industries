@@ -2,6 +2,7 @@ package io.github.reoseah.hayo.feature.wrench;
 
 import io.github.reoseah.hayo.Hayo;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
@@ -26,6 +27,7 @@ public class WrenchItem extends Item {
                         : context.getHorizontalDirection().getOpposite();
                 if (currentFacing != playerFacing) {
                     level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.HORIZONTAL_FACING, playerFacing));
+                    level.playSound(context.getPlayer(), pos, Hayo.SoundEvents.WRENCH, SoundSource.PLAYERS);
                     return InteractionResult.SUCCESS;
                 }
             } else if (state.hasProperty(BlockStateProperties.FACING)) {
@@ -33,6 +35,7 @@ public class WrenchItem extends Item {
                 var playerFacing = context.getClickedFace();
                 if (currentFacing != playerFacing) {
                     level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.FACING, playerFacing));
+                    level.playSound(context.getPlayer(), pos, Hayo.SoundEvents.WRENCH, SoundSource.PLAYERS);
                     return InteractionResult.SUCCESS;
                 }
             }

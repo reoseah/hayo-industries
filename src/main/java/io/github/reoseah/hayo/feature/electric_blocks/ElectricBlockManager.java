@@ -26,10 +26,8 @@ public class ElectricBlockManager {
     public static final Logger LOGGER = Logger.getLogger("HAYO/ElectricBlockManager");
 
     protected final ServerLevel level;
-    // TODO: maybe merge this and the persisted data (electric block positions)
-    //   can save manually in chunk load/unload events instead of Fabric attachments on chunks
-    protected final Map<ChunkPos, ChunkTickValues> tickData = new HashMap<>();
-    protected final Map<Pair<BlockPos, @Nullable Direction>, List<ReceiverPath>> pathCache = new HashMap<>();
+    protected final Map<ChunkPos, TickData> tickData = new HashMap<>();
+    protected final Map<Pair<BlockPos, @Nullable Direction>, List<TransferPath>> pathCache = new HashMap<>();
 
     public ElectricBlockManager(ServerLevel level) {
         this.level = level;
@@ -69,11 +67,11 @@ public class ElectricBlockManager {
     }
 
     public int sendEnergy(int amount, BlockPos pos, @Nullable Direction sendingFace) {
-        assert amount >= 0;
+        if (amount <= 0) throw new IllegalArgumentException("Amount must be positive");
 
         var paths = this.pathCache.get(Pair.of(pos, sendingFace));
         if (paths == null) {
-            paths = discoverReceivers(this.level, pos, sendingFace);
+            paths = discoverPaths(this.level, pos, sendingFace);
             this.pathCache.put(Pair.of(pos.immutable(), sendingFace), paths);
         }
 
@@ -81,7 +79,7 @@ public class ElectricBlockManager {
 
         record Target(ElectricReceiverBlock handler, int maxAmount) {
         }
-        var targets = new HashMap<ReceiverPath, Target>();
+        var targets = new HashMap<TransferPath, Target>();
 
         for (var iter = paths.iterator(); iter.hasNext(); ) {
             var path = iter.next();
@@ -89,7 +87,6 @@ public class ElectricBlockManager {
 
             if (state.getBlock() instanceof ElectricReceiverBlock receiver) {
                 int maxReceivableAmount = receiver.getReceivableEnergy(this.level, path.receiver, path.receivingFace);
-                assert maxReceivableAmount >= 0;
                 int maxSendableAmount = Math.min(amount, maxReceivableAmount);
 
                 targetsTotal += maxSendableAmount;
@@ -111,25 +108,21 @@ public class ElectricBlockManager {
                 var path = targetEntry.getKey();
                 var target = targetEntry.getValue();
 
-                assert amount - totalSent >= target.maxAmount;
                 var received = target.handler.receiveEnergy(target.maxAmount, this.level, path.receiver, path.receivingFace);
-                assert received == target.maxAmount;
 
-                this.increaseCurrent(pos, received);
+                this.increaseCurrent(path, received);
                 totalSent += received;
             }
         } else {
             var fraction = Mth.ceil(amount / (float) targets.size());
             for (var targetEntry : targets.entrySet()) {
-
                 var path = targetEntry.getKey();
                 var target = targetEntry.getValue();
 
                 int sendable = Math.min(target.maxAmount, Math.min(amount - totalSent, fraction));
                 var received = target.handler.receiveEnergy(sendable, this.level, path.receiver, path.receivingFace);
-                assert 0 <= received && received <= sendable;
 
-                this.increaseCurrent(pos, received);
+                this.increaseCurrent(path, received);
                 totalSent += received;
                 if (totalSent == amount) {
                     break;
@@ -139,10 +132,10 @@ public class ElectricBlockManager {
                 for (var targetEntry : targets.entrySet()) {
                     var path = targetEntry.getKey();
                     var target = targetEntry.getValue();
-                    var received = target.handler.receiveEnergy(amount - totalSent, this.level, path.receiver, path.receivingFace);
-                    assert 0 <= received && received <= amount - totalSent;
+                    int sendable = amount - totalSent;
+                    var received = target.handler.receiveEnergy(sendable, this.level, path.receiver, path.receivingFace);
 
-                    this.increaseCurrent(pos, received);
+                    this.increaseCurrent(path, received);
                     totalSent += received;
                 }
             }
@@ -152,115 +145,118 @@ public class ElectricBlockManager {
         return totalSent;
     }
 
-    protected void increaseCurrent(BlockPos cablePos, int amount) {
-        var chunkPos = ChunkPos.containing(cablePos);
-        var data = this.tickData.computeIfAbsent(chunkPos, _ -> new ChunkTickValues());
-        data.cableCurrent.put(cablePos, data.cableCurrent.getOrDefault(cablePos, 0) + amount);
+    protected void increaseCurrent(TransferPath path, int amount) {
+        for (var cablePos : path.cables) {
+            var chunkPos = ChunkPos.containing(cablePos);
+            var data = this.tickData.computeIfAbsent(chunkPos, _ -> new TickData());
+            data.transferPerTick.put(cablePos, data.transferPerTick.getOrDefault(cablePos, 0) + amount);
+        }
     }
 
     public void addOrUpdate(BlockPos pos) {
-        this.deleteReachablePaths(this.level, pos);
+        this.deletePaths(pos);
 
-        var chunkData = this.level.getChunk(pos).getAttachedOrCreate(Hayo.CHUNK_ELECTRIC_DATA);
+        var data = this.level.getChunk(pos).getAttachedOrCreate(Hayo.CHUNK_ELECTRIC_DATA);
         var state = this.level.getBlockState(pos);
         if (state.getBlock() instanceof ElectricBlock) {
-            if (!chunkData.electricBlocks.contains(pos)) {
-                chunkData.electricBlocks.add(pos.immutable());
+            if (!data.electricBlocks.contains(pos)) {
+                data.electricBlocks.add(pos.immutable());
             }
         } else {
-            chunkData.electricBlocks.remove(pos);
+            data.electricBlocks.remove(pos);
             var tickData = this.tickData.get(ChunkPos.containing(pos));
             if (tickData != null) {
-                tickData.cableCurrent.removeInt(pos);
+                tickData.transferPerTick.removeInt(pos);
             }
         }
     }
 
     public void remove(BlockPos pos) {
-        this.deleteReachablePaths(this.level, pos);
+        this.deletePaths(pos);
 
-        var chunkData = this.level.getChunk(pos).getAttached(Hayo.CHUNK_ELECTRIC_DATA);
-        if (chunkData != null) {
-            chunkData.electricBlocks.remove(pos);
+        var data = this.level.getChunk(pos).getAttached(Hayo.CHUNK_ELECTRIC_DATA);
+        if (data != null) {
+            data.electricBlocks.remove(pos);
         }
-        var chunkValues = this.tickData.get(ChunkPos.containing(pos));
-        if (chunkValues != null) {
-            chunkValues.cableCurrent.removeInt(pos);
-            chunkValues.ticksAboveMaxCurrent.removeInt(pos);
+        var tickData = this.tickData.get(ChunkPos.containing(pos));
+        if (tickData != null) {
+            tickData.transferPerTick.removeInt(pos);
+            tickData.destroyTicks.removeInt(pos);
+            // TODO: reset destroy stage on clients
         }
     }
 
     public void onLevelTickEnd() {
-        for (var tickValues : this.tickData.values()) {
-            for (var currentEntry : tickValues.cableCurrent.object2IntEntrySet()) {
-                var pos = currentEntry.getKey();
-                var current = currentEntry.getIntValue();
+        for (var data : this.tickData.values()) {
+            for (var entry : data.transferPerTick.object2IntEntrySet()) {
+                var pos = entry.getKey();
+                var transfer = entry.getIntValue();
                 var state = this.level.getBlockState(pos);
 
                 if (state.getBlock() instanceof ElectricCableBlock cableBlock) {
-                    var maxCurrent = cableBlock.getTransferLimit(state);
-                    if (current > maxCurrent) {
-                        tickValues.ticksAboveMaxCurrent.put(pos, tickValues.ticksAboveMaxCurrent.getOrDefault(pos, 0) + 1);
+                    var limit = cableBlock.getTransferLimit(state);
+                    if (transfer > limit) {
+                        data.destroyTicks.put(pos, data.destroyTicks.getOrDefault(pos, 0) + 1);
                     }
                 }
             }
-            for (var ticksAboveMaxCurrentEntry : tickValues.ticksAboveMaxCurrent.object2IntEntrySet()) {
-                var pos = ticksAboveMaxCurrentEntry.getKey();
-                var current = tickValues.cableCurrent.getOrDefault(pos, 0);
-                var state = this.level.getBlockState(pos);
+            for (var entry1 : data.destroyTicks.object2IntEntrySet()) {
+                var pos1 = entry1.getKey();
+                var transfer = data.transferPerTick.getOrDefault(pos1, 0);
 
+                var state = this.level.getBlockState(pos1);
                 if (state.getBlock() instanceof ElectricCableBlock cableBlock) {
-                    var maxCurrent = cableBlock.getTransferLimit(state);
-                    if (current <= maxCurrent) {
-                        int value = Math.max(0, tickValues.ticksAboveMaxCurrent.getOrDefault(pos, 0) - 1);
-                        if (value > 0) {
-                            tickValues.ticksAboveMaxCurrent.put(pos, value);
+                    var limit = cableBlock.getTransferLimit(state);
+                    if (transfer <= limit) {
+                        int prevDestroyTicks = data.destroyTicks.getOrDefault(pos1, 0);
+                        int destroyTicks = Math.max(0, prevDestroyTicks - 1);
+                        if (destroyTicks == 0) {
+                            data.destroyTicks.removeInt(pos1);
                         } else {
-                            tickValues.ticksAboveMaxCurrent.removeInt(pos);
+                            data.destroyTicks.put(pos1, destroyTicks);
                         }
                     }
                 }
             }
-            tickValues.cableCurrent.clear();
+            data.transferPerTick.clear();
         }
 
         if (this.level.getGameTime() % 10 == 0) {
-            for (var chunkEntry : this.tickData.entrySet()) {
-                var chunkPos = chunkEntry.getKey();
-                var chunkValues = chunkEntry.getValue();
+            for (var dataEntry : this.tickData.entrySet()) {
+                var chunkPos = dataEntry.getKey();
+                var data = dataEntry.getValue();
 
-                var destructionProgressMap = new Object2IntOpenHashMap<BlockPos>();
+                var newDestroyStage = new Object2IntOpenHashMap<BlockPos>();
 
-                for (var iterator = chunkValues.ticksAboveMaxCurrent.object2IntEntrySet().iterator(); iterator.hasNext(); ) {
-                    var ticksAboveMaxCurrentEntry = iterator.next();
-                    var pos = ticksAboveMaxCurrentEntry.getKey();
-                    var ticksAboveMaxCurrent = ticksAboveMaxCurrentEntry.getIntValue();
-
-                    if (ticksAboveMaxCurrent > 100) {
-                        // TODO: call a method on ElectricCableBlock?
-                        iterator.remove();
-                        destructionProgressMap.put(pos, -1);
-                        this.level.destroyBlock(pos, false);
-                    } else if (ticksAboveMaxCurrent > 0) {
-                        int destructionProgress = Mth.clamp(ticksAboveMaxCurrent / 10, 0, 9);
-                        destructionProgressMap.put(pos, destructionProgress);
-                    } else {
-                        destructionProgressMap.put(pos, -1);
-                    }
-                }
-
-                for (var iterator = destructionProgressMap.object2IntEntrySet().iterator(); iterator.hasNext(); ) {
-                    var entry = iterator.next();
+                for (var iter = data.destroyTicks.object2IntEntrySet().iterator(); iter.hasNext(); ) {
+                    var entry = iter.next();
                     var pos = entry.getKey();
-                    var destructionProgress = entry.getIntValue();
+                    var ticks = entry.getIntValue();
 
-                    if (destructionProgress == chunkValues.lastDestructionProgressMap.getOrDefault(pos, -1)) {
-                        iterator.remove();
+                    if (ticks > 100) {
+                        iter.remove();
+                        newDestroyStage.put(pos, -1);
+                        this.level.destroyBlock(pos, false);
+                    } else if (ticks > 0) {
+                        int stage = Math.clamp(ticks / 10, 0, 9);
+                        newDestroyStage.put(pos, stage);
+                    } else {
+                        newDestroyStage.put(pos, -1);
                     }
                 }
-                chunkValues.lastDestructionProgressMap = destructionProgressMap;
-                if (!destructionProgressMap.isEmpty()) {
-                    PlayerLookup.tracking(this.level, chunkPos).forEach(serverPlayer -> ServerPlayNetworking.send(serverPlayer, new CableBreakPayload(chunkPos, destructionProgressMap)));
+
+                for (var iter = newDestroyStage.object2IntEntrySet().iterator(); iter.hasNext(); ) {
+                    var entry = iter.next();
+                    var pos = entry.getKey();
+                    var stage = entry.getIntValue();
+
+                    if (stage == data.destroyStage.getOrDefault(pos, -1)) {
+                        iter.remove();
+                    }
+                }
+                data.destroyStage = newDestroyStage;
+                if (!newDestroyStage.isEmpty()) {
+                    PlayerLookup.tracking(this.level, chunkPos).forEach(serverPlayer -> ServerPlayNetworking.send(serverPlayer, new CableBreakPayload(chunkPos, newDestroyStage)));
                 }
             }
         }
@@ -268,15 +264,15 @@ public class ElectricBlockManager {
 
     public void onChunkLoad(LevelChunk chunk) {
         try {
-            var chunkData = chunk.getAttached(Hayo.CHUNK_ELECTRIC_DATA);
-            if (chunkData == null) {
+            var data = chunk.getAttached(Hayo.CHUNK_ELECTRIC_DATA);
+            if (data == null) {
                 return;
             }
 
             var server = this.level.getServer();
             server.schedule(server.wrapRunnable(() -> {
                 if (this.level.isLoaded(chunk.getPos().getWorldPosition())) {
-                    this.deleteReachablePaths(this.level, chunkData.electricBlocks);
+                    this.deletePaths(data.electricBlocks);
                 }
             }));
         } catch (Exception e) {
@@ -288,31 +284,43 @@ public class ElectricBlockManager {
         try {
             this.tickData.remove(chunk.getPos());
 
-            var chunkData = chunk.getAttached(Hayo.CHUNK_ELECTRIC_DATA);
-            if (chunkData == null) {
+            var data = chunk.getAttached(Hayo.CHUNK_ELECTRIC_DATA);
+            if (data == null) {
                 return;
             }
-            this.deleteReachablePaths(this.level, chunkData.electricBlocks);
+            this.deletePaths(data.electricBlocks);
         } catch (Exception e) {
             // wrapping in try-catch, otherwise whole chunk won't get saved if something errors
             LOGGER.log(Level.SEVERE, "Error while updating internal state for unloaded chunk", e);
         }
     }
 
-    public record ReceiverPath(BlockPos receiver, Direction receivingFace, List<BlockPos> cables) {
+    public record TransferPath(BlockPos receiver, Direction receivingFace, List<BlockPos> cables) {
     }
 
-    public static List<ReceiverPath> discoverReceivers(ServerLevel level, BlockPos start, @Nullable Direction sendingFace) {
+    public static List<TransferPath> discoverPaths(ServerLevel level, BlockPos start, @Nullable Direction sendingFace) {
+        if (!level.isLoaded(start)) {
+            return List.of();
+        }
+
+        record VisitedPos(int distance, Direction direction, BlockState state) {
+        }
+        var visited = new HashMap<BlockPos, VisitedPos>();
+        visited.put(start, new VisitedPos(0, null, level.getBlockState(start)));
+
         var queue = new ArrayDeque<BlockPos>();
-
-        var visited = new HashMap<BlockPos, PosData>();
-        visited.put(start, new PosData(0, null, level.getBlockState(start)));
-
-        if (sendingFace != null) {
-            var pos = start.relative(sendingFace);
-            visitReceiverOrCableAt(level, queue, visited, pos, sendingFace, 1);
-        } else {
+        if (sendingFace == null) {
             queue.add(start);
+        } else {
+            var pos = start.relative(sendingFace);
+            var state = level.getBlockState(pos);
+            if (state.getBlock() instanceof ElectricBlock electricBlock //
+                    && electricBlock.connectsToCables(state, level, pos, sendingFace)) {
+                visited.put(pos, new VisitedPos(1, sendingFace, state));
+                if (state.getBlock() instanceof ElectricCableBlock) {
+                    queue.add(pos);
+                }
+            }
         }
 
         while (!queue.isEmpty()) {
@@ -321,80 +329,71 @@ public class ElectricBlockManager {
 
             for (var direction : Direction.values()) {
                 var pos = queuedPos.relative(direction);
-                visitReceiverOrCableAt(level, queue, visited, pos, direction, distance);
+                var existingEntry = visited.get(pos);
+                if (existingEntry != null) {
+                    if (existingEntry.distance > distance) {
+                        visited.put(pos, new VisitedPos(distance, direction, existingEntry.state));
+                        if (existingEntry.state.getBlock() instanceof ElectricCableBlock) {
+                            queue.add(pos);
+                        }
+                    }
+                    continue;
+                }
+
+                if (!level.isLoaded(pos)) {
+                    continue;
+                }
+
+                var state = level.getBlockState(pos);
+                if (!(state.getBlock() instanceof ElectricBlock electricBlock) || !electricBlock.connectsToCables(state, level, pos, direction)) {
+                    continue;
+                }
+
+                visited.put(pos, new VisitedPos(distance, direction, state));
+                if (state.getBlock() instanceof ElectricCableBlock) {
+                    queue.add(pos);
+                }
             }
         }
 
-        var paths = new ArrayList<ReceiverPath>();
+        var paths = new ArrayList<TransferPath>();
         for (var entry : visited.entrySet()) {
             var pos = entry.getKey();
             var data = entry.getValue();
-            if (pos.equals(start) //
-                    || !(data.state.getBlock() instanceof ElectricReceiverBlock receiver) //
-                    || !receiver.canReceiveEnergy(data.state, level, pos, data.direction) //
+            if (!pos.equals(start) //
+                    && data.state.getBlock() instanceof ElectricReceiverBlock receiver //
+                    && receiver.canReceiveEnergy(data.state, level, pos, data.direction) //
             ) {
-                continue;
-            }
+                var cables = new ArrayList<BlockPos>();
+                var ipos = pos.relative(data.direction.getOpposite());
+                var idata = visited.get(ipos);
+                while (idata.distance > 0) {
+                    cables.add(ipos);
+                    ipos = ipos.relative(idata.direction.getOpposite());
+                    idata = visited.get(ipos);
+                }
 
-            var cables = new ArrayList<BlockPos>();
-            var ipos = pos.relative(data.direction.getOpposite());
-            var idata = visited.get(ipos);
-            while (idata.distance > 0) {
-                cables.add(ipos);
-                ipos = ipos.relative(idata.direction.getOpposite());
-                idata = visited.get(ipos);
+                paths.add(new TransferPath(pos, data.direction, List.copyOf(cables)));
             }
-
-            paths.add(new ReceiverPath(pos, data.direction, cables));
         }
 
         return paths;
     }
 
-    private static void visitReceiverOrCableAt(ServerLevel level, ArrayDeque<BlockPos> queue, HashMap<BlockPos, PosData> visited, BlockPos pos, Direction direction, int distance) {
-        var existingEntry = visited.get(pos);
-        if (existingEntry != null) {
-            if (existingEntry.distance > distance) {
-                visited.put(pos, new PosData(distance, direction, existingEntry.state));
-                if (existingEntry.state.getBlock() instanceof ElectricCableBlock) {
-                    queue.add(pos);
-                }
-            }
-            return;
-        }
-
-        if (!level.isLoaded(pos)) {
-            return;
-        }
-
-        var state = level.getBlockState(pos);
-        if (!(state.getBlock() instanceof ElectricBlock electricBlock) || !electricBlock.connectsToCables(state, level, pos, direction)) {
-            return;
-        }
-
-        visited.put(pos, new PosData(distance, direction, state));
-        if (state.getBlock() instanceof ElectricCableBlock) {
-            queue.add(pos);
-        }
-    }
-
-    private record PosData(int distance, Direction direction, BlockState state) {
-    }
-
-    public void deleteReachablePaths(ServerLevel level, BlockPos start) {
+    public void deletePaths(BlockPos end) {
         var queue = new ArrayDeque<BlockPos>();
-        queue.add(start);
+        queue.add(end);
 
-        deleteReachablePathsInternal(level, queue, this.pathCache);
+        this.deletePathsInternal(queue);
     }
 
-    public void deleteReachablePaths(ServerLevel level, Collection<BlockPos> starts) {
-        var queue = new ArrayDeque<>(starts);
+    public void deletePaths(Collection<BlockPos> ends) {
+        var queue = new ArrayDeque<>(ends);
 
-        deleteReachablePathsInternal(level, queue, this.pathCache);
+        this.deletePathsInternal(queue);
     }
 
-    private static void deleteReachablePathsInternal(ServerLevel level, ArrayDeque<BlockPos> queue, Map<Pair<BlockPos, @Nullable Direction>, ?> paths) {
+    private void deletePathsInternal(ArrayDeque<BlockPos> queue) {
         var visited = new HashSet<BlockPos>();
 
         while (!queue.isEmpty()) {
@@ -406,13 +405,13 @@ public class ElectricBlockManager {
                     continue;
                 }
 
-                if (!level.isLoaded(pos)) {
+                if (!this.level.isLoaded(pos)) {
                     continue;
                 }
 
-                var state = level.getBlockState(pos);
+                var state = this.level.getBlockState(pos);
                 if (!(state.getBlock() instanceof ElectricBlock electricBlock) //
-                        || !electricBlock.connectsToCables(state, level, pos, direction)) {
+                        || !electricBlock.connectsToCables(state, this.level, pos, direction)) {
                     continue;
                 }
 
@@ -421,9 +420,9 @@ public class ElectricBlockManager {
                     queue.add(pos);
                 }
                 if (state.getBlock() instanceof ElectricSenderBlock) {
-                    paths.remove(Pair.of(pos, null));
+                    this.pathCache.remove(Pair.of(pos, null));
                     for (var side : Direction.values()) {
-                        paths.remove(Pair.of(pos, side));
+                        this.pathCache.remove(Pair.of(pos, side));
                     }
                 }
             }
@@ -431,25 +430,25 @@ public class ElectricBlockManager {
     }
 
     // TODO: doesn't need relatively large BlockPos instances, a position inside a chunk can be represented with a single int
-    public static class ChunkData {
-        public static final MapCodec<ChunkData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance //
+    public static class PersistentData {
+        public static final MapCodec<PersistentData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance //
                 .group(BlockPos.CODEC.listOf().fieldOf("electric_blocks").forGetter(data -> ImmutableList.copyOf(data.electricBlocks))) //
-                .apply(instance, ChunkData::new));
+                .apply(instance, PersistentData::new));
 
         protected final Set<BlockPos> electricBlocks;
 
-        public ChunkData() {
+        public PersistentData() {
             this.electricBlocks = new HashSet<>();
         }
 
-        public ChunkData(List<BlockPos> electricBlocks) {
+        public PersistentData(List<BlockPos> electricBlocks) {
             this.electricBlocks = new HashSet<>(electricBlocks);
         }
     }
 
-    public static class ChunkTickValues {
-        public final Object2IntMap<BlockPos> cableCurrent = new Object2IntOpenHashMap<>();
-        public final Object2IntMap<BlockPos> ticksAboveMaxCurrent = new Object2IntOpenHashMap<>();
-        public Object2IntOpenHashMap<BlockPos> lastDestructionProgressMap = new Object2IntOpenHashMap<>();
+    public static class TickData {
+        public final Object2IntMap<BlockPos> transferPerTick = new Object2IntOpenHashMap<>();
+        public final Object2IntMap<BlockPos> destroyTicks = new Object2IntOpenHashMap<>();
+        public Object2IntMap<BlockPos> destroyStage = new Object2IntOpenHashMap<>();
     }
 }

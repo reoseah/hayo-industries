@@ -3,8 +3,8 @@ package io.github.reoseah.hayo.feature.rubber_tree;
 import io.github.reoseah.hayo.Hayo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 public class ResinYieldingLogBlock extends Block {
@@ -66,10 +65,9 @@ public class ResinYieldingLogBlock extends Block {
             var side = level.getBlockState(pos).getValue(FACING);
             if (side == hitResult.getDirection()) {
                 level.setBlockAndUpdate(pos, state.setValue(HAS_RESIN, false));
-                // TODO: play sound
+                level.playSound(player, player.getX(), player.getY(), player.getZ(), Hayo.SoundEvents.STICKY_RESIN_GATHER, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-                var position = Vec3.atCenterOf(pos).add(side.getStepX() * 0.7, 0, side.getStepZ() * 0.7);
-                DefaultDispenseItemBehavior.spawnItem(level, new ItemStack(Hayo.Items.STICKY_RESIN), 6, side, position);
+                Block.popResourceFromFace(level, pos, side, new ItemStack(Hayo.Items.STICKY_RESIN));
 
                 return InteractionResult.SUCCESS;
             }

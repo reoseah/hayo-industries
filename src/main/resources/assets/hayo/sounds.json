@@ -1,0 +1,20 @@
+{
+  "sticky_resin_gather": {
+    "subtitle": "subtitles.hayo.sticky_resin_gather",
+    "sounds": [
+      "minecraft:mob/slime/big1",
+      "minecraft:mob/slime/big2",
+      "minecraft:mob/slime/big3",
+      "minecraft:mob/slime/big4"
+    ]
+  },
+  "wrench": {
+    "subtitle": "subtitles.hayo.wrench",
+    "sounds": [
+      "hayo:wrench1",
+      "hayo:wrench2",
+      "hayo:wrench3",
+      "hayo:wrench4"
+    ]
+  }
+}
