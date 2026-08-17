@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "hayo-energy",
+  "name": "HAYO Energy",
+  "version": "${version}",
+  "environment": "*",
+  "license": "WTFPL",
+  "entrypoints": {
+    "main": [
+      "hayo.energy.impl.HayoEnergy::initialize"
+    ],
+    "client": [
+      "hayo.energy.impl.HayoEnergy::initializeClient"
+    ]
+  },
+  "mixins": [
+  ]
+}

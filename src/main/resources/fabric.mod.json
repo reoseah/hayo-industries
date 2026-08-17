@@ -16,13 +16,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.reoseah.hayo.Hayo::initialize"
+      "hayo.Hayo::initialize"
     ],
     "client": [
-      "io.github.reoseah.hayo.Hayo::initializeClient"
+      "hayo.Hayo::initializeClient"
     ],
     "jei_mod_plugin": [
-      "io.github.reoseah.hayo.mod_support.jei.HayoJeiPlugin"
+      "hayo.mod_support.jei.HayoJeiPlugin"
     ]
   },
   "mixins": [

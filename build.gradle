@@ -1,32 +1,12 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    id 'net.fabricmc.fabric-loom' version "${loom_version}" apply false
     id("io.freefair.lombok") version "9.1.0"
-    id 'maven-publish'
 }
 
 version = project.mod_version
 group = project.maven_group
 
-base {
-    archivesName = project.archives_base_name
-}
-
 repositories {
-    maven {
-        name = 'ParchmentMC'
-        url = 'https://maven.parchmentmc.org'
-    }
-
-    maven {
-        name "REI"
-        url "https://maven.shedaniel.me/"
-        content {
-            includeGroup "me.shedaniel"
-            includeGroup "me.shedaniel.cloth"
-            includeGroup "dev.architectury"
-        }
-    }
-
     maven {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
@@ -35,189 +15,54 @@ repositories {
             artifact()
         }
     }
+}
 
-    maven {
-        name = "ModMaven"
-        url = "https://modmaven.dev"
-        metadataSources {
-            mavenPom()
-            artifact()
+allprojects {
+    apply plugin: "net.fabricmc.fabric-loom"
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${project.minecraft_version}"
+        api "net.fabricmc:fabric-loader:${project.loader_version}"
+
+        implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    }
+
+    processResources {
+        inputs.property "version", project.version
+
+        filesMatching("fabric.mod.json") {
+            expand "version": inputs.properties.version
         }
     }
 
-    flatDir {
-        dirs 'libs'
+    tasks.withType(JavaCompile).configureEach {
+        it.options.release = 25
+    }
+
+    java {
+        withSourcesJar()
+
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
+    }
+
+    jar {
+        inputs.property "archivesName", project.base.archivesName
+
+        from("LICENSE") {
+            rename { "${it}_${inputs.properties.archivesName}" }
+        }
     }
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    api "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-
-//    api ("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") {
-//        transitive = false
-//    }
-//    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
-//    modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${project.rei_version}"
-
     api("mezz.jei:jei-${project.minecraft_version}-fabric-api:+")
     implementation("mezz.jei:jei-${project.minecraft_version}-fabric:+")
-}
 
-//sourceSets {
-//    main {
-//        java {
-//            exclude 'io/github/reoseah/hayo/mod_support/roughlyenoughitems/**'
-//        }
-//    }
-//}
+    implementation project(':hayo-energy')
+    include project(':hayo-energy')
+}
 
 loom {
     accessWidenerPath = file("src/main/resources/hayo.classtweaker")
-}
-
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": inputs.properties.version
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.release = 25
-}
-
-java {
-    withSourcesJar()
-
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
-}
-
-jar {
-    inputs.property "archivesName", project.base.archivesName
-
-    from("LICENSE") {
-        rename { "${it}_${inputs.properties.archivesName}" }
-    }
-}
-
-publishing {
-    publications {
-        create("mavenJava", MavenPublication) {
-            artifactId = project.archives_base_name
-            from components.java
-        }
-    }
-
-    repositories {}
-}
-
-import groovy.json.JsonSlurper
-
-tasks.register("findUnusedTranslations") {
-    group = "verification"
-    description = "Finds translation keys that are probably unused."
-
-    doLast {
-        File langFile = file("src/main/resources/assets/hayo/lang/en_us.json")
-
-        if (!langFile.exists()) {
-            throw new GradleException("Translation file not found: $langFile")
-        }
-
-        Map<String, Object> translations =
-                new JsonSlurper().parse(langFile) as Map<String, Object>
-
-        List<File> sourceFiles = fileTree("src/main") {
-            include "**/*.java"
-            include "**/*.kt"
-        }.files as List
-
-        String source = sourceFiles.collect { it.getText("UTF-8") }.join("\n")
-
-        List<String> ignorePrefixes = [
-                "block.",
-                "item.",
-                "tag.item."
-        ]
-
-        List<String> unused = []
-
-        translations.keySet().each { key ->
-            if (ignorePrefixes.any { key.startsWith(it) }) {
-                return
-            }
-
-            if (!source.contains("\"${key}\"") &&
-                    !source.contains("'${key}'") &&
-                    !source.contains(key)) {
-
-                unused << key
-            }
-        }
-
-        unused.sort()
-
-        println "\nPotentially unused translation keys (${unused.size()}):"
-
-        unused.each {
-            println it
-        }
-    }
-}
-
-tasks.register("checkBlockstateLootTables") {
-    group = "verification"
-    description = "Checks that every blockstate has a matching loot table and vice versa."
-
-    doLast {
-        def modid = "hayo"
-
-        def blockstatesDir = file("src/main/resources/assets/${modid}/blockstates")
-        def lootTablesDir = file("src/main/resources/data/${modid}/loot_table/blocks")
-
-        if (!blockstatesDir.exists()) {
-            throw new GradleException("Blockstates directory does not exist: $blockstatesDir")
-        }
-
-        if (!lootTablesDir.exists()) {
-            throw new GradleException("Loot tables directory does not exist: $lootTablesDir")
-        }
-
-        def blockstates = blockstatesDir.listFiles()
-                .findAll { it.isFile() && it.name.endsWith(".json") }
-                .collect { it.name[0..-6] } // remove ".json"
-                .toSet()
-
-        def lootTables = lootTablesDir.listFiles()
-                .findAll { it.isFile() && it.name.endsWith(".json") }
-                .collect { it.name[0..-6] }
-                .toSet()
-
-        def missingLootTables = blockstates - lootTables
-        def missingBlockstates = lootTables - blockstates
-
-        if (missingLootTables.empty && missingBlockstates.empty) {
-            println "\nBlockstates and loot tables match."
-            return
-        }
-
-        if (!missingLootTables.empty) {
-            println "\nMissing loot tables:"
-            missingLootTables.sort().each {
-                println "  $it"
-            }
-        }
-
-        if (!missingBlockstates.empty) {
-            println "\nMissing blockstates:"
-            missingBlockstates.sort().each {
-                println "  $it"
-            }
-        }
-    }
 }
