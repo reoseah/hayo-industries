@@ -15,7 +15,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.EnumMap;
 
 public class EnergyComponents {
-    public static final DataComponentType<EnergyStorage> CAPACITY = DataComponentType.<EnergyStorage>builder() //
+    public static final DataComponentType<EnergyStorage> ENERGY_STORAGE = DataComponentType.<EnergyStorage>builder() //
             .persistent(EnergyStorage.CODEC) //
             .networkSynchronized(EnergyStorage.STREAM_CODEC) //
             .build();
@@ -52,17 +52,16 @@ public class EnergyComponents {
             .build();
 
 
-
     public static boolean isStorage(ItemStack stack) {
-        return stack.has(CAPACITY);
+        return stack.has(ENERGY_STORAGE);
     }
 
     public static boolean canChargeInMachine(ItemStack stack) {
-        return stack.has(CAPACITY);
+        return stack.has(ENERGY_STORAGE);
     }
 
     public static boolean canDischargeInMachine(ItemStack stack) {
-        return stack.has(CAPACITY) && stack.has(CAN_CHARGE_BLOCKS);
+        return stack.has(ENERGY_STORAGE) && stack.has(CAN_CHARGE_BLOCKS);
     }
 
     public static int getEnergy(ItemStack stack) {
@@ -73,6 +72,15 @@ public class EnergyComponents {
         stack.set(ENERGY, energy);
         updateEnergyComponents(stack, energy);
         return stack;
+    }
+
+    public static ItemStack withEnergy(Item item, int amount) {
+        return setEnergy(new ItemStack(item), amount);
+    }
+
+    public static ItemStack withFullEnergy(Item item) {
+        var stack = new ItemStack(item);
+        return setEnergy(stack, getCapacity(stack));
     }
 
     public static void updateEnergyComponents(ItemStack stack, int energy) {
@@ -92,12 +100,12 @@ public class EnergyComponents {
     }
 
     public static int getCapacity(ItemStack stack) {
-        var storage = stack.get(CAPACITY);
+        var storage = stack.get(ENERGY_STORAGE);
         return storage != null ? storage.capacity() : 0;
     }
 
     public static int getTransferLimit(ItemStack stack) {
-        var storage = stack.get(CAPACITY);
+        var storage = stack.get(ENERGY_STORAGE);
         return storage != null ? storage.transferLimit() : 0;
     }
 
@@ -105,7 +113,7 @@ public class EnergyComponents {
     ///
     /// @return energy that was added to the item, you probably want to remove it from your energy source
     public static int charge(int energy, ItemStack stack) {
-        var storage = stack.get(CAPACITY);
+        var storage = stack.get(ENERGY_STORAGE);
         if (storage == null) {
             return 0;
         }
@@ -127,7 +135,7 @@ public class EnergyComponents {
         if (!stack.has(CAN_CHARGE_BLOCKS)) {
             return 0;
         }
-        var storage = stack.get(CAPACITY);
+        var storage = stack.get(ENERGY_STORAGE);
         if (storage == null) {
             return 0;
         }
@@ -152,15 +160,6 @@ public class EnergyComponents {
         }
         setEnergy(stack, storedEnergy - amount);
         return true;
-    }
-
-    public static ItemStack withEnergy(Item item, int amount) {
-        return setEnergy(new ItemStack(item), amount);
-    }
-
-    public static ItemStack withFullEnergy(Item item) {
-        var stack = new ItemStack(item);
-        return setEnergy(stack, getCapacity(stack));
     }
 
     public static boolean defaultIsBarVisible(ItemStack stack) {
@@ -194,8 +193,8 @@ public class EnergyComponents {
     }
 
     public static int moveEnergy(ItemStack source, ItemStack target) {
-        var sourceStorage = source.get(CAPACITY);
-        var targetStorage = target.get(CAPACITY);
+        var sourceStorage = source.get(ENERGY_STORAGE);
+        var targetStorage = target.get(ENERGY_STORAGE);
 
         if (sourceStorage == null || targetStorage == null) {
             return 0;
@@ -221,7 +220,7 @@ public class EnergyComponents {
                 continue;
             }
             var item = player.getItemBySlot(slot);
-            var storage = item.get(CAPACITY);
+            var storage = item.get(ENERGY_STORAGE);
             if (storage == null) {
                 continue;
             }

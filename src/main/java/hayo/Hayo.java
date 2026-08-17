@@ -320,7 +320,7 @@ public class Hayo {
         private static Item.Properties createBatteryProperties(int capacity, int transferLimit) {
             return new Item.Properties() //
                     .stacksTo(1) //
-                    .component(EnergyComponents.CAPACITY, new EnergyStorage(capacity, transferLimit)) //
+                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
                     .component(EnergyComponents.CAN_CHARGE_BLOCKS, Unit.INSTANCE);
         }
 
@@ -337,7 +337,7 @@ public class Hayo {
                                 Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.CHAINSAW_MINEABLE), 0.5F) //
                         ), 0.5F, 0, false) //
                 ) //
-                .component(EnergyComponents.CAPACITY, new EnergyStorage(10_000, 32)) //
+                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
                 .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 50, 100)) //
                 .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.tool(10, -3, 100)) //
         );
@@ -353,7 +353,7 @@ public class Hayo {
                 .stacksTo(1) //
                 .equippable(EquipmentSlot.MAINHAND) //
                 .component(DataComponents.TOOL, drillTool(BlockTags.INCORRECT_FOR_IRON_TOOL)) //
-                .component(EnergyComponents.CAPACITY, new EnergyStorage(10_000, 32)) //
+                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
                 .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(7F, 50, 100)) //
                 .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.tool(6, -3, 100)));
         public static final Item DIAMOND_DRILL = registerItem("diamond_drill", SimpleElectricItem::new, new Item.Properties() //
@@ -361,7 +361,7 @@ public class Hayo {
                 .rarity(Rarity.RARE) //
                 .equippable(EquipmentSlot.MAINHAND) //
                 .component(DataComponents.TOOL, drillTool(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)) //
-                .component(EnergyComponents.CAPACITY, new EnergyStorage(10_000, 32)) //
+                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
                 .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 80, 160)) //
                 .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.tool(8, -3, 160)));
 
@@ -372,7 +372,7 @@ public class Hayo {
                             Equippable.builder(ArmorType.CHESTPLATE.getSlot()) //
                                     .setAsset(modKey(EquipmentAssets.ROOT_ID, "battery_pack")) //
                                     .build()) //
-                    .component(EnergyComponents.CAPACITY, new EnergyStorage(capacity, transferLimit)) //
+                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
                     .component(EnergyComponents.CHARGES_INVENTORY, Unit.INSTANCE);
         }
 
@@ -386,7 +386,7 @@ public class Hayo {
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(type.getSlot()) //
                             .setAsset(modKey(EquipmentAssets.ROOT_ID, "nano")) //
                             .build()) //
-                    .component(EnergyComponents.CAPACITY, new EnergyStorage(100_000, 128)) //
+                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(100_000, 128)) //
                     .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.armor(type, armor, 3, 100)) //
                     .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(100));
         }
@@ -403,7 +403,7 @@ public class Hayo {
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(type.getSlot()) //
                             .setAsset(modKey(EquipmentAssets.ROOT_ID, "quantum")) //
                             .build()) //
-                    .component(EnergyComponents.CAPACITY, new EnergyStorage(1_000_000, 512)) //
+                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(1_000_000, 512)) //
                     .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.armor(type, armor, 4, 100)) //
                     .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(200)) //
                     .component(Components.QUANTUM_ARMOR, Unit.INSTANCE);

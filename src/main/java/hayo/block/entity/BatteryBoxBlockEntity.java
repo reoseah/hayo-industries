@@ -134,7 +134,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
         int energy = 0;
         for (int i = 0; i < BATTERY_SLOTS; i++) {
             var item = this.getItem(i);
-            var itemStorage = item.get(EnergyComponents.CAPACITY);
+            var itemStorage = item.get(EnergyComponents.ENERGY_STORAGE);
             if (itemStorage == null) {
                 continue;
             }
@@ -217,7 +217,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
         int leftToInsert = amount;
         for (int i = 0; i < BATTERY_SLOTS; i++) {
             var item = this.getItem(i);
-            var itemStorage = item.get(EnergyComponents.CAPACITY);
+            var itemStorage = item.get(EnergyComponents.ENERGY_STORAGE);
             if (itemStorage == null) {
                 continue;
             }
@@ -239,7 +239,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
         int leftToExtract = amount;
         for (int i = BATTERY_SLOTS - 1; i >= 0; i--) {
             var item = this.getItem(i);
-            var itemStorage = item.get(EnergyComponents.CAPACITY);
+            var itemStorage = item.get(EnergyComponents.ENERGY_STORAGE);
             if (itemStorage == null) {
                 continue;
             }

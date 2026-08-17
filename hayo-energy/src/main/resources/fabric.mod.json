@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "id": "hayo-energy",
   "name": "HAYO Energy",
+  "description": "Energy API written for HAYO Industries.",
   "version": "${version}",
   "environment": "*",
   "license": "WTFPL",
