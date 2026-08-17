@@ -3,7 +3,7 @@ package io.github.reoseah.hayo.feature.machines.macerator;
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.machines.ClassicMachineBlockEntity;
 import io.github.reoseah.hayo.feature.universal_screen.RecipeProgressBar;
-import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
+import io.github.reoseah.hayo.menu.UniversalContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;

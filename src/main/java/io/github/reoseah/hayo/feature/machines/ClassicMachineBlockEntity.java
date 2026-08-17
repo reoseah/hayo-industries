@@ -1,9 +1,9 @@
 package io.github.reoseah.hayo.feature.machines;
 
-import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
+import io.github.reoseah.hayo.item.components.EnergyComponents;
 import io.github.reoseah.hayo.feature.universal_screen.MachineEnergyBar;
 import io.github.reoseah.hayo.feature.universal_screen.SpriteElement;
-import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
+import io.github.reoseah.hayo.menu.UniversalContainerMenu;
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

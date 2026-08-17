@@ -5,7 +5,7 @@ import io.github.reoseah.hayo.feature.machines.compressor.CompressingRecipe;
 import io.github.reoseah.hayo.feature.machines.extractor.ExtractingRecipe;
 import io.github.reoseah.hayo.feature.machines.macerator.MaceratingRecipe;
 import io.github.reoseah.hayo.feature.machines.matter_generator.MatterGeneratingRecipe;
-import io.github.reoseah.hayo.feature.universal_screen.UniversalContainerMenu;
+import io.github.reoseah.hayo.menu.UniversalContainerMenu;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.drawable.IDrawable;

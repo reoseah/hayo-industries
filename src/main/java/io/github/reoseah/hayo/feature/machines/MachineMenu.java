@@ -1,12 +1,15 @@
 package io.github.reoseah.hayo.feature.machines;
 
-import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
+import io.github.reoseah.hayo.item.components.EnergyComponents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -130,9 +133,6 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         return remaining;
     }
 
-    public int getEnergyUseRate() {
-        return this.data.get(8);
-    }
 
     public int getStoredEnergy() {
         return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);
@@ -148,5 +148,9 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 
     public int getRecipeTotalEnergy() {
         return (this.data.get(7) << 16) | (this.data.get(6) & 0xFFFF);
+    }
+
+    public int getEnergyUseRate() {
+        return this.data.get(8);
     }
 }

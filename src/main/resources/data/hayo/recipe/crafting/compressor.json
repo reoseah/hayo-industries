@@ -2,15 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    " C ",
-    "RPR",
-    " # "
+    "C",
+    "P",
+    "#"
   ],
   "key": {
     "#": "hayo:machine_block",
     "C": "hayo:circuit",
-    "P": "minecraft:piston",
-    "R": "minecraft:redstone"
+    "P": "minecraft:piston"
   },
   "result": {
     "id": "hayo:compressor",

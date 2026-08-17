@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo.feature.universal_screen;
 
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.menu.UniversalContainerMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;

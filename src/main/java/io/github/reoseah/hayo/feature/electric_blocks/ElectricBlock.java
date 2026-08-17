@@ -1,5 +1,6 @@
 package io.github.reoseah.hayo.feature.electric_blocks;
 
+import io.github.reoseah.hayo.level.ElectricBlockManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelReader;

@@ -1,5 +1,6 @@
 package io.github.reoseah.hayo.feature.electric_blocks;
 
+import io.github.reoseah.hayo.block.entity.SimpleElectricBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

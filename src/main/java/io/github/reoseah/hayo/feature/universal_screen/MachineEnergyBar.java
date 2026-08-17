@@ -2,6 +2,7 @@ package io.github.reoseah.hayo.feature.universal_screen;
 
 import io.github.reoseah.hayo.Hayo;
 import io.github.reoseah.hayo.feature.electric_blocks.EnergyTexts;
+import io.github.reoseah.hayo.menu.UniversalContainerMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;

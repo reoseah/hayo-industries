@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import io.github.reoseah.hayo.feature.electric_items.EnergyComponents;
+import io.github.reoseah.hayo.item.components.EnergyComponents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;

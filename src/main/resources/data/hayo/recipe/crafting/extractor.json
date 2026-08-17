@@ -4,11 +4,10 @@
   "pattern": [
     "GMG",
     "GXG",
-    "C#C"
+    " # "
   ],
   "key": {
     "#": "hayo:machine_block",
-    "C": "hayo:power_cable",
     "M": "minecraft:glass",
     "X": "hayo:circuit",
     "G": "minecraft:gold_ingot"

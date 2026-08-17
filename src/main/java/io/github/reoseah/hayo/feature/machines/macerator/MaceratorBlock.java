@@ -2,7 +2,7 @@ package io.github.reoseah.hayo.feature.machines.macerator;
 
 import com.mojang.serialization.MapCodec;
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.base.block.HorizontalDirectionalElectricalBlock;
+import io.github.reoseah.hayo.block.HorizontalDirectionalElectricalBlock;
 import io.github.reoseah.hayo.feature.electric_blocks.ElectricReceiverBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

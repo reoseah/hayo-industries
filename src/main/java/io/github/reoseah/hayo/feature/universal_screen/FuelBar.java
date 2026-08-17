@@ -1,6 +1,7 @@
 package io.github.reoseah.hayo.feature.universal_screen;
 
 import io.github.reoseah.hayo.Hayo;
+import io.github.reoseah.hayo.menu.UniversalContainerMenu;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;

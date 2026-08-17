@@ -1,7 +1,7 @@
 package io.github.reoseah.hayo.feature.machines;
 
 import io.github.reoseah.hayo.Hayo;
-import io.github.reoseah.hayo.feature.electric_blocks.SimpleElectricBlockEntity;
+import io.github.reoseah.hayo.block.entity.SimpleElectricBlockEntity;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
