@@ -1,7 +1,6 @@
 package hayo.block.entity;
 
 import hayo.Hayo;
-import hayo.block.EnergyStorageBlockEntity;
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

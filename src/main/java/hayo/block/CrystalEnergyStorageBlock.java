@@ -3,6 +3,7 @@ package hayo.block;
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
 import hayo.block.entity.CrystalEnergyStorageBlockEntity;
+import hayo.block.entity.EnergyStorageBlockEntity;
 import hayo.energy.block.ElectricReceiverBlock;
 import hayo.energy.block.ElectricSenderBlock;
 import net.minecraft.core.BlockPos;

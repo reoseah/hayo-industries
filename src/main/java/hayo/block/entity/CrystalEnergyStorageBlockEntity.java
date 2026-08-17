@@ -1,7 +1,6 @@
 package hayo.block.entity;
 
 import hayo.Hayo;
-import hayo.block.EnergyStorageBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;

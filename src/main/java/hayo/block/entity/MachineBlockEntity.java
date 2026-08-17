@@ -141,7 +141,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     protected void inventoryChanged(int slot) {
         super.inventoryChanged(slot);
         if (this.isInputSlot(slot)) {
-            if (this.lastRecipe != null && !this.lastRecipe.value().matches(this.createRecipeInput(), this.level)) {
+            if (this.lastRecipe != null && this.level != null && !this.lastRecipe.value().matches(this.createRecipeInput(), this.level)) {
                 this.resetRecipeProgress();
             }
             return;

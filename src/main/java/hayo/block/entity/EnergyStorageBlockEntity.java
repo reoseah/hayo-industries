@@ -1,7 +1,7 @@
-package hayo.block;
+package hayo.block.entity;
 
+import hayo.block.DirectionalElectricalBlock;
 import hayo.energy.block.EnergyGrid;
-import hayo.block.entity.SimpleElectricBlockEntity;
 import hayo.energy.item.EnergyComponents;
 import hayo.menu.SpriteElement;
 import hayo.menu.StorageEnergyBar;

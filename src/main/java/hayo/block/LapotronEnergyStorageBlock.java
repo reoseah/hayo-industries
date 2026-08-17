@@ -2,6 +2,7 @@ package hayo.block;
 
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
+import hayo.block.entity.EnergyStorageBlockEntity;
 import hayo.block.entity.LapotronEnergyStorageBlockEntity;
 import hayo.energy.block.ElectricReceiverBlock;
 import hayo.energy.block.ElectricSenderBlock;
