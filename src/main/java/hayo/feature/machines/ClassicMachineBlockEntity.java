@@ -1,6 +1,6 @@
 package hayo.feature.machines;
 
-import hayo.item.components.EnergyComponents;
+import hayo.energy.item.EnergyComponents;
 import hayo.feature.universal_screen.MachineEnergyBar;
 import hayo.feature.universal_screen.SpriteElement;
 import hayo.menu.UniversalContainerMenu;

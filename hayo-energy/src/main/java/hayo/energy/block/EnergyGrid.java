@@ -21,6 +21,5 @@ public class EnergyGrid {
 
     public static void remove(ServerLevel level, BlockPos pos) {
         EnergyGridImpl.get(level).remove(pos);
-
     }
 }

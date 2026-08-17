@@ -1,8 +1,8 @@
 package hayo.mod_support.jei;
 
+import hayo.energy.client.EnergySprites;
 import hayo.energy.EnergyTexts;
 import hayo.feature.machines.ClassicMachineRecipe;
-import hayo.feature.universal_screen.MachineEnergyBar;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -90,7 +90,7 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
     @Override
     public void draw(RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         var recipe = holder.value();
-        MachineEnergyBar.extract(graphics, 1, 20, 10, 14);
+        EnergySprites.extractZap(graphics, 1, 20, 10, 14);
 
         int energyCost = recipe.energyCost;
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / this.energyUseRate / 24)) % 24d);
@@ -114,7 +114,7 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
 
             tooltip.addAll(List.of( //
                     Component.translatable("hayo.duration.seconds", duration), //
-                    Component.translatable("hayo.energy.amount_and_amount_per_tick", recipe.energyCost, this.energyUseRate).withStyle(ChatFormatting.GRAY)));
+                    EnergyTexts.amountAndAmountPerTick(recipe.energyCost, this.energyUseRate).withStyle(ChatFormatting.GRAY)));
         }
     }
 }

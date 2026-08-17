@@ -1,4 +1,4 @@
-package hayo.item.components;
+package hayo.energy.item;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -1,6 +1,6 @@
 package hayo.feature.machines;
 
-import hayo.item.components.EnergyComponents;
+import hayo.energy.item.EnergyComponents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;

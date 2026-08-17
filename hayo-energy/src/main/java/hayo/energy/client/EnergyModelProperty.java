@@ -1,6 +1,7 @@
-package hayo.item.components;
+package hayo.energy.client;
 
 import com.mojang.serialization.MapCodec;
+import hayo.energy.item.EnergyComponents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -9,6 +10,33 @@ import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
+/// Item stack energy as a "range property" based on which you can decide
+/// texture/model in the item's JSON file (`assets/[modid]/items/[id].json`).
+///
+/// E.g.:
+/// ```json
+/// {
+///   "model": {
+///     "type": "minecraft:range_dispatch",
+///     "property": "hayo:energy",
+///     "scale": 1,
+///     "fallback": {
+///       "type": "minecraft:model",
+///       "model": "modid:item/example_battery"
+///     },
+///     "entries": [
+///       {
+///         "threshold": 1000,
+///         "model": {
+///           "type": "minecraft:model",
+///           "model": "modid:item/example_battery_charge1"
+///         }
+///       },
+///       // repeat for each texture+threshold you have
+///     ]
+///   }
+/// }
+/// ```
 @Environment(EnvType.CLIENT)
 public record EnergyModelProperty() implements RangeSelectItemModelProperty {
     public static final MapCodec<EnergyModelProperty> MAP_CODEC = MapCodec.unit(new EnergyModelProperty());

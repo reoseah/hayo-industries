@@ -1,7 +1,7 @@
 package hayo.feature.machines.matter_generator;
 
 import hayo.Hayo;
-import hayo.feature.universal_screen.MachineEnergyBar;
+import hayo.energy.client.EnergySprites;
 import hayo.mod_support.jei.RecipeArrow;
 import hayo.energy.EnergyTexts;
 import hayo.feature.universal_screen.SpriteElement;
@@ -62,7 +62,9 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SpriteElement.SLOT, x + this.menu.slots.get(0).x - 1, y + this.menu.slots.get(0).y - 1, 18, 18);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SpriteElement.OUTPUT_SLOT, x + this.menu.slots.get(1).x - 4, y + this.menu.slots.get(1).y - 4, 24, 24);
 
-        MachineEnergyBar.extract(graphics, x + 57, y + 17, this.menu.getStoredEnergy(), this.menu.getEnergyCapacity());
+        int energy = this.menu.getStoredEnergy();
+        int capacity = this.menu.getEnergyCapacity();
+        EnergySprites.extractZap(graphics, x + 57, y + 17, energy, capacity);
         RecipeArrow.extract(graphics, x + 80, y + 25, RecipeArrow.DEFAULT, this.menu.getRecipeUsedEnergy(), this.menu.getRecipeTotalEnergy());
 
         this.drawRecipeButtons(graphics, mouseX, mouseY);

@@ -1,14 +1,9 @@
-package hayo.item.components;
+package hayo.energy.item;
 
 import com.mojang.serialization.Codec;
-import hayo.Hayo;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -19,10 +14,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.EnumMap;
 
-public enum EnergyComponents {
-    ;
-
-    public static final DataComponentType<EnergyStorage> ENERGY_STORAGE = DataComponentType.<EnergyStorage>builder() //
+public class EnergyComponents {
+    public static final DataComponentType<EnergyStorage> CAPACITY = DataComponentType.<EnergyStorage>builder() //
             .persistent(EnergyStorage.CODEC) //
             .networkSynchronized(EnergyStorage.STREAM_CODEC) //
             .build();
@@ -33,14 +26,14 @@ public enum EnergyComponents {
             .ignoreSwapAnimation() //
             .build();
 
-    public static final DataComponentType<Unit> CAN_DISCHARGE = DataComponentType.<Unit>builder() //
+    public static final DataComponentType<Unit> CAN_CHARGE_BLOCKS = DataComponentType.<Unit>builder() //
             .persistent(Unit.CODEC) //
             .networkSynchronized(Unit.STREAM_CODEC) //
             .build();
 
-    public static final DataComponentType<ChargedAttributes> CHARGED_ATTRIBUTES = DataComponentType.<ChargedAttributes>builder() //
-            .persistent(ChargedAttributes.CODEC) //
-            .networkSynchronized(ChargedAttributes.STREAM_CODEC) //
+    public static final DataComponentType<AttributesWhenCharged> ATTRIBUTES_WHEN_CHARGED = DataComponentType.<AttributesWhenCharged>builder() //
+            .persistent(AttributesWhenCharged.CODEC) //
+            .networkSynchronized(AttributesWhenCharged.STREAM_CODEC) //
             .build();
 
     public static final DataComponentType<EnergyTool> ENERGY_TOOL = DataComponentType.<EnergyTool>builder() //
@@ -58,42 +51,40 @@ public enum EnergyComponents {
             .networkSynchronized(Unit.STREAM_CODEC) //
             .build();
 
-    public static final DataComponentType<Unit> QUANTUM_ARMOR = DataComponentType.<Unit>builder() //
-            .persistent(Unit.CODEC) //
-            .networkSynchronized(Unit.STREAM_CODEC) //
-            .build();
+
 
     public static boolean isStorage(ItemStack stack) {
-        return stack.has(ENERGY_STORAGE);
+        return stack.has(CAPACITY);
     }
 
     public static boolean canChargeInMachine(ItemStack stack) {
-        return stack.has(ENERGY_STORAGE);
+        return stack.has(CAPACITY);
     }
 
     public static boolean canDischargeInMachine(ItemStack stack) {
-        return stack.has(ENERGY_STORAGE) && stack.has(CAN_DISCHARGE);
+        return stack.has(CAPACITY) && stack.has(CAN_CHARGE_BLOCKS);
     }
 
     public static int getEnergy(ItemStack stack) {
         return stack.getOrDefault(ENERGY, 0);
     }
 
-    public static void setEnergy(ItemStack stack, int energy) {
+    public static ItemStack setEnergy(ItemStack stack, int energy) {
         stack.set(ENERGY, energy);
         updateEnergyComponents(stack, energy);
+        return stack;
     }
 
     public static void updateEnergyComponents(ItemStack stack, int energy) {
-        var chargedAttributes = stack.get(CHARGED_ATTRIBUTES);
-        if (chargedAttributes != null) {
-            boolean hasCharge = energy >= chargedAttributes.requiredEnergy();
+        var attributesWhenCharged = stack.get(ATTRIBUTES_WHEN_CHARGED);
+        if (attributesWhenCharged != null) {
+            boolean hasCharge = energy >= attributesWhenCharged.requiredEnergy();
 
             var attributes = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
-            boolean hasChargedAttributes = attributes == chargedAttributes.attributes();
+            boolean hasChargedAttributes = attributes == attributesWhenCharged.attributes();
 
             if (hasCharge && !hasChargedAttributes) {
-                stack.set(DataComponents.ATTRIBUTE_MODIFIERS, chargedAttributes.attributes());
+                stack.set(DataComponents.ATTRIBUTE_MODIFIERS, attributesWhenCharged.attributes());
             } else if (!hasCharge && hasChargedAttributes) {
                 stack.remove(DataComponents.ATTRIBUTE_MODIFIERS);
             }
@@ -101,12 +92,12 @@ public enum EnergyComponents {
     }
 
     public static int getCapacity(ItemStack stack) {
-        var storage = stack.get(ENERGY_STORAGE);
+        var storage = stack.get(CAPACITY);
         return storage != null ? storage.capacity() : 0;
     }
 
     public static int getTransferLimit(ItemStack stack) {
-        var storage = stack.get(ENERGY_STORAGE);
+        var storage = stack.get(CAPACITY);
         return storage != null ? storage.transferLimit() : 0;
     }
 
@@ -114,7 +105,7 @@ public enum EnergyComponents {
     ///
     /// @return energy that was added to the item, you probably want to remove it from your energy source
     public static int charge(int energy, ItemStack stack) {
-        var storage = stack.get(ENERGY_STORAGE);
+        var storage = stack.get(CAPACITY);
         if (storage == null) {
             return 0;
         }
@@ -133,10 +124,10 @@ public enum EnergyComponents {
     ///
     /// @return energy that was removed from the item, you probably want to add it to your energy storage
     public static int discharge(int amount, ItemStack stack) {
-        if (!stack.has(CAN_DISCHARGE)) {
+        if (!stack.has(CAN_CHARGE_BLOCKS)) {
             return 0;
         }
-        var storage = stack.get(ENERGY_STORAGE);
+        var storage = stack.get(CAPACITY);
         if (storage == null) {
             return 0;
         }
@@ -164,15 +155,12 @@ public enum EnergyComponents {
     }
 
     public static ItemStack withEnergy(Item item, int amount) {
-        var stack = new ItemStack(item);
-        setEnergy(stack, amount);
-        return stack;
+        return setEnergy(new ItemStack(item), amount);
     }
 
     public static ItemStack withFullEnergy(Item item) {
         var stack = new ItemStack(item);
-        setEnergy(stack, getCapacity(stack));
-        return stack;
+        return setEnergy(stack, getCapacity(stack));
     }
 
     public static boolean defaultIsBarVisible(ItemStack stack) {
@@ -184,7 +172,7 @@ public enum EnergyComponents {
         if (energy >= capacity) {
             return false;
         }
-        var isEquipment = stack.get(CHARGED_ATTRIBUTES);
+        var isEquipment = stack.get(ATTRIBUTES_WHEN_CHARGED);
         if (isEquipment != null) {
             return true;
         }
@@ -206,8 +194,8 @@ public enum EnergyComponents {
     }
 
     public static int moveEnergy(ItemStack source, ItemStack target) {
-        var sourceStorage = source.get(ENERGY_STORAGE);
-        var targetStorage = target.get(ENERGY_STORAGE);
+        var sourceStorage = source.get(CAPACITY);
+        var targetStorage = target.get(CAPACITY);
 
         if (sourceStorage == null || targetStorage == null) {
             return 0;
@@ -233,7 +221,7 @@ public enum EnergyComponents {
                 continue;
             }
             var item = player.getItemBySlot(slot);
-            var storage = item.get(ENERGY_STORAGE);
+            var storage = item.get(CAPACITY);
             if (storage == null) {
                 continue;
             }
@@ -299,42 +287,5 @@ public enum EnergyComponents {
         }
 
         return totalDistributed;
-    }
-
-    public static void initialize() {
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_storage"), EnergyComponents.ENERGY_STORAGE);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy"), EnergyComponents.ENERGY);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("can_discharge"), EnergyComponents.CAN_DISCHARGE);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("charged_attributes"), EnergyComponents.CHARGED_ATTRIBUTES);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_tool"), EnergyComponents.ENERGY_TOOL);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("energy_armor"), EnergyComponents.ENERGY_ARMOR);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("charges_inventory"), EnergyComponents.CHARGES_INVENTORY);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Hayo.modId("quantum_armor"), EnergyComponents.QUANTUM_ARMOR);
-
-        ServerTickEvents.END_LEVEL_TICK.register(EnergyComponents::tickPlayerInventories);
-    }
-
-    private static void tickPlayerInventories(ServerLevel level) {
-        for (var player : level.players()) {
-            var chest = player.getItemBySlot(EquipmentSlot.CHEST);
-            if (chest.has(EnergyComponents.CHARGES_INVENTORY)) {
-                var stats = chest.get(EnergyComponents.ENERGY_STORAGE);
-                if (stats == null) continue;
-
-                var limit = stats.transferLimit();
-                if (limit == 0) continue;
-
-                var energy = EnergyComponents.getEnergy(chest);
-                if (energy == 0) continue;
-
-                int moved = EnergyComponents.spreadEnergy(player, Math.min(energy, limit), EquipmentSlot.CHEST);
-                EnergyComponents.setEnergy(chest, energy - moved);
-
-                player.getInventory().setChanged();
-                if (player.isCreative()) {
-                    player.inventoryMenu.broadcastChanges();
-                }
-            }
-        }
     }
 }

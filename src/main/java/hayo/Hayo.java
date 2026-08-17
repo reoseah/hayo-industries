@@ -5,7 +5,7 @@ import hayo.block.*;
 import hayo.block.entity.BatteryBoxBlockEntity;
 import hayo.block.entity.GeneratorBlockEntity;
 import hayo.client.EmmissiveArmorRenderer;
-import hayo.energy.impl.CableDestroyProgressPayload;
+import hayo.energy.item.*;
 import hayo.feature.machines.ClassicMachineRecipe;
 import hayo.feature.machines.compressor.CompressingRecipe;
 import hayo.feature.machines.compressor.CompressorBlock;
@@ -24,7 +24,6 @@ import hayo.item.BlockItemWithTooltip;
 import hayo.item.ItemWithTooltip;
 import hayo.item.SimpleElectricItem;
 import hayo.item.WrenchItem;
-import hayo.item.components.*;
 import hayo.level.RubberFoliagePlacer;
 import hayo.menu.UniversalContainerMenu;
 import net.fabricmc.api.EnvType;
@@ -32,30 +31,27 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
@@ -103,7 +99,7 @@ import java.util.function.Function;
 import static net.minecraft.world.level.block.Blocks.leavesProperties;
 import static net.minecraft.world.level.block.Blocks.logProperties;
 
-// TODO: consider making batteries and what not "bundle-like" holders of the battery or energy crystal
+// TODO: consider making drills and what not "bundle-like" holders of the battery or energy crystal
 public class Hayo {
     public static final String MOD_ID = "hayo";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -123,8 +119,6 @@ public class Hayo {
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modId("main"), TAB);
 
-        EnergyComponents.initialize();
-
         Blocks.initialize();
         Items.initialize();
         BlockEntityTypes.initialize();
@@ -138,7 +132,6 @@ public class Hayo {
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.COMPRESSING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.EXTRACTING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.ENERGY_PRESERVING_CRAFTING);
 
         BiomeModifications.create(modId("rubber_trees")) //
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST) //
@@ -154,8 +147,6 @@ public class Hayo {
     @Environment(EnvType.CLIENT)
     public static void initializeClient() {
         BlockColorRegistry.register((_, level, pos, tintValues) -> tintValues.add(level != null && pos != null ? BiomeColors.getAverageFoliageColor(level, pos) : 0xff48b518), Blocks.RUBBER_LEAVES);
-
-        RangeSelectItemModelProperties.ID_MAPPER.put(modId("energy"), EnergyModelProperty.MAP_CODEC);
 
         MenuTypes.initializeClient();
 
@@ -241,6 +232,17 @@ public class Hayo {
         public static final TagKey<Block> ROTATABLE_WITH_WRENCH = TagKey.create(Registries.BLOCK, modId("rotatable_with_wrench"));
     }
 
+    public static class Components {
+        public static final DataComponentType<Unit> QUANTUM_ARMOR = register("quantum_armor",
+                DataComponentType.<Unit>builder() //
+                        .persistent(Unit.CODEC) //
+                        .networkSynchronized(Unit.STREAM_CODEC));
+
+        public static <T> DataComponentType<T> register(String name, DataComponentType.Builder<T> builder) {
+            return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId(name), builder.build());
+        }
+    }
+
     public static class Items {
         private static final HolderGetter<Block> BLOCK_LOOKUP = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
 
@@ -318,8 +320,8 @@ public class Hayo {
         private static Item.Properties createBatteryProperties(int capacity, int transferLimit) {
             return new Item.Properties() //
                     .stacksTo(1) //
-                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
-                    .component(EnergyComponents.CAN_DISCHARGE, Unit.INSTANCE);
+                    .component(EnergyComponents.CAPACITY, new EnergyStorage(capacity, transferLimit)) //
+                    .component(EnergyComponents.CAN_CHARGE_BLOCKS, Unit.INSTANCE);
         }
 
         public static final Item BATTERY = registerItem("battery", SimpleElectricItem::new, createBatteryProperties(10_000, 32));
@@ -335,9 +337,9 @@ public class Hayo {
                                 Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.CHAINSAW_MINEABLE), 0.5F) //
                         ), 0.5F, 0, false) //
                 ) //
-                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
+                .component(EnergyComponents.CAPACITY, new EnergyStorage(10_000, 32)) //
                 .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 50, 100)) //
-                .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.tool(10, -3, 100)) //
+                .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.tool(10, -3, 100)) //
         );
 
         private static Tool drillTool(TagKey<Block> incorrectBlocks) {
@@ -351,17 +353,17 @@ public class Hayo {
                 .stacksTo(1) //
                 .equippable(EquipmentSlot.MAINHAND) //
                 .component(DataComponents.TOOL, drillTool(BlockTags.INCORRECT_FOR_IRON_TOOL)) //
-                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
+                .component(EnergyComponents.CAPACITY, new EnergyStorage(10_000, 32)) //
                 .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(7F, 50, 100)) //
-                .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.tool(6, -3, 100)));
+                .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.tool(6, -3, 100)));
         public static final Item DIAMOND_DRILL = registerItem("diamond_drill", SimpleElectricItem::new, new Item.Properties() //
                 .stacksTo(1) //
                 .rarity(Rarity.RARE) //
                 .equippable(EquipmentSlot.MAINHAND) //
                 .component(DataComponents.TOOL, drillTool(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)) //
-                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
+                .component(EnergyComponents.CAPACITY, new EnergyStorage(10_000, 32)) //
                 .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 80, 160)) //
-                .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.tool(8, -3, 160)));
+                .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.tool(8, -3, 160)));
 
         private static Item.Properties createBatteryPackProperties(int capacity, int transferLimit) {
             return new Item.Properties() //
@@ -370,7 +372,7 @@ public class Hayo {
                             Equippable.builder(ArmorType.CHESTPLATE.getSlot()) //
                                     .setAsset(modKey(EquipmentAssets.ROOT_ID, "battery_pack")) //
                                     .build()) //
-                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
+                    .component(EnergyComponents.CAPACITY, new EnergyStorage(capacity, transferLimit)) //
                     .component(EnergyComponents.CHARGES_INVENTORY, Unit.INSTANCE);
         }
 
@@ -384,8 +386,8 @@ public class Hayo {
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(type.getSlot()) //
                             .setAsset(modKey(EquipmentAssets.ROOT_ID, "nano")) //
                             .build()) //
-                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(100_000, 128)) //
-                    .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.armor(type, armor, 3, 100)) //
+                    .component(EnergyComponents.CAPACITY, new EnergyStorage(100_000, 128)) //
+                    .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.armor(type, armor, 3, 100)) //
                     .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(100));
         }
 
@@ -401,10 +403,10 @@ public class Hayo {
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(type.getSlot()) //
                             .setAsset(modKey(EquipmentAssets.ROOT_ID, "quantum")) //
                             .build()) //
-                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(1_000_000, 512)) //
-                    .component(EnergyComponents.CHARGED_ATTRIBUTES, ChargedAttributes.armor(type, armor, 4, 100)) //
+                    .component(EnergyComponents.CAPACITY, new EnergyStorage(1_000_000, 512)) //
+                    .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.armor(type, armor, 4, 100)) //
                     .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(200)) //
-                    .component(EnergyComponents.QUANTUM_ARMOR, Unit.INSTANCE);
+                    .component(Components.QUANTUM_ARMOR, Unit.INSTANCE);
         }
 
         public static final Item QUANTUM_HELMET = registerItem("quantum_helmet", SimpleElectricItem::new, quantumArmorProperties(ArmorType.HELMET, 3));
@@ -762,7 +764,6 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
-        public static final RecipeSerializer<EnergyPreservingShapedRecipe> ENERGY_PRESERVING_CRAFTING = register("energy_preserving_crafting", new RecipeSerializer<>(EnergyPreservingShapedRecipe.CODEC, EnergyPreservingShapedRecipe.STREAM_CODEC));
 
         public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", ClassicMachineRecipe.createCodec(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.createCodec(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));

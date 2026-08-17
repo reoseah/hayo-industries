@@ -1,7 +1,7 @@
 package hayo.item;
 
 import hayo.energy.EnergyTexts;
-import hayo.item.components.EnergyComponents;
+import hayo.energy.item.EnergyComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -28,7 +28,7 @@ public class SimpleElectricItem extends Item {
 
         var energyTool = stack.get(EnergyComponents.ENERGY_TOOL);
         if (energyTool != null) {
-            builder.accept(Component.translatable("hayo.energy.amount_per_use", energyTool.destroyEnergy()).withStyle(ChatFormatting.GRAY));
+            builder.accept(EnergyTexts.amountPerUse(energyTool.destroyEnergy()).withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -83,7 +83,7 @@ public class SimpleElectricItem extends Item {
             var energy = stack.getOrDefault(EnergyComponents.ENERGY, 0);
 
             if (energy >= energyTool.destroyEnergy() && this.isCorrectToolForDrops(stack, state)) {
-                return energyTool.destroySpeedOverride();
+                return energyTool.chargedDestroySpeed();
             }
         }
         return super.getDestroySpeed(stack, state);

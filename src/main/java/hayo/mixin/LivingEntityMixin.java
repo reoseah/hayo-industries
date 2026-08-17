@@ -1,7 +1,8 @@
 package hayo.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import hayo.item.components.EnergyComponents;
+import hayo.Hayo;
+import hayo.energy.item.EnergyComponents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -18,7 +19,7 @@ public class LivingEntityMixin {
         int quantumPieces = 0;
         for (var slot : EquipmentSlotGroup.ARMOR) {
             var item = ((LivingEntity) (Object) this).getItemBySlot(slot);
-            if (item.has(EnergyComponents.QUANTUM_ARMOR)) {
+            if (item.has(Hayo.Components.QUANTUM_ARMOR)) {
                 quantumPieces++;
             }
         }

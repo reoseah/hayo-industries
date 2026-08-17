@@ -1,8 +1,8 @@
 package hayo.mod_support.jei;
 
+import hayo.energy.client.EnergySprites;
 import hayo.energy.EnergyTexts;
 import hayo.feature.machines.electric_furnace.ElectricFurnaceBlockEntity;
-import hayo.feature.universal_screen.MachineEnergyBar;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -22,7 +22,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import java.util.List;
 
 public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<? extends AbstractCookingRecipe>> {
-    private static final int ENERGY_USE_RATE = ElectricFurnaceBlockEntity.ENERGY_USE_RATE;
     private static final int TICK_IN_MILLISECONDS = 50;
 
     private final IRecipeType<RecipeHolder<? extends AbstractCookingRecipe>> type;
@@ -72,10 +71,10 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
 
     @Override
     public void draw(RecipeHolder<? extends AbstractCookingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        MachineEnergyBar.extract(graphics, 1, 20, 10, 14);
+        EnergySprites.extractZap(graphics, 1, 20, 10, 14);
 
         int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(holder.value());
-        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ENERGY_USE_RATE / 24)) % 24d);
+        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ElectricFurnaceBlockEntity.ENERGY_USE_RATE / 24)) % 24d);
         RecipeArrow.extract(graphics, 24, 4, RecipeArrow.DEFAULT, progress, 24);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
@@ -87,7 +86,7 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
                 || mouseX > 24 && mouseX <= 24 + 24 && mouseY > 4 && mouseY <= 4 + 16) {
             var recipe = holder.value();
 
-            int energyUseRate = ENERGY_USE_RATE;
+            int energyUseRate = ElectricFurnaceBlockEntity.ENERGY_USE_RATE;
             if (this.type != (Object) HayoJeiPlugin.ELECTRIC_SMELTING) {
                 energyUseRate *= 2;
             }
@@ -97,7 +96,7 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
 
             tooltip.addAll(List.of( //
                     Component.translatable("hayo.duration.seconds", duration), //
-                    Component.translatable("hayo.energy.amount_and_amount_per_tick", energyCost, energyUseRate).withStyle(ChatFormatting.GRAY)));
+                    EnergyTexts.amountAndAmountPerTick(energyCost, energyUseRate).withStyle(ChatFormatting.GRAY)));
         }
     }
 }

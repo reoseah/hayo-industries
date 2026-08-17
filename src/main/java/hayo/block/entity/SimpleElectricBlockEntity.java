@@ -1,6 +1,6 @@
 package hayo.block.entity;
 
-import hayo.item.components.EnergyComponents;
+import hayo.energy.item.EnergyComponents;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;

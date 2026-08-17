@@ -1,9 +1,9 @@
 package hayo.mod_support.jei;
 
+import hayo.energy.client.EnergySprites;
 import hayo.energy.EnergyTexts;
 import hayo.feature.machines.matter_generator.MatterGeneratingRecipe;
 import hayo.feature.machines.matter_generator.MatterGeneratorBlockEntity;
-import hayo.feature.universal_screen.MachineEnergyBar;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -23,7 +23,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder<MatterGeneratingRecipe>> {
-    private static final int ENERGY_USE_RATE = MatterGeneratorBlockEntity.ENERGY_USE_RATE;
     private static final int TICK_IN_MILLISECONDS = 50;
 
     private final IDrawable icon;
@@ -66,10 +65,10 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
 
     @Override
     public void draw(RecipeHolder<MatterGeneratingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        MachineEnergyBar.extract(graphics, 3, 6, 10, 14);
+        EnergySprites.extractZap(graphics, 3, 6, 10, 14);
 
         int energyCost = recipe.value().energyCost();
-        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ENERGY_USE_RATE / 24)) % 24d);
+        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / MatterGeneratorBlockEntity.ENERGY_USE_RATE / 24)) % 24d);
         RecipeArrow.extract(graphics, 22, 4, RecipeArrow.DEFAULT, progress, 24);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 1, 28, 0xFF404040, false);
@@ -84,7 +83,7 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
 
             tooltip.addAll(List.of( //
                     Component.translatable("hayo.duration.seconds", duration), //
-                    Component.translatable("hayo.energy.amount_and_amount_per_tick", recipe.energyCost(), ENERGY_USE_RATE).withStyle(ChatFormatting.GRAY)));
+                    EnergyTexts.amountAndAmountPerTick(recipe.energyCost(), MatterGeneratorBlockEntity.ENERGY_USE_RATE).withStyle(ChatFormatting.GRAY)));
         }
     }
 }
