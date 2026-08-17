@@ -28,12 +28,12 @@ public class CableBlock extends Block implements ElectricCableBlock {
         this.transferLimit = transferLimit;
         this.shapes = CableShapeCache.getOrCreate(radius);
 
-        this.registerDefaultState(this.defaultBlockState() //
-                .setValue(CableShapeCache.DOWN, false) //
-                .setValue(CableShapeCache.UP, false) //
-                .setValue(CableShapeCache.NORTH, false) //
-                .setValue(CableShapeCache.SOUTH, false) //
-                .setValue(CableShapeCache.EAST, false) //
+        this.registerDefaultState(this.defaultBlockState()
+                .setValue(CableShapeCache.DOWN, false)
+                .setValue(CableShapeCache.UP, false)
+                .setValue(CableShapeCache.NORTH, false)
+                .setValue(CableShapeCache.SOUTH, false)
+                .setValue(CableShapeCache.EAST, false)
                 .setValue(CableShapeCache.WEST, false));
     }
 
@@ -53,12 +53,12 @@ public class CableBlock extends Block implements ElectricCableBlock {
     }
 
     public BlockState getStateForPos(Level level, BlockPos pos) {
-        return this.defaultBlockState() //
-                .setValue(CableShapeCache.DOWN, this.connectsTo(level, pos, Direction.DOWN)) //
-                .setValue(CableShapeCache.UP, this.connectsTo(level, pos, Direction.UP)) //
-                .setValue(CableShapeCache.WEST, this.connectsTo(level, pos, Direction.WEST)) //
-                .setValue(CableShapeCache.EAST, this.connectsTo(level, pos, Direction.EAST)) //
-                .setValue(CableShapeCache.NORTH, this.connectsTo(level, pos, Direction.NORTH)) //
+        return this.defaultBlockState()
+                .setValue(CableShapeCache.DOWN, this.connectsTo(level, pos, Direction.DOWN))
+                .setValue(CableShapeCache.UP, this.connectsTo(level, pos, Direction.UP))
+                .setValue(CableShapeCache.WEST, this.connectsTo(level, pos, Direction.WEST))
+                .setValue(CableShapeCache.EAST, this.connectsTo(level, pos, Direction.EAST))
+                .setValue(CableShapeCache.NORTH, this.connectsTo(level, pos, Direction.NORTH))
                 .setValue(CableShapeCache.SOUTH, this.connectsTo(level, pos, Direction.SOUTH));
     }
 

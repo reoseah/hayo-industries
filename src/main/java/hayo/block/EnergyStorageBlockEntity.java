@@ -3,8 +3,8 @@ package hayo.block;
 import hayo.energy.block.EnergyGrid;
 import hayo.block.entity.SimpleElectricBlockEntity;
 import hayo.energy.item.EnergyComponents;
-import hayo.feature.universal_screen.SpriteElement;
-import hayo.feature.universal_screen.StorageEnergyBar;
+import hayo.menu.SpriteElement;
+import hayo.menu.StorageEnergyBar;
 import hayo.menu.UniversalContainerMenu;
 import lombok.Getter;
 import lombok.Setter;
@@ -104,15 +104,15 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player player) {
-        return new UniversalContainerMenu(menuId, this).setCenterTitle(true) //
-                .addDataSlotsChainable(new EnergyStorageData(this)) //
-                .addSlotChainable(new Slot(this, DISCHARGE_SLOT, 62, 18)) //
-                .addSlotChainable(new Slot(this, CHARGE_SLOT, 62, 54)) //
-                .addStandardInventorySlotsChainable(playerInventory) //
-                .addQuickMoveRule(DISCHARGE_SLOT, DISCHARGE_SLOT + 1, EnergyComponents::canDischargeInMachine) //
-                .addQuickMoveRule(CHARGE_SLOT, CHARGE_SLOT + 1, EnergyComponents::canChargeInMachine) //
-                .addElement(new StorageEnergyBar(88, 16, this::getStoredEnergy, this::getEnergyCapacity, this::getAverageInputPerTick, this::getAverageOutputPerTick)) //
-                .addElement(SpriteElement.smallArrowRight(79, 17)) //
+        return new UniversalContainerMenu(menuId, this).setCenterTitle(true)
+                .addDataSlotsChainable(new EnergyStorageData(this))
+                .addSlotChainable(new Slot(this, DISCHARGE_SLOT, 62, 18))
+                .addSlotChainable(new Slot(this, CHARGE_SLOT, 62, 54))
+                .addStandardInventorySlotsChainable(playerInventory)
+                .addQuickMoveRule(DISCHARGE_SLOT, DISCHARGE_SLOT + 1, EnergyComponents::canDischargeInMachine)
+                .addQuickMoveRule(CHARGE_SLOT, CHARGE_SLOT + 1, EnergyComponents::canChargeInMachine)
+                .addElement(new StorageEnergyBar(88, 16, this::getStoredEnergy, this::getEnergyCapacity, this::getAverageInputPerTick, this::getAverageOutputPerTick))
+                .addElement(SpriteElement.smallArrowRight(79, 17))
                 .addElement(SpriteElement.smallArrowLeft(79, 53));
     }
 

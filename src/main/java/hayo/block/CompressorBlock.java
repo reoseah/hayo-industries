@@ -2,12 +2,9 @@ package hayo.block;
 
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
-import hayo.block.entity.LapotronEnergyStorageBlockEntity;
 import hayo.energy.block.ElectricReceiverBlock;
-import hayo.energy.block.ElectricSenderBlock;
+import hayo.block.entity.CompressorBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,10 +13,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class LapotronEnergyStorageBlock extends DirectionalElectricalBlock implements ElectricReceiverBlock, ElectricSenderBlock {
-    public static final MapCodec<LapotronEnergyStorageBlock> CODEC = simpleCodec(LapotronEnergyStorageBlock::new);
+public class CompressorBlock extends HorizontalDirectionalElectricalBlock implements ElectricReceiverBlock {
+    public static final MapCodec<CompressorBlock> CODEC = simpleCodec(CompressorBlock::new);
 
-    public LapotronEnergyStorageBlock(Properties properties) {
+    public CompressorBlock(Properties properties) {
         super(properties);
     }
 
@@ -30,17 +27,12 @@ public class LapotronEnergyStorageBlock extends DirectionalElectricalBlock imple
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new LapotronEnergyStorageBlockEntity(pos, state);
+        return new CompressorBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, Hayo.BlockEntityTypes.LAPOTRON_ENERGY_STORAGE, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
-    }
-
-    @Override
-    public boolean canReceiveEnergy(BlockState state, ServerLevel level, BlockPos pos, Direction side) {
-        return side.getOpposite() != state.getValue(FACING);
+        return createTickerHelper(type, Hayo.BlockEntityTypes.COMPRESSOR, world.isClientSide() ? null : CompressorBlockEntity::tickServer);
     }
 }

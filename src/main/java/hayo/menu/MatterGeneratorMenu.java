@@ -1,0 +1,114 @@
+package hayo.menu;
+
+import com.google.common.base.Predicates;
+import hayo.Hayo;
+import hayo.block.entity.MatterGeneratorBlockEntity;
+import hayo.menu.slot.ResultSlot;
+import hayo.recipe.MatterGeneratingRecipe;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+
+import java.util.List;
+
+public class MatterGeneratorMenu extends MachineMenu {
+    public final List<RecipeHolder<MatterGeneratingRecipe>> recipes;
+    public final DataSlot selectedIdx;
+
+    public MatterGeneratorMenu(int menuId, Inventory inventory) {
+        this(menuId, new SimpleContainer(MatterGeneratorBlockEntity.SLOTS), new SimpleContainerData(MachineContainerData.SIZE), inventory);
+    }
+
+    public MatterGeneratorMenu(int menuId, MatterGeneratorBlockEntity entity, Inventory inventory) {
+        this(menuId, entity, new SimpleContainerData(MachineContainerData.SIZE), inventory);
+    }
+
+    protected MatterGeneratorMenu(int menuId, Container container, ContainerData data, Inventory inventory) {
+        super(Hayo.MenuTypes.MATTER_GENERATOR, menuId, container, data, inventory);
+
+        this.addSlot(new Slot(container, 0, 56, 34));
+        this.addSlot(new ResultSlot(container, 1, 116, 26));
+
+        this.addStandardInventorySlots(inventory, 8, 110);
+
+        var level = inventory.player.level();
+        this.recipes = level.recipeAccess().getSynchronizedRecipes().getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING) //
+                .stream() //
+                .sorted((holder1, holder2) -> compare(holder1.value(), holder2.value())) //
+                .toList();
+
+        this.selectedIdx = (container instanceof MatterGeneratorBlockEntity entity) ? createSelectedIdx(entity, this.recipes) : DataSlot.standalone();
+        this.addDataSlot(this.selectedIdx);
+    }
+
+    public static int compare(MatterGeneratingRecipe r1, MatterGeneratingRecipe r2) {
+        int energyCostComparison = Integer.compare(r1.energyCost(), r2.energyCost());
+        if (energyCostComparison != 0) {
+            return energyCostComparison;
+        }
+
+        var id1 = r1.result().create().getItem().builtInRegistryHolder().key().identifier();
+        var id2 = r2.result().create().getItem().builtInRegistryHolder().key().identifier();
+        var namespace1 = id1.getNamespace();
+        var namespace2 = id2.getNamespace();
+        var isVanilla1 = namespace1.equals("minecraft");
+        var isVanilla2 = namespace2.equals("minecraft");
+
+        int isVanillaComparison = Boolean.compare(isVanilla1, isVanilla2);
+        if (isVanillaComparison != 0) {
+            return energyCostComparison;
+        }
+
+        int namespaceComparison = namespace1.compareTo(namespace2);
+        if (namespaceComparison != 0) {
+            return namespaceComparison;
+        }
+
+        var path1 = id1.getPath();
+        var path2 = id2.getPath();
+
+        return path1.compareTo(path2);
+    }
+
+    private static DataSlot createSelectedIdx(MatterGeneratorBlockEntity entity, List<RecipeHolder<MatterGeneratingRecipe>> recipes) {
+        var ids = recipes.stream().map(holder -> holder.id().identifier()).toList();
+
+        return new DataSlot() {
+            @Override
+            public int get() {
+                return ids.indexOf(entity.selectedRecipeId);
+            }
+
+            @Override
+            public void set(int value) {
+                entity.selectRecipe(value >= 0 && value < ids.size() ? ids.get(value) : null);
+            }
+        };
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player player, int index) {
+        return quickMoveClassicMachineStack(this, player, index, 0, 1, 1, 0, Predicates.alwaysFalse(), null);
+    }
+
+    public int getSelectedRecipeIdx() {
+        return this.selectedIdx.get();
+    }
+
+    public boolean clickMenuButton(Player player, int buttonId) {
+        if (buttonId >= 0 && buttonId < this.recipes.size()) {
+            this.selectedIdx.set(buttonId);
+
+            return true;
+        }
+
+        return super.clickMenuButton(player, buttonId);
+    }
+}

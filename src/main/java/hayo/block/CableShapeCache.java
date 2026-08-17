@@ -29,12 +29,12 @@ public enum CableShapeCache {
             float min = 8 - r;
             float max = 8 + r;
             var center = Block.box(min, min, min, max, max, max);
-            var connections = new VoxelShape[]{ //
-                    Block.box(min, 0, min, max, max, max), //
-                    Block.box(min, min, min, max, 16, max), //
-                    Block.box(min, min, 0, max, max, max), //
-                    Block.box(min, min, min, max, max, 16), //
-                    Block.box(0, min, min, max, max, max), //
+            var connections = new VoxelShape[]{
+                    Block.box(min, 0, min, max, max, max),
+                    Block.box(min, min, min, max, 16, max),
+                    Block.box(min, min, 0, max, max, max),
+                    Block.box(min, min, min, max, max, 16),
+                    Block.box(0, min, min, max, max, max),
                     Block.box(min, min, min, 16, max, max)};
 
             for (int i = 0; i < 64; i++) {
@@ -62,11 +62,11 @@ public enum CableShapeCache {
     }
 
     public static int getIndex(BlockState state) {
-        return (state.getValue(DOWN) ? 1 : 0) //
-                | (state.getValue(UP) ? 2 : 0) //
-                | (state.getValue(NORTH) ? 4 : 0) //
-                | (state.getValue(SOUTH) ? 8 : 0) //
-                | (state.getValue(WEST) ? 16 : 0) //
+        return (state.getValue(DOWN) ? 1 : 0)
+                | (state.getValue(UP) ? 2 : 0)
+                | (state.getValue(NORTH) ? 4 : 0)
+                | (state.getValue(SOUTH) ? 8 : 0)
+                | (state.getValue(WEST) ? 16 : 0)
                 | (state.getValue(EAST) ? 32 : 0);
     }
 }

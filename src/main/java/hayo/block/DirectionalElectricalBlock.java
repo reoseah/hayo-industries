@@ -40,7 +40,7 @@ public abstract class DirectionalElectricalBlock extends BaseEntityBlock impleme
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState() //
+        return this.defaultBlockState()
                 .setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 

@@ -43,7 +43,7 @@ public abstract class HorizontalDirectionalElectricalBlock extends BaseEntityBlo
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState() //
+        return this.defaultBlockState()
                 .setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 

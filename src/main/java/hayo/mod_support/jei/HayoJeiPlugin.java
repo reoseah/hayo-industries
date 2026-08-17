@@ -1,10 +1,10 @@
 package hayo.mod_support.jei;
 
 import hayo.Hayo;
-import hayo.feature.machines.compressor.CompressingRecipe;
-import hayo.feature.machines.extractor.ExtractingRecipe;
-import hayo.feature.machines.macerator.MaceratingRecipe;
-import hayo.feature.machines.matter_generator.MatterGeneratingRecipe;
+import hayo.recipe.CompressingRecipe;
+import hayo.recipe.ExtractingRecipe;
+import hayo.recipe.MaceratingRecipe;
+import hayo.recipe.MatterGeneratingRecipe;
 import hayo.menu.UniversalContainerMenu;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
