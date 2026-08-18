@@ -4,6 +4,7 @@ import hayo.Hayo;
 import hayo.menu.MatterGeneratorMenu;
 import hayo.recipe.EmptyRecipeInput;
 import hayo.recipe.MatterGeneratingRecipe;
+import hayo.util.IntRange;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
@@ -27,7 +28,7 @@ import org.jspecify.annotations.Nullable;
 public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGeneratingRecipe, EmptyRecipeInput> {
     public static final int CAPACITY = 10000, TRANSFER_LIMIT = 128, ENERGY_USE_RATE = 100, SLOTS = 2, BATTERY_SLOT = 0, OUTPUT_SLOT = 1;
 
-    protected @Nullable Identifier selectedRecipeId;
+    public @Nullable Identifier selectedRecipeId;
 
     public MatterGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.MATTER_GENERATOR, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
@@ -65,13 +66,8 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
     }
 
     @Override
-    protected int getFirstUpgradeSlot() {
-        return 0;
-    }
-
-    @Override
-    protected int getLastUpgradeSlot() {
-        return -1;
+    protected IntRange getUpgradeSlots() {
+        return new IntRange(0, 0);
     }
 
     @Override

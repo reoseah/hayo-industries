@@ -1,6 +1,7 @@
 package hayo.block.entity;
 
 import hayo.Hayo;
+import hayo.util.IntRange;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -100,9 +101,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected abstract boolean isInputSlot(int slot);
 
-    protected abstract int getFirstUpgradeSlot();
-
-    protected abstract int getLastUpgradeSlot();
+    protected abstract IntRange getUpgradeSlots();
 
     protected abstract RecipeType<R> getRecipeType();
 
@@ -129,7 +128,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         return useRate;
     }
 
-    public int getRecipeTotalEnergy(RecipeHolder<R> holder) {
+    public int getRecipeTotalEnergy(@Nullable RecipeHolder<R> holder) {
         return (int) (this.getBaseEnergyCost(holder) * (1 + this.extraRecipeCost));
     }
 
@@ -144,10 +143,8 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
             if (this.lastRecipe != null && this.level != null && !this.lastRecipe.value().matches(this.createRecipeInput(), this.level)) {
                 this.resetRecipeProgress();
             }
-            return;
-        } else if (slot >= this.getFirstUpgradeSlot() && slot <= this.getLastUpgradeSlot()) {
+        } else if (this.getUpgradeSlots().contains(slot)) {
             this.updateUpgradeState();
-            return;
         }
     }
 
@@ -188,9 +185,8 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         int extraCapacity = 0;
         boolean hasInductionUpgrade = false;
 
-        int firstSlot = this.getFirstUpgradeSlot();
-        int lastSlot = this.getLastUpgradeSlot();
-        for (int i = firstSlot; i <= lastSlot; i++) {
+        var upgradeSlots = this.getUpgradeSlots();
+        for (int i = upgradeSlots.start(); i < upgradeSlots.end(); i++) {
             var stack = this.stacks.get(i);
             if (stack.is(Hayo.Items.CAPACITOR_UPGRADE)) {
                 extraCapacity += 10000;
@@ -199,16 +195,12 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
                 extraCraftingSpeed += 1;
                 extraRecipeCost += 0.25F;
             }
-        }
-
-        for (int i = firstSlot; i <= lastSlot; i++) {
-            var stack = this.stacks.get(i);
-            if (stack.is(Hayo.Items.STREAMLINE_OVERHAUL_UPGRADE)) {
+            if (stack.is(Hayo.Items.STREAMLINE_OVERHAUL_UPGRADE) && !hasInductionUpgrade) {
                 hasInductionUpgrade = true;
                 extraCraftingSpeed += 3;
-                break;
             }
         }
+
         this.extraCapacity = extraCapacity;
         if (this.storedEnergy > this.getEnergyCapacity()) {
             this.storedEnergy = this.getEnergyCapacity();
@@ -224,7 +216,6 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
             this.hasInductionUpgrade = hasInductionUpgrade;
             this.inductionHeat = 0;
         }
-
     }
 
     protected void resetRecipeProgress() {

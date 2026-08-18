@@ -56,11 +56,7 @@ public class EnergyComponents {
         return stack.has(ENERGY_STORAGE);
     }
 
-    public static boolean canChargeInMachine(ItemStack stack) {
-        return stack.has(ENERGY_STORAGE);
-    }
-
-    public static boolean canDischargeInMachine(ItemStack stack) {
+    public static boolean canChargeMachine(ItemStack stack) {
         return stack.has(ENERGY_STORAGE) && stack.has(CAN_CHARGE_BLOCKS);
     }
 

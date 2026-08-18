@@ -7,6 +7,7 @@ import hayo.menu.slot.ResultSlot;
 import hayo.menu.slot.TagFilteredSlot;
 import hayo.menu.UniversalContainerMenu;
 import hayo.recipe.ClassicMachineRecipe;
+import hayo.util.IntRange;
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,13 +47,8 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     }
 
     @Override
-    public int getFirstUpgradeSlot() {
-        return FIRST_UPGRADE_SLOT;
-    }
-
-    @Override
-    public int getLastUpgradeSlot() {
-        return LAST_UPGRADE_SLOT;
+    protected IntRange getUpgradeSlots() {
+        return new IntRange(FIRST_UPGRADE_SLOT, LAST_UPGRADE_SLOT + 1);
     }
 
     @Override
@@ -142,7 +138,7 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
                 .addStandardInventorySlotsChainable(inventory) //
                 .addQuickMoveRule(3, 7, stack -> stack.is(this.getUpgradeTag())) //
                 .addQuickMoveRule(INPUT_SLOT, INPUT_SLOT + 1, this::isRecipeInput) //
-                .addQuickMoveRule(BATTERY_SLOT, BATTERY_SLOT + 1, EnergyComponents::canDischargeInMachine) //
+                .addQuickMoveRule(BATTERY_SLOT, BATTERY_SLOT + 1, EnergyComponents::canChargeMachine) //
                 .setRecipeTransferData(this::getRecipeType, INPUT_SLOT, INPUT_SLOT + 1) //
                 .addDataSlotsChainable(new ClassicMachineData(this)) //
                 .addElement(new MachineEnergyBar(48, 37, this::getStoredEnergy, this::getEnergyCapacity)) //

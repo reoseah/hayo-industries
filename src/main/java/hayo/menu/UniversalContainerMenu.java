@@ -1,6 +1,7 @@
 package hayo.menu;
 
 import hayo.Hayo;
+import hayo.util.IntRange;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -26,9 +27,9 @@ import java.util.function.Supplier;
 public class UniversalContainerMenu extends AbstractContainerMenu {
     protected final Container container;
     @Getter
-    protected SlotRange playerInventory;
-    protected SlotRange playerMainInventory;
-    protected SlotRange playerHotbar;
+    protected IntRange playerInventory;
+    protected IntRange playerMainInventory;
+    protected IntRange playerHotbar;
     protected final List<QuickMoveRule> quickMoveRules = new ArrayList<>();
     @Getter
     public @Nullable RecipeTransferData recipeTransferData;
@@ -74,16 +75,6 @@ public class UniversalContainerMenu extends AbstractContainerMenu {
         return this;
     }
 
-    public record SlotRange(int start, int end) {
-        public static SlotRange of(int start, int count) {
-            return new SlotRange(start, start + count);
-        }
-
-        public boolean contains(int index) {
-            return index >= this.start && index < this.end;
-        }
-    }
-
     public UniversalContainerMenu addStandardInventorySlotsChainable(Container inventory) {
         return this.addStandardInventorySlotsChainable(inventory, 8, 84);
     }
@@ -93,9 +84,9 @@ public class UniversalContainerMenu extends AbstractContainerMenu {
 
         this.addStandardInventorySlots(inventory, x, y);
 
-        this.playerInventory = new SlotRange(start, start + 36);
-        this.playerMainInventory = new SlotRange(start, start + 27);
-        this.playerHotbar = new SlotRange(start + 27, start + 36);
+        this.playerInventory = new IntRange(start, start + 36);
+        this.playerMainInventory = new IntRange(start, start + 27);
+        this.playerHotbar = new IntRange(start + 27, start + 36);
 
         return this;
     }

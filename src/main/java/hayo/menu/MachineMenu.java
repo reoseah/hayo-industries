@@ -91,7 +91,7 @@ public abstract class MachineMenu extends AbstractContainerMenu {
                 if (!menu.moveItemStackTo(stack, start, start + upgradeSlots, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (batterySlots != 0 && EnergyComponents.canDischargeInMachine(stack)) {
+            } else if (batterySlots != 0 && EnergyComponents.canChargeMachine(stack)) {
                 if (!menu.moveItemStackTo(stack, inputSlots, inputSlots + batterySlots, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -123,7 +123,6 @@ public abstract class MachineMenu extends AbstractContainerMenu {
         slot.onTake(player, stack);
         return remaining;
     }
-
 
     public int getStoredEnergy() {
         return (this.data.get(1) << 16) | (this.data.get(0) & 0xFFFF);

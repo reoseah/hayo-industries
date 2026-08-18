@@ -94,7 +94,7 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
-        return slot == DISCHARGE_SLOT ? EnergyComponents.canDischargeInMachine(stack) : EnergyComponents.canChargeInMachine(stack);
+        return slot == DISCHARGE_SLOT ? EnergyComponents.canChargeMachine(stack) : EnergyComponents.isStorage(stack);
     }
 
     @Override
@@ -109,8 +109,8 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
                 .addSlotChainable(new Slot(this, DISCHARGE_SLOT, 62, 18))
                 .addSlotChainable(new Slot(this, CHARGE_SLOT, 62, 54))
                 .addStandardInventorySlotsChainable(playerInventory)
-                .addQuickMoveRule(DISCHARGE_SLOT, DISCHARGE_SLOT + 1, EnergyComponents::canDischargeInMachine)
-                .addQuickMoveRule(CHARGE_SLOT, CHARGE_SLOT + 1, EnergyComponents::canChargeInMachine)
+                .addQuickMoveRule(DISCHARGE_SLOT, DISCHARGE_SLOT + 1, EnergyComponents::canChargeMachine)
+                .addQuickMoveRule(CHARGE_SLOT, CHARGE_SLOT + 1, EnergyComponents::isStorage)
                 .addElement(new StorageEnergyBar(88, 16, this::getStoredEnergy, this::getEnergyCapacity, this::getAverageInputPerTick, this::getAverageOutputPerTick))
                 .addElement(SpriteElement.smallArrowRight(79, 17))
                 .addElement(SpriteElement.smallArrowLeft(79, 53));

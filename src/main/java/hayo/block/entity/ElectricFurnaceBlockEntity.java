@@ -100,17 +100,16 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
             var stack = this.stacks.get(i);
             if (stack.is(Hayo.Items.BLASTING_UPGRADE)) {
                 mode = ElectricFurnaceMode.BLASTING;
+                this.extraCraftingSpeed += 1;
                 break;
             } else if (stack.is(Hayo.Items.SMOKING_UPGRADE)) {
                 mode = ElectricFurnaceMode.SMOKING;
+                this.extraCraftingSpeed += 1;
                 break;
             }
         }
         if (mode != this.mode) {
             this.mode = mode;
-            if (this.mode != ElectricFurnaceMode.SMELTING) {
-                this.extraCraftingSpeed += 1;
-            }
             this.resetRecipeProgress();
         }
     }

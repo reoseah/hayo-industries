@@ -174,7 +174,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
                 .addSlotChainable(new Slot(this, 6, 124, 36)) //
                 .addStandardInventorySlotsChainable(inventory) //
                 .addQuickMoveRule(0, 6, stack -> stack.is(Hayo.ItemTags.BATTERY_BOX_BATTERIES)) //
-                .addQuickMoveRule(6, 7, EnergyComponents::canChargeInMachine) //
+                .addQuickMoveRule(6, 7, EnergyComponents::isStorage) //
                 .addDataSlotsChainable(new BatteryBoxData(this)) //
                 .addElement(new StorageEnergyBar(88, 16, this::getStoredEnergy, this::getEnergyCapacity, this::getAverageInputPerTick, this::getAverageOutputPerTick)) //
                 .addElement(SpriteElement.outputSlot(120, 32)) //
@@ -190,12 +190,12 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
-        return slot == CHARGING_SLOT && !EnergyComponents.canChargeInMachine(stack);
+        return slot == CHARGING_SLOT && !EnergyComponents.isStorage(stack);
     }
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
-        return slot == CHARGING_SLOT && EnergyComponents.canChargeInMachine(stack);
+        return slot == CHARGING_SLOT && EnergyComponents.isStorage(stack);
     }
 
     @Override
