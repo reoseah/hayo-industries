@@ -194,7 +194,7 @@ public class Hayo {
         public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINE_PROPS);
         public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, BlockBehaviour.Properties.of().strength(15F).sound(SoundType.METAL).mapColor(MapColor.METAL));
         public static final Block SILICON_BRONZE_BLOCK = register("silicon_bronze_block", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.COLOR_ORANGE));
-        public static final Block COMPOSITE_PLATE_BLOCK = register("composite_plate_block", Block::new, BlockBehaviour.Properties.of().strength(5F, 30F).sound(SoundType.METAL).mapColor(MapColor.COLOR_GREEN));
+        public static final Block COMPOSITE_PLATE_BLOCK = register("composite_plate_block", Block::new, BlockBehaviour.Properties.of().strength(10F, 60F).sound(SoundType.METAL).mapColor(MapColor.COLOR_GREEN));
         public static final Block RAW_SILICON_BLOCK = register("raw_silicon_block", Block::new, BlockBehaviour.Properties.of().strength(3F).mapColor(MapColor.COLOR_BLACK));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
@@ -205,7 +205,6 @@ public class Hayo {
         public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.GLASS));
         public static final Block REINFORCED_STONE_STAIRS = register("reinforced_stone_stairs", props -> new StairBlock(REINFORCED_STONE.defaultBlockState(), props), REINFORCED_BLOCKS);
         public static final Block REINFORCED_STONE_SLAB = register("reinforced_stone_slab", SlabBlock::new, REINFORCED_BLOCKS);
-        public static final Block GLAZED_REINFORCED_STONE = register("glazed_reinforced_stone", Block::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
         public static final Block REINFORCED_TRAPDOOR = register("reinforced_trapdoor", props -> new TrapDoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
 
@@ -283,7 +282,6 @@ public class Hayo {
         public static final Item REINFORCED_GLASS = registerBlock(Blocks.REINFORCED_GLASS);
         public static final Item REINFORCED_STONE_STAIRS = registerBlock(Blocks.REINFORCED_STONE_STAIRS);
         public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
-        public static final Item GLAZED_REINFORCED_STONE = registerBlock(Blocks.GLAZED_REINFORCED_STONE);
         public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
         public static final Item REINFORCED_TRAPDOOR = registerBlock(Blocks.REINFORCED_TRAPDOOR);
 
@@ -535,7 +533,6 @@ public class Hayo {
                 entries.accept(REINFORCED_STONE);
                 entries.accept(REINFORCED_STONE_STAIRS);
                 entries.accept(REINFORCED_STONE_SLAB);
-                entries.accept(GLAZED_REINFORCED_STONE);
                 entries.accept(REINFORCED_GLASS);
                 entries.accept(REINFORCED_DOOR);
                 entries.accept(REINFORCED_TRAPDOOR);

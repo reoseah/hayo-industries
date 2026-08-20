@@ -6,33 +6,6 @@
       },
       {
         "model": "hayo:block/composite_plate_block",
-        "x": 90
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "x": 180
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "x": 270
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "y": 90
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "x": 90,
-        "y": 90
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "x": 180,
-        "y": 90
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "x": 270,
         "y": 90
       },
       {
@@ -41,36 +14,6 @@
       },
       {
         "model": "hayo:block/composite_plate_block",
-        "x": 90,
-        "y": 180
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "x": 180,
-        "y": 180
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "x": 270,
-        "y": 180
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "y": 270
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "x": 90,
-        "y": 270
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "x": 180,
-        "y": 270
-      },
-      {
-        "model": "hayo:block/composite_plate_block",
-        "x": 270,
         "y": 270
       }
     ]
