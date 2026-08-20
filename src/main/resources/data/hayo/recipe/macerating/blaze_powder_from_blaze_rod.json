@@ -1,7 +1,7 @@
 {
   "type": "hayo:macerating",
   "ingredient": "minecraft:blaze_rod",
-  "processing_energy": 400,
+  "energy_cost": 400,
   "result": {
     "id": "minecraft:blaze_powder",
     "count": 3

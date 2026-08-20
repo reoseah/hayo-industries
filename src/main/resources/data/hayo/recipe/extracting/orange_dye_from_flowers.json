@@ -5,7 +5,7 @@
     "minecraft:torchflower",
     "minecraft:open_eyeblossom"
   ],
-  "processing_energy": 600,
+  "energy_cost": 600,
   "result": {
     "id": "minecraft:orange_dye",
     "count": 2

@@ -1,7 +1,7 @@
 {
   "type": "hayo:macerating",
   "ingredient": "#c:ingots/copper",
-  "processing_energy": 400,
+  "energy_cost": 400,
   "result": {
     "id": "hayo:copper_dust"
   }

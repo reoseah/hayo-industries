@@ -44,7 +44,7 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, ElectricFurnaceBlockEntity entity) {
-        entity.chargeFromSlot(BATTERY_SLOT);
+        entity.chargeFromSlot(BATTERY);
         entity.tickRecipe((ServerLevel) level, pos, state);
         entity.resetEnergyPerTick();
     }
@@ -96,7 +96,7 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
         super.updateUpgradeState();
 
         var mode = ElectricFurnaceMode.SMELTING;
-        for (int i = FIRST_UPGRADE_SLOT; i <= LAST_UPGRADE_SLOT; i++) {
+        for (int i = FIRST_UPGRADE; i < FIRST_UPGRADE + UPGRADES; i++) {
             var stack = this.stacks.get(i);
             if (stack.is(Hayo.Items.BLASTING_UPGRADE)) {
                 mode = ElectricFurnaceMode.BLASTING;

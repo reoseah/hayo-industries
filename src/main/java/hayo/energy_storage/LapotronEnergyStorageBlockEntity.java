@@ -1,12 +1,11 @@
 package hayo.energy_storage;
 
 import hayo.Hayo;
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class LapotronEnergyStorageBlockEntity extends EnergyStorageBlockEntity implements ExtendedMenuProvider<BlockPos> {
+public class LapotronEnergyStorageBlockEntity extends EnergyStorageBlockEntity {
     public static final int CAPACITY = 4_000_000;
     public static final int TRANSFER_LIMIT = 512;
 
@@ -20,7 +19,7 @@ public class LapotronEnergyStorageBlockEntity extends EnergyStorageBlockEntity i
     }
 
     @Override
-    protected int getEnergyCapacity() {
+    public int getEnergyCapacity() {
         return CAPACITY;
     }
 

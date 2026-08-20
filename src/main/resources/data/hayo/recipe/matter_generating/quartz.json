@@ -1,6 +1,6 @@
 {
   "type": "hayo:matter_generating",
-  "processing_energy": 200000,
+  "energy_cost": 200000,
   "result": {
     "id": "minecraft:quartz"
   }

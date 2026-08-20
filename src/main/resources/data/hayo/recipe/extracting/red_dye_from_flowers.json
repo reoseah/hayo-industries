@@ -4,7 +4,7 @@
     "minecraft:poppy",
     "minecraft:red_tulip"
   ],
-  "processing_energy": 600,
+  "energy_cost": 600,
   "result": {
     "id": "minecraft:red_dye",
     "count": 2

@@ -2,7 +2,7 @@
   "type": "hayo:extracting",
   "ingredient": "minecraft:bread",
   "input_count": 2,
-  "processing_energy": 600,
+  "energy_cost": 600,
   "result": {
     "id": "hayo:nutrient_paste"
   }

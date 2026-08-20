@@ -79,7 +79,7 @@ public abstract class ClassicMachineRecipe implements Recipe<SingleRecipeInput> 
                         Codec.INT.fieldOf("input_count").orElse(1).forGetter(recipe -> recipe.inputCount), //
                         ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result), //
                         Codec.FLOAT.fieldOf("extra_result_chance").orElse(0F).forGetter(recipe -> recipe.extraResultChance), //
-                        Codec.INT.fieldOf("processing_energy").orElse(defaultEnergy).forGetter(recipe -> recipe.energyCost) //
+                        Codec.INT.fieldOf("energy_cost").orElse(defaultEnergy).forGetter(recipe -> recipe.energyCost) //
                 ).apply(instance, factory::create));
 
         var streamCodec = StreamCodec.composite( //

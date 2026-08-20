@@ -1,7 +1,7 @@
 {
   "type": "hayo:extracting",
   "ingredient": "minecraft:sugar_cane",
-  "processing_energy": 600,
+  "energy_cost": 600,
   "result": {
     "id": "minecraft:sugar",
     "count": 2

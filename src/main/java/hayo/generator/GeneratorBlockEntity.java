@@ -2,27 +2,20 @@ package hayo.generator;
 
 import hayo.Hayo;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
-import hayo.energy.block.EnergyGrid;
-import hayo.old_menus.FuelBar;
-import hayo.old_menus.SpriteElement;
-import hayo.old_menus.StorageEnergyBar;
-import hayo.old_menus.UniversalContainerMenu;
 import hayo.common.blockentity.SimpleContainerBlockEntity;
+import hayo.energy.block.EnergyGrid;
 import lombok.Getter;
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.FuelValues;
@@ -31,7 +24,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer, ExtendedMenuProvider<BlockPos> {
+public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer, MenuProvider {
     public static final int FUEL_CONSUMPTION_RATE = 2;
     public static final int ENERGY_PER_FUEL_TICK = 5;
     public static final int GENERATION_RATE = FUEL_CONSUMPTION_RATE * ENERGY_PER_FUEL_TICK;
@@ -87,20 +80,8 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
     }
 
     @Override
-    public BlockPos getScreenOpeningData(ServerPlayer player) {
-        return this.worldPosition;
-    }
-
-    @Override
-    public @Nullable AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player player) {
-        return new UniversalContainerMenu(menuId, this) //
-                .addSlotChainable(new Slot(this, 0, 62, 54)) // TODO: only accept fuels?
-                .addStandardInventorySlotsChainable(playerInventory) //
-                .addQuickMoveRule(0, 1, stack -> this.level.fuelValues().isFuel(stack) && !stack.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS)) //
-                .addDataSlotsChainable(new GeneratorData(this)) //
-                .addElement(new FuelBar(62, 37, this::getFuelEnergyLeft, this::getFuelEnergyTotal)) //
-                .addElement(new StorageEnergyBar(88, 16, this::getStoredEnergy, () -> CAPACITY)) //
-                .addElement(SpriteElement.smallArrowRight(79, 44));
+    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new GeneratorMenu(containerId, this, playerInventory);
     }
 
     @Override
@@ -163,36 +144,4 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
         return !FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).isFuel(stack);
     }
 
-    protected record GeneratorData(GeneratorBlockEntity entity) implements ContainerData {
-        @Override
-        public int getCount() {
-            return 6;
-        }
-
-        @Override
-        public int get(int index) {
-            return switch (index) {
-                case 0 -> this.entity.storedEnergy & 0xFFFF;
-                case 1 -> this.entity.storedEnergy >>> 16;
-                case 2 -> this.entity.fuelEnergyLeft & 0xFFFF;
-                case 3 -> this.entity.fuelEnergyLeft >>> 16;
-                case 4 -> this.entity.fuelEnergyTotal & 0xFFFF;
-                case 5 -> this.entity.fuelEnergyTotal >>> 16;
-                default -> 0;
-            };
-        }
-
-        @Override
-        public void set(int index, int value) {
-            value &= 0xFFFF;
-            switch (index) {
-                case 0 -> this.entity.storedEnergy = this.entity.storedEnergy & 0xFFFF_0000 | value;
-                case 1 -> this.entity.storedEnergy = this.entity.storedEnergy & 0xFFFF | value << 16;
-                case 2 -> this.entity.fuelEnergyLeft = this.entity.fuelEnergyLeft & 0xFFFF_0000 | value;
-                case 3 -> this.entity.fuelEnergyLeft = this.entity.fuelEnergyLeft & 0xFFFF | value << 16;
-                case 4 -> this.entity.fuelEnergyTotal = this.entity.fuelEnergyTotal & 0xFFFF_0000 | value;
-                case 5 -> this.entity.fuelEnergyTotal = this.entity.fuelEnergyTotal & 0xFFFF | value << 16;
-            }
-        }
-    }
 }

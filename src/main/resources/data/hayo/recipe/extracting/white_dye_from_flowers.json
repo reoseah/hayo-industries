@@ -1,7 +1,7 @@
 {
   "type": "hayo:extracting",
   "ingredient": "minecraft:lily_of_the_valley",
-  "processing_energy": 600,
+  "energy_cost": 600,
   "result": {
     "id": "minecraft:white_dye",
     "count": 2

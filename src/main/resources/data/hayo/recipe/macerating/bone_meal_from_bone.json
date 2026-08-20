@@ -1,7 +1,7 @@
 {
   "type": "hayo:macerating",
   "ingredient": "minecraft:bone",
-  "processing_energy": 400,
+  "energy_cost": 400,
   "result": {
     "id": "minecraft:bone_meal",
     "count": 5

@@ -1,7 +1,7 @@
 {
   "type": "hayo:extracting",
   "ingredient": "minecraft:allium",
-  "processing_energy": 600,
+  "energy_cost": 600,
   "result": {
     "id": "minecraft:magenta_dye",
     "count": 2

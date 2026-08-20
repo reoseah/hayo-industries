@@ -1,12 +1,12 @@
 package hayo.processing_machine.classic;
 
+import hayo.common.IntRange;
+import hayo.common.menuslot.ResultSlot;
+import hayo.common.menuslot.TagFilteredSlot;
 import hayo.energy.item.EnergyComponents;
 import hayo.old_menus.MachineEnergyBar;
 import hayo.old_menus.SpriteElement;
 import hayo.old_menus.UniversalContainerMenu;
-import hayo.common.menuslot.ResultSlot;
-import hayo.common.menuslot.TagFilteredSlot;
-import hayo.common.IntRange;
 import hayo.processing_machine.UpgradableMachineBlockEntity;
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
@@ -31,11 +31,12 @@ import org.jspecify.annotations.Nullable;
 
 public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends UpgradableMachineBlockEntity<R, SingleRecipeInput> implements WorldlyContainer, ExtendedMenuProvider<BlockPos> {
     public static final int SLOTS = 7;
-    public static final int INPUT_SLOT = 0;
-    public static final int BATTERY_SLOT = 1;
-    public static final int OUTPUT_SLOT = 2;
-    public static final int FIRST_UPGRADE_SLOT = 3;
-    public static final int LAST_UPGRADE_SLOT = 6;
+
+    public static final int INPUT = 0;
+    public static final int BATTERY = 1;
+    public static final int OUTPUT = 2;
+    public static final int FIRST_UPGRADE = 3;
+    public static final int UPGRADES = 4;
 
     protected ClassicMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
@@ -43,17 +44,17 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
 
     @Override
     protected IntRange getUpgradeSlots() {
-        return new IntRange(FIRST_UPGRADE_SLOT, LAST_UPGRADE_SLOT + 1);
+        return new IntRange(FIRST_UPGRADE, FIRST_UPGRADE + UPGRADES);
     }
 
     @Override
     public boolean isInputSlot(int slot) {
-        return slot == INPUT_SLOT;
+        return slot == INPUT;
     }
 
     @Override
     public SingleRecipeInput createRecipeInput() {
-        return new SingleRecipeInput(this.stacks.get(INPUT_SLOT));
+        return new SingleRecipeInput(this.stacks.get(INPUT));
     }
 
     @Override
@@ -69,12 +70,12 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
         if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             recipeOutput.setCount(recipeOutput.getCount() + 1);
         }
-        return this.canInsertToSlot(recipeOutput, OUTPUT_SLOT);
+        return this.canInsertToSlot(recipeOutput, OUTPUT);
     }
 
     @Override
     public void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, SingleRecipeInput input) {
-        var inputStack = this.stacks.get(INPUT_SLOT);
+        var inputStack = this.stacks.get(INPUT);
         if (recipe.value() instanceof ClassicMachineRecipe machineRecipe) {
             inputStack.shrink(machineRecipe.inputCount);
         } else {
@@ -87,9 +88,9 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
             }
         }
 
-        var outputStack = this.stacks.get(OUTPUT_SLOT);
+        var outputStack = this.stacks.get(OUTPUT);
         if (outputStack.isEmpty()) {
-            this.stacks.set(OUTPUT_SLOT, recipeOutput);
+            this.stacks.set(OUTPUT, recipeOutput);
         } else {
             outputStack.grow(recipeOutput.getCount());
         }
@@ -98,16 +99,16 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     @Override
     public int[] getSlotsForFace(Direction side) {
         return switch (side) {
-            case UP -> new int[]{INPUT_SLOT};
-            case DOWN -> new int[]{OUTPUT_SLOT};
-            default -> new int[]{BATTERY_SLOT};
+            case UP -> new int[]{INPUT};
+            case DOWN -> new int[]{OUTPUT};
+            default -> new int[]{BATTERY};
         };
     }
 
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction side) {
         return switch (side) {
-            case null -> index != OUTPUT_SLOT;
+            case null -> index != OUTPUT;
             case UP -> true;
             case DOWN -> false;
             default -> EnergyComponents.isStorage(stack);
@@ -127,18 +128,18 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     @Override
     public UniversalContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
         return new UniversalContainerMenu(containerId, this) //
-                .addSlotChainable(new Slot(this, INPUT_SLOT, 47, 18)) //
-                .addSlotChainable(new Slot(this, BATTERY_SLOT, 47, 54)) //
-                .addSlotChainable(new ResultSlot(this, OUTPUT_SLOT, 107, 36)) //
+                .addSlotChainable(new Slot(this, INPUT, 47, 18)) //
+                .addSlotChainable(new Slot(this, BATTERY, 47, 54)) //
+                .addSlotChainable(new ResultSlot(this, OUTPUT, 107, 36)) //
                 .addSlotChainable(new TagFilteredSlot(this, 3, 152, 8, this.getUpgradeTag())) //
                 .addSlotChainable(new TagFilteredSlot(this, 4, 152, 26, this.getUpgradeTag())) //
                 .addSlotChainable(new TagFilteredSlot(this, 5, 152, 44, this.getUpgradeTag())) //
                 .addSlotChainable(new TagFilteredSlot(this, 6, 152, 62, this.getUpgradeTag())) //
                 .addStandardInventorySlotsChainable(inventory) //
                 .addQuickMoveRule(3, 7, stack -> stack.is(this.getUpgradeTag())) //
-                .addQuickMoveRule(INPUT_SLOT, INPUT_SLOT + 1, this::isRecipeInput) //
-                .addQuickMoveRule(BATTERY_SLOT, BATTERY_SLOT + 1, EnergyComponents::canChargeMachine) //
-                .setRecipeTransferData(this::getRecipeType, INPUT_SLOT, INPUT_SLOT + 1) //
+                .addQuickMoveRule(INPUT, INPUT + 1, this::isRecipeInput) //
+                .addQuickMoveRule(BATTERY, BATTERY + 1, EnergyComponents::canChargeMachine) //
+                .setRecipeTransferData(this::getRecipeType, INPUT, INPUT + 1) //
                 .addDataSlotsChainable(new ClassicMachineData(this)) //
                 .addElement(new MachineEnergyBar(48, 37, this::getStoredEnergy, this::getEnergyCapacity)) //
                 .addElement(SpriteElement.outputSlot(103, 32)) //

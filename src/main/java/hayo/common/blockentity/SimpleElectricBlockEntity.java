@@ -26,7 +26,7 @@ public abstract class SimpleElectricBlockEntity extends SimpleContainerBlockEnti
         super(type, pos, state, stacks);
     }
 
-    protected abstract int getEnergyCapacity();
+    public abstract int getEnergyCapacity();
 
     protected abstract int getEnergyTransferLimit();
 

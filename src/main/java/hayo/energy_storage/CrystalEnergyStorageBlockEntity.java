@@ -19,7 +19,7 @@ public class CrystalEnergyStorageBlockEntity extends EnergyStorageBlockEntity {
     }
 
     @Override
-    protected int getEnergyCapacity() {
+    public int getEnergyCapacity() {
         return CAPACITY;
     }
 

@@ -1,7 +1,7 @@
 {
   "type": "hayo:macerating",
   "ingredient": "#c:ores/emerald",
-  "processing_energy": 400,
+  "energy_cost": 400,
   "result": {
     "id": "minecraft:emerald",
     "count": 1

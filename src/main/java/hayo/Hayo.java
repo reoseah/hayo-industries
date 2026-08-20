@@ -4,29 +4,24 @@ import com.mojang.serialization.MapCodec;
 import hayo.battery_box.BatteryBoxBlock;
 import hayo.battery_box.BatteryBoxBlockEntity;
 import hayo.cable.CableBlock;
-import hayo.energy_armor.EmmissiveOverlayArmorRenderer;
-import hayo.energy.EnergyTexts;
-import hayo.energy.item.*;
-import hayo.processing_machine.matter_generator.MatterGeneratorMenu;
-import hayo.energy_storage.CrystalEnergyStorageBlock;
-import hayo.energy_storage.CrystalEnergyStorageBlockEntity;
-import hayo.energy_storage.LapotronEnergyStorageBlock;
-import hayo.energy_storage.LapotronEnergyStorageBlockEntity;
-import hayo.generator.GeneratorBlock;
-import hayo.generator.GeneratorBlockEntity;
-import hayo.processing_machine.classic.*;
-import hayo.processing_machine.matter_generator.MatterGeneratorScreen;
-import hayo.old_menus.UniversalContainerScreen;
 import hayo.common.item.BlockItemWithTooltip;
 import hayo.common.item.ItemWithTooltip;
 import hayo.common.item.SimpleElectricItem;
-import hayo.wrench.WrenchItem;
-import hayo.processing_machine.matter_generator.MatterGeneratorBlock;
-import hayo.processing_machine.matter_generator.MatterGeneratorBlockEntity;
+import hayo.energy.EnergyTexts;
+import hayo.energy.item.*;
+import hayo.energy_armor.EmmissiveOverlayArmorRenderer;
+import hayo.energy_storage.*;
+import hayo.generator.GeneratorBlock;
+import hayo.generator.GeneratorBlockEntity;
+import hayo.generator.GeneratorMenu;
+import hayo.generator.GeneratorScreen;
+import hayo.old_menus.UniversalContainerMenu;
+import hayo.old_menus.UniversalContainerScreen;
+import hayo.processing_machine.classic.*;
+import hayo.processing_machine.matter_generator.*;
 import hayo.rubber_tree.ResinProducingLogBlock;
 import hayo.rubber_tree.RubberFoliagePlacer;
-import hayo.old_menus.UniversalContainerMenu;
-import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
+import hayo.wrench.WrenchItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -710,7 +705,10 @@ public class Hayo {
 
             return (UniversalContainerMenu) provider.createMenu(containerId, inventory, inventory.player);
         }, BlockPos.STREAM_CODEC);
+
+        public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
         public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
+        public static final MenuType<EnergyStorageMenu> ENERGY_STORAGE = register("energy_storage", EnergyStorageMenu::new);
 
         public static void initialize() {
         }
@@ -726,7 +724,9 @@ public class Hayo {
         public static void initializeClient() {
             MenuScreens.register(UNIVERSAL, UniversalContainerScreen::new);
 
+            MenuScreens.register(GENERATOR, GeneratorScreen::new);
             MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
+            MenuScreens.register(ENERGY_STORAGE, EnergyStorageScreen::new);
         }
     }
 

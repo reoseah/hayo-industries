@@ -1,6 +1,6 @@
 {
   "type": "hayo:matter_generating",
-  "processing_energy": 750000,
+  "energy_cost": 750000,
   "result": {
     "id": "minecraft:emerald"
   }

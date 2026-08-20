@@ -23,7 +23,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
 public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGeneratingRecipe, EmptyRecipeInput> {
-    public static final int CAPACITY = 10000, TRANSFER_LIMIT = 128, ENERGY_USE_RATE = 100, SLOTS = 2, BATTERY_SLOT = 0, OUTPUT_SLOT = 1;
+    public static final int CAPACITY = 10000, TRANSFER_LIMIT = 128, ENERGY_USE_RATE = 100;
+    public static final int SLOTS = 2, BATTERY = 0, OUTPUT = 1;
 
     public @Nullable Identifier selectedRecipeId;
 
@@ -32,7 +33,7 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, MatterGeneratorBlockEntity entity) {
-        entity.chargeFromSlot(BATTERY_SLOT);
+        entity.chargeFromSlot(BATTERY);
         entity.tickRecipe((ServerLevel) level, pos, state);
         entity.resetEnergyPerTick();
     }
@@ -48,7 +49,7 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
     }
 
     @Override
-    protected int getEnergyCapacity() {
+    public int getEnergyCapacity() {
         return CAPACITY;
     }
 
@@ -112,15 +113,15 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
 
     @Override
     protected boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<MatterGeneratingRecipe> recipe, EmptyRecipeInput recipeInput) {
-        return recipe != null && this.canInsertToSlot(recipe.value().result().create(), OUTPUT_SLOT);
+        return recipe != null && this.canInsertToSlot(recipe.value().result().create(), OUTPUT);
     }
 
     @Override
     protected void craft(RegistryAccess registryAccess, RecipeHolder<MatterGeneratingRecipe> recipe, EmptyRecipeInput input) {
         var recipeOutput = recipe.value().assemble(input);
-        var outputStack = this.stacks.get(OUTPUT_SLOT);
+        var outputStack = this.stacks.get(OUTPUT);
         if (outputStack.isEmpty()) {
-            this.stacks.set(OUTPUT_SLOT, recipeOutput);
+            this.stacks.set(OUTPUT, recipeOutput);
         } else {
             outputStack.grow(recipeOutput.getCount());
         }

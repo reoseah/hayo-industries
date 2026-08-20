@@ -28,7 +28,7 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
     }
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, CompressorBlockEntity entity) {
-        entity.chargeFromSlot(BATTERY_SLOT);
+        entity.chargeFromSlot(BATTERY);
         entity.tickRecipe((ServerLevel) level, pos, state);
         entity.resetEnergyPerTick();
     }

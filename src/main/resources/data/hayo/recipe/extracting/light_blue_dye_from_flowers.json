@@ -1,7 +1,7 @@
 {
   "type": "hayo:extracting",
   "ingredient": "minecraft:blue_orchid",
-  "processing_energy": 600,
+  "energy_cost": 600,
   "result": {
     "id": "minecraft:light_blue_dye",
     "count": 2

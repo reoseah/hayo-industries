@@ -1,6 +1,6 @@
 {
   "type": "hayo:matter_generating",
-  "processing_energy": 10000000,
+  "energy_cost": 10000000,
   "result": {
     "id": "hayo:nether_star_dust"
   }

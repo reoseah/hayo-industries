@@ -32,7 +32,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import org.jspecify.annotations.Nullable;
 
 public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements WorldlyContainer, ExtendedMenuProvider<BlockPos> {
-    public static final int BATTERY_SLOTS = 6, CHARGING_SLOT = 6, SLOTS = 7;
+    public static final int BATTERIES = 6, CHARGING_SLOT = 6, SLOTS = 7;
 
     @Getter
     @Setter
@@ -87,7 +87,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
     }
 
     @Override
-    protected int getEnergyCapacity() {
+    public int getEnergyCapacity() {
         return this.capacity;
     }
 
@@ -132,7 +132,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
         int capacity = 0;
         int transferLimit = 0;
         int energy = 0;
-        for (int i = 0; i < BATTERY_SLOTS; i++) {
+        for (int i = 0; i < BATTERIES; i++) {
             var item = this.getItem(i);
             var itemStorage = item.get(EnergyComponents.ENERGY_STORAGE);
             if (itemStorage == null) {
@@ -215,7 +215,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
 
     protected void insertToBatteries(int amount) {
         int leftToInsert = amount;
-        for (int i = 0; i < BATTERY_SLOTS; i++) {
+        for (int i = 0; i < BATTERIES; i++) {
             var item = this.getItem(i);
             var itemStorage = item.get(EnergyComponents.ENERGY_STORAGE);
             if (itemStorage == null) {
@@ -237,7 +237,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
 
     protected void extractFromBatteries(int amount) {
         int leftToExtract = amount;
-        for (int i = BATTERY_SLOTS - 1; i >= 0; i--) {
+        for (int i = BATTERIES - 1; i >= 0; i--) {
             var item = this.getItem(i);
             var itemStorage = item.get(EnergyComponents.ENERGY_STORAGE);
             if (itemStorage == null) {

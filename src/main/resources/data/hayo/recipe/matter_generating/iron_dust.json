@@ -1,6 +1,6 @@
 {
   "type": "hayo:matter_generating",
-  "processing_energy": 250000,
+  "energy_cost": 250000,
   "result": {
     "id": "hayo:iron_dust"
   }

@@ -18,7 +18,7 @@ public record MatterGeneratingRecipe(ItemStackTemplate result, int energyCost) i
     public static final MapCodec<MatterGeneratingRecipe> CODEC = RecordCodecBuilder.mapCodec( //
             instance -> instance.group( //
                     ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result), //
-                    Codec.INT.fieldOf("processing_energy").forGetter(recipe -> recipe.energyCost) //
+                    Codec.INT.fieldOf("energy_cost").forGetter(recipe -> recipe.energyCost) //
             ).apply(instance, MatterGeneratingRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, MatterGeneratingRecipe> STREAM_CODEC = StreamCodec.composite( //
