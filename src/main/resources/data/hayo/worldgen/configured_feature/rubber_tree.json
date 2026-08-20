@@ -79,7 +79,7 @@
         },
         {
           "data": {
-            "Name": "hayo:resin_yielding_rubber_log",
+            "Name": "hayo:resin_producing_rubber_log",
             "Properties": {
               "facing": "north",
               "has_resin": "false"
@@ -89,7 +89,7 @@
         },
         {
           "data": {
-            "Name": "hayo:resin_yielding_rubber_log",
+            "Name": "hayo:resin_producing_rubber_log",
             "Properties": {
               "facing": "south",
               "has_resin": "false"
@@ -99,7 +99,7 @@
         },
         {
           "data": {
-            "Name": "hayo:resin_yielding_rubber_log",
+            "Name": "hayo:resin_producing_rubber_log",
             "Properties": {
               "facing": "east",
               "has_resin": "false"
@@ -109,7 +109,7 @@
         },
         {
           "data": {
-            "Name": "hayo:resin_yielding_rubber_log",
+            "Name": "hayo:resin_producing_rubber_log",
             "Properties": {
               "facing": "west",
               "has_resin": "false"
@@ -119,7 +119,7 @@
         },
         {
           "data": {
-            "Name": "hayo:resin_yielding_rubber_log",
+            "Name": "hayo:resin_producing_rubber_log",
             "Properties": {
               "facing": "north",
               "has_resin": "true"
@@ -129,7 +129,7 @@
         },
         {
           "data": {
-            "Name": "hayo:resin_yielding_rubber_log",
+            "Name": "hayo:resin_producing_rubber_log",
             "Properties": {
               "facing": "south",
               "has_resin": "true"
@@ -139,7 +139,7 @@
         },
         {
           "data": {
-            "Name": "hayo:resin_yielding_rubber_log",
+            "Name": "hayo:resin_producing_rubber_log",
             "Properties": {
               "facing": "east",
               "has_resin": "true"
@@ -149,7 +149,7 @@
         },
         {
           "data": {
-            "Name": "hayo:resin_yielding_rubber_log",
+            "Name": "hayo:resin_producing_rubber_log",
             "Properties": {
               "facing": "west",
               "has_resin": "true"

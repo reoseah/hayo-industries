@@ -2,7 +2,7 @@ package hayo.mod_support.jei;
 
 import hayo.energy.client.EnergySprites;
 import hayo.energy.EnergyTexts;
-import hayo.block.entity.ElectricFurnaceBlockEntity;
+import hayo.processing_machine.classic.ElectricFurnaceBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

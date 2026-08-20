@@ -1,11 +1,11 @@
 package hayo.mod_support.jei;
 
 import hayo.Hayo;
-import hayo.recipe.CompressingRecipe;
-import hayo.recipe.ExtractingRecipe;
-import hayo.recipe.MaceratingRecipe;
-import hayo.recipe.MatterGeneratingRecipe;
-import hayo.menu.UniversalContainerMenu;
+import hayo.processing_machine.classic.CompressingRecipe;
+import hayo.processing_machine.classic.ExtractingRecipe;
+import hayo.processing_machine.classic.MaceratingRecipe;
+import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
+import hayo.old_menus.UniversalContainerMenu;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.drawable.IDrawable;

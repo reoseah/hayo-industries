@@ -1,28 +1,32 @@
 package hayo;
 
 import com.mojang.serialization.MapCodec;
-import hayo.block.*;
-import hayo.block.entity.*;
-import hayo.client.EmmissiveArmorRenderer;
+import hayo.battery_box.BatteryBoxBlock;
+import hayo.battery_box.BatteryBoxBlockEntity;
+import hayo.cable.CableBlock;
+import hayo.energy_armor.EmmissiveOverlayArmorRenderer;
+import hayo.energy.EnergyTexts;
 import hayo.energy.item.*;
-import hayo.menu.MatterGeneratorMenu;
-import hayo.menu.client.MatterGeneratorScreen;
-import hayo.recipe.ClassicMachineRecipe;
-import hayo.recipe.CompressingRecipe;
-import hayo.block.CompressorBlock;
-import hayo.block.ElectricFurnaceBlock;
-import hayo.recipe.ExtractingRecipe;
-import hayo.block.ExtractorBlock;
-import hayo.recipe.MaceratingRecipe;
-import hayo.block.MaceratorBlock;
-import hayo.menu.client.UniversalContainerScreen;
-import hayo.item.BlockItemWithTooltip;
-import hayo.item.ItemWithTooltip;
-import hayo.item.SimpleElectricItem;
-import hayo.item.WrenchItem;
-import hayo.level.RubberFoliagePlacer;
-import hayo.menu.UniversalContainerMenu;
-import hayo.recipe.MatterGeneratingRecipe;
+import hayo.processing_machine.matter_generator.MatterGeneratorMenu;
+import hayo.energy_storage.CrystalEnergyStorageBlock;
+import hayo.energy_storage.CrystalEnergyStorageBlockEntity;
+import hayo.energy_storage.LapotronEnergyStorageBlock;
+import hayo.energy_storage.LapotronEnergyStorageBlockEntity;
+import hayo.generator.GeneratorBlock;
+import hayo.generator.GeneratorBlockEntity;
+import hayo.processing_machine.classic.*;
+import hayo.processing_machine.matter_generator.MatterGeneratorScreen;
+import hayo.old_menus.UniversalContainerScreen;
+import hayo.common.item.BlockItemWithTooltip;
+import hayo.common.item.ItemWithTooltip;
+import hayo.common.item.SimpleElectricItem;
+import hayo.wrench.WrenchItem;
+import hayo.processing_machine.matter_generator.MatterGeneratorBlock;
+import hayo.processing_machine.matter_generator.MatterGeneratorBlockEntity;
+import hayo.rubber_tree.ResinProducingLogBlock;
+import hayo.rubber_tree.RubberFoliagePlacer;
+import hayo.old_menus.UniversalContainerMenu;
+import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -147,10 +151,10 @@ public class Hayo {
 
         MenuTypes.initializeClient();
 
-        ArmorRenderer.register(ctx -> new EmmissiveArmorRenderer(ctx, EmmissiveArmorRenderer.NANO, EmmissiveArmorRenderer.QUANTUM_OVERLAY), Items.NANO_HELMET, Items.NANO_CHESTPLATE, Items.NANO_BOOTS);
-        ArmorRenderer.register(ctx -> new EmmissiveArmorRenderer(ctx, EmmissiveArmorRenderer.LEGS_NANO, EmmissiveArmorRenderer.LEGS_QUANTUM_OVERLAY), Items.NANO_LEGGINGS);
-        ArmorRenderer.register(ctx -> new EmmissiveArmorRenderer(ctx, EmmissiveArmorRenderer.QUANTUM, EmmissiveArmorRenderer.QUANTUM_OVERLAY), Items.QUANTUM_HELMET, Items.QUANTUM_CHESTPLATE, Items.QUANTUM_BOOTS);
-        ArmorRenderer.register(ctx -> new EmmissiveArmorRenderer(ctx, EmmissiveArmorRenderer.LEGS_QUANTUM, EmmissiveArmorRenderer.LEGS_QUANTUM_OVERLAY), Items.QUANTUM_LEGGINGS);
+        ArmorRenderer.register(ctx -> new EmmissiveOverlayArmorRenderer(ctx, EmmissiveOverlayArmorRenderer.NANO, EmmissiveOverlayArmorRenderer.QUANTUM_OVERLAY), Items.NANO_HELMET, Items.NANO_CHESTPLATE, Items.NANO_BOOTS);
+        ArmorRenderer.register(ctx -> new EmmissiveOverlayArmorRenderer(ctx, EmmissiveOverlayArmorRenderer.LEGS_NANO, EmmissiveOverlayArmorRenderer.LEGS_QUANTUM_OVERLAY), Items.NANO_LEGGINGS);
+        ArmorRenderer.register(ctx -> new EmmissiveOverlayArmorRenderer(ctx, EmmissiveOverlayArmorRenderer.QUANTUM, EmmissiveOverlayArmorRenderer.QUANTUM_OVERLAY), Items.QUANTUM_HELMET, Items.QUANTUM_CHESTPLATE, Items.QUANTUM_BOOTS);
+        ArmorRenderer.register(ctx -> new EmmissiveOverlayArmorRenderer(ctx, EmmissiveOverlayArmorRenderer.LEGS_QUANTUM, EmmissiveOverlayArmorRenderer.LEGS_QUANTUM_OVERLAY), Items.QUANTUM_LEGGINGS);
     }
 
     public static Identifier modId(String path) {
@@ -179,7 +183,7 @@ public class Hayo {
         public static final CableBlock ENERGY_BUS = register("energy_bus", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
 
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
-        public static final Block RESIN_YIELDING_RUBBER_LOG = register("resin_yielding_rubber_log", ResinYieldingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
+        public static final Block RESIN_PRODUCING_RUBBER_LOG = register("resin_producing_rubber_log", ResinProducingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
         public static final Block RUBBER_WOOD = register("rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block STRIPPED_RUBBER_LOG = register("stripped_rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block STRIPPED_RUBBER_WOOD = register("stripped_rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
@@ -255,12 +259,12 @@ public class Hayo {
         public static final Item CRYSTAL_ENERGY_STORAGE = registerBlock(Blocks.CRYSTAL_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
         public static final Item LAPOTRON_ENERGY_STORAGE = registerBlock(Blocks.LAPOTRON_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item CABLE = registerBlock(Blocks.POWER_CABLE, BlockItemWithTooltip::new);
-        public static final Item POWER_CABLE = registerBlock(Blocks.QUADRUPLE_POWER_CABLE, BlockItemWithTooltip::new);
-        public static final Item ENERGY_BUS = registerBlock(Blocks.ENERGY_BUS, BlockItemWithTooltip::new);
+        public static final Item CABLE = registerBlock(Blocks.POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, EnergyTexts.maxAmountPerTick(block.transferLimit).withStyle(ChatFormatting.GRAY), properties));
+        public static final Item POWER_CABLE = registerBlock(Blocks.QUADRUPLE_POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, EnergyTexts.maxAmountPerTick(block.transferLimit).withStyle(ChatFormatting.GRAY), properties));
+        public static final Item ENERGY_BUS = registerBlock(Blocks.ENERGY_BUS, (block, properties) -> new BlockItemWithTooltip(block, EnergyTexts.maxAmountPerTick(block.transferLimit).withStyle(ChatFormatting.GRAY), properties));
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
-        public static final Item RESIN_YIELDING_RUBBER_LOG = registerBlock(Blocks.RESIN_YIELDING_RUBBER_LOG);
+        public static final Item RESIN_PRODUCING_RUBBER_LOG = registerBlock(Blocks.RESIN_PRODUCING_RUBBER_LOG);
         public static final Item RUBBER_WOOD = registerBlock(Blocks.RUBBER_WOOD);
         public static final Item STRIPPED_RUBBER_LOG = registerBlock(Blocks.STRIPPED_RUBBER_LOG);
         public static final Item STRIPPED_RUBBER_WOOD = registerBlock(Blocks.STRIPPED_RUBBER_WOOD);
@@ -515,7 +519,7 @@ public class Hayo {
                 entries.accept(ENERGY_BUS);
 
                 entries.accept(RUBBER_LOG);
-                entries.accept(RESIN_YIELDING_RUBBER_LOG);
+                entries.accept(RESIN_PRODUCING_RUBBER_LOG);
                 entries.accept(RUBBER_WOOD);
                 entries.accept(STRIPPED_RUBBER_LOG);
                 entries.accept(STRIPPED_RUBBER_WOOD);
@@ -763,7 +767,7 @@ public class Hayo {
     public static class RecipeSerializers {
 
         public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", ClassicMachineRecipe.createCodec(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.createCodec(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.createCodec(CompressingRecipe::new, CompressorBlockEntity.DEFAULT_RECIPE_ENERGY));
         public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", ClassicMachineRecipe.createCodec(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
 
