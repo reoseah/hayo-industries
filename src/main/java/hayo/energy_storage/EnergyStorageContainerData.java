@@ -14,11 +14,11 @@ public interface EnergyStorageContainerData extends ContainerData {
         return (this.get(3) << 16) | (this.get(2) & 0xFFFF);
     }
 
-    default float getAverageInputPerTick() {
+    default float averageInputPerTick() {
         return this.get(4) / 10F;
     }
 
-    default float getAverageOutputPerTick() {
+    default float averageOutputPerTick() {
         return this.get(5) / 10F;
     }
 

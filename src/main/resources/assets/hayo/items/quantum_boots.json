@@ -1,6 +1,20 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "hayo:item/quantum_boots"
+    "type": "minecraft:range_dispatch",
+    "property": "hayo:energy",
+    "scale": 1,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "hayo:item/quantum_boots"
+    },
+    "entries": [
+      {
+        "threshold": 200,
+        "model": {
+          "type": "minecraft:model",
+          "model": "hayo:item/quantum_boots_charged"
+        }
+      }
+    ]
   }
 }

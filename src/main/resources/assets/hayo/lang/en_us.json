@@ -143,8 +143,8 @@
   "hayo.upgrades.energy_capacity": "%s Energy capacity",
   "hayo.upgrades.use_blasting_recipes": " Blasting recipes only",
   "hayo.upgrades.use_smoking_recipes": " Smoking recipes only",
-  "hayo.upgrades.heat_scaling": " Crafting speed scales with Heat",
-  "hayo.upgrades.heat_capacity": " %s Heat capacity",
-  "hayo.upgrades.heat_when_active": "%s Heat/tick when active",
-  "hayo.upgrades.heat_when_idle": "%s Heat/tick when idle"
+  "hayo.upgrades.heat1": " Consumed energy is multiplied by Heat",
+  "hayo.upgrades.heat2": " before adding to the recipe progress",
+  "hayo.upgrades.heat3": "+0.01% Heat per tick when active",
+  "hayo.upgrades.heat4": "-0.04% Heat per tick when idle"
 }

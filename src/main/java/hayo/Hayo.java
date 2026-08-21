@@ -9,7 +9,7 @@ import hayo.common.item.ItemWithTooltip;
 import hayo.common.item.SimpleElectricItem;
 import hayo.energy.EnergyTexts;
 import hayo.energy.item.*;
-import hayo.energy_armor.EmmissiveOverlayArmorRenderer;
+import hayo.energy_armor.EnergyArmorOverlayRenderer;
 import hayo.energy_storage.*;
 import hayo.generator.GeneratorBlock;
 import hayo.generator.GeneratorBlockEntity;
@@ -146,10 +146,10 @@ public class Hayo {
 
         MenuTypes.initializeClient();
 
-        ArmorRenderer.register(ctx -> new EmmissiveOverlayArmorRenderer(ctx, EmmissiveOverlayArmorRenderer.NANO, EmmissiveOverlayArmorRenderer.QUANTUM_OVERLAY), Items.NANO_HELMET, Items.NANO_CHESTPLATE, Items.NANO_BOOTS);
-        ArmorRenderer.register(ctx -> new EmmissiveOverlayArmorRenderer(ctx, EmmissiveOverlayArmorRenderer.LEGS_NANO, EmmissiveOverlayArmorRenderer.LEGS_QUANTUM_OVERLAY), Items.NANO_LEGGINGS);
-        ArmorRenderer.register(ctx -> new EmmissiveOverlayArmorRenderer(ctx, EmmissiveOverlayArmorRenderer.QUANTUM, EmmissiveOverlayArmorRenderer.QUANTUM_OVERLAY), Items.QUANTUM_HELMET, Items.QUANTUM_CHESTPLATE, Items.QUANTUM_BOOTS);
-        ArmorRenderer.register(ctx -> new EmmissiveOverlayArmorRenderer(ctx, EmmissiveOverlayArmorRenderer.LEGS_QUANTUM, EmmissiveOverlayArmorRenderer.LEGS_QUANTUM_OVERLAY), Items.QUANTUM_LEGGINGS);
+        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, EnergyArmorOverlayRenderer.NANO, EnergyArmorOverlayRenderer.QUANTUM_OVERLAY), Items.NANO_HELMET, Items.NANO_CHESTPLATE, Items.NANO_BOOTS);
+        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, EnergyArmorOverlayRenderer.LEGS_NANO, EnergyArmorOverlayRenderer.LEGS_QUANTUM_OVERLAY), Items.NANO_LEGGINGS);
+        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, EnergyArmorOverlayRenderer.QUANTUM, EnergyArmorOverlayRenderer.QUANTUM_OVERLAY), Items.QUANTUM_HELMET, Items.QUANTUM_CHESTPLATE, Items.QUANTUM_BOOTS);
+        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, EnergyArmorOverlayRenderer.LEGS_QUANTUM, EnergyArmorOverlayRenderer.LEGS_QUANTUM_OVERLAY), Items.QUANTUM_LEGGINGS);
     }
 
     public static Identifier modId(String path) {
@@ -467,11 +467,11 @@ public class Hayo {
                         props, //
                         Component.empty(), //
                         Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY), //
-                        Component.translatable("hayo.upgrades.heat_scaling").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.heat_capacity", 10000).withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.heat_when_active", "+1").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.heat_when_idle", "-4").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA) //
+                        Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.heat1").withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.heat2").withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.heat3").withStyle(ChatFormatting.DARK_AQUA), //
+                        Component.translatable("hayo.upgrades.heat4").withStyle(ChatFormatting.DARK_AQUA) //
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", //
