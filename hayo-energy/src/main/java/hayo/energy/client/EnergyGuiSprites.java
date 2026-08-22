@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-public class EnergySprites {
+public class EnergyGuiSprites {
     public static final Identifier ZAP = HayoEnergy.modId("energy/zap");
     public static final Identifier ZAP_OVERLAY = HayoEnergy.modId("energy/zap_overlay");
 
@@ -16,7 +16,7 @@ public class EnergySprites {
     public static final Identifier VERTICAL_BAR_OVERLAY = HayoEnergy.modId("energy/vertical_bar_overlay");
 
     @Environment(EnvType.CLIENT)
-    public static void extractZap(GuiGraphicsExtractor graphics, int x, int y, int energy, int capacity) {
+    public static void blitZap(GuiGraphicsExtractor graphics, int x, int y, int energy, int capacity) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ZAP, x, y, 14, 14);
 
         if (energy > 0 && capacity > 0) {

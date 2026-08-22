@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:block/composite_plate_block"
+    "model": "hayo:block/glazed_reinforced_stone"
   }
 }

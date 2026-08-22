@@ -19,7 +19,7 @@ public enum RecipeArrow {
         this.overlay = overlay;
     }
 
-    public static void extract(GuiGraphicsExtractor graphics, int x, int y, RecipeArrow arrowType, int currentProgress, int totalProgress) {
+    public static void blit(GuiGraphicsExtractor graphics, int x, int y, RecipeArrow arrowType, int currentProgress, int totalProgress) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, arrowType.background, x, y, 24, 16);
 
         if (currentProgress > 0 && totalProgress > 0) {

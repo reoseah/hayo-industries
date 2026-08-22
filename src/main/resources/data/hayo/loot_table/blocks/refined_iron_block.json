@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:composite_plate_block"
+          "name": "hayo:refined_iron_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/composite_plate_block"
+  "random_sequence": "hayo:blocks/refined_iron_block"
 }

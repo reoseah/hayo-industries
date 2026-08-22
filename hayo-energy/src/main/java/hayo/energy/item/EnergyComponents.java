@@ -26,7 +26,7 @@ public class EnergyComponents {
             .ignoreSwapAnimation() //
             .build();
 
-    public static final DataComponentType<Unit> CAN_CHARGE_BLOCKS = DataComponentType.<Unit>builder() //
+    public static final DataComponentType<Unit> CHARGES_BLOCKS = DataComponentType.<Unit>builder() //
             .persistent(Unit.CODEC) //
             .networkSynchronized(Unit.STREAM_CODEC) //
             .build();
@@ -56,8 +56,8 @@ public class EnergyComponents {
         return stack.has(ENERGY_STORAGE);
     }
 
-    public static boolean canChargeMachine(ItemStack stack) {
-        return stack.has(ENERGY_STORAGE) && stack.has(CAN_CHARGE_BLOCKS);
+    public static boolean chargesBlocks(ItemStack stack) {
+        return stack.has(ENERGY_STORAGE) && stack.has(CHARGES_BLOCKS);
     }
 
     public static int getEnergy(ItemStack stack) {
@@ -128,7 +128,7 @@ public class EnergyComponents {
     ///
     /// @return energy that was removed from the item, you probably want to add it to your energy storage
     public static int discharge(int amount, ItemStack stack) {
-        if (!stack.has(CAN_CHARGE_BLOCKS)) {
+        if (!stack.has(CHARGES_BLOCKS)) {
             return 0;
         }
         var storage = stack.get(ENERGY_STORAGE);

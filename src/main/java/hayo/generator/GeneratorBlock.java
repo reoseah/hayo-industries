@@ -2,8 +2,8 @@ package hayo.generator;
 
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
-import hayo.energy.block.ElectricSenderBlock;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
+import hayo.energy.block.ElectricSenderBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;

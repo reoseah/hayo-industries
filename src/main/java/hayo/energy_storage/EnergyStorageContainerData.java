@@ -14,11 +14,11 @@ public interface EnergyStorageContainerData extends ContainerData {
         return (this.get(3) << 16) | (this.get(2) & 0xFFFF);
     }
 
-    default float averageInputPerTick() {
+    default float averageInput() {
         return this.get(4) / 10F;
     }
 
-    default float averageOutputPerTick() {
+    default float averageOutput() {
         return this.get(5) / 10F;
     }
 
@@ -35,20 +35,20 @@ public interface EnergyStorageContainerData extends ContainerData {
         }
 
         @Override
-        public int get(int index) {
-            return switch (index) {
+        public int get(int dataId) {
+            return switch (dataId) {
                 case 0 -> this.entity.getStoredEnergy() & 0xFFFF;
                 case 1 -> this.entity.getStoredEnergy() >>> 16;
                 case 2 -> this.entity.getEnergyCapacity() & 0xFFFF;
                 case 3 -> this.entity.getEnergyCapacity() >>> 16;
-                case 4 -> Math.round(this.entity.averageInputPerTick * 10);
-                case 5 -> Math.round(this.entity.averageOutputPerTick * 10);
+                case 4 -> Math.round(this.entity.averageInput * 10);
+                case 5 -> Math.round(this.entity.averageOutput * 10);
                 default -> 0;
             };
         }
 
         @Override
-        public void set(int index, int value) {
+        public void set(int dataId, int value) {
         }
     }
 }

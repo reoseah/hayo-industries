@@ -1,9 +1,9 @@
 package hayo.processing_machine.matter_generator;
 
 import hayo.Hayo;
+import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
-import hayo.energy.client.EnergySprites;
-import hayo.old_menus.SpriteElement;
+import hayo.energy.client.EnergyGuiSprites;
 import hayo.mod_support.jei.RecipeArrow;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -19,19 +19,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGeneratorMenu> {
-    public static final Identifier BACKGROUND = Hayo.modId("textures/gui/container/matter_generator.png");
-
     public static final int RECIPE_COLUMNS = 8;
     public static final int RECIPE_ROWS = 2;
+    public static final Identifier RECIPE_BACKGROUND = Hayo.modId("recipe_button/background");
     public static final Identifier RECIPE = Hayo.modId("recipe_button/default");
     public static final Identifier RECIPE_SELECTED = Hayo.modId("recipe_button/selected");
     public static final Identifier RECIPE_HIGHLIGHTED = Hayo.modId("recipe_button/highlighted");
-    public static final Identifier RECIPE_DISABLED = Hayo.modId("recipe_button/disabled");
+    public static final Identifier SCROLLER_BACKGROUND = Hayo.modId("scroller/background");
     public static final Identifier SCROLLER = Hayo.modId("scroller/default");
     public static final Identifier SCROLLER_DISABLED = Hayo.modId("scroller/disabled");
-
-    private static final int SCROLLER_HEIGHT = 15;
-    private static final int SCROLLER_FULL_HEIGHT = 36;
 
     private int startIndex = 0;
     private float scrollOffset = 0;
@@ -59,23 +55,22 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
-        int x = this.leftPos;
-        int y = this.topPos;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x, y, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        HayoGuiSprites.blitBackground(graphics, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
 
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SpriteElement.SLOT, x + this.menu.slots.get(0).x - 1, y + this.menu.slots.get(0).y - 1, 18, 18);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SpriteElement.OUTPUT_SLOT, x + this.menu.slots.get(1).x - 4, y + this.menu.slots.get(1).y - 4, 24, 24);
+        HayoGuiSprites.blitSlot(graphics, this.leftPos + 55, this.topPos + 33);
+        HayoGuiSprites.blitOutputSlot(graphics, this.leftPos + 112, this.topPos + 22);
+        HayoGuiSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 109);
 
-        int energy = this.menu.machineData.energy();
-        int capacity = this.menu.machineData.capacity();
-        EnergySprites.extractZap(graphics, x + 57, y + 17, energy, capacity);
-        RecipeArrow.extract(graphics, x + 80, y + 25, RecipeArrow.DEFAULT, this.menu.machineData.progressEnergy(), this.menu.machineData.recipeCost());
+        EnergyGuiSprites.blitZap(graphics, this.leftPos + 57, this.topPos + 17, this.menu.machineData.energy(), this.menu.machineData.capacity());
+        RecipeArrow.blit(graphics, this.leftPos + 80, this.topPos + 25, RecipeArrow.DEFAULT, this.menu.machineData.recipeProgress(), this.menu.machineData.recipeCost());
 
         this.extractRecipeButtons(graphics, mouseX, mouseY);
         this.extractScrollbar(graphics, mouseX, mouseY);
     }
 
     protected void extractRecipeButtons(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RECIPE_BACKGROUND, this.leftPos + 8, this.topPos + 58, 2 + 18 * RECIPE_COLUMNS, 2 + 18 * RECIPE_ROWS);
+
         for (int i = this.startIndex; i < this.startIndex + 16 && i < this.menu.recipes.size(); i++) {
             int pos = i - this.startIndex;
 
@@ -96,8 +91,9 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
     }
 
     protected void extractScrollbar(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_BACKGROUND, this.leftPos + 155, this.topPos + 58, 14, 38);
         if (this.menu.recipes.size() > RECIPE_ROWS * RECIPE_COLUMNS) {
-            int scrollerY = 59 + (int) (this.scrollOffset * (SCROLLER_FULL_HEIGHT - SCROLLER_HEIGHT));
+            int scrollerY = 59 + (int) (this.scrollOffset * (36 - 15));
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER, this.leftPos + 156, this.topPos + scrollerY, 12, 15);
         } else {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_DISABLED, this.leftPos + 156, this.topPos + 59, 12, 15);
@@ -112,7 +108,7 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
         }
         if (this.isHovering(80, 25, 24, 16, mouseX, mouseY) && this.menu.machineData.recipeCost() > 0) {
             var tooltip = List.<Component>of( //
-                    EnergyTexts.amountWithCapacityAndPercentage(this.menu.machineData.progressEnergy(), this.menu.machineData.recipeCost()), //
+                    EnergyTexts.amountWithCapacityAndPercentage(this.menu.machineData.recipeProgress(), this.menu.machineData.recipeCost()), //
                     EnergyTexts.durationAtAmountPerTick(this.menu.machineData.recipeDuration(), this.menu.machineData.energyUseRate()).withStyle(ChatFormatting.GRAY) //
             );
             graphics.setTooltipForNextFrame(this.font, tooltip, Optional.empty(), mouseX, mouseY);
@@ -151,7 +147,7 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
 
         if (this.isScrollBarActive()) {
             if (event.x() >= this.leftPos + 156 && event.x() < this.leftPos + 156 + 12 //
-                    && event.y() >= this.topPos + 59 && event.y() < this.topPos + 59 + SCROLLER_FULL_HEIGHT) {
+                    && event.y() >= this.topPos + 59 && event.y() < this.topPos + 59 + 36) {
                 this.scrolling = true;
             }
         }
@@ -163,7 +159,7 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
     public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
         if (this.scrolling && this.isScrollBarActive()) {
             int yscr = this.topPos + 59;
-            int yscr2 = yscr + SCROLLER_FULL_HEIGHT;
+            int yscr2 = yscr + 36;
             this.scrollOffset = ((float) event.y() - yscr - 7.5F) / (yscr2 - yscr - 15.0F);
             this.scrollOffset = Mth.clamp(this.scrollOffset, 0.0F, 1.0F);
             this.startIndex = (int) (this.scrollOffset * this.getOffscreenRows() + 0.5) * RECIPE_COLUMNS;
@@ -193,6 +189,4 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
 
         return true;
     }
-
-
 }

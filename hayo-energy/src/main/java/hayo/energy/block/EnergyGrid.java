@@ -12,6 +12,8 @@ public class EnergyGrid {
     }
 
     public static int trySend(int amount, ServerLevel level, BlockPos pos, @Nullable Direction face) {
+        if (amount <= 0) throw new IllegalArgumentException("Amount must be positive");
+
         return EnergyGridImpl.get(level).sendEnergy(amount, pos, face);
     }
 

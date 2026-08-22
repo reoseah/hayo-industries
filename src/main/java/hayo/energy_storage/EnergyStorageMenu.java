@@ -34,7 +34,7 @@ public class EnergyStorageMenu extends HayoContainerMenu {
 
     @Override
     protected boolean handleQuickMoveFromInventory(ItemStack stack, Player player, int index) {
-        if (EnergyComponents.canChargeMachine(stack) && this.moveItemStackTo(stack, 0, 1, false)) {
+        if (EnergyComponents.chargesBlocks(stack) && this.moveItemStackTo(stack, 0, 1, false)) {
             return true;
         }
         if (EnergyComponents.isStorage(stack)) {

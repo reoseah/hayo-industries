@@ -1,10 +1,10 @@
 package hayo.processing_machine.matter_generator;
 
 import hayo.Hayo;
-import hayo.processing_machine.MachineBlockEntity;
-import hayo.energy.item.EnergyComponents;
-import hayo.common.menuslot.ResultSlot;
 import hayo.common.menu.HayoContainerMenu;
+import hayo.common.menuslot.ResultSlot;
+import hayo.energy.item.EnergyComponents;
+import hayo.processing_machine.MachineContainerData;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,34 +17,34 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import java.util.List;
 
 public class MatterGeneratorMenu extends HayoContainerMenu {
-    public final MachineBlockEntity.MachineContainerData machineData;
+    public final MachineContainerData machineData;
 
     public final List<RecipeHolder<MatterGeneratingRecipe>> recipes;
     public final DataSlot selectedRecipe;
 
     public MatterGeneratorMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(MatterGeneratorBlockEntity.SLOTS), new MachineBlockEntity.MachineContainerData.Simple(), inventory);
+        this(menuId, new SimpleContainer(MatterGeneratorBlockEntity.SLOTS), new MachineContainerData.Clientside(), inventory);
     }
 
     public MatterGeneratorMenu(int menuId, MatterGeneratorBlockEntity entity, Inventory inventory) {
-        this(menuId, entity, new MachineBlockEntity.MachineContainerData.Entity(entity), inventory);
+        this(menuId, entity, new MachineContainerData.Serverside(entity), inventory);
     }
 
-    protected MatterGeneratorMenu(int menuId, Container container, MachineBlockEntity.MachineContainerData data, Inventory inventory) {
+    protected MatterGeneratorMenu(int menuId, Container container, MachineContainerData data, Inventory inventory) {
         super(Hayo.MenuTypes.MATTER_GENERATOR, menuId, container);
+
+        this.machineData = data;
+        this.addDataSlots(this.machineData);
 
         this.addSlot(new Slot(container, 0, 56, 34));
         this.addSlot(new ResultSlot(container, 1, 116, 26));
 
         this.addStandardInventorySlots(inventory, 8, 110);
 
-        this.machineData = data;
-        this.addDataSlots(this.machineData);
-
         var level = inventory.player.level();
-        this.recipes = level.recipeAccess().getSynchronizedRecipes().getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING) //
-                .stream() //
-                .sorted((holder1, holder2) -> compare(holder1.value(), holder2.value())) //
+        this.recipes = level.recipeAccess().getSynchronizedRecipes().getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING)
+                .stream()
+                .sorted((holder1, holder2) -> compare(holder1.value(), holder2.value()))
                 .toList();
 
         this.selectedRecipe = (container instanceof MatterGeneratorBlockEntity entity) ? createSelectedIdx(entity, this.recipes) : DataSlot.standalone();
@@ -97,7 +97,7 @@ public class MatterGeneratorMenu extends HayoContainerMenu {
 
     @Override
     protected boolean handleQuickMoveFromInventory(ItemStack stack, Player player, int index) {
-        if (EnergyComponents.canChargeMachine(stack)) {
+        if (EnergyComponents.chargesBlocks(stack)) {
             return this.moveItemStackTo(stack, 0, 1, false);
         }
         return false;

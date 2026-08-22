@@ -9,7 +9,7 @@
   },
   "textures": {
     "particle": "hayo:block/compressor_front_active",
-    "down": "hayo:block/machine_bottom",
+    "down": "hayo:block/refined_iron_block",
     "up": "hayo:block/extractor_top",
     "north": "hayo:block/compressor_front_active",
     "east": "hayo:block/compressor_left",

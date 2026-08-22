@@ -75,12 +75,12 @@ public class EnergyTexts {
     }
 
     /// E.g.: `+42.5 avg. ε/t in`.
-    public static MutableComponent averageInputPerTick(float amount) {
+    public static MutableComponent averageInput(float amount) {
         return Component.translatable(AVERAGE_INPUT_PER_TICK, (amount > 0 ? "+" : "") + amount);
     }
 
     /// E.g.: `-42.5 avg. ε/t out`.
-    public static MutableComponent averageOutputPerTick(float amount) {
+    public static MutableComponent averageOutput(float amount) {
         if (amount != 0) amount = -amount;
         return Component.translatable(AVERAGE_OUTPUT_PER_TICK, (amount > 0 ? "+" : "") + amount);
     }

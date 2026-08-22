@@ -2,9 +2,9 @@ package hayo.battery_box;
 
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
+import hayo.common.block.HorizontalDirectionalElectricalBlock;
 import hayo.energy.block.ElectricReceiverBlock;
 import hayo.energy.block.ElectricSenderBlock;
-import hayo.common.block.HorizontalDirectionalElectricalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

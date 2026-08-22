@@ -2,7 +2,7 @@
   "type": "hayo:energy_preserving_crafting",
   "category": "misc",
   "key": {
-    "#": "hayo:refined_iron_ingot",
+    "#": "#c:ingots/refined_iron",
     "B": "hayo:battery",
     "E": "hayo:electric_motor"
   },

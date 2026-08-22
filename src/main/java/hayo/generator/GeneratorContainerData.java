@@ -31,8 +31,8 @@ public interface GeneratorContainerData extends ContainerData {
         }
 
         @Override
-        public int get(int index) {
-            return switch (index) {
+        public int get(int dataId) {
+            return switch (dataId) {
                 case 0 -> this.entity.storedEnergy & 0xFFFF;
                 case 1 -> this.entity.storedEnergy >>> 16;
                 case 2 -> this.entity.fuelEnergyLeft & 0xFFFF;
@@ -44,7 +44,7 @@ public interface GeneratorContainerData extends ContainerData {
         }
 
         @Override
-        public void set(int index, int value) {
+        public void set(int dataId, int value) {
         }
     }
 }

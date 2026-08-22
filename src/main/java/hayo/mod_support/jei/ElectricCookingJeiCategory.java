@@ -1,7 +1,7 @@
 package hayo.mod_support.jei;
 
-import hayo.energy.client.EnergySprites;
 import hayo.energy.EnergyTexts;
+import hayo.energy.client.EnergyGuiSprites;
 import hayo.processing_machine.classic.ElectricFurnaceBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -71,11 +71,11 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
 
     @Override
     public void draw(RecipeHolder<? extends AbstractCookingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        EnergySprites.extractZap(graphics, 1, 20, 10, 14);
+        EnergyGuiSprites.blitZap(graphics, 1, 20, 10, 14);
 
         int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(holder.value());
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ElectricFurnaceBlockEntity.ENERGY_USE_RATE / 24)) % 24d);
-        RecipeArrow.extract(graphics, 24, 4, RecipeArrow.DEFAULT, progress, 24);
+        RecipeArrow.blit(graphics, 24, 4, RecipeArrow.DEFAULT, progress, 24);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
     }

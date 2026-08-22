@@ -2,8 +2,8 @@ package hayo.processing_machine.classic;
 
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
-import hayo.energy.block.ElectricReceiverBlock;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
+import hayo.energy.block.ElectricReceiverBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;

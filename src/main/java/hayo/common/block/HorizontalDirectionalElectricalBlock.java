@@ -1,8 +1,8 @@
 package hayo.common.block;
 
+import hayo.common.blockentity.SimpleElectricBlockEntity;
 import hayo.energy.block.ElectricBlock;
 import hayo.energy.block.EnergyGrid;
-import hayo.common.blockentity.SimpleElectricBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

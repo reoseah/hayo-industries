@@ -1,7 +1,7 @@
 package hayo.mod_support.jei;
 
-import hayo.energy.client.EnergySprites;
 import hayo.energy.EnergyTexts;
+import hayo.energy.client.EnergyGuiSprites;
 import hayo.processing_machine.classic.ClassicMachineRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -90,11 +90,11 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
     @Override
     public void draw(RecipeHolder<? extends ClassicMachineRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         var recipe = holder.value();
-        EnergySprites.extractZap(graphics, 1, 20, 10, 14);
+        EnergyGuiSprites.blitZap(graphics, 1, 20, 10, 14);
 
         int energyCost = recipe.energyCost;
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / this.energyUseRate / 24)) % 24d);
-        RecipeArrow.extract(graphics, 24, 4, this.arrowType, progress, 24);
+        RecipeArrow.blit(graphics, 24, 4, this.arrowType, progress, 24);
 
         var font = Minecraft.getInstance().font;
 

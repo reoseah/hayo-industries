@@ -98,7 +98,7 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
 
     @SuppressWarnings("unchecked")
     @Override
-    public @Nullable RecipeHolder<MatterGeneratingRecipe> updateMatchingRecipe(ServerLevel level, EmptyRecipeInput input) {
+    public @Nullable RecipeHolder<MatterGeneratingRecipe> findMatchingRecipe(ServerLevel level, EmptyRecipeInput input) {
         if (this.selectedRecipeId == null) {
             return null;
         }

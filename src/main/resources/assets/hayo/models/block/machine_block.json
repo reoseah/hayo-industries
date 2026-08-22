@@ -3,6 +3,6 @@
   "textures": {
     "top": "hayo:block/machine",
     "side": "hayo:block/machine_side",
-    "bottom": "hayo:block/machine_bottom"
+    "bottom": "hayo:block/refined_iron_block"
   }
 }

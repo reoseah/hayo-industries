@@ -1,26 +1,15 @@
 package hayo.processing_machine.classic;
 
 import hayo.common.IntRange;
-import hayo.common.menuslot.ResultSlot;
-import hayo.common.menuslot.TagFilteredSlot;
 import hayo.energy.item.EnergyComponents;
-import hayo.old_menus.MachineEnergyBar;
-import hayo.old_menus.SpriteElement;
-import hayo.old_menus.UniversalContainerMenu;
 import hayo.processing_machine.UpgradableMachineBlockEntity;
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.TagKey;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -29,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends UpgradableMachineBlockEntity<R, SingleRecipeInput> implements WorldlyContainer, ExtendedMenuProvider<BlockPos> {
+public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInput>> extends UpgradableMachineBlockEntity<R, SingleRecipeInput> implements WorldlyContainer, MenuProvider {
     public static final int SLOTS = 7;
 
     public static final int INPUT = 0;
@@ -118,45 +107,6 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction side) {
         return side != Direction.UP;
-    }
-
-    @Override
-    public BlockPos getScreenOpeningData(ServerPlayer player) {
-        return this.worldPosition;
-    }
-
-    @Override
-    public UniversalContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new UniversalContainerMenu(containerId, this) //
-                .addSlotChainable(new Slot(this, INPUT, 47, 18)) //
-                .addSlotChainable(new Slot(this, BATTERY, 47, 54)) //
-                .addSlotChainable(new ResultSlot(this, OUTPUT, 107, 36)) //
-                .addSlotChainable(new TagFilteredSlot(this, 3, 152, 8, this.getUpgradeTag())) //
-                .addSlotChainable(new TagFilteredSlot(this, 4, 152, 26, this.getUpgradeTag())) //
-                .addSlotChainable(new TagFilteredSlot(this, 5, 152, 44, this.getUpgradeTag())) //
-                .addSlotChainable(new TagFilteredSlot(this, 6, 152, 62, this.getUpgradeTag())) //
-                .addStandardInventorySlotsChainable(inventory) //
-                .addQuickMoveRule(3, 7, stack -> stack.is(this.getUpgradeTag())) //
-                .addQuickMoveRule(INPUT, INPUT + 1, this::isRecipeInput) //
-                .addQuickMoveRule(BATTERY, BATTERY + 1, EnergyComponents::canChargeMachine) //
-                .setRecipeTransferData(this::getRecipeType, INPUT, INPUT + 1) //
-                .addDataSlotsChainable(new ClassicMachineData(this)) //
-                .addElement(new MachineEnergyBar(48, 37, this::getStoredEnergy, this::getEnergyCapacity)) //
-                .addElement(SpriteElement.outputSlot(103, 32)) //
-                .addElement(SpriteElement.upgradeSlot(151, 7)) //
-                .addElement(SpriteElement.upgradeSlot(151, 25)) //
-                .addElement(SpriteElement.upgradeSlot(151, 43)) //
-                .addElement(SpriteElement.upgradeSlot(151, 61));
-    }
-
-    protected abstract TagKey<Item> getUpgradeTag();
-
-    protected boolean isRecipeInput(ItemStack stack) {
-        return this.level //
-                .recipeAccess() //
-                .getSynchronizedRecipes() //
-                .getFirstMatch(this.getRecipeType(), new SingleRecipeInput(stack), this.level) //
-                .isPresent();
     }
 
     protected int lastOrDefaultRecipeEnergy;

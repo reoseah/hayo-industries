@@ -41,7 +41,7 @@ public class HayoEnergy {
     public static void initialize() {
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_storage"), EnergyComponents.ENERGY_STORAGE);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy"), EnergyComponents.ENERGY);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("can_discharge"), EnergyComponents.CAN_CHARGE_BLOCKS);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("can_discharge"), EnergyComponents.CHARGES_BLOCKS);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("charged_attributes"), EnergyComponents.ATTRIBUTES_WHEN_CHARGED);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_tool"), EnergyComponents.ENERGY_TOOL);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_armor"), EnergyComponents.ENERGY_ARMOR);

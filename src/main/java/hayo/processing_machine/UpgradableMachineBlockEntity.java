@@ -46,11 +46,15 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
 
     @Override
     public final int getEnergyUseRate() {
-        int useRate = (int) (this.getBaseEnergyUseRate() * (1 + this.extraCraftingSpeed));
+        return (int) (this.getBaseEnergyUseRate() * (1 + this.extraCraftingSpeed));
+    }
+
+    @Override
+    protected int getAmountToProgressRecipe(int usableEnergy) {
         if (this.hasInductionUpgrade) {
-            return 1 + ((useRate - 1) * this.inductionHeat / MAX_INDUCTION_HEAT);
+            return 1 + ((usableEnergy - 1) * this.inductionHeat / MAX_INDUCTION_HEAT);
         }
-        return useRate;
+        return super.getAmountToProgressRecipe(usableEnergy);
     }
 
     protected abstract int getBaseEnergyUseRate();

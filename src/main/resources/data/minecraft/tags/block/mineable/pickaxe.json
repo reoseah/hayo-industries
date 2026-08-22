@@ -1,8 +1,9 @@
 {
   "values": [
     "#hayo:machines",
+    "hayo:refined_iron_block",
     "hayo:silicon_bronze_block",
-    "hayo:composite_plate_block",
+    "hayo:glazed_reinforced_stone",
     "hayo:raw_silicon_block",
     "hayo:reinforced_stone",
     "hayo:reinforced_glass",

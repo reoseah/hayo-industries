@@ -27,12 +27,12 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
 
     @Getter
     @Setter
-    protected float averageInputPerTick;
+    protected float averageInput;
     @Getter
     protected int outputPerTick;
     @Getter
     @Setter
-    protected float averageOutputPerTick;
+    protected float averageOutput;
 
     public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
@@ -67,9 +67,9 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
 
     @Override
     protected void resetEnergyPerTick() {
-        this.averageInputPerTick = Mth.lerp(0.05F, this.averageInputPerTick, this.inputPerTick);
+        this.averageInput = Mth.lerp(0.05F, this.averageInput, this.inputPerTick);
         super.resetEnergyPerTick();
-        this.averageOutputPerTick = Mth.lerp(0.05F, this.averageOutputPerTick, this.outputPerTick);
+        this.averageOutput = Mth.lerp(0.05F, this.averageOutput, this.outputPerTick);
         this.outputPerTick = 0;
     }
 
@@ -89,7 +89,7 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
-        return slot == DISCHARGE_SLOT ? EnergyComponents.canChargeMachine(stack) : EnergyComponents.isStorage(stack);
+        return slot == DISCHARGE_SLOT ? EnergyComponents.chargesBlocks(stack) : EnergyComponents.isStorage(stack);
     }
 
     @Override

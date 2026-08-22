@@ -3,7 +3,10 @@ package hayo;
 import com.mojang.serialization.MapCodec;
 import hayo.battery_box.BatteryBoxBlock;
 import hayo.battery_box.BatteryBoxBlockEntity;
+import hayo.battery_box.BatteryBoxMenu;
+import hayo.battery_box.BatteryBoxScreen;
 import hayo.cable.CableBlock;
+import hayo.common.HayoGuiSprites;
 import hayo.common.item.BlockItemWithTooltip;
 import hayo.common.item.ItemWithTooltip;
 import hayo.common.item.SimpleElectricItem;
@@ -15,8 +18,6 @@ import hayo.generator.GeneratorBlock;
 import hayo.generator.GeneratorBlockEntity;
 import hayo.generator.GeneratorMenu;
 import hayo.generator.GeneratorScreen;
-import hayo.old_menus.UniversalContainerMenu;
-import hayo.old_menus.UniversalContainerScreen;
 import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.*;
 import hayo.rubber_tree.ResinProducingLogBlock;
@@ -38,7 +39,6 @@ import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -95,7 +95,6 @@ import java.util.function.Function;
 import static net.minecraft.world.level.block.Blocks.leavesProperties;
 import static net.minecraft.world.level.block.Blocks.logProperties;
 
-// TODO: consider making drills and what not "bundle-like" holders of the battery or energy crystal
 public class Hayo {
     public static final String MOD_ID = "hayo";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -193,8 +192,8 @@ public class Hayo {
 
         public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINE_PROPS);
         public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, BlockBehaviour.Properties.of().strength(15F).sound(SoundType.METAL).mapColor(MapColor.METAL));
-        public static final Block SILICON_BRONZE_BLOCK = register("silicon_bronze_block", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.COLOR_ORANGE));
-        public static final Block COMPOSITE_PLATE_BLOCK = register("composite_plate_block", Block::new, BlockBehaviour.Properties.of().strength(10F, 60F).sound(SoundType.METAL).mapColor(MapColor.COLOR_GREEN));
+        public static final Block REFINED_IRON_BLOCK = register("refined_iron_block", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.METAL));
+        public static final Block SILICON_BRONZE_BLOCK = register("silicon_bronze_block", Block::new, BlockBehaviour.Properties.of().strength(3F, 15F).sound(SoundType.METAL).mapColor(MapColor.COLOR_ORANGE));
         public static final Block RAW_SILICON_BLOCK = register("raw_silicon_block", Block::new, BlockBehaviour.Properties.of().strength(3F).mapColor(MapColor.COLOR_BLACK));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
@@ -202,6 +201,7 @@ public class Hayo {
 
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F, 30F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
         public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
+        public static final Block GLAZED_REINFORCED_STONE = register("glazed_reinforced_stone", Block::new, REINFORCED_BLOCKS);
         public static final Block REINFORCED_GLASS = register("reinforced_glass", TransparentBlock::new, BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.GLASS));
         public static final Block REINFORCED_STONE_STAIRS = register("reinforced_stone_stairs", props -> new StairBlock(REINFORCED_STONE.defaultBlockState(), props), REINFORCED_BLOCKS);
         public static final Block REINFORCED_STONE_SLAB = register("reinforced_stone_slab", SlabBlock::new, REINFORCED_BLOCKS);
@@ -271,8 +271,8 @@ public class Hayo {
 
         public static final Item MACHINE_BLOCK = registerBlock(Blocks.MACHINE_BLOCK);
         public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
+        public static final Item REFINED_IRON_BLOCK = registerBlock(Blocks.REFINED_IRON_BLOCK);
         public static final Item SILICON_BRONZE_BLOCK = registerBlock(Blocks.SILICON_BRONZE_BLOCK);
-        public static final Item COMPOSITE_PLATE_BLOCK = registerBlock(Blocks.COMPOSITE_PLATE_BLOCK);
         public static final Item RAW_SILICON_BLOCK = registerBlock(Blocks.RAW_SILICON_BLOCK);
 
         public static final Item CHIPBOARD = registerBlock(Blocks.CHIPBOARD);
@@ -280,6 +280,7 @@ public class Hayo {
 
         public static final Item REINFORCED_STONE = registerBlock(Blocks.REINFORCED_STONE);
         public static final Item REINFORCED_GLASS = registerBlock(Blocks.REINFORCED_GLASS);
+        public static final Item GLAZED_REINFORCED_STONE = registerBlock(Blocks.GLAZED_REINFORCED_STONE);
         public static final Item REINFORCED_STONE_STAIRS = registerBlock(Blocks.REINFORCED_STONE_STAIRS);
         public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
         public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
@@ -315,7 +316,7 @@ public class Hayo {
             return new Item.Properties() //
                     .stacksTo(1) //
                     .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
-                    .component(EnergyComponents.CAN_CHARGE_BLOCKS, Unit.INSTANCE);
+                    .component(EnergyComponents.CHARGES_BLOCKS, Unit.INSTANCE);
         }
 
         public static final Item BATTERY = registerItem("battery", SimpleElectricItem::new, createBatteryProperties(10_000, 32));
@@ -525,8 +526,9 @@ public class Hayo {
 
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);
+                entries.accept(REFINED_IRON_BLOCK);
                 entries.accept(SILICON_BRONZE_BLOCK);
-                entries.accept(COMPOSITE_PLATE_BLOCK);
+                entries.accept(GLAZED_REINFORCED_STONE);
                 entries.accept(RAW_SILICON_BLOCK);
                 entries.accept(CHIPBOARD);
                 entries.accept(CHIPBOARD_DOOR);
@@ -691,21 +693,14 @@ public class Hayo {
     }
 
     public static class MenuTypes {
-        @SuppressWarnings("DataFlowIssue")
-        public static final ExtendedMenuType<UniversalContainerMenu, BlockPos> UNIVERSAL = register("universal", (containerId, inventory, pos) -> {
-            var level = inventory.player.level();
-            var blockState = level.getBlockState(pos);
-            var provider = blockState.getMenuProvider(level, pos);
-            if (provider == null) {
-                return null;
-            }
-
-            return (UniversalContainerMenu) provider.createMenu(containerId, inventory, inventory.player);
-        }, BlockPos.STREAM_CODEC);
-
         public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
+        public static final MenuType<ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
+        public static final MenuType<MaceratorMenu> MACERATOR = register("macerator", MaceratorMenu::new);
+        public static final MenuType<CompressorMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
+        public static final MenuType<ExtractorMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
         public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
         public static final MenuType<EnergyStorageMenu> ENERGY_STORAGE = register("energy_storage", EnergyStorageMenu::new);
+        public static final MenuType<BatteryBoxMenu> BATTERY_BOX = register("battery_box", BatteryBoxMenu::new);
 
         public static void initialize() {
         }
@@ -719,11 +714,14 @@ public class Hayo {
         }
 
         public static void initializeClient() {
-            MenuScreens.register(UNIVERSAL, UniversalContainerScreen::new);
-
             MenuScreens.register(GENERATOR, GeneratorScreen::new);
+            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(ELECTRIC_FURNACE, (menu, inventory, title) -> new ClassicMachineScreen(menu, inventory, title, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY));
+            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(MACERATOR, (menu, inventory, title) -> new ClassicMachineScreen(menu, inventory, title, HayoGuiSprites.MACERATING_ARROW, HayoGuiSprites.MACERATING_ARROW_OVERLAY));
+            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(COMPRESSOR, (menu, inventory, title) -> new ClassicMachineScreen(menu, inventory, title, HayoGuiSprites.COMPRESSING_ARROW, HayoGuiSprites.COMPRESSING_ARROW_OVERLAY));
+            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(EXTRACTOR, (menu, inventory, title) -> new ClassicMachineScreen(menu, inventory, title, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY));
             MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
             MenuScreens.register(ENERGY_STORAGE, EnergyStorageScreen::new);
+            MenuScreens.register(BATTERY_BOX, BatteryBoxScreen::new);
         }
     }
 
@@ -762,7 +760,6 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
-
         public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", ClassicMachineRecipe.createCodec(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.createCodec(CompressingRecipe::new, CompressorBlockEntity.DEFAULT_RECIPE_ENERGY));
         public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", ClassicMachineRecipe.createCodec(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));

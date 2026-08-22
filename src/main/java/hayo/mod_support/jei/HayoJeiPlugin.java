@@ -5,11 +5,9 @@ import hayo.processing_machine.classic.CompressingRecipe;
 import hayo.processing_machine.classic.ExtractingRecipe;
 import hayo.processing_machine.classic.MaceratingRecipe;
 import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
-import hayo.old_menus.UniversalContainerMenu;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.recipe.transfer.IRecipeTransferInfo;
 import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -18,14 +16,11 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 @JeiPlugin
@@ -85,7 +80,6 @@ public class HayoJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
         for (var jeiRecipeType : List.of( //
-                // TODO: handle normal furnace views of smelting recipes too?
                 ELECTRIC_SMELTING, //
                 ELECTRIC_BLASTING, //
                 ELECTRIC_SMOKING, //
@@ -93,48 +87,7 @@ public class HayoJeiPlugin implements IModPlugin {
                 COMPRESSING, //
                 EXTRACTING //
         )) {
-            registration.addRecipeTransferHandler(new UniversalMenuRecipeTransferInfo<>(jeiRecipeType));
-        }
-    }
-
-    public record UniversalMenuRecipeTransferInfo<R extends RecipeHolder<?>>(
-            IRecipeType<R> jeiRecipeType) implements IRecipeTransferInfo<UniversalContainerMenu, R> {
-        @Override
-        public Class<? extends UniversalContainerMenu> getContainerClass() {
-            return UniversalContainerMenu.class;
-        }
-
-        @Override
-        public Optional<MenuType<UniversalContainerMenu>> getMenuType() {
-            return Optional.of(Hayo.MenuTypes.UNIVERSAL);
-        }
-
-        @Override
-        public IRecipeType<R> getRecipeType() {
-            return this.jeiRecipeType;
-        }
-
-        @Override
-        public boolean canHandle(UniversalContainerMenu container, R recipe) {
-            return container.getRecipeTransferData() != null && container.getRecipeTransferData().recipeType().get() == recipe.value().getType();
-        }
-
-        @Override
-        public List<Slot> getRecipeSlots(UniversalContainerMenu container, R recipe) {
-            var data = container.getRecipeTransferData();
-            if (data == null) {
-                return List.of();
-            }
-            return container.slots.subList(data.start(), data.end());
-        }
-
-        @Override
-        public List<Slot> getInventorySlots(UniversalContainerMenu container, R recipe) {
-            var playerSlots = container.getPlayerInventory();
-            if (playerSlots == null) {
-                return List.of();
-            }
-            return container.slots.subList(playerSlots.start(), playerSlots.end());
+            // TODO reimplement
         }
     }
 }

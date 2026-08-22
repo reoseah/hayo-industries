@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": "hayo:refined_iron_ingot",
+    "#": "#c:ingots/refined_iron",
     "R": "hayo:rubber",
     "C": "minecraft:copper_ingot"
   },

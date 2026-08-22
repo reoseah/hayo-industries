@@ -30,26 +30,18 @@ public abstract class SimpleElectricBlockEntity extends SimpleContainerBlockEnti
 
     protected abstract int getEnergyTransferLimit();
 
-    protected boolean doesStoredEnergyPersist() {
-        return true;
-    }
-
     @Override
     @MustBeInvokedByOverriders
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        if (this.doesStoredEnergyPersist()) {
-            output.putInt("stored_energy", this.storedEnergy);
-        }
+        output.putInt("stored_energy", this.storedEnergy);
     }
 
     @Override
     @MustBeInvokedByOverriders
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        if (this.doesStoredEnergyPersist()) {
-            this.storedEnergy = input.getIntOr("stored_energy", 0);
-        }
+        this.storedEnergy = input.getIntOr("stored_energy", 0);
     }
 
     public int getReceivableEnergy() {

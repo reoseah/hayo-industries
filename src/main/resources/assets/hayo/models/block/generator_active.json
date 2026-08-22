@@ -9,7 +9,7 @@
   },
   "textures": {
     "particle": "hayo:block/generator_front_active",
-    "down": "hayo:block/machine_bottom",
+    "down": "hayo:block/refined_iron_block",
     "up": "hayo:block/machine",
     "north": "hayo:block/generator_front_active",
     "east": "hayo:block/generator_side",

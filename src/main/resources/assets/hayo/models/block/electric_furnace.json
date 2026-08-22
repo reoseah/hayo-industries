@@ -9,7 +9,7 @@
   },
   "textures": {
     "particle": "hayo:block/electric_furnace_front",
-    "down": "hayo:block/machine_bottom",
+    "down": "hayo:block/refined_iron_block",
     "up": "hayo:block/machine",
     "north": "hayo:block/electric_furnace_front",
     "east": "hayo:block/machine_side",

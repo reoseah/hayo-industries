@@ -7,8 +7,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -44,24 +42,24 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
                 this.setChanged();
             }
         } else {
-            var recipeHolder = this.updateMatchingRecipe(level, input);
+            var recipeHolder = this.findMatchingRecipe(level, input);
 
-            int recipeTotalEnergy = this.getEnergyCost(recipeHolder);
+            int recipeCost = this.getEnergyCost(recipeHolder);
             if (this.hasEnoughEnergyToProgress() && this.canCraft(level.registryAccess(), recipeHolder, input)) {
-                int usable = Math.min(Math.min(recipeTotalEnergy - this.recipeProgress, this.getEnergyUseRate()), this.storedEnergy);
+                int usableEnergy = Math.min(Math.min(recipeCost - this.recipeProgress, this.getEnergyUseRate()), this.storedEnergy);
 
-                this.storedEnergy -= usable;
-                this.recipeProgress += usable;
+                this.storedEnergy -= usableEnergy;
+                this.recipeProgress += this.getAmountToProgressRecipe(usableEnergy);
                 madeProgress = true;
 
-                if (this.recipeProgress >= recipeTotalEnergy) {
+                if (this.recipeProgress >= recipeCost) {
                     this.craft(level.registryAccess(), recipeHolder, input);
                     this.recipeProgress = 0;
                 }
 
                 this.setChanged();
             } else if (this.recipeProgress > 0) {
-                this.recipeProgress = Mth.clamp(this.recipeProgress - 2 * this.getEnergyUseRate(), 0, recipeTotalEnergy);
+                this.recipeProgress = Mth.clamp(this.recipeProgress - 2 * this.getEnergyUseRate(), 0, recipeCost);
                 this.setChanged();
             }
         }
@@ -74,6 +72,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         return madeProgress;
     }
 
+
     public abstract int getEnergyUseRate();
 
     public int getLastOrDefaultRecipeCost() {
@@ -84,6 +83,10 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected boolean hasEnoughEnergyToProgress() {
         return this.storedEnergy >= this.getEnergyUseRate();
+    }
+
+    protected int getAmountToProgressRecipe(int usableEnergy) {
+        return usableEnergy;
     }
 
     protected abstract RecipeType<R> getRecipeType();
@@ -120,7 +123,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         this.recipeProgress = input.getIntOr("recipe_progress", 0);
     }
 
-    public @Nullable RecipeHolder<R> updateMatchingRecipe(ServerLevel level, I input) {
+    public @Nullable RecipeHolder<R> findMatchingRecipe(ServerLevel level, I input) {
         var recipeManager = level.recipeAccess();
         var match = recipeManager.getRecipeFor(this.getRecipeType(), input, level, this.lastRecipe).orElse(null);
         if (match != this.lastRecipe) {
@@ -134,66 +137,5 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         return currentStack.isEmpty()
                 || ItemStack.isSameItemSameComponents(currentStack, stack)
                 && currentStack.getCount() + stack.getCount() <= Math.min(stack.getMaxStackSize(), this.getMaxStackSize(stack));
-    }
-
-    public interface MachineContainerData extends ContainerData {
-        int SIZE = 9;
-
-        default int energy() {
-            return (this.get(1) << 16) | (this.get(0) & 0xFFFF);
-        }
-
-        default int capacity() {
-            return (this.get(3) << 16) | (this.get(2) & 0xFFFF);
-        }
-
-        default int progressEnergy() {
-            return (this.get(5) << 16) | (this.get(4) & 0xFFFF);
-        }
-
-        default int recipeCost() {
-            return (this.get(7) << 16) | (this.get(6) & 0xFFFF);
-        }
-
-        default int energyUseRate() {
-            return this.get(8);
-        }
-
-        default float recipeDuration() {
-            return Mth.ceil(this.recipeCost() / (float) this.energyUseRate()) / 20F;
-        }
-
-        class Simple extends SimpleContainerData implements MachineContainerData {
-            public Simple() {
-                super(SIZE);
-            }
-        }
-
-        record Entity(MachineBlockEntity<?, ?> entity) implements MachineContainerData {
-            @Override
-            public int getCount() {
-                return SIZE;
-            }
-
-            @Override
-            public int get(int index) {
-                return switch (index) {
-                    case 0 -> this.entity.getStoredEnergy() & 0xFFFF;
-                    case 1 -> this.entity.getStoredEnergy() >>> 16;
-                    case 2 -> this.entity.getEnergyCapacity() & 0xFFFF;
-                    case 3 -> this.entity.getEnergyCapacity() >>> 16;
-                    case 4 -> this.entity.getRecipeProgress() & 0xFFFF;
-                    case 5 -> this.entity.getRecipeProgress() >>> 16;
-                    case 6 -> this.entity.getLastOrDefaultRecipeCost() & 0xFFFF;
-                    case 7 -> this.entity.getLastOrDefaultRecipeCost() >>> 16;
-                    case 8 -> this.entity.getEnergyUseRate();
-                    default -> 0;
-                };
-            }
-
-            @Override
-            public void set(int index, int value) {
-            }
-        }
     }
 }

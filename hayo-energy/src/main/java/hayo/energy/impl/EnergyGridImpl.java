@@ -41,8 +41,6 @@ public class EnergyGridImpl {
     }
 
     public int sendEnergy(int amount, BlockPos pos, @Nullable Direction sendingFace) {
-        if (amount <= 0) throw new IllegalArgumentException("Amount must be positive");
-
         var paths = this.pathCache.get(Pair.of(pos, sendingFace));
         if (paths == null) {
             paths = discoverPaths(this.level, pos, sendingFace);

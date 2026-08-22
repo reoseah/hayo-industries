@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": "hayo:composite_plate"
+    "#": "#c:ingots/refined_iron"
   },
   "pattern": [
     "###",
@@ -10,7 +10,6 @@
     "###"
   ],
   "result": {
-    "count": 1,
-    "id": "hayo:composite_plate_block"
+    "id": "hayo:refined_iron_block"
   }
 }

@@ -1,15 +1,12 @@
 package hayo.processing_machine.classic;
 
 import hayo.Hayo;
-import hayo.old_menus.RecipeProgressBar;
-import hayo.old_menus.UniversalContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -56,17 +53,12 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ExtractingRe
     }
 
     @Override
-    protected TagKey<Item> getUpgradeTag() {
-        return Hayo.ItemTags.EXTRACTOR_UPGRADES;
-    }
-    @Override
     public Component getDefaultName() {
         return Component.translatable("block.hayo.extractor");
     }
 
     @Override
-    public UniversalContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return super.createMenu(containerId, inventory, player) //
-                .addElement(RecipeProgressBar.extractor(70, 36, this::getRecipeProgress, this::getLastOrDefaultRecipeCost));
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new ExtractorMenu(containerId, this, inventory);
     }
 }

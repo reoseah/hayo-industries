@@ -1,6 +1,7 @@
 {
   "values": [
     "#c:storage_blocks/raw_silicon",
+    "#c:storage_blocks/refined_iron",
     "#c:storage_blocks/silicon_bronze"
   ]
 }
