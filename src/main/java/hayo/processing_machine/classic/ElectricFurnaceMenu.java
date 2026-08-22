@@ -45,7 +45,7 @@ public class ElectricFurnaceMenu extends ClassicMachineMenu {
     }
 
     @Override
-    protected RecipeType<? extends Recipe<SingleRecipeInput>> getRecipeType() {
+    public RecipeType<? extends Recipe<SingleRecipeInput>> getRecipeType() {
         return this.getModeData().recipeType;
     }
 }

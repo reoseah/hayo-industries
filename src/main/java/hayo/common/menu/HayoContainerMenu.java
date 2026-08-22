@@ -13,7 +13,7 @@ public abstract class HayoContainerMenu extends AbstractContainerMenu {
     protected final Container container;
 
     protected Player player;
-    protected IntRange playerInventory;
+    public IntRange playerInventory;
     protected IntRange playerMainInventory;
     protected IntRange playerHotbar;
 

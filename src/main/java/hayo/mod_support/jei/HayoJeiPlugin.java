@@ -1,13 +1,12 @@
 package hayo.mod_support.jei;
 
 import hayo.Hayo;
-import hayo.processing_machine.classic.CompressingRecipe;
-import hayo.processing_machine.classic.ExtractingRecipe;
-import hayo.processing_machine.classic.MaceratingRecipe;
+import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.recipe.transfer.IRecipeTransferInfo;
 import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -16,11 +15,14 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 @JeiPlugin
@@ -35,7 +37,7 @@ public class HayoJeiPlugin implements IModPlugin {
 
     @Override
     public Identifier getPluginUid() {
-        return Hayo.modId("jei_plugin");
+        return Hayo.modId("jei");
     }
 
     @Override
@@ -79,15 +81,46 @@ public class HayoJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        for (var jeiRecipeType : List.of( //
-                ELECTRIC_SMELTING, //
-                ELECTRIC_BLASTING, //
-                ELECTRIC_SMOKING, //
-                MACERATING, //
-                COMPRESSING, //
-                EXTRACTING //
+        for (var jeiRecipeType : List.of(
+                ELECTRIC_SMELTING,
+                ELECTRIC_BLASTING,
+                ELECTRIC_SMOKING
         )) {
-            // TODO reimplement
+            registration.addRecipeTransferHandler(new IRecipeTransferInfo<ElectricFurnaceMenu, RecipeHolder<?>>() {
+                @Override
+                public Class<? extends ElectricFurnaceMenu> getContainerClass() {
+                    return ElectricFurnaceMenu.class;
+                }
+
+                @Override
+                public Optional<MenuType<ElectricFurnaceMenu>> getMenuType() {
+                    return Optional.of(Hayo.MenuTypes.ELECTRIC_FURNACE);
+                }
+
+                @Override
+                public IRecipeType<RecipeHolder<?>> getRecipeType() {
+                    return (IRecipeType<RecipeHolder<?>>) (IRecipeType) jeiRecipeType;
+                }
+
+                @Override
+                public boolean canHandle(ElectricFurnaceMenu container, RecipeHolder<?> holder) {
+                    return container.getRecipeType() == holder.value().getType();
+                }
+
+                @Override
+                public List<Slot> getRecipeSlots(ElectricFurnaceMenu container, RecipeHolder<?> recipe) {
+                    return container.slots.subList(0, 1);
+                }
+
+                @Override
+                public List<Slot> getInventorySlots(ElectricFurnaceMenu container, RecipeHolder<?> recipe) {
+                    return container.slots.subList(container.playerInventory.start(), container.playerInventory.end());
+                }
+            });
         }
+
+        registration.addRecipeTransferHandler(MaceratorMenu.class, Hayo.MenuTypes.MACERATOR, MACERATING, 0, 1, ClassicMachineBlockEntity.SLOTS, 36);
+        registration.addRecipeTransferHandler(CompressorMenu.class, Hayo.MenuTypes.COMPRESSOR, COMPRESSING, 0, 1, ClassicMachineBlockEntity.SLOTS, 36);
+        registration.addRecipeTransferHandler(ExtractorMenu.class, Hayo.MenuTypes.EXTRACTOR, EXTRACTING, 0, 1, ClassicMachineBlockEntity.SLOTS, 36);
     }
 }

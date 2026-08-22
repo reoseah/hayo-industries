@@ -101,14 +101,14 @@ public class Hayo {
 
     public static final CreativeModeTab TAB = FabricCreativeModeTab.builder().title(Component.translatable("itemGroup.hayo")).icon(() -> new ItemStack(Blocks.ELECTRIC_FURNACE)).build();
 
-    public static final TreeGrower RUBBER_TREE = new TreeGrower( //
-            "hayo:rubber_tree", //
-            0F, //
-            Optional.empty(), //
-            Optional.empty(), //
-            Optional.of(modKey(Registries.CONFIGURED_FEATURE, "rubber_tree")), //
-            Optional.empty(), //
-            Optional.empty(), //
+    public static final TreeGrower RUBBER_TREE = new TreeGrower(
+            "hayo:rubber_tree",
+            0F,
+            Optional.empty(),
+            Optional.empty(),
+            Optional.of(modKey(Registries.CONFIGURED_FEATURE, "rubber_tree")),
+            Optional.empty(),
+            Optional.empty(),
             Optional.empty());
 
     public static void initialize() {
@@ -128,11 +128,11 @@ public class Hayo {
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.EXTRACTING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
 
-        BiomeModifications.create(modId("rubber_trees")) //
-                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST) //
-                                .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA)) //
-                                .or(BiomeSelectors.tag(BiomeTags.IS_JUNGLE)) //
-                                .or(BiomeSelectors.includeByKey(Biomes.SWAMP)), //
+        BiomeModifications.create(modId("rubber_trees"))
+                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST)
+                                .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
+                                .or(BiomeSelectors.tag(BiomeTags.IS_JUNGLE))
+                                .or(BiomeSelectors.includeByKey(Biomes.SWAMP)),
                         (_, modification) -> {
                             var feature = modKey(Registries.PLACED_FEATURE, "rubber_tree_patch");
                             modification.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, feature);
@@ -229,8 +229,8 @@ public class Hayo {
 
     public static class Components {
         public static final DataComponentType<Unit> QUANTUM_ARMOR = register("quantum_armor",
-                DataComponentType.<Unit>builder() //
-                        .persistent(Unit.CODEC) //
+                DataComponentType.<Unit>builder()
+                        .persistent(Unit.CODEC)
                         .networkSynchronized(Unit.STREAM_CODEC));
 
         public static <T> DataComponentType<T> register(String name, DataComponentType.Builder<T> builder) {
@@ -253,8 +253,8 @@ public class Hayo {
         public static final Item CRYSTAL_ENERGY_STORAGE = registerBlock(Blocks.CRYSTAL_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
         public static final Item LAPOTRON_ENERGY_STORAGE = registerBlock(Blocks.LAPOTRON_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item CABLE = registerBlock(Blocks.POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, EnergyTexts.maxAmountPerTick(block.transferLimit).withStyle(ChatFormatting.GRAY), properties));
-        public static final Item POWER_CABLE = registerBlock(Blocks.QUADRUPLE_POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, EnergyTexts.maxAmountPerTick(block.transferLimit).withStyle(ChatFormatting.GRAY), properties));
+        public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, EnergyTexts.maxAmountPerTick(block.transferLimit).withStyle(ChatFormatting.GRAY), properties));
+        public static final Item QUANDRUPLE_POWER_CABLE = registerBlock(Blocks.QUADRUPLE_POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, EnergyTexts.maxAmountPerTick(block.transferLimit).withStyle(ChatFormatting.GRAY), properties));
         public static final Item ENERGY_BUS = registerBlock(Blocks.ENERGY_BUS, (block, properties) -> new BlockItemWithTooltip(block, EnergyTexts.maxAmountPerTick(block.transferLimit).withStyle(ChatFormatting.GRAY), properties));
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
@@ -287,17 +287,17 @@ public class Hayo {
         public static final Item REINFORCED_TRAPDOOR = registerBlock(Blocks.REINFORCED_TRAPDOOR);
 
         private static final TagKey<Item> COPPER_INGOTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"));
-        public static final Item WRENCH = registerItem("wrench", WrenchItem::new, new Item.Properties() //
-                .stacksTo(1) //
-                .equippable(EquipmentSlot.MAINHAND) //
-                .durability(256) //
-                .enchantable(10) //
-                .repairable(COPPER_INGOTS) //
-                .component(DataComponents.TOOL, new Tool( //
-                        List.of( //
-                                Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
-                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.WRENCH_MINEABLE), 20F) //
-                        ), 1F, 1, true) //
+        public static final Item WRENCH = registerItem("wrench", WrenchItem::new, new Item.Properties()
+                .stacksTo(1)
+                .equippable(EquipmentSlot.MAINHAND)
+                .durability(256)
+                .enchantable(10)
+                .repairable(COPPER_INGOTS)
+                .component(DataComponents.TOOL, new Tool(
+                        List.of(
+                                Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)),
+                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.WRENCH_MINEABLE), 20F)
+                        ), 1F, 1, true)
                 ));
 
         private static final ToolMaterial SILICON_BRONZE = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, ToolMaterial.DIAMOND.durability(), 7, 2.0F, 10, ItemTags.SILICON_BRONZE_MATERIALS);
@@ -307,15 +307,15 @@ public class Hayo {
         public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe", properties -> new AxeItem(SILICON_BRONZE, 6.0F, -3.1F, properties));
         public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
 
-        private static final ArmorMaterial FLAK_ARMOR = new ArmorMaterial( //
-                33, ArmorMaterials.makeDefense(3, 6, 8, 3, 11), 10, net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 0.0F, ItemTags.FLAK_MATERIALS, modKey(EquipmentAssets.ROOT_ID, "flak") //
+        private static final ArmorMaterial FLAK_ARMOR = new ArmorMaterial(
+                33, ArmorMaterials.makeDefense(3, 6, 8, 3, 11), 10, net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 0.0F, ItemTags.FLAK_MATERIALS, modKey(EquipmentAssets.ROOT_ID, "flak")
         );
         public static final Item FLAK_CHESTPLATE = registerItem("flak_chestplate", Item::new, new Item.Properties().humanoidArmor(FLAK_ARMOR, ArmorType.CHESTPLATE).stacksTo(1));
 
         private static Item.Properties createBatteryProperties(int capacity, int transferLimit) {
-            return new Item.Properties() //
-                    .stacksTo(1) //
-                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
+            return new Item.Properties()
+                    .stacksTo(1)
+                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit))
                     .component(EnergyComponents.CHARGES_BLOCKS, Unit.INSTANCE);
         }
 
@@ -323,51 +323,51 @@ public class Hayo {
         public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", SimpleElectricItem::new, createBatteryProperties(100_000, 128));
         public static final Item LAPOTRON_CRYSTAL = registerItem("lapotron_crystal", SimpleElectricItem::new, createBatteryProperties(1_000_000, 512).rarity(Rarity.RARE));
 
-        public static final Item CHAINSAW = registerItem("chainsaw", SimpleElectricItem::new, new Item.Properties() //
-                .stacksTo(1) //
-                .equippable(EquipmentSlot.MAINHAND) //
-                .component(DataComponents.TOOL, new Tool( //
-                        List.of( //
-                                Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)), //
-                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.CHAINSAW_MINEABLE), 0.5F) //
-                        ), 0.5F, 0, false) //
-                ) //
-                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
-                .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 50, 100)) //
-                .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.tool(10, -3, 100)) //
+        public static final Item CHAINSAW = registerItem("chainsaw", SimpleElectricItem::new, new Item.Properties()
+                .stacksTo(1)
+                .equippable(EquipmentSlot.MAINHAND)
+                .component(DataComponents.TOOL, new Tool(
+                        List.of(
+                                Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(BlockTags.INCORRECT_FOR_IRON_TOOL)),
+                                Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.CHAINSAW_MINEABLE), 0.5F)
+                        ), 0.5F, 0, false)
+                )
+                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32))
+                .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 50, 100))
+                .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.tool(10, -3, 100))
         );
 
         private static Tool drillTool(TagKey<Block> incorrectBlocks) {
-            return new Tool(List.of( //
-                    Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(incorrectBlocks)), //
-                    Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.DRILL_MINEABLE), 0.5F) //
+            return new Tool(List.of(
+                    Tool.Rule.deniesDrops(BLOCK_LOOKUP.getOrThrow(incorrectBlocks)),
+                    Tool.Rule.minesAndDrops(BLOCK_LOOKUP.getOrThrow(HBlockTags.DRILL_MINEABLE), 0.5F)
             ), 0.5F, 0, true);
         }
 
-        public static final Item DRILL = registerItem("drill", SimpleElectricItem::new, new Item.Properties() //
-                .stacksTo(1) //
-                .equippable(EquipmentSlot.MAINHAND) //
-                .component(DataComponents.TOOL, drillTool(BlockTags.INCORRECT_FOR_IRON_TOOL)) //
-                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
-                .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(7F, 50, 100)) //
+        public static final Item DRILL = registerItem("drill", SimpleElectricItem::new, new Item.Properties()
+                .stacksTo(1)
+                .equippable(EquipmentSlot.MAINHAND)
+                .component(DataComponents.TOOL, drillTool(BlockTags.INCORRECT_FOR_IRON_TOOL))
+                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32))
+                .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(7F, 50, 100))
                 .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.tool(6, -3, 100)));
-        public static final Item DIAMOND_DRILL = registerItem("diamond_drill", SimpleElectricItem::new, new Item.Properties() //
-                .stacksTo(1) //
-                .rarity(Rarity.RARE) //
-                .equippable(EquipmentSlot.MAINHAND) //
-                .component(DataComponents.TOOL, drillTool(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)) //
-                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32)) //
-                .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 80, 160)) //
+        public static final Item DIAMOND_DRILL = registerItem("diamond_drill", SimpleElectricItem::new, new Item.Properties()
+                .stacksTo(1)
+                .rarity(Rarity.RARE)
+                .equippable(EquipmentSlot.MAINHAND)
+                .component(DataComponents.TOOL, drillTool(BlockTags.INCORRECT_FOR_DIAMOND_TOOL))
+                .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(10_000, 32))
+                .component(EnergyComponents.ENERGY_TOOL, new EnergyTool(9F, 80, 160))
                 .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.tool(8, -3, 160)));
 
         private static Item.Properties createBatteryPackProperties(int capacity, int transferLimit) {
-            return new Item.Properties() //
-                    .stacksTo(1) //
-                    .component(DataComponents.EQUIPPABLE, //
-                            Equippable.builder(ArmorType.CHESTPLATE.getSlot()) //
-                                    .setAsset(modKey(EquipmentAssets.ROOT_ID, "battery_pack")) //
-                                    .build()) //
-                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit)) //
+            return new Item.Properties()
+                    .stacksTo(1)
+                    .component(DataComponents.EQUIPPABLE,
+                            Equippable.builder(ArmorType.CHESTPLATE.getSlot())
+                                    .setAsset(modKey(EquipmentAssets.ROOT_ID, "battery_pack"))
+                                    .build())
+                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(capacity, transferLimit))
                     .component(EnergyComponents.CHARGES_INVENTORY, Unit.INSTANCE);
         }
 
@@ -375,14 +375,14 @@ public class Hayo {
         public static final Item ADVANCED_BATTERY_PACK = registerItem("advanced_battery_pack", SimpleElectricItem::new, createBatteryPackProperties(300_000, 128));
 
         private static Item.Properties nanoArmorProperties(ArmorType type, int armor) {
-            return new Item.Properties() //
-                    .stacksTo(1) //
-                    .rarity(Rarity.RARE) //
-                    .component(DataComponents.EQUIPPABLE, Equippable.builder(type.getSlot()) //
-                            .setAsset(modKey(EquipmentAssets.ROOT_ID, "nano")) //
-                            .build()) //
-                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(100_000, 128)) //
-                    .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.armor(type, armor, 3, 100)) //
+            return new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.RARE)
+                    .component(DataComponents.EQUIPPABLE, Equippable.builder(type.getSlot())
+                            .setAsset(modKey(EquipmentAssets.ROOT_ID, "nano"))
+                            .build())
+                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(100_000, 128))
+                    .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.armor(type, armor, 3, 100))
                     .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(100));
         }
 
@@ -392,15 +392,15 @@ public class Hayo {
         public static final Item NANO_BOOTS = registerItem("nano_boots", SimpleElectricItem::new, nanoArmorProperties(ArmorType.BOOTS, 3));
 
         private static Item.Properties quantumArmorProperties(ArmorType type, int armor) {
-            return new Item.Properties() //
-                    .stacksTo(1) //
-                    .rarity(Rarity.RARE) //
-                    .component(DataComponents.EQUIPPABLE, Equippable.builder(type.getSlot()) //
-                            .setAsset(modKey(EquipmentAssets.ROOT_ID, "quantum")) //
-                            .build()) //
-                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(1_000_000, 512)) //
-                    .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.armor(type, armor, 4, 100)) //
-                    .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(200)) //
+            return new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.RARE)
+                    .component(DataComponents.EQUIPPABLE, Equippable.builder(type.getSlot())
+                            .setAsset(modKey(EquipmentAssets.ROOT_ID, "quantum"))
+                            .build())
+                    .component(EnergyComponents.ENERGY_STORAGE, new EnergyStorage(1_000_000, 512))
+                    .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.armor(type, armor, 4, 100))
+                    .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(200))
                     .component(Components.QUANTUM_ARMOR, Unit.INSTANCE);
         }
 
@@ -439,59 +439,59 @@ public class Hayo {
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON).component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
         public static final Item CANISTER = registerItem("canister");
-        public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food( //
-                new FoodProperties(4, 8F, false), //
-                Consumable.builder().onConsume( //
-                        new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.HUNGER, 300), 0.15F) //
-                ).build()) //
+        public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food(
+                new FoodProperties(4, 8F, false),
+                Consumable.builder().onConsume(
+                        new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.HUNGER, 300), 0.15F)
+                ).build())
         );
 
-        public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade", //
-                props -> new ItemWithTooltip( //
-                        props, //
-                        Component.empty(), //
-                        Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY), //
-                        Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.recipe_cost", "+25%").withStyle(ChatFormatting.DARK_AQUA) //
+        public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA),
+                        Component.translatable("hayo.upgrades.recipe_cost", "+25%").withStyle(ChatFormatting.DARK_AQUA)
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
-        public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade", //
-                props -> new ItemWithTooltip( //
-                        props, //
-                        Component.empty(), //
-                        Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY), //
-                        Component.translatable("hayo.upgrades.energy_capacity", "+10000").withStyle(ChatFormatting.DARK_AQUA) //
+        public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.energy_capacity", "+10000").withStyle(ChatFormatting.DARK_AQUA)
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
-        public static final Item STREAMLINE_OVERHAUL_UPGRADE = registerItem("streamline_overhaul_upgrade", //
-                props -> new ItemWithTooltip( //
-                        props, //
-                        Component.empty(), //
-                        Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY), //
-                        Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.heat1").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.heat2").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.heat3").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.heat4").withStyle(ChatFormatting.DARK_AQUA) //
+        public static final Item STREAMLINE_OVERHAUL_UPGRADE = registerItem("streamline_overhaul_upgrade",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA),
+                        Component.translatable("hayo.upgrades.heat1").withStyle(ChatFormatting.DARK_AQUA),
+                        Component.translatable("hayo.upgrades.heat2").withStyle(ChatFormatting.DARK_AQUA),
+                        Component.translatable("hayo.upgrades.heat3").withStyle(ChatFormatting.DARK_AQUA),
+                        Component.translatable("hayo.upgrades.heat4").withStyle(ChatFormatting.DARK_AQUA)
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
-        public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade", //
-                props -> new ItemWithTooltip( //
-                        props, //
-                        Component.empty(), //
-                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.electric_furnace")).withStyle(ChatFormatting.GRAY), //
-                        Component.translatable("hayo.upgrades.use_blasting_recipes").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA) //
-                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16) //
+        public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.electric_furnace")).withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.use_blasting_recipes").withStyle(ChatFormatting.DARK_AQUA),
+                        Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA)
+                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
-        public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade", //
-                props -> new ItemWithTooltip( //
-                        props, //
-                        Component.empty(), //
-                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.electric_furnace")).withStyle(ChatFormatting.GRAY), //
-                        Component.translatable("hayo.upgrades.use_smoking_recipes").withStyle(ChatFormatting.DARK_AQUA), //
-                        Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA) //
-                ), //
+        public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.electric_furnace")).withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.use_smoking_recipes").withStyle(ChatFormatting.DARK_AQUA),
+                        Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA)
+                ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static void initialize() {
@@ -508,8 +508,8 @@ public class Hayo {
                 entries.accept(CRYSTAL_ENERGY_STORAGE);
                 entries.accept(LAPOTRON_ENERGY_STORAGE);
 
-                entries.accept(CABLE);
                 entries.accept(POWER_CABLE);
+                entries.accept(QUANDRUPLE_POWER_CABLE);
                 entries.accept(ENERGY_BUS);
 
                 entries.accept(RUBBER_LOG);
