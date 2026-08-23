@@ -6,7 +6,6 @@ import hayo.battery_box.BatteryBoxBlockEntity;
 import hayo.battery_box.BatteryBoxMenu;
 import hayo.battery_box.BatteryBoxScreen;
 import hayo.cable.CableBlock;
-import hayo.common.HayoGuiSprites;
 import hayo.common.item.BlockItemWithTooltip;
 import hayo.common.item.ItemWithTooltip;
 import hayo.common.item.SimpleElectricItem;
@@ -32,7 +31,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
@@ -45,9 +43,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
@@ -709,16 +705,12 @@ public class Hayo {
             return Registry.register(BuiltInRegistries.MENU, modId(name), new MenuType<>(constructor, FeatureFlags.VANILLA_SET));
         }
 
-        private static <T extends AbstractContainerMenu, D> ExtendedMenuType<T, D> register(String name, ExtendedMenuType.ExtendedFactory<T, D> constructor, StreamCodec<? super RegistryFriendlyByteBuf, D> codec) {
-            return Registry.register(BuiltInRegistries.MENU, modId(name), new ExtendedMenuType<>(constructor, codec));
-        }
-
         public static void initializeClient() {
             MenuScreens.register(GENERATOR, GeneratorScreen::new);
-            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(ELECTRIC_FURNACE, (menu, inventory, title) -> new ClassicMachineScreen(menu, inventory, title, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY));
-            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(MACERATOR, (menu, inventory, title) -> new ClassicMachineScreen(menu, inventory, title, HayoGuiSprites.MACERATING_ARROW, HayoGuiSprites.MACERATING_ARROW_OVERLAY));
-            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(COMPRESSOR, (menu, inventory, title) -> new ClassicMachineScreen(menu, inventory, title, HayoGuiSprites.COMPRESSING_ARROW, HayoGuiSprites.COMPRESSING_ARROW_OVERLAY));
-            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(EXTRACTOR, (menu, inventory, title) -> new ClassicMachineScreen(menu, inventory, title, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY));
+            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(ELECTRIC_FURNACE, ClassicMachineScreen::createElectricFurnace);
+            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(MACERATOR, ClassicMachineScreen::createMacerator);
+            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(COMPRESSOR, ClassicMachineScreen::createCompressor);
+            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(EXTRACTOR, ClassicMachineScreen::createExtractor);
             MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
             MenuScreens.register(ENERGY_STORAGE, EnergyStorageScreen::new);
             MenuScreens.register(BATTERY_BOX, BatteryBoxScreen::new);
@@ -761,7 +753,7 @@ public class Hayo {
 
     public static class RecipeSerializers {
         public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", ClassicMachineRecipe.createCodec(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.createCodec(CompressingRecipe::new, CompressorBlockEntity.DEFAULT_RECIPE_ENERGY));
+        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.createCodec(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", ClassicMachineRecipe.createCodec(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
 

@@ -132,6 +132,10 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         return match;
     }
 
+    public boolean hasRecipe() {
+        return this.lastRecipe != null && this.lastRecipe.value().matches(this.createRecipeInput(), this.level);
+    }
+
     protected boolean canInsertToSlot(ItemStack stack, int slot) {
         var currentStack = this.stacks.get(slot);
         return currentStack.isEmpty()

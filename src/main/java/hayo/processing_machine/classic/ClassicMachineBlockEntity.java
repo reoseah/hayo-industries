@@ -95,18 +95,18 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     }
 
     @Override
-    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction side) {
-        return switch (side) {
-            case null -> index != OUTPUT;
-            case UP -> true;
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
+        return switch (direction) {
+            case null -> slot != OUTPUT;
+            case UP -> slot == INPUT;
             case DOWN -> false;
-            default -> EnergyComponents.isStorage(stack);
+            default -> slot == BATTERY && EnergyComponents.chargesBlocks(stack);
         };
     }
 
     @Override
-    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction side) {
-        return side != Direction.UP;
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
+        return direction != Direction.UP;
     }
 
     protected int lastOrDefaultRecipeEnergy;

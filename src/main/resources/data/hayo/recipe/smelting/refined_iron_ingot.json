@@ -5,6 +5,6 @@
   "experience": 0.0,
   "ingredient": "#c:ingots/iron",
   "result": {
-    "id": "#c:ingots/refined_iron"
+    "id": "hayo:refined_iron_ingot"
   }
 }

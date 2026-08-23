@@ -52,7 +52,7 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
     @Override
     protected int getAmountToProgressRecipe(int usableEnergy) {
         if (this.hasInductionUpgrade) {
-            return 1 + ((usableEnergy - 1) * this.inductionHeat / MAX_INDUCTION_HEAT);
+            return 1 + (usableEnergy - 1) * this.inductionHeat / MAX_INDUCTION_HEAT;
         }
         return super.getAmountToProgressRecipe(usableEnergy);
     }

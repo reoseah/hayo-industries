@@ -5,7 +5,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 
 public interface MachineContainerData extends ContainerData {
-    int SIZE = 9;
+    int SIZE = 10;
 
     default int energy() {
         return (this.get(1) << 16) | (this.get(0) & 0xFFFF);
@@ -25,6 +25,10 @@ public interface MachineContainerData extends ContainerData {
 
     default int energyUseRate() {
         return this.get(8);
+    }
+
+    default boolean matchesRecipe() {
+        return this.get(9) == 1;
     }
 
     default float recipeDuration() {
@@ -55,6 +59,7 @@ public interface MachineContainerData extends ContainerData {
                 case 6 -> this.entity.getLastOrDefaultRecipeCost() & 0xFFFF;
                 case 7 -> this.entity.getLastOrDefaultRecipeCost() >>> 16;
                 case 8 -> this.entity.getEnergyUseRate();
+                case 9 -> this.entity.hasRecipe() ? 1 : 0;
                 default -> 0;
             };
         }

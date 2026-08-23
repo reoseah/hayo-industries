@@ -69,7 +69,16 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
 
     @Override
     public int getBaseEnergyCost(RecipeHolder<AbstractCookingRecipe> holder) {
-        return energyCostFromCookingTime(holder == null ? AbstractFurnaceBlockEntity.BURN_TIME_STANDARD : holder.value().cookingTime());
+        if (holder == null) {
+            if (this.mode == ElectricFurnaceMode.BLASTING || this.mode == ElectricFurnaceMode.SMOKING) {
+                return energyCostFromCookingTime(2 * AbstractFurnaceBlockEntity.BURN_TIME_STANDARD);
+            }
+            return AbstractFurnaceBlockEntity.BURN_TIME_STANDARD;
+        }
+        if (this.mode == ElectricFurnaceMode.BLASTING || this.mode == ElectricFurnaceMode.SMOKING) {
+            return energyCostFromCookingTime(2 * holder.value().cookingTime());
+        }
+        return energyCostFromCookingTime(holder.value().cookingTime());
     }
 
     @Override

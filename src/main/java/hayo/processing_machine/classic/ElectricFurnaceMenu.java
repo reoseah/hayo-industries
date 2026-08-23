@@ -2,6 +2,7 @@ package hayo.processing_machine.classic;
 
 import hayo.Hayo;
 import hayo.processing_machine.MachineContainerData;
+import hayo.processing_machine.UpgradableMachineContainerData;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
@@ -16,12 +17,23 @@ public class ElectricFurnaceMenu extends ClassicMachineMenu {
     private final DataSlot modeData;
 
     public ElectricFurnaceMenu(int containerId, Inventory inventory) {
-        super(Hayo.MenuTypes.ELECTRIC_FURNACE, containerId, new SimpleContainer(ClassicMachineBlockEntity.SLOTS), new MachineContainerData.Clientside(), inventory);
+        super(Hayo.MenuTypes.ELECTRIC_FURNACE,
+                containerId,
+                new SimpleContainer(ClassicMachineBlockEntity.SLOTS),
+                new MachineContainerData.Clientside(),
+                new UpgradableMachineContainerData.Clientside(),
+                inventory);
         this.modeData = DataSlot.standalone();
+        this.addDataSlot(this.modeData);
     }
 
     public ElectricFurnaceMenu(int containerId, ElectricFurnaceBlockEntity entity, Inventory inventory) {
-        super(Hayo.MenuTypes.ELECTRIC_FURNACE, containerId, entity, new MachineContainerData.Serverside(entity), inventory);
+        super(Hayo.MenuTypes.ELECTRIC_FURNACE,
+                containerId,
+                entity,
+                new MachineContainerData.Serverside(entity),
+                new UpgradableMachineContainerData.Serverside(entity),
+                inventory);
         this.modeData = new DataSlot() {
             @Override
             public int get() {
@@ -33,10 +45,11 @@ public class ElectricFurnaceMenu extends ClassicMachineMenu {
 
             }
         };
+        this.addDataSlot(this.modeData);
     }
 
     public ElectricFurnaceMode getModeData() {
-        return ElectricFurnaceMode.values()[Mth.clamp(this.modeData.get(), 0, 2)];
+        return ElectricFurnaceMode.values()[Math.clamp(this.modeData.get(), 0, 2)];
     }
 
     @Override

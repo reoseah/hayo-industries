@@ -17,8 +17,7 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
     public static final int TRANSFER_LIMIT = 32;
     public static final int ENERGY_USE_RATE = 2;
     public static final int DEFAULT_RECIPE_DURATION = 12;
-    public static final int DEFAULT_RECIPE_ENERGY = DEFAULT_RECIPE_DURATION * ENERGY_USE_RATE * 20;
-    public static final int CAPACITY = DEFAULT_RECIPE_ENERGY;
+    public static final int CAPACITY = DEFAULT_RECIPE_DURATION * ENERGY_USE_RATE * 20;
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.COMPRESSOR, pos, state);
@@ -52,7 +51,7 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
 
     @Override
     public int getBaseEnergyCost(@Nullable RecipeHolder<CompressingRecipe> holder) {
-        return holder == null ? DEFAULT_RECIPE_ENERGY : holder.value().energyCost;
+        return holder == null ? CompressingRecipe.DEFAULT_ENERGY : holder.value().energyCost;
     }
 
     @Override

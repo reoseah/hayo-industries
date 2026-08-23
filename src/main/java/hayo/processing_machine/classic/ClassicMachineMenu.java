@@ -5,6 +5,8 @@ import hayo.common.menuslot.ResultSlot;
 import hayo.common.menuslot.TagFilteredSlot;
 import hayo.energy.item.EnergyComponents;
 import hayo.processing_machine.MachineContainerData;
+import hayo.processing_machine.UpgradableMachineBlockEntity;
+import hayo.processing_machine.UpgradableMachineContainerData;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,12 +22,16 @@ import org.jspecify.annotations.Nullable;
 
 public abstract class ClassicMachineMenu extends HayoContainerMenu {
     public final MachineContainerData machineData;
+    public final UpgradableMachineContainerData upgradeData;
 
-    protected ClassicMachineMenu(@Nullable MenuType<?> menuType, int containerId, Container container, MachineContainerData machineData, Inventory inventory) {
+    protected ClassicMachineMenu(@Nullable MenuType<?> menuType, int containerId, Container container, MachineContainerData machineData, UpgradableMachineContainerData upgradeData, Inventory inventory) {
         super(menuType, containerId, container);
 
         this.machineData = machineData;
         this.addDataSlots(this.machineData);
+
+        this.upgradeData = upgradeData;
+        this.addDataSlots(this.upgradeData);
 
         this.addSlot(new Slot(container, ClassicMachineBlockEntity.INPUT, 47, 18));
         this.addSlot(new Slot(container, ClassicMachineBlockEntity.BATTERY, 47, 54));
@@ -53,5 +59,13 @@ public abstract class ClassicMachineMenu extends HayoContainerMenu {
             return this.moveItemStackTo(stack, 1, 2, false);
         }
         return false;
+    }
+
+    public int getRecipeProgressPerTick() {
+        int energyUse = this.machineData.energyUseRate();
+        if (this.upgradeData.hasInductionUpgrade()) {
+            return 1 + (energyUse - 1) * this.upgradeData.inductionHeat() / UpgradableMachineBlockEntity.MAX_INDUCTION_HEAT;
+        }
+        return energyUse;
     }
 }
