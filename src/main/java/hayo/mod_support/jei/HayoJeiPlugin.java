@@ -1,6 +1,7 @@
 package hayo.mod_support.jei;
 
 import hayo.Hayo;
+import hayo.common.HayoGuiSprites;
 import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
 import mezz.jei.api.IModPlugin;
@@ -47,9 +48,9 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new ElectricCookingJeiCategory(ELECTRIC_SMELTING, Component.translatable("hayo.recipe_type.electric_smelting"), drawable.apply(Hayo.Items.ELECTRIC_FURNACE)));
         registration.addRecipeCategories(new ElectricCookingJeiCategory(ELECTRIC_BLASTING, Component.translatable("hayo.recipe_type.electric_blasting"), drawable.apply(Hayo.Items.ELECTRIC_FURNACE)));
         registration.addRecipeCategories(new ElectricCookingJeiCategory(ELECTRIC_SMOKING, Component.translatable("hayo.recipe_type.electric_smoking"), drawable.apply(Hayo.Items.ELECTRIC_FURNACE)));
-        registration.addRecipeCategories(new ClassicMachineRecipeJeiCategory(MACERATING, 2, RecipeArrow.MACERATOR, Component.translatable("hayo.recipe_type.macerating"), drawable.apply(Hayo.Items.MACERATOR)));
-        registration.addRecipeCategories(new ClassicMachineRecipeJeiCategory(COMPRESSING, 2, RecipeArrow.COMPRESSOR, Component.translatable("hayo.recipe_type.compressing"), drawable.apply(Hayo.Items.COMPRESSOR)));
-        registration.addRecipeCategories(new ClassicMachineRecipeJeiCategory(EXTRACTING, 2, RecipeArrow.EXTRACTOR, Component.translatable("hayo.recipe_type.extracting"), drawable.apply(Hayo.Items.EXTRACTOR)));
+        registration.addRecipeCategories(new ClassicMachineRecipeJeiCategory(MACERATING, 2, HayoGuiSprites.MACERATING_ARROW, HayoGuiSprites.MACERATING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.macerating"), drawable.apply(Hayo.Items.MACERATOR)));
+        registration.addRecipeCategories(new ClassicMachineRecipeJeiCategory(COMPRESSING, 2, HayoGuiSprites.COMPRESSING_ARROW, HayoGuiSprites.COMPRESSING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.compressing"), drawable.apply(Hayo.Items.COMPRESSOR)));
+        registration.addRecipeCategories(new ClassicMachineRecipeJeiCategory(EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.extracting"), drawable.apply(Hayo.Items.EXTRACTOR)));
         registration.addRecipeCategories(new MatterGeneratingJeiCategory(drawable.apply(Hayo.Items.MATTER_GENERATOR)));
     }
 

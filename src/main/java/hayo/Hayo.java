@@ -707,10 +707,10 @@ public class Hayo {
 
         public static void initializeClient() {
             MenuScreens.register(GENERATOR, GeneratorScreen::new);
-            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(ELECTRIC_FURNACE, ClassicMachineScreen::createElectricFurnace);
-            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(MACERATOR, ClassicMachineScreen::createMacerator);
-            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(COMPRESSOR, ClassicMachineScreen::createCompressor);
-            MenuScreens.<ClassicMachineMenu, ClassicMachineScreen>register(EXTRACTOR, ClassicMachineScreen::createExtractor);
+            MenuScreens.register(ELECTRIC_FURNACE, ClassicMachineScreen::createElectricFurnace);
+            MenuScreens.register(MACERATOR, ClassicMachineScreen::createMacerator);
+            MenuScreens.register(COMPRESSOR, ClassicMachineScreen::createCompressor);
+            MenuScreens.register(EXTRACTOR, ClassicMachineScreen::createExtractor);
             MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
             MenuScreens.register(ENERGY_STORAGE, EnergyStorageScreen::new);
             MenuScreens.register(BATTERY_BOX, BatteryBoxScreen::new);
@@ -767,7 +767,7 @@ public class Hayo {
 
     public static final class SoundEvents {
         public static final SoundEvent STICKY_RESIN_GATHER = register("sticky_resin_gather");
-        public static final SoundEvent WRENCH = register("wrench");
+        public static final SoundEvent WRENCH_USE = register("wrench_use");
 
         public static void initialize() {
         }

@@ -1,5 +1,6 @@
 package hayo.mod_support.jei;
 
+import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
 import hayo.processing_machine.classic.ElectricFurnaceBlockEntity;
@@ -75,7 +76,7 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
 
         int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(holder.value());
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ElectricFurnaceBlockEntity.ENERGY_USE_RATE / 24)) % 24d);
-        RecipeArrow.blit(graphics, 24, 4, RecipeArrow.DEFAULT, progress, 24);
+        HayoGuiSprites.blitRecipeArrow(graphics, 24, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, progress, energyCost);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
     }

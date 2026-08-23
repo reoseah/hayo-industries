@@ -1,5 +1,6 @@
 package hayo.mod_support.jei;
 
+import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
 import hayo.processing_machine.classic.ClassicMachineRecipe;
@@ -15,6 +16,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -26,14 +28,15 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
 
     private final IRecipeType<? extends RecipeHolder<? extends ClassicMachineRecipe>> type;
     private final int energyUseRate;
-    private final RecipeArrow arrowType;
+    private final Identifier arrow, arrowOverlay;
     private final Component title;
     private final IDrawable icon;
 
-    public ClassicMachineRecipeJeiCategory(IRecipeType<? extends RecipeHolder<? extends ClassicMachineRecipe>> type, int energyUseRate, RecipeArrow arrowType, Component title, IDrawable icon) {
+    public ClassicMachineRecipeJeiCategory(IRecipeType<? extends RecipeHolder<? extends ClassicMachineRecipe>> type, int energyUseRate, Identifier arrow, Identifier arrowOverlay, Component title, IDrawable icon) {
         this.type = type;
         this.energyUseRate = energyUseRate;
-        this.arrowType = arrowType;
+        this.arrow = arrow;
+        this.arrowOverlay = arrowOverlay;
         this.title = title;
         this.icon = icon;
     }
@@ -82,7 +85,7 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
         if (recipe.extraResultChance > 0) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 1) //
                     .setStandardSlotBackground() //
-                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.translatable("hayo.chance.words", recipe.extraResultChance * 100).withStyle(ChatFormatting.YELLOW)))
+                    .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.chance.words", recipe.extraResultChance * 100).withStyle(ChatFormatting.YELLOW)))
                     .add(recipe.result.create().copyWithCount(1));
         }
     }
@@ -94,7 +97,7 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
 
         int energyCost = recipe.energyCost;
         int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / this.energyUseRate / 24)) % 24d);
-        RecipeArrow.blit(graphics, 24, 4, this.arrowType, progress, 24);
+        HayoGuiSprites.blitRecipeArrow(graphics, 24, 4, this.arrow, this.arrowOverlay, progress, energyCost);
 
         var font = Minecraft.getInstance().font;
 

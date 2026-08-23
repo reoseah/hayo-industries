@@ -4,7 +4,6 @@ import hayo.Hayo;
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
-import hayo.mod_support.jei.RecipeArrow;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -62,7 +61,7 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
         HayoGuiSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 109);
 
         EnergyGuiSprites.blitZap(graphics, this.leftPos + 57, this.topPos + 17, this.menu.machineData.energy(), this.menu.machineData.capacity());
-        RecipeArrow.blit(graphics, this.leftPos + 80, this.topPos + 25, RecipeArrow.DEFAULT, this.menu.machineData.recipeProgress(), this.menu.machineData.recipeCost());
+        HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 80, this.topPos + 25, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, this.menu.machineData.recipeProgress(), this.menu.machineData.recipeCost());
 
         this.extractRecipeButtons(graphics, mouseX, mouseY);
         this.extractScrollbar(graphics, mouseX, mouseY);

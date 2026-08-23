@@ -123,7 +123,7 @@
   "tag.item.hayo.compressor_upgrades": "Compressor Upgrades",
   "tag.item.hayo.extractor_upgrades": "Extractor Upgrades",
   "subtitles.hayo.sticky_resin_gather": "Sticky resin gathered",
-  "subtitles.hayo.wrench": "Wrench used",
+  "subtitles.hayo.wrench_use": "Wrench used",
   "hayo.chance.percentage": "%s%%",
   "hayo.chance.words": "%s%% Chance",
   "hayo.duration.seconds": "%s s",

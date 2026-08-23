@@ -8,8 +8,8 @@
       "minecraft:mob/slime/big4"
     ]
   },
-  "wrench": {
-    "subtitle": "subtitles.hayo.wrench",
+  "wrench_use": {
+    "subtitle": "subtitles.hayo.wrench_use",
     "sounds": [
       "hayo:wrench1",
       "hayo:wrench2",

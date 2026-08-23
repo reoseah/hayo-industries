@@ -27,7 +27,7 @@ public class WrenchItem extends Item {
                         : context.getHorizontalDirection().getOpposite();
                 if (currentFacing != playerFacing) {
                     level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.HORIZONTAL_FACING, playerFacing));
-                    level.playSound(context.getPlayer(), pos, Hayo.SoundEvents.WRENCH, SoundSource.PLAYERS);
+                    level.playSound(context.getPlayer(), pos, Hayo.SoundEvents.WRENCH_USE, SoundSource.PLAYERS);
                     return InteractionResult.SUCCESS;
                 }
             } else if (state.hasProperty(BlockStateProperties.FACING)) {
@@ -35,7 +35,7 @@ public class WrenchItem extends Item {
                 var playerFacing = context.getClickedFace();
                 if (currentFacing != playerFacing) {
                     level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.FACING, playerFacing));
-                    level.playSound(context.getPlayer(), pos, Hayo.SoundEvents.WRENCH, SoundSource.PLAYERS);
+                    level.playSound(context.getPlayer(), pos, Hayo.SoundEvents.WRENCH_USE, SoundSource.PLAYERS);
                     return InteractionResult.SUCCESS;
                 }
             }
