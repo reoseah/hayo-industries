@@ -12,6 +12,9 @@ import net.minecraft.world.level.ChunkPos;
 
 public record CableDestroyProgressPayload(ChunkPos chunkPos,
                                           Object2IntMap<BlockPos> destroyProgress) implements CustomPacketPayload {
+    /// ClientLevel#destroyBlockProgress uses this to remove a crack overlay
+    public static final int CLEAR_STAGE = -1;
+
     public static final StreamCodec<FriendlyByteBuf, CableDestroyProgressPayload> STREAM_CODEC = CustomPacketPayload.codec(CableDestroyProgressPayload::write, CableDestroyProgressPayload::read);
 
     public static void receive(CableDestroyProgressPayload payload, ClientPlayNetworking.Context context) {

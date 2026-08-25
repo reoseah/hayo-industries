@@ -15,7 +15,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.EnumMap;
 
 public class EnergyComponents {
-    public static final DataComponentType<EnergyStorage> ENERGY_STORAGE = DataComponentType.<EnergyStorage>builder() //
+    public static final DataComponentType<EnergyStorage> STORES_ENERGY = DataComponentType.<EnergyStorage>builder() //
             .persistent(EnergyStorage.CODEC) //
             .networkSynchronized(EnergyStorage.STREAM_CODEC) //
             .build();
@@ -52,11 +52,11 @@ public class EnergyComponents {
             .build();
 
     public static boolean isStorage(ItemStack stack) {
-        return stack.has(ENERGY_STORAGE);
+        return stack.has(STORES_ENERGY);
     }
 
     public static boolean chargesBlocks(ItemStack stack) {
-        return stack.has(ENERGY_STORAGE) && stack.has(CHARGES_BLOCKS);
+        return stack.has(STORES_ENERGY) && stack.has(CHARGES_BLOCKS);
     }
 
     public static int getEnergy(ItemStack stack) {
@@ -95,12 +95,12 @@ public class EnergyComponents {
     }
 
     public static int getCapacity(ItemStack stack) {
-        var storage = stack.get(ENERGY_STORAGE);
+        var storage = stack.get(STORES_ENERGY);
         return storage != null ? storage.capacity() : 0;
     }
 
     public static int getTransferLimit(ItemStack stack) {
-        var storage = stack.get(ENERGY_STORAGE);
+        var storage = stack.get(STORES_ENERGY);
         return storage != null ? storage.transferLimit() : 0;
     }
 
@@ -108,7 +108,7 @@ public class EnergyComponents {
     ///
     /// @return energy that was added to the item, you probably want to remove it from your energy source
     public static int charge(int energy, ItemStack stack) {
-        var storage = stack.get(ENERGY_STORAGE);
+        var storage = stack.get(STORES_ENERGY);
         if (storage == null) {
             return 0;
         }
@@ -130,7 +130,7 @@ public class EnergyComponents {
         if (!stack.has(CHARGES_BLOCKS)) {
             return 0;
         }
-        var storage = stack.get(ENERGY_STORAGE);
+        var storage = stack.get(STORES_ENERGY);
         if (storage == null) {
             return 0;
         }
@@ -188,8 +188,8 @@ public class EnergyComponents {
     }
 
     public static int moveEnergy(ItemStack source, ItemStack target) {
-        var sourceStorage = source.get(ENERGY_STORAGE);
-        var targetStorage = target.get(ENERGY_STORAGE);
+        var sourceStorage = source.get(STORES_ENERGY);
+        var targetStorage = target.get(STORES_ENERGY);
 
         if (sourceStorage == null || targetStorage == null) {
             return 0;
@@ -218,7 +218,7 @@ public class EnergyComponents {
             if (item.has(CHARGES_INVENTORY)) {
                 continue;
             }
-            var storage = item.get(ENERGY_STORAGE);
+            var storage = item.get(STORES_ENERGY);
             if (storage == null) {
                 continue;
             }

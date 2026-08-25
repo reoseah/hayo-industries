@@ -204,7 +204,7 @@ public class EnergyGridImpl {
                 var chunkPos = dataEntry.getKey();
                 var data = dataEntry.getValue();
 
-                var newDestroyStage = new Object2IntOpenHashMap<BlockPos>();
+                var changes = new Object2IntOpenHashMap<BlockPos>();
 
                 for (var iter = data.destroyTicks.object2IntEntrySet().iterator(); iter.hasNext(); ) {
                     var entry = iter.next();
@@ -213,28 +213,33 @@ public class EnergyGridImpl {
 
                     if (ticks > 100) {
                         iter.remove();
-                        newDestroyStage.put(pos, -1);
+                        if (data.destroyStage.containsKey(pos)) {
+                            data.destroyStage.removeInt(pos);
+                            changes.put(pos, CableDestroyProgressPayload.CLEAR_STAGE);
+                        }
                         this.level.destroyBlock(pos, false);
                     } else if (ticks > 0) {
                         int stage = Math.clamp(ticks / 10, 0, 9);
-                        newDestroyStage.put(pos, stage);
-                    } else {
-                        newDestroyStage.put(pos, -1);
+                        if (!data.destroyStage.containsKey(pos) || data.destroyStage.getInt(pos) != stage) {
+                            data.destroyStage.put(pos, stage);
+                            changes.put(pos, stage);
+                        }
                     }
                 }
 
-                for (var iter = newDestroyStage.object2IntEntrySet().iterator(); iter.hasNext(); ) {
+                // destroyTicks entries can decay to zero and be removed during the
+                // normal tick processing, so clear their old client-side stages
+                for (var iter = data.destroyStage.object2IntEntrySet().iterator(); iter.hasNext(); ) {
                     var entry = iter.next();
                     var pos = entry.getKey();
-                    var stage = entry.getIntValue();
 
-                    if (stage == data.destroyStage.getOrDefault(pos, -1)) {
+                    if (!data.destroyTicks.containsKey(pos)) {
                         iter.remove();
+                        changes.put(pos, CableDestroyProgressPayload.CLEAR_STAGE);
                     }
                 }
-                data.destroyStage = newDestroyStage;
-                if (!newDestroyStage.isEmpty()) {
-                    PlayerLookup.tracking(this.level, chunkPos).forEach(serverPlayer -> ServerPlayNetworking.send(serverPlayer, new CableDestroyProgressPayload(chunkPos, newDestroyStage)));
+                if (!changes.isEmpty()) {
+                    PlayerLookup.tracking(this.level, chunkPos).forEach(serverPlayer -> ServerPlayNetworking.send(serverPlayer, new CableDestroyProgressPayload(chunkPos, changes)));
                 }
             }
         }
@@ -427,6 +432,6 @@ public class EnergyGridImpl {
     public static class TickData {
         public final Object2IntMap<BlockPos> transferPerTick = new Object2IntOpenHashMap<>();
         public final Object2IntMap<BlockPos> destroyTicks = new Object2IntOpenHashMap<>();
-        public Object2IntMap<BlockPos> destroyStage = new Object2IntOpenHashMap<>();
+        public final Object2IntMap<BlockPos> destroyStage = new Object2IntOpenHashMap<>();
     }
 }

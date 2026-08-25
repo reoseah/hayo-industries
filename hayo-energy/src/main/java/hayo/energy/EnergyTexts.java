@@ -14,11 +14,12 @@ public class EnergyTexts {
     public static final String AMOUNT_PER_TICK = "hayo.energy.amount_per_tick";
     public static final String AMOUNT_PER_USE = "hayo.energy.amount_per_use";
     public static final String AMOUNT_AND_AMOUNT_PER_TICK = "hayo.energy.amount_and_amount_per_tick";
-    public static final String AVERAGE_AMOUNT_PER_TICK = "hayo.energy.average_amount_per_tick";
     public static final String AVERAGE_INPUT_PER_TICK = "hayo.energy.average_input_per_tick";
     public static final String AVERAGE_OUTPUT_PER_TICK = "hayo.energy.average_output_per_tick";
     public static final String MAX_AMOUNT = "hayo.energy.max_amount";
-    public static final String MAX_AMOUNT_PER_TICK = "hayo.energy.max_amount_per_tick";
+    public static final String MAX_RATE = "hayo.energy.max_rate";
+    public static final String MAX_OUTPUT = "hayo.energy.max_output";
+    public static final String MAX_TRANSFER = "hayo.energy.max_transfer";
     public static final String AMOUNT_AND_PERCENTAGE = "hayo.energy.amount_and_percentage";
     public static final String AMOUNT_WITH_CAPACITY_AND_PERCENTAGE = "hayo.energy.amount_with_capacity_and_percentage";
     public static final String DURATION_AT_AMOUNT_PER_TICK = "hayo.energy.duration_at_amount_per_tick";
@@ -69,11 +70,6 @@ public class EnergyTexts {
         return Component.translatable(AMOUNT_AND_AMOUNT_PER_TICK, formatAmount(amount), formatAmount(amountPerTick));
     }
 
-    /// E.g.: `+42.5 avg. ε/t`. Round the value to one or two digits before passing it as a parameter.
-    public static MutableComponent averageAmountPerTick(float amount) {
-        return Component.translatable(AVERAGE_AMOUNT_PER_TICK, (amount > 0 ? "+" : "") + amount);
-    }
-
     /// E.g.: `+42.5 avg. ε/t in`.
     public static MutableComponent averageInput(float amount) {
         return Component.translatable(AVERAGE_INPUT_PER_TICK, (amount > 0 ? "+" : "") + amount);
@@ -91,8 +87,18 @@ public class EnergyTexts {
     }
 
     /// E.g.: `512 max. ε/t`.
-    public static MutableComponent maxAmountPerTick(long amount) {
-        return Component.translatable(MAX_AMOUNT_PER_TICK, amount);
+    public static MutableComponent maxRate(long amountPerTick) {
+        return Component.translatable(MAX_RATE, amountPerTick);
+    }
+
+    /// E.g.: `512 ε/t max. output`.
+    public static MutableComponent maxOutput(long amountPerTick) {
+        return Component.translatable(MAX_OUTPUT, amountPerTick);
+    }
+
+    /// E.g.: `512 ε/t max. transfer`.
+    public static MutableComponent maxTransfer(long amountPerTick) {
+        return Component.translatable(MAX_TRANSFER, amountPerTick);
     }
 
     /// E.g.: `5000 ε (50%)`.

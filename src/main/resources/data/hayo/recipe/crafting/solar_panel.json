@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GGG",
+    "SSS",
+    "C#C"
+  ],
+  "key": {
+    "#": "hayo:machine_block",
+    "C": "hayo:circuit",
+    "S": "#c:dusts/silicon",
+    "G": "minecraft:glass"
+  },
+  "result": {
+    "id": "hayo:solar_panel"
+  }
+}

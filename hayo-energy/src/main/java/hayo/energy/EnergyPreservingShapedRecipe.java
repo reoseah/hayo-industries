@@ -40,7 +40,7 @@ public class EnergyPreservingShapedRecipe extends ShapedRecipe {
     public ItemStack assemble(CraftingInput input) {
         var result = super.assemble(input);
 
-        var resultStorage = result.get(EnergyComponents.ENERGY_STORAGE);
+        var resultStorage = result.get(EnergyComponents.STORES_ENERGY);
         if (resultStorage != null) {
             int totalEnergy = 0;
             for (int i = 0; i < input.size(); i++) {

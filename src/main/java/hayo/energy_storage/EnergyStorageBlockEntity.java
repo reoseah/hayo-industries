@@ -28,6 +28,7 @@ public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity
     @Getter
     @Setter
     protected float averageInput;
+
     @Getter
     protected int outputPerTick;
     @Getter

@@ -39,9 +39,9 @@ public class HayoEnergy {
     }
 
     public static void initialize() {
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_storage"), EnergyComponents.ENERGY_STORAGE);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("stores_energy"), EnergyComponents.STORES_ENERGY);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy"), EnergyComponents.ENERGY);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("can_discharge"), EnergyComponents.CHARGES_BLOCKS);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("charges_blocks"), EnergyComponents.CHARGES_BLOCKS);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("charged_attributes"), EnergyComponents.ATTRIBUTES_WHEN_CHARGED);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_tool"), EnergyComponents.ENERGY_TOOL);
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId("energy_armor"), EnergyComponents.ENERGY_ARMOR);
@@ -80,7 +80,7 @@ public class HayoEnergy {
         for (var player : level.players()) {
             var chest = player.getItemBySlot(EquipmentSlot.CHEST);
             if (chest.has(EnergyComponents.CHARGES_INVENTORY)) {
-                var stats = chest.get(EnergyComponents.ENERGY_STORAGE);
+                var stats = chest.get(EnergyComponents.STORES_ENERGY);
                 if (stats == null) continue;
 
                 var limit = stats.transferLimit();
