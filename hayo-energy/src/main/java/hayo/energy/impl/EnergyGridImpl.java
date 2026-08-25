@@ -3,10 +3,10 @@ package hayo.energy.impl;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import hayo.energy.block.ElectricBlock;
-import hayo.energy.block.ElectricCableBlock;
-import hayo.energy.block.ElectricReceiverBlock;
-import hayo.energy.block.ElectricSenderBlock;
+import hayo.energy.block.EnergyHandler;
+import hayo.energy.block.EnergyReceiver;
+import hayo.energy.block.EnergySender;
+import hayo.energy.block.EnergyTransferrer;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -17,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
@@ -36,11 +37,13 @@ public class EnergyGridImpl {
         this.level = level;
     }
 
-    public static EnergyGridImpl get(ServerLevel level) {
+    public static EnergyGridImpl getOrCreate(ServerLevel level) {
         return level.getAttachedOrCreate(HayoEnergy.ENERGY_GRID, () -> new EnergyGridImpl(level));
     }
 
     public int sendEnergy(int amount, BlockPos pos, @Nullable Direction sendingFace) {
+        if (amount <= 0) throw new IllegalArgumentException("Amount must be positive");
+
         var paths = this.pathCache.get(Pair.of(pos, sendingFace));
         if (paths == null) {
             paths = discoverPaths(this.level, pos, sendingFace);
@@ -49,7 +52,7 @@ public class EnergyGridImpl {
 
         int targetsTotal = 0;
 
-        record Target(ElectricReceiverBlock handler, int maxAmount) {
+        record Target(EnergyReceiver handler, int maxAmount) {
         }
         var targets = new HashMap<TransferPath, Target>();
 
@@ -57,7 +60,7 @@ public class EnergyGridImpl {
             var path = iter.next();
             var state = this.level.getBlockState(path.receiver);
 
-            if (state.getBlock() instanceof ElectricReceiverBlock receiver) {
+            if (state.getBlock() instanceof EnergyReceiver receiver) {
                 int maxReceivableAmount = receiver.getReceivableEnergy(this.level, path.receiver, path.receivingFace);
                 int maxSendableAmount = Math.min(amount, maxReceivableAmount);
 
@@ -119,7 +122,11 @@ public class EnergyGridImpl {
     protected void increaseCurrent(TransferPath path, int amount) {
         for (var cablePos : path.cables) {
             var chunkPos = ChunkPos.containing(cablePos);
-            var data = this.tickData.computeIfAbsent(chunkPos, _ -> new TickData());
+            var data = this.tickData.get(chunkPos);
+            if (data == null) {
+                data = new TickData();
+                this.tickData.put(chunkPos, data);
+            }
             data.transferPerTick.put(cablePos, data.transferPerTick.getOrDefault(cablePos, 0) + amount);
         }
     }
@@ -129,7 +136,7 @@ public class EnergyGridImpl {
 
         var data = this.level.getChunk(pos).getAttachedOrCreate(HayoEnergy.ENERGY_GRID_CHUNK);
         var state = this.level.getBlockState(pos);
-        if (state.getBlock() instanceof ElectricBlock) {
+        if (state.getBlock() instanceof EnergyHandler) {
             if (!data.electricBlocks.contains(pos)) {
                 data.electricBlocks.add(pos.immutable());
             }
@@ -164,8 +171,8 @@ public class EnergyGridImpl {
                 var transfer = entry.getIntValue();
                 var state = this.level.getBlockState(pos);
 
-                if (state.getBlock() instanceof ElectricCableBlock cableBlock) {
-                    var limit = cableBlock.getTransferLimit(state);
+                if (state.getBlock() instanceof EnergyTransferrer transferrer) {
+                    var limit = transferrer.getTransferLimit(state);
                     if (transfer > limit) {
                         data.destroyTicks.put(pos, data.destroyTicks.getOrDefault(pos, 0) + 1);
                     }
@@ -176,8 +183,8 @@ public class EnergyGridImpl {
                 var transfer = data.transferPerTick.getOrDefault(pos, 0);
 
                 var state = this.level.getBlockState(pos);
-                if (state.getBlock() instanceof ElectricCableBlock cableBlock) {
-                    var limit = cableBlock.getTransferLimit(state);
+                if (state.getBlock() instanceof EnergyTransferrer transferrer) {
+                    var limit = transferrer.getTransferLimit(state);
                     if (transfer <= limit) {
                         int prevDestroyTicks = data.destroyTicks.getOrDefault(pos, 0);
                         int destroyTicks = Math.max(0, prevDestroyTicks - 1);
@@ -285,10 +292,9 @@ public class EnergyGridImpl {
         } else {
             var pos = start.relative(sendingFace);
             var state = level.getBlockState(pos);
-            if (state.getBlock() instanceof ElectricBlock electricBlock //
-                    && electricBlock.connectsToCables(state, level, pos, sendingFace)) {
+            if (state.getBlock() instanceof EnergyHandler electricBlock && electricBlock.connectsToCables(state, level, pos, sendingFace.getOpposite())) {
                 visited.put(pos, new VisitedPos(1, sendingFace, state));
-                if (state.getBlock() instanceof ElectricCableBlock) {
+                if (state.getBlock() instanceof EnergyTransferrer) {
                     queue.add(pos);
                 }
             }
@@ -304,7 +310,7 @@ public class EnergyGridImpl {
                 if (existingEntry != null) {
                     if (existingEntry.distance > distance) {
                         visited.put(pos, new VisitedPos(distance, direction, existingEntry.state));
-                        if (existingEntry.state.getBlock() instanceof ElectricCableBlock) {
+                        if (existingEntry.state.getBlock() instanceof EnergyTransferrer) {
                             queue.add(pos);
                         }
                     }
@@ -316,12 +322,13 @@ public class EnergyGridImpl {
                 }
 
                 var state = level.getBlockState(pos);
-                if (!(state.getBlock() instanceof ElectricBlock electricBlock) || !electricBlock.connectsToCables(state, level, pos, direction)) {
+                if (!(state.getBlock() instanceof EnergyHandler electricBlock)
+                        || !electricBlock.connectsToCables(state, (LevelReader) level, pos, direction.getOpposite())) {
                     continue;
                 }
 
                 visited.put(pos, new VisitedPos(distance, direction, state));
-                if (state.getBlock() instanceof ElectricCableBlock) {
+                if (state.getBlock() instanceof EnergyTransferrer) {
                     queue.add(pos);
                 }
             }
@@ -331,9 +338,9 @@ public class EnergyGridImpl {
         for (var entry : visited.entrySet()) {
             var pos = entry.getKey();
             var data = entry.getValue();
-            if (!pos.equals(start) //
-                    && data.state.getBlock() instanceof ElectricReceiverBlock receiver //
-                    && receiver.canReceiveEnergy(data.state, level, pos, data.direction) //
+            if (!pos.equals(start)
+                    && data.state.getBlock() instanceof EnergyReceiver receiver
+                    && receiver.canReceiveEnergy(data.state, level, pos, data.direction)
             ) {
                 var cables = new ArrayList<BlockPos>();
                 var ipos = pos.relative(data.direction.getOpposite());
@@ -381,16 +388,16 @@ public class EnergyGridImpl {
                 }
 
                 var state = this.level.getBlockState(pos);
-                if (!(state.getBlock() instanceof ElectricBlock electricBlock) //
-                        || !electricBlock.connectsToCables(state, this.level, pos, direction)) {
+                if (!(state.getBlock() instanceof EnergyHandler electricBlock)
+                        || !electricBlock.connectsToCables(state, (LevelReader) this.level, pos, direction.getOpposite())) {
                     continue;
                 }
 
                 visited.add(pos);
-                if (state.getBlock() instanceof ElectricCableBlock) {
+                if (state.getBlock() instanceof EnergyTransferrer) {
                     queue.add(pos);
                 }
-                if (state.getBlock() instanceof ElectricSenderBlock) {
+                if (state.getBlock() instanceof EnergySender) {
                     this.pathCache.remove(Pair.of(pos, null));
                     for (var side : Direction.values()) {
                         this.pathCache.remove(Pair.of(pos, side));
@@ -402,8 +409,8 @@ public class EnergyGridImpl {
 
     // TODO: doesn't need relatively large BlockPos instances, a position inside a chunk can be represented with a single int
     public static class PersistentData {
-        public static final MapCodec<PersistentData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance //
-                .group(BlockPos.CODEC.listOf().fieldOf("electric_blocks").forGetter(data -> ImmutableList.copyOf(data.electricBlocks))) //
+        public static final MapCodec<PersistentData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+                .group(BlockPos.CODEC.listOf().fieldOf("electric_blocks").forGetter(data -> ImmutableList.copyOf(data.electricBlocks)))
                 .apply(instance, PersistentData::new));
 
         protected final Set<BlockPos> electricBlocks;

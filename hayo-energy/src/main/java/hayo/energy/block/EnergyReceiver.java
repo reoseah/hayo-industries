@@ -5,9 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 
-public interface ElectricReceiverBlock extends ElectricBlock {
+public interface EnergyReceiver extends EnergyHandler {
     default boolean canReceiveEnergy(BlockState state, ServerLevel level, BlockPos pos, Direction side) {
-        return this.connectsToCables(state, level, pos, side);
+        return connectsToCables(state, level, pos, side.getOpposite());
     }
 
     int getReceivableEnergy(ServerLevel level, BlockPos pos, Direction side);

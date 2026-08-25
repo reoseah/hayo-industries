@@ -3,7 +3,7 @@ package hayo.processing_machine.classic;
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
-import hayo.energy.block.ElectricReceiverBlock;
+import hayo.energy.block.EnergyReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class MaceratorBlock extends HorizontalDirectionalElectricalBlock implements ElectricReceiverBlock {
+public class MaceratorBlock extends HorizontalDirectionalElectricalBlock implements EnergyReceiver {
     public static final MapCodec<MaceratorBlock> CODEC = simpleCodec(MaceratorBlock::new);
 
     public MaceratorBlock(Properties properties) {

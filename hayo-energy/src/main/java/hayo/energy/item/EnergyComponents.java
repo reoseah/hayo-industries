@@ -51,7 +51,6 @@ public class EnergyComponents {
             .networkSynchronized(Unit.STREAM_CODEC) //
             .build();
 
-
     public static boolean isStorage(ItemStack stack) {
         return stack.has(ENERGY_STORAGE);
     }
@@ -216,6 +215,9 @@ public class EnergyComponents {
                 continue;
             }
             var item = player.getItemBySlot(slot);
+            if (item.has(CHARGES_INVENTORY)) {
+                continue;
+            }
             var storage = item.get(ENERGY_STORAGE);
             if (storage == null) {
                 continue;

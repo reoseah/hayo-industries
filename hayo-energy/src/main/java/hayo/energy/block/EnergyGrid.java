@@ -12,16 +12,14 @@ public class EnergyGrid {
     }
 
     public static int trySend(int amount, ServerLevel level, BlockPos pos, @Nullable Direction face) {
-        if (amount <= 0) throw new IllegalArgumentException("Amount must be positive");
-
-        return EnergyGridImpl.get(level).sendEnergy(amount, pos, face);
+        return EnergyGridImpl.getOrCreate(level).sendEnergy(amount, pos, face);
     }
 
     public static void addOrUpdate(ServerLevel level, BlockPos pos) {
-        EnergyGridImpl.get(level).addOrUpdate(pos);
+        EnergyGridImpl.getOrCreate(level).addOrUpdate(pos);
     }
 
     public static void remove(ServerLevel level, BlockPos pos) {
-        EnergyGridImpl.get(level).remove(pos);
+        EnergyGridImpl.getOrCreate(level).remove(pos);
     }
 }

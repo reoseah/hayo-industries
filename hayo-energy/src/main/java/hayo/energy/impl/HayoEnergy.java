@@ -57,13 +57,13 @@ public class HayoEnergy {
             if (generated) {
                 return;
             }
-            EnergyGridImpl.get(level).onChunkLoad(chunk);
+            EnergyGridImpl.getOrCreate(level).onChunkLoad(chunk);
         });
         ServerChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
-            EnergyGridImpl.get(level).onChunkUnload(chunk);
+            EnergyGridImpl.getOrCreate(level).onChunkUnload(chunk);
         });
         ServerTickEvents.END_LEVEL_TICK.register(level -> {
-            EnergyGridImpl.get(level).onLevelTickEnd();
+            EnergyGridImpl.getOrCreate(level).onLevelTickEnd();
 
             tickPlayerInventories(level);
         });

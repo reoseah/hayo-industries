@@ -1,7 +1,7 @@
 package hayo.cable;
 
-import hayo.energy.block.ElectricBlock;
-import hayo.energy.block.ElectricCableBlock;
+import hayo.energy.block.EnergyHandler;
+import hayo.energy.block.EnergyTransferrer;
 import hayo.energy.block.EnergyGrid;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,7 +19,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
-public class CableBlock extends Block implements ElectricCableBlock {
+public class CableBlock extends Block implements EnergyTransferrer {
     public final int transferLimit;
     protected final VoxelShape[] shapes;
 
@@ -70,8 +70,9 @@ public class CableBlock extends Block implements ElectricCableBlock {
     protected boolean connectsTo(LevelReader level, BlockPos pos, Direction side) {
         var neighborState = level.getBlockState(pos.relative(side));
         var block = neighborState.getBlock();
-        if (block instanceof ElectricBlock electricBlock) {
-            return electricBlock.connectsToCables(neighborState, level, pos.relative(side), side);
+        if (block instanceof EnergyHandler electricBlock) {
+            BlockPos pos1 = pos.relative(side);
+            return electricBlock.connectsToCables(neighborState, level, pos1, side.getOpposite());
         }
         return false;
     }

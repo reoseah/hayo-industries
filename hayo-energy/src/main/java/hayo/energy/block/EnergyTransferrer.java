@@ -2,6 +2,6 @@ package hayo.energy.block;
 
 import net.minecraft.world.level.block.state.BlockState;
 
-public interface ElectricCableBlock extends ElectricBlock {
+public interface EnergyTransferrer extends EnergyHandler {
     int getTransferLimit(BlockState state);
 }

@@ -3,8 +3,8 @@ package hayo.energy_storage;
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
 import hayo.common.block.DirectionalElectricalBlock;
-import hayo.energy.block.ElectricReceiverBlock;
-import hayo.energy.block.ElectricSenderBlock;
+import hayo.energy.block.EnergyReceiver;
+import hayo.energy.block.EnergySender;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class LapotronEnergyStorageBlock extends DirectionalElectricalBlock implements ElectricReceiverBlock, ElectricSenderBlock {
+public class LapotronEnergyStorageBlock extends DirectionalElectricalBlock implements EnergyReceiver, EnergySender {
     public static final MapCodec<LapotronEnergyStorageBlock> CODEC = simpleCodec(LapotronEnergyStorageBlock::new);
 
     public LapotronEnergyStorageBlock(Properties properties) {

@@ -3,7 +3,7 @@ package hayo.generator;
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
-import hayo.energy.block.ElectricSenderBlock;
+import hayo.energy.block.EnergySender;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class GeneratorBlock extends HorizontalDirectionalElectricalBlock implements ElectricSenderBlock {
+public class GeneratorBlock extends HorizontalDirectionalElectricalBlock implements EnergySender {
     public static final MapCodec<GeneratorBlock> CODEC = simpleCodec(GeneratorBlock::new);
 
     public GeneratorBlock(Properties properties) {

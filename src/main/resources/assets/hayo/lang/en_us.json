@@ -1,6 +1,7 @@
 {
   "itemGroup.hayo": "HAYO Industries",
   "block.hayo.generator": "Generator",
+  "block.hayo.solar_panel": "Solar Panel",
   "block.hayo.electric_furnace": "Electric Furnace",
   "block.hayo.macerator": "Macerator",
   "block.hayo.extractor": "Extractor",

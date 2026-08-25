@@ -3,8 +3,8 @@ package hayo.battery_box;
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
-import hayo.energy.block.ElectricReceiverBlock;
-import hayo.energy.block.ElectricSenderBlock;
+import hayo.energy.block.EnergyReceiver;
+import hayo.energy.block.EnergySender;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jspecify.annotations.Nullable;
 
-public class BatteryBoxBlock extends HorizontalDirectionalElectricalBlock implements ElectricReceiverBlock, ElectricSenderBlock {
+public class BatteryBoxBlock extends HorizontalDirectionalElectricalBlock implements EnergyReceiver, EnergySender {
     public static final MapCodec<BatteryBoxBlock> CODEC = simpleCodec(BatteryBoxBlock::new);
     public static final IntegerProperty BATTERIES = IntegerProperty.create("batteries", 0, 6);
 

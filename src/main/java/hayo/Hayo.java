@@ -21,6 +21,7 @@ import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.*;
 import hayo.rubber_tree.ResinProducingLogBlock;
 import hayo.rubber_tree.RubberFoliagePlacer;
+import hayo.solar_panel.SolarPanelBlock;
 import hayo.wrench.WrenchItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -158,12 +159,16 @@ public class Hayo {
     public static class Blocks {
         private static final BlockBehaviour.Properties MACHINE_PROPS = BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.METAL);
         private static final BlockBehaviour.Properties LIT_MACHINE_PROPS = BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.METAL).lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 11 : 0);
-        public static final Block GENERATOR = register("generator", GeneratorBlock::new, LIT_MACHINE_PROPS);
+
         public static final Block ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlock::new, LIT_MACHINE_PROPS);
         public static final Block MACERATOR = register("macerator", MaceratorBlock::new, LIT_MACHINE_PROPS);
         public static final Block COMPRESSOR = register("compressor", CompressorBlock::new, LIT_MACHINE_PROPS);
         public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, LIT_MACHINE_PROPS);
         public static final Block MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlock::new, LIT_MACHINE_PROPS);
+
+        public static final Block GENERATOR = register("generator", GeneratorBlock::new, LIT_MACHINE_PROPS);
+        public static final Block SOLAR_PANEL = register("solar_panel", SolarPanelBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.COLOR_BLUE));
+
         public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         public static final Block CRYSTAL_ENERGY_STORAGE = register("crystal_energy_storage", CrystalEnergyStorageBlock::new, MACHINE_PROPS);
         public static final Block LAPOTRON_ENERGY_STORAGE = register("lapotron_energy_storage", LapotronEnergyStorageBlock::new, MACHINE_PROPS);
@@ -244,6 +249,7 @@ public class Hayo {
         public static final Item MATTER_GENERATOR = registerBlock(Blocks.MATTER_GENERATOR, new Item.Properties().rarity(Rarity.EPIC));
 
         public static final Item GENERATOR = registerBlock(Blocks.GENERATOR);
+        public static final Item SOLAR_PANEL = registerBlock(Blocks.SOLAR_PANEL);
 
         public static final Item BATTERY_BOX = registerBlock(Blocks.BATTERY_BOX);
         public static final Item CRYSTAL_ENERGY_STORAGE = registerBlock(Blocks.CRYSTAL_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
@@ -499,6 +505,7 @@ public class Hayo {
                 entries.accept(MATTER_GENERATOR);
 
                 entries.accept(GENERATOR);
+                entries.accept(SOLAR_PANEL);
 
                 entries.accept(BATTERY_BOX);
                 entries.accept(CRYSTAL_ENERGY_STORAGE);
