@@ -4,11 +4,11 @@
   "key": {
     "#": "#c:ingots/refined_iron",
     "B": "hayo:battery",
-    "E": "hayo:electric_motor"
+    "C": "hayo:circuit"
   },
   "pattern": [
     " ##",
-    "#E#",
+    "#C#",
     "B# "
   ],
   "result": {

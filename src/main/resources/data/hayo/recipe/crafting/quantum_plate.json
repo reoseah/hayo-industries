@@ -7,10 +7,10 @@
     "DCD"
   ],
   "key": {
-    "#": "#c:dusts/nether_star",
+    "#": "#c:raw_materials/iridium",
     "C": "hayo:composite_plate",
     "A": "hayo:advanced_circuit",
-    "D": "minecraft:diamond"
+    "D": "#c:dusts/diamond"
   },
   "result": {
     "id": "hayo:quantum_plate"

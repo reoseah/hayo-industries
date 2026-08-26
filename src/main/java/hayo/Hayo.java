@@ -437,7 +437,6 @@ public class Hayo {
         public static final Item COPPER_WIRE = registerItem("copper_wire");
         public static final Item CIRCUIT = registerItem("circuit");
         public static final Item ADVANCED_CIRCUIT = registerItem("advanced_circuit", new Item.Properties().rarity(Rarity.RARE));
-        public static final Item ELECTRIC_MOTOR = registerItem("electric_motor");
         public static final Item MIXED_METAL_INGOT = registerItem("mixed_metal_ingot");
         public static final Item COMPOSITE_PLATE = registerItem("composite_plate", new Item.Properties().rarity(Rarity.RARE));
         public static final Item CARBON_MESH = registerItem("carbon_mesh");
@@ -613,7 +612,6 @@ public class Hayo {
                 entries.accept(COPPER_WIRE);
                 entries.accept(CIRCUIT);
                 entries.accept(ADVANCED_CIRCUIT);
-                entries.accept(ELECTRIC_MOTOR);
 
                 entries.accept(MIXED_METAL_INGOT);
                 entries.accept(COMPOSITE_PLATE);

@@ -3,13 +3,13 @@
   "category": "misc",
   "pattern": [
     "FFF",
-    "M#M",
+    "S#S",
     " C "
   ],
   "key": {
     "#": "hayo:machine_block",
     "C": "hayo:circuit",
-    "M": "hayo:electric_motor",
+    "S": "minecraft:stone",
     "F": "minecraft:flint"
   },
   "result": {

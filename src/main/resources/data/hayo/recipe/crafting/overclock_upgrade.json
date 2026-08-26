@@ -2,13 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    " M ",
+    "LRL",
     "X#X"
   ],
   "key": {
     "#": "hayo:circuit",
     "X": "hayo:power_cable",
-    "M": "hayo:electric_motor"
+    "L": "minecraft:lapis_lazuli",
+    "R": "minecraft:redstone"
   },
   "result": {
     "id": "hayo:overclock_upgrade",
