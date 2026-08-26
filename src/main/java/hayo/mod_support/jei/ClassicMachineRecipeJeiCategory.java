@@ -96,8 +96,8 @@ public class ClassicMachineRecipeJeiCategory implements IRecipeCategory<RecipeHo
         EnergyGuiSprites.blitZap(graphics, 1, 20, 10, 14);
 
         int energyCost = recipe.energyCost;
-        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / this.energyUseRate / 24)) % 24d);
-        HayoGuiSprites.blitRecipeArrow(graphics, 24, 4, this.arrow, this.arrowOverlay, progress, energyCost);
+        float fill = (System.currentTimeMillis() / TICK_IN_MILLISECONDS * this.energyUseRate) % energyCost;
+        HayoGuiSprites.blitRecipeArrow(graphics, 24, 4, this.arrow, this.arrowOverlay, (int) fill, energyCost);
 
         var font = Minecraft.getInstance().font;
 

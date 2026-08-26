@@ -3,6 +3,7 @@ package hayo.mod_support.jei;
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
+import hayo.processing_machine.classic.ElectricFurnaceBlockEntity;
 import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
 import hayo.processing_machine.matter_generator.MatterGeneratorBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -69,8 +70,8 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
         EnergyGuiSprites.blitZap(graphics, 3, 6, 10, 14);
 
         int energyCost = recipe.value().energyCost();
-        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / MatterGeneratorBlockEntity.ENERGY_USE_RATE / 24)) % 24d);
-        HayoGuiSprites.blitRecipeArrow(graphics, 22, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, progress, 24);
+        float fill = (System.currentTimeMillis() / TICK_IN_MILLISECONDS * ElectricFurnaceBlockEntity.ENERGY_USE_RATE) % energyCost;
+        HayoGuiSprites.blitRecipeArrow(graphics, 24, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, (int) fill, energyCost);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 1, 28, 0xFF404040, false);
     }

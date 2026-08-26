@@ -15,6 +15,7 @@
     ]
   },
   "mixins": [
+    "hayoenergy.mixin.json"
   ],
   "accessWidener": "hayoenergy.classtweaker"
 }

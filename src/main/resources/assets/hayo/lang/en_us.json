@@ -8,8 +8,8 @@
   "block.hayo.compressor": "Compressor",
   "block.hayo.matter_generator": "Matter Generator",
   "block.hayo.battery_box": "Battery Box",
-  "block.hayo.crystal_energy_storage": "Crystalline Energy Storage",
-  "block.hayo.lapotron_energy_storage": "Lapotron Energy Storage",
+  "block.hayo.crystal_energy_storage": "Energy Storage Unit",
+  "block.hayo.lapotron_energy_storage": "Advanced Energy Storage Unit",
   "block.hayo.power_cable": "Power Cable",
   "block.hayo.quadruple_power_cable": "High-Current Power Cable",
   "block.hayo.energy_bus": "Shielded Energy Bus",
@@ -73,6 +73,7 @@
   "item.hayo.silicon_dust": "Silicon Dust",
   "item.hayo.silicon_bronze_dust": "Silicon Bronze Dust",
   "item.hayo.raw_silicon": "Raw Silicon",
+  "item.hayo.raw_iridium": "Raw Iridium",
   "item.hayo.refined_iron_ingot": "Refined Iron Ingot",
   "item.hayo.silicon_bronze_ingot": "Silicon Bronze Ingot",
   "item.hayo.sticky_resin": "Sticky Resin",
@@ -156,5 +157,6 @@
   "hayo.machine.current_recipe": "Current recipe:",
   "hayo.machine.default_recipe": "Default recipe:",
   "hayo.machine.recipe_cost": " %s ε (%s ε base, %s%%)",
-  "hayo.machine.recipe_duration": " %s s at %s ε/t (%s s base, %s%%)"
+  "hayo.machine.recipe_duration": " %s s at %s ε/t (%s s base, %s%%)",
+  "hayo.damage_reduction": "+%s%% Damage Reduction"
 }

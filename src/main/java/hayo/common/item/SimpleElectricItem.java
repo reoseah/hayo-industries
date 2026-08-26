@@ -1,5 +1,6 @@
 package hayo.common.item;
 
+import hayo.Hayo;
 import hayo.energy.EnergyTexts;
 import hayo.energy.item.EnergyComponents;
 import net.minecraft.ChatFormatting;

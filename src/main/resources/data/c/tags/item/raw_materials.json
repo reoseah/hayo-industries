@@ -1,5 +1,6 @@
 {
   "values": [
-    "#c:raw_materials/silicon"
+    "#c:raw_materials/silicon",
+    "#c:raw_materials/iridium"
   ]
 }

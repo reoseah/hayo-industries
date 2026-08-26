@@ -75,8 +75,8 @@ public class ElectricCookingJeiCategory implements IRecipeCategory<RecipeHolder<
         EnergyGuiSprites.blitZap(graphics, 1, 20, 10, 14);
 
         int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(holder.value());
-        int progress = (int) ((System.currentTimeMillis() / (TICK_IN_MILLISECONDS * energyCost / ElectricFurnaceBlockEntity.ENERGY_USE_RATE / 24)) % 24d);
-        HayoGuiSprites.blitRecipeArrow(graphics, 24, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, progress, energyCost);
+        float fill = (System.currentTimeMillis() / TICK_IN_MILLISECONDS * ElectricFurnaceBlockEntity.ENERGY_USE_RATE) % energyCost;
+        HayoGuiSprites.blitRecipeArrow(graphics, 24, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, (int) fill, energyCost);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 19, 24, 0xFF404040, false);
     }

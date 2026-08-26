@@ -45,12 +45,14 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -229,10 +231,10 @@ public class Hayo {
     }
 
     public static class Components {
-        public static final DataComponentType<Unit> QUANTUM_ARMOR = register("quantum_armor",
-                DataComponentType.<Unit>builder()
-                        .persistent(Unit.CODEC)
-                        .networkSynchronized(Unit.STREAM_CODEC));
+        public static final DataComponentType<Integer> DAMAGE_REDUCTION = register("damage_reduction",
+                DataComponentType.<Integer>builder()
+                        .persistent(ExtraCodecs.intRange(0, 100))
+                        .networkSynchronized(ByteBufCodecs.VAR_INT));
 
         public static <T> DataComponentType<T> register(String name, DataComponentType.Builder<T> builder) {
             return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId(name), builder.build());
@@ -395,7 +397,7 @@ public class Hayo {
         public static final Item NANO_LEGGINGS = registerItem("nano_leggings", SimpleElectricItem::new, nanoArmorProperties(ArmorType.LEGGINGS, 6));
         public static final Item NANO_BOOTS = registerItem("nano_boots", SimpleElectricItem::new, nanoArmorProperties(ArmorType.BOOTS, 3));
 
-        private static Item.Properties quantumArmorProperties(ArmorType type, int armor) {
+        private static Item.Properties quantumArmorProperties(ArmorType type, int armor, int damageReduction) {
             return new Item.Properties()
                     .stacksTo(1)
                     .rarity(Rarity.RARE)
@@ -405,13 +407,13 @@ public class Hayo {
                     .component(EnergyComponents.STORES_ENERGY, new EnergyStorage(1_000_000, 512))
                     .component(EnergyComponents.ATTRIBUTES_WHEN_CHARGED, AttributesWhenCharged.armor(type, armor, 4, 100))
                     .component(EnergyComponents.ENERGY_ARMOR, new EnergyArmor(200))
-                    .component(Components.QUANTUM_ARMOR, Unit.INSTANCE);
+                    .component(Components.DAMAGE_REDUCTION, damageReduction);
         }
 
-        public static final Item QUANTUM_HELMET = registerItem("quantum_helmet", SimpleElectricItem::new, quantumArmorProperties(ArmorType.HELMET, 3));
-        public static final Item QUANTUM_CHESTPLATE = registerItem("quantum_chestplate", SimpleElectricItem::new, quantumArmorProperties(ArmorType.CHESTPLATE, 8));
-        public static final Item QUANTUM_LEGGINGS = registerItem("quantum_leggings", SimpleElectricItem::new, quantumArmorProperties(ArmorType.LEGGINGS, 6));
-        public static final Item QUANTUM_BOOTS = registerItem("quantum_boots", SimpleElectricItem::new, quantumArmorProperties(ArmorType.BOOTS, 3));
+        public static final Item QUANTUM_HELMET = registerItem("quantum_helmet", SimpleElectricItem::new, quantumArmorProperties(ArmorType.HELMET, 3, 15));
+        public static final Item QUANTUM_CHESTPLATE = registerItem("quantum_chestplate", SimpleElectricItem::new, quantumArmorProperties(ArmorType.CHESTPLATE, 8, 60));
+        public static final Item QUANTUM_LEGGINGS = registerItem("quantum_leggings", SimpleElectricItem::new, quantumArmorProperties(ArmorType.LEGGINGS, 6, 40));
+        public static final Item QUANTUM_BOOTS = registerItem("quantum_boots", SimpleElectricItem::new, quantumArmorProperties(ArmorType.BOOTS, 3, 15));
 
         public static final Item WOOD_DUST = registerItem("wood_dust");
         public static final Item STONE_DUST = registerItem("stone_dust");
@@ -426,6 +428,7 @@ public class Hayo {
         public static final Item SILICON_BRONZE_DUST = registerItem("silicon_bronze_dust");
 
         public static final Item RAW_SILICON = registerItem("raw_silicon");
+        public static final Item RAW_IRIDIUM = registerItem("raw_iridium", new Item.Properties().rarity(Rarity.RARE));
         public static final Item REFINED_IRON_INGOT = registerItem("refined_iron_ingot");
         public static final Item SILICON_BRONZE_INGOT = registerItem("silicon_bronze_ingot");
 
@@ -440,7 +443,7 @@ public class Hayo {
         public static final Item CARBON_MESH = registerItem("carbon_mesh");
         public static final Item CARBON_PLATE = registerItem("carbon_plate", new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON).component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
+        public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
         public static final Item CANISTER = registerItem("canister");
         public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food(
@@ -602,6 +605,7 @@ public class Hayo {
                 entries.accept(SILICON_BRONZE_DUST);
 
                 entries.accept(RAW_SILICON);
+                entries.accept(RAW_IRIDIUM);
                 entries.accept(REFINED_IRON_INGOT);
                 entries.accept(SILICON_BRONZE_INGOT);
                 entries.accept(STICKY_RESIN);

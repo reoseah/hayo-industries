@@ -11,14 +11,12 @@ import org.spongepowered.asm.mixin.injection.At;
 public class LivingEntityMixin {
     @ModifyReturnValue(method = "getDamageAfterArmorAbsorb", at = @At("RETURN"))
     public float onApplyArmorToDamage(float original) {
-        int quantumPieces = 0;
+        int totalDamageReduction = 0;
         for (var slot : EquipmentSlotGroup.ARMOR) {
             var item = ((LivingEntity) (Object) this).getItemBySlot(slot);
-            if (item.has(Hayo.Components.QUANTUM_ARMOR)) {
-                quantumPieces++;
-            }
+            totalDamageReduction += item.getOrDefault(Hayo.Components.DAMAGE_REDUCTION, 0);
         }
 
-        return original * (1 - 0.25F * quantumPieces);
+        return original * (100 - totalDamageReduction) / 100;
     }
 }
