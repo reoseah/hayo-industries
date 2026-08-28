@@ -13,12 +13,12 @@ public class MaceratingRecipe extends ClassicMachineRecipe {
     }
 
     @Override
-    public RecipeSerializer<? extends Recipe<SingleRecipeInput>> getSerializer() {
+    public RecipeSerializer<? extends SingleItemRecipe> getSerializer() {
         return Hayo.RecipeSerializers.MACERATING;
     }
 
     @Override
-    public RecipeType<? extends Recipe<SingleRecipeInput>> getType() {
+    public RecipeType<? extends SingleItemRecipe> getType() {
         return Hayo.RecipeTypes.MACERATING;
     }
 }

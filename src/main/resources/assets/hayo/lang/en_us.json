@@ -158,5 +158,6 @@
   "hayo.machine.default_recipe": "Default recipe:",
   "hayo.machine.recipe_cost": " %s ε (%s ε base, %s%%)",
   "hayo.machine.recipe_duration": " %s s at %s ε/t (%s s base, %s%%)",
-  "hayo.damage_reduction": "+%s%% Damage Reduction"
+  "hayo.damage_reduction": "+%s%% Damage Reduction",
+  "hayo.required_upgrade": "Required Upgrade"
 }
