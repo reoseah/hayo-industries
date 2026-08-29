@@ -24,13 +24,13 @@ import net.minecraft.world.item.crafting.SingleItemRecipe;
 public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends SingleItemRecipe>> implements IRecipeCategory<T> {
     public static final IDrawable UPGRADE_SLOT_DRAWABLE = new DrawableSprite(Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.GUI), HayoGuiSprites.UPGRADE_SLOT, 18, 18);
 
-    protected abstract boolean hasCatalyst();
+    protected abstract boolean canHaveCatalyst();
 
     protected ItemStack getCatalyst(T holder) {
         return ItemStack.EMPTY;
     }
 
-    protected abstract boolean hasSecondaryResult();
+    protected abstract boolean canHaveSecondaryResult();
 
     protected abstract int getEnergyCost(T holder);
 
@@ -43,10 +43,10 @@ public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends 
     @Override
     public int getWidth() {
         int width = 82;
-        if (this.hasCatalyst()) {
+        if (this.canHaveCatalyst()) {
             width += 20;
         }
-        if (this.hasSecondaryResult()) {
+        if (this.canHaveSecondaryResult()) {
             width += 20;
         }
         return width;
@@ -59,16 +59,16 @@ public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends 
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, T holder, IFocusGroup focuses) {
-        if (this.hasCatalyst() && !this.getCatalyst(holder).isEmpty()) {
+        if (this.canHaveCatalyst() && !this.getCatalyst(holder).isEmpty()) {
             builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
                     .setBackground(UPGRADE_SLOT_DRAWABLE, -1, -1)
                     .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.required_upgrade").withStyle(ChatFormatting.YELLOW)))
                     .add(this.getCatalyst(holder));
         }
 
-        int x = this.hasCatalyst() ? 20 : 0;
+        int x = this.canHaveCatalyst() ? 20 : 0;
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.inputCount != 1) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
+            builder.addSlot(RecipeIngredientRole.INPUT, x + 1, 1)
                     .setStandardSlotBackground()
                     .addItemStacks(holder.value().input().items().map(item -> new ItemStack(item, machineRecipe.inputCount)).toList());
         } else {
@@ -81,7 +81,7 @@ public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends 
                 .setOutputSlotBackground()
                 .add(holder.value().result().create());
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 1)
+            builder.addSlot(RecipeIngredientRole.OUTPUT, x + 85, 1)
                     .setStandardSlotBackground()
                     .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.chance.words", machineRecipe.extraResultChance * 100).withStyle(ChatFormatting.YELLOW)))
                     .add(holder.value().result().create().copyWithCount(1));
@@ -90,7 +90,7 @@ public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends 
 
     @Override
     public void draw(T holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        int x = this.hasCatalyst() ? 20 : 0;
+        int x = this.canHaveCatalyst() ? 20 : 0;
 
         EnergyGuiSprites.blitZap(graphics, x + 1, 20, 10, 14);
 

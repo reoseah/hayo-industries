@@ -218,6 +218,12 @@ public class EnergyGridImpl {
                             changes.put(pos, CableDestroyProgressPayload.CLEAR_STAGE);
                         }
                         this.level.destroyBlock(pos, false);
+                        this.deletePaths(pos);
+
+                        var chunkData = this.level.getChunk(pos).getAttached(HayoEnergy.ENERGY_GRID_CHUNK);
+                        if (chunkData != null) {
+                            chunkData.electricBlocks.remove(pos);
+                        }
                     } else if (ticks > 0) {
                         int stage = Math.clamp(ticks / 10, 0, 9);
                         if (!data.destroyStage.containsKey(pos) || data.destroyStage.getInt(pos) != stage) {

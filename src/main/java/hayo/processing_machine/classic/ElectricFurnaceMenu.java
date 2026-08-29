@@ -4,7 +4,6 @@ import hayo.Hayo;
 import hayo.processing_machine.MachineContainerData;
 import hayo.processing_machine.UpgradableMachineContainerData;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.DataSlot;
@@ -49,7 +48,7 @@ public class ElectricFurnaceMenu extends ClassicMachineMenu {
     }
 
     public ElectricFurnaceMode getModeData() {
-        return ElectricFurnaceMode.values()[Math.clamp(this.modeData.get(), 0, 2)];
+        return ElectricFurnaceMode.values()[Math.clamp(this.modeData.get(), 0, ElectricFurnaceMode.values().length - 1)];
     }
 
     @Override

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BRB",
+    "XCX"
+  ],
+  "key": {
+    "C": "hayo:advanced_circuit",
+    "X": "hayo:power_cable",
+    "B": "minecraft:glass_bottle",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "id": "hayo:nutrient_dispenser_upgrade"
+  }
+}

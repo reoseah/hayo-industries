@@ -38,7 +38,7 @@ public class ElectricCookingCategory extends SingleItemRecipeCategory<RecipeHold
     }
 
     @Override
-    protected boolean hasCatalyst() {
+    protected boolean canHaveCatalyst() {
         return this.type != HayoJeiPlugin.ELECTRIC_SMELTING;
     }
 
@@ -50,7 +50,7 @@ public class ElectricCookingCategory extends SingleItemRecipeCategory<RecipeHold
     }
 
     @Override
-    protected boolean hasSecondaryResult() {
+    protected boolean canHaveSecondaryResult() {
         return false;
     }
 

@@ -1,5 +1,5 @@
 {
-  "type": "hayo:extracting",
+  "type": "hayo:nutrient_paste_extracting",
   "ingredient": [
     "minecraft:cooked_cod",
     "minecraft:cod",

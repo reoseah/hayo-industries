@@ -39,12 +39,12 @@ public class ClassicMachineRecipeCategory extends SingleItemRecipeCategory<Recip
     }
 
     @Override
-    protected boolean hasCatalyst() {
+    protected boolean canHaveCatalyst() {
         return false;
     }
 
     @Override
-    protected boolean hasSecondaryResult() {
+    protected boolean canHaveSecondaryResult() {
         return true;
     }
 

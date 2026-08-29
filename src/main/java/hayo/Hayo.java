@@ -125,6 +125,7 @@ public class Hayo {
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MACERATING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.COMPRESSING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.EXTRACTING);
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.NUTRIENT_EXTRACTING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
 
         BiomeModifications.create(modId("rubber_trees"))
@@ -500,6 +501,15 @@ public class Hayo {
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
+        public static final Item NUTRIENT_DISPENSER_UPGRADE = registerItem("nutrient_dispenser_upgrade",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.extractor")).withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.use_nutrient_paste_recipes").withStyle(ChatFormatting.DARK_AQUA)
+                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
+        );
+
         public static void initialize() {
             CreativeModeTabEvents.modifyOutputEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
                 entries.accept(ELECTRIC_FURNACE);
@@ -627,6 +637,7 @@ public class Hayo {
                 entries.accept(STREAMLINE_OVERHAUL_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
+                entries.accept(NUTRIENT_DISPENSER_UPGRADE);
             });
         }
 
@@ -746,6 +757,7 @@ public class Hayo {
         public static final RecipeType<MaceratingRecipe> MACERATING = register("macerating");
         public static final RecipeType<CompressingRecipe> COMPRESSING = register("compressing");
         public static final RecipeType<ExtractingRecipe> EXTRACTING = register("extracting");
+        public static final RecipeType<NutrientExtractingRecipe> NUTRIENT_EXTRACTING = register("nutrient_paste_extracting");
         public static final RecipeType<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating");
 
         public static void initialize() {
@@ -767,6 +779,7 @@ public class Hayo {
         public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", ClassicMachineRecipe.createCodec(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.createCodec(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", ClassicMachineRecipe.createCodec(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<NutrientExtractingRecipe> NUTRIENT_EXTRACTING = register("nutrient_paste_extracting", ClassicMachineRecipe.createCodec(NutrientExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
 
         public static void initialize() {

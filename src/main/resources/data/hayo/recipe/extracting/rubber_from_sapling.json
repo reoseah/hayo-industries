@@ -1,0 +1,8 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": "hayo:rubber_sapling",
+  "energy_cost": 600,
+  "result": {
+    "id": "hayo:rubber"
+  }
+}

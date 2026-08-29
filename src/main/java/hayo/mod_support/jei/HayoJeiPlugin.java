@@ -34,6 +34,7 @@ public class HayoJeiPlugin implements IModPlugin {
     public static final IRecipeType<RecipeHolder<MaceratingRecipe>> MACERATING = IRecipeType.create(Hayo.RecipeTypes.MACERATING);
     public static final IRecipeType<RecipeHolder<CompressingRecipe>> COMPRESSING = IRecipeType.create(Hayo.RecipeTypes.COMPRESSING);
     public static final IRecipeType<RecipeHolder<ExtractingRecipe>> EXTRACTING = IRecipeType.create(Hayo.RecipeTypes.EXTRACTING);
+    public static final IRecipeType<RecipeHolder<NutrientExtractingRecipe>> NUTRIENT_EXTRACTING = IRecipeType.create(Hayo.RecipeTypes.NUTRIENT_EXTRACTING);
     public static final IRecipeType<RecipeHolder<MatterGeneratingRecipe>> MATTER_GENERATING = IRecipeType.create(Hayo.RecipeTypes.MATTER_GENERATING);
 
     @Override
@@ -51,6 +52,7 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new ClassicMachineRecipeCategory(MACERATING, 2, HayoGuiSprites.MACERATING_ARROW, HayoGuiSprites.MACERATING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.macerating"), drawable.apply(Hayo.Items.MACERATOR)));
         registration.addRecipeCategories(new ClassicMachineRecipeCategory(COMPRESSING, 2, HayoGuiSprites.COMPRESSING_ARROW, HayoGuiSprites.COMPRESSING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.compressing"), drawable.apply(Hayo.Items.COMPRESSOR)));
         registration.addRecipeCategories(new ClassicMachineRecipeCategory(EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.extracting"), drawable.apply(Hayo.Items.EXTRACTOR)));
+        registration.addRecipeCategories(new CatalyzedMachineRecipeCategory(NUTRIENT_EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.nutrient_extracting"), drawable.apply(Hayo.Items.EXTRACTOR), new ItemStack(Hayo.Items.NUTRIENT_DISPENSER_UPGRADE)));
         registration.addRecipeCategories(new MatterGeneratingJeiCategory(drawable.apply(Hayo.Items.MATTER_GENERATOR)));
     }
 
@@ -65,6 +67,7 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipes(MACERATING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.MACERATING)));
         registration.addRecipes(COMPRESSING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.COMPRESSING)));
         registration.addRecipes(EXTRACTING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.EXTRACTING)));
+        registration.addRecipes(NUTRIENT_EXTRACTING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.NUTRIENT_EXTRACTING)));
         registration.addRecipes(MATTER_GENERATING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING)));
     }
 
@@ -77,6 +80,7 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addCraftingStation(MACERATING, new ItemStack(Hayo.Items.MACERATOR));
         registration.addCraftingStation(COMPRESSING, new ItemStack(Hayo.Items.COMPRESSOR));
         registration.addCraftingStation(EXTRACTING, new ItemStack(Hayo.Items.EXTRACTOR));
+        registration.addCraftingStation(NUTRIENT_EXTRACTING, new ItemStack(Hayo.Items.EXTRACTOR));
         registration.addCraftingStation(MATTER_GENERATING, new ItemStack(Hayo.Items.MATTER_GENERATOR));
     }
 
@@ -122,6 +126,41 @@ public class HayoJeiPlugin implements IModPlugin {
 
         registration.addRecipeTransferHandler(MaceratorMenu.class, Hayo.MenuTypes.MACERATOR, MACERATING, 0, 1, ClassicMachineBlockEntity.SLOTS, 36);
         registration.addRecipeTransferHandler(CompressorMenu.class, Hayo.MenuTypes.COMPRESSOR, COMPRESSING, 0, 1, ClassicMachineBlockEntity.SLOTS, 36);
-        registration.addRecipeTransferHandler(ExtractorMenu.class, Hayo.MenuTypes.EXTRACTOR, EXTRACTING, 0, 1, ClassicMachineBlockEntity.SLOTS, 36);
+        for (var jeiRecipeType : List.of(
+                EXTRACTING,
+                NUTRIENT_EXTRACTING
+        )) {
+            registration.addRecipeTransferHandler(new IRecipeTransferInfo<ExtractorMenu, RecipeHolder<?>>() {
+                @Override
+                public Class<? extends ExtractorMenu> getContainerClass() {
+                    return ExtractorMenu.class;
+                }
+
+                @Override
+                public Optional<MenuType<ExtractorMenu>> getMenuType() {
+                    return Optional.of(Hayo.MenuTypes.EXTRACTOR);
+                }
+
+                @Override
+                public IRecipeType<RecipeHolder<?>> getRecipeType() {
+                    return (IRecipeType<RecipeHolder<?>>) (IRecipeType) jeiRecipeType;
+                }
+
+                @Override
+                public boolean canHandle(ExtractorMenu container, RecipeHolder<?> holder) {
+                    return container.getRecipeType() == holder.value().getType();
+                }
+
+                @Override
+                public List<Slot> getRecipeSlots(ExtractorMenu container, RecipeHolder<?> recipe) {
+                    return container.slots.subList(0, 1);
+                }
+
+                @Override
+                public List<Slot> getInventorySlots(ExtractorMenu container, RecipeHolder<?> recipe) {
+                    return container.slots.subList(container.playerInventory.start(), container.playerInventory.end());
+                }
+            });
+        }
     }
 }

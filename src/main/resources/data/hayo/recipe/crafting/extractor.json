@@ -2,18 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "GMG",
-    "GXG",
-    " # "
+    "B B",
+    "BCB",
+    "X#X"
   ],
   "key": {
     "#": "hayo:machine_block",
-    "M": "minecraft:glass",
-    "X": "hayo:circuit",
-    "G": "minecraft:gold_ingot"
+    "C": "hayo:circuit",
+    "X": "hayo:power_cable",
+    "B": "minecraft:glass_bottle"
   },
   "result": {
-    "id": "hayo:extractor",
-    "count": 1
+    "id": "hayo:extractor"
   }
 }

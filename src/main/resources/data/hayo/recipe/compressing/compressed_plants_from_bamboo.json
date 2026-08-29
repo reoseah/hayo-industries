@@ -1,0 +1,8 @@
+{
+  "type": "hayo:compressing",
+  "ingredient": "minecraft:bamboo",
+  "input_count": 8,
+  "result": {
+    "id": "hayo:compressed_plants"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "type": "hayo:nutrient_paste_extracting",
-  "ingredient": "minecraft:bread",
-  "input_count": 2,
+  "ingredient": "#c:mushrooms",
+  "input_count": 8,
   "energy_cost": 600,
   "result": {
     "id": "hayo:nutrient_paste"

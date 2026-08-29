@@ -95,6 +95,7 @@
   "item.hayo.blasting_upgrade": "Blast Smelting Upgrade",
   "item.hayo.smoking_upgrade": "Artificial Smoking Upgrade",
   "item.hayo.induction_upgrade": "Inductive Heating Upgrade",
+  "item.hayo.nutrient_dispenser_upgrade": "Nutrient Dispenser Upgrade",
   "tag.item.c.wrenches": "Wrenches",
   "tag.item.c.dusts.coal": "Coal Dusts",
   "tag.item.c.dusts.copper": "Copper Dusts",
@@ -159,5 +160,7 @@
   "hayo.machine.recipe_cost": " %s ε (%s ε base, %s%%)",
   "hayo.machine.recipe_duration": " %s s at %s ε/t (%s s base, %s%%)",
   "hayo.damage_reduction": "+%s%% Damage Reduction",
-  "hayo.required_upgrade": "Required Upgrade"
+  "hayo.required_upgrade": "Required Upgrade",
+  "hayo.upgrades.use_nutrient_paste_recipes": " Use Nutrient Paste recipes",
+  "hayo.recipe_type.nutrient_extracting": "Extracting (Nutrient Paste)"
 }

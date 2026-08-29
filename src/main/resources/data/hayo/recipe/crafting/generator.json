@@ -3,8 +3,8 @@
   "category": "misc",
   "pattern": [
     "C",
-    "#",
-    "F"
+    "F",
+    "#"
   ],
   "key": {
     "C": "hayo:circuit",
