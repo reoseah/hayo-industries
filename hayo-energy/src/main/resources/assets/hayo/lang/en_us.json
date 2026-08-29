@@ -7,7 +7,7 @@
   "hayo.energy.average_amount_per_tick": "%s avg. ε/t",
   "hayo.energy.average_input_per_tick": "%s avg. ε/t in",
   "hayo.energy.average_output_per_tick": "%s avg. ε/t out",
-  "hayo.energy.max_amount": "%s max. ε",
+  "hayo.energy.max_amount": "%s ε max.",
   "hayo.energy.max_rate": "%s ε/t max.",
   "hayo.energy.max_output": "%s ε/t max. output",
   "hayo.energy.max_transfer": "%s ε/t max. transfer",

@@ -1,13 +1,18 @@
 package hayo.generator;
 
+import hayo.Hayo;
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.FuelValues;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,5 +55,31 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
                     EnergyTexts.maxAmount(capacity).withStyle(ChatFormatting.GRAY)
             ), Optional.empty(), mouseX, mouseY);
         }
+    }
+
+    @Override
+    protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
+        var fuelValues = FuelValues.vanillaBurnTimes(Minecraft.getInstance().level.registryAccess(), FeatureFlags.DEFAULT_FLAGS);
+        if (fuelValues.isFuel(stack)) {
+            if (stack.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS)) {
+                var tooltip = super.getTooltipFromContainerItem(stack);
+                tooltip.add(Component.empty());
+                tooltip.add(Component.translatable("hayo.generator.disabled_fuel").withStyle(ChatFormatting.RED));
+                return tooltip;
+            } else {
+                var energyValue = fuelValues.burnDuration(stack) * GeneratorBlockEntity.ENERGY_PER_FUEL_TICK;
+
+                var tooltip = super.getTooltipFromContainerItem(stack);
+                tooltip.add(Component.empty());
+                if (stack.count() == 1) {
+                    tooltip.add(Component.translatable("hayo.generator.item_value", energyValue).withStyle(ChatFormatting.DARK_AQUA));
+                } else {
+                    tooltip.add(Component.translatable("hayo.generator.stack_value", energyValue, energyValue * stack.count()).withStyle(ChatFormatting.DARK_AQUA));
+                }
+
+                return tooltip;
+            }
+        }
+        return super.getTooltipFromContainerItem(stack);
     }
 }
