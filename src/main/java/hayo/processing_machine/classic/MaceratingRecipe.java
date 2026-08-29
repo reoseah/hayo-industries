@@ -2,7 +2,10 @@ package hayo.processing_machine.classic;
 
 import hayo.Hayo;
 import net.minecraft.world.item.ItemStackTemplate;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleItemRecipe;
 
 public class MaceratingRecipe extends ClassicMachineRecipe {
     private static final int DEFAULT_DURATION_SECONDS = 10;
