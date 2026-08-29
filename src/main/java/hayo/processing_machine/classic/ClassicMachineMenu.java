@@ -2,7 +2,6 @@ package hayo.processing_machine.classic;
 
 import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
-import hayo.common.menuslot.TagFilteredSlot;
 import hayo.energy.item.EnergyComponents;
 import hayo.processing_machine.MachineContainerData;
 import hayo.processing_machine.UpgradableMachineBlockEntity;
@@ -36,10 +35,10 @@ public abstract class ClassicMachineMenu extends HayoContainerMenu {
         this.addSlot(new Slot(container, ClassicMachineBlockEntity.INPUT, 47, 18));
         this.addSlot(new Slot(container, ClassicMachineBlockEntity.BATTERY, 47, 54));
         this.addSlot(new ResultSlot(container, ClassicMachineBlockEntity.OUTPUT, 107, 36));
-        this.addSlot(new TagFilteredSlot(container, 3, 152, 8, this.getUpgradeTag()));
-        this.addSlot(new TagFilteredSlot(container, 4, 152, 26, this.getUpgradeTag()));
-        this.addSlot(new TagFilteredSlot(container, 5, 152, 44, this.getUpgradeTag()));
-        this.addSlot(new TagFilteredSlot(container, 6, 152, 62, this.getUpgradeTag()));
+        this.addSlot(new MachineUpgradeSlot(container, 3, 152, 8, this.getUpgradeTag(), 3, 6));
+        this.addSlot(new MachineUpgradeSlot(container, 4, 152, 26, this.getUpgradeTag(), 3, 6));
+        this.addSlot(new MachineUpgradeSlot(container, 5, 152, 44, this.getUpgradeTag(), 3, 6));
+        this.addSlot(new MachineUpgradeSlot(container, 6, 152, 62, this.getUpgradeTag(), 3, 6));
         this.addStandardInventorySlots(inventory, 8, 84);
     }
 
