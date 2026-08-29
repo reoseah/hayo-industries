@@ -122,40 +122,40 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
     protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
         var tooltip = super.getTooltipFromContainerItem(stack);
 
-        if (!stack.is(this.menu.getUpgradeTag())) {
-            tooltip.add(Component.empty());
-            tooltip.add(Component.translatable("hayo.machine.not_compatible_uprade").withStyle(ChatFormatting.RED));
-            return tooltip;
-        } else if (stack.is(Hayo.ItemTags.NON_REPEATABLE_UPGRADES) || stack.is(Hayo.ItemTags.MUTUALLY_EXCLUSIVE_UPGRADES)) {
-            boolean hoveringItself = false;
-            boolean repeats = false;
-            boolean conflicts = false;
+        if (stack.is(Hayo.ItemTags.UPGRADES)) {
+            if (!stack.is(this.menu.getUpgradeTag())) {
+                tooltip.add(Component.empty());
+                tooltip.add(Component.translatable("hayo.machine.not_compatible_uprade").withStyle(ChatFormatting.RED));
+            } else if (stack.is(Hayo.ItemTags.NON_REPEATABLE_UPGRADES) || stack.is(Hayo.ItemTags.MUTUALLY_EXCLUSIVE_UPGRADES)) {
+                boolean hoveringItself = false;
+                boolean repeats = false;
+                boolean conflicts = false;
 
-            for (var slot = 3; slot <= 7; slot++) {
-                var installedUpgrade = this.menu.getSlot(slot).getItem();
-                if (stack == installedUpgrade) {
-                    hoveringItself = true;
-                    break;
+                for (var slot = 3; slot <= 7; slot++) {
+                    var installedUpgrade = this.menu.getSlot(slot).getItem();
+                    if (stack == installedUpgrade) {
+                        hoveringItself = true;
+                        break;
+                    }
+
+                    if (installedUpgrade.is(Hayo.ItemTags.NON_REPEATABLE_UPGRADES) && ItemStack.isSameItem(stack, installedUpgrade)) {
+                        repeats = true;
+                    } else if (installedUpgrade.is(Hayo.ItemTags.MUTUALLY_EXCLUSIVE_UPGRADES)) {
+                        conflicts = true;
+                    }
                 }
 
-                if (installedUpgrade.is(Hayo.ItemTags.NON_REPEATABLE_UPGRADES) && ItemStack.isSameItem(stack, installedUpgrade)) {
-                    repeats = true;
-                } else if (installedUpgrade.is(Hayo.ItemTags.MUTUALLY_EXCLUSIVE_UPGRADES)) {
-                    conflicts = true;
-                }
-            }
-
-            if (!hoveringItself) {
-                if (repeats) {
-                    tooltip.add(Component.empty());
-                    tooltip.add(Component.translatable("hayo.machine.already_installed_upgrade").withStyle(ChatFormatting.RED));
-                } else if (conflicts) {
-                    tooltip.add(Component.empty());
-                    tooltip.add(Component.translatable("hayo.machine.conflicts_with_installed_upgrade").withStyle(ChatFormatting.RED));
+                if (!hoveringItself) {
+                    if (repeats) {
+                        tooltip.add(Component.empty());
+                        tooltip.add(Component.translatable("hayo.machine.already_installed_upgrade").withStyle(ChatFormatting.RED));
+                    } else if (conflicts) {
+                        tooltip.add(Component.empty());
+                        tooltip.add(Component.translatable("hayo.machine.conflicts_with_installed_upgrade").withStyle(ChatFormatting.RED));
+                    }
                 }
             }
         }
-
         return tooltip;
     }
 }

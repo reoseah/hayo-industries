@@ -683,6 +683,7 @@ public class Hayo {
         public static final TagKey<Item> FLAK_MATERIALS = TagKey.create(Registries.ITEM, modId("flak_materials"));
         public static final TagKey<Item> DISABLED_GENERATOR_FUELS = TagKey.create(Registries.ITEM, modId("disabled_generator_fuels"));
 
+        public static final TagKey<Item> UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades"));
         public static final TagKey<Item> NON_REPEATABLE_UPGRADES = TagKey.create(Registries.ITEM, modId("non_repeatable_upgrades"));
         public static final TagKey<Item> MUTUALLY_EXCLUSIVE_UPGRADES = TagKey.create(Registries.ITEM, modId("mutually_exclusive_upgrades"));
         public static final TagKey<Item> ELECTRIC_FURNACE_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/electric_furnace"));
