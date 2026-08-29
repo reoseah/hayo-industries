@@ -1,6 +1,7 @@
 {
   "values": [
-    "#hayo:processing_machine_upgrades",
+    "hayo:overclock_upgrade",
+    "hayo:capacitor_upgrade",
     "hayo:blasting_upgrade",
     "hayo:smoking_upgrade",
     "hayo:streamline_overhaul_upgrade"

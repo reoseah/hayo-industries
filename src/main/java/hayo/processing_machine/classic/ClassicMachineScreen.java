@@ -1,6 +1,7 @@
 package hayo.processing_machine.classic;
 
 import com.google.common.collect.Lists;
+import hayo.Hayo;
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
@@ -12,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 
 import java.util.List;
@@ -110,9 +112,50 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
             float duration = Mth.positiveCeilDiv(this.menu.machineData.recipeCost(), this.menu.getRecipeProgressPerTick()) / 20F;
             float defaultDuration = Mth.positiveCeilDiv(this.defaultRecipeCost, this.baseEnergyUse) / 20F;
             float relativeDuration = duration / defaultDuration * 100;
-            components.add(Component.translatable("hayo.machine.recipe_duration", String.format("%.0f", duration), this.menu.getRecipeProgressPerTick(), String.format("%.0f", defaultDuration), String.format("%.0f",relativeDuration)).withStyle(ChatFormatting.GRAY));
+            components.add(Component.translatable("hayo.machine.recipe_duration", String.format("%.0f", duration), this.menu.getRecipeProgressPerTick(), String.format("%.0f", defaultDuration), String.format("%.0f", relativeDuration)).withStyle(ChatFormatting.GRAY));
 
             graphics.setTooltipForNextFrame(this.font, components, Optional.empty(), mouseX, mouseY);
         }
+    }
+
+    @Override
+    protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
+        var tooltip = super.getTooltipFromContainerItem(stack);
+
+        if (!stack.is(this.menu.getUpgradeTag())) {
+            tooltip.add(Component.empty());
+            tooltip.add(Component.translatable("hayo.machine.not_compatible_uprade").withStyle(ChatFormatting.RED));
+            return tooltip;
+        } else if (stack.is(Hayo.ItemTags.NON_REPEATABLE_UPGRADES) || stack.is(Hayo.ItemTags.MUTUALLY_EXCLUSIVE_UPGRADES)) {
+            boolean hoveringItself = false;
+            boolean repeats = false;
+            boolean conflicts = false;
+
+            for (var slot = 3; slot <= 7; slot++) {
+                var installedUpgrade = this.menu.getSlot(slot).getItem();
+                if (stack == installedUpgrade) {
+                    hoveringItself = true;
+                    break;
+                }
+
+                if (installedUpgrade.is(Hayo.ItemTags.NON_REPEATABLE_UPGRADES) && ItemStack.isSameItem(stack, installedUpgrade)) {
+                    repeats = true;
+                } else if (installedUpgrade.is(Hayo.ItemTags.MUTUALLY_EXCLUSIVE_UPGRADES)) {
+                    conflicts = true;
+                }
+            }
+
+            if (!hoveringItself) {
+                if (repeats) {
+                    tooltip.add(Component.empty());
+                    tooltip.add(Component.translatable("hayo.machine.already_installed_upgrade").withStyle(ChatFormatting.RED));
+                } else if (conflicts) {
+                    tooltip.add(Component.empty());
+                    tooltip.add(Component.translatable("hayo.machine.conflicts_with_installed_upgrade").withStyle(ChatFormatting.RED));
+                }
+            }
+        }
+
+        return tooltip;
     }
 }

@@ -683,10 +683,12 @@ public class Hayo {
         public static final TagKey<Item> FLAK_MATERIALS = TagKey.create(Registries.ITEM, modId("flak_materials"));
         public static final TagKey<Item> DISABLED_GENERATOR_FUELS = TagKey.create(Registries.ITEM, modId("disabled_generator_fuels"));
 
-        public static final TagKey<Item> ELECTRIC_FURNACE_UPGRADES = TagKey.create(Registries.ITEM, modId("electric_furnace_upgrades"));
-        public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("macerator_upgrades"));
-        public static final TagKey<Item> COMPRESSOR_UPGRADES = TagKey.create(Registries.ITEM, modId("compressor_upgrades"));
-        public static final TagKey<Item> EXTRACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("extractor_upgrades"));
+        public static final TagKey<Item> NON_REPEATABLE_UPGRADES = TagKey.create(Registries.ITEM, modId("non_repeatable_upgrades"));
+        public static final TagKey<Item> MUTUALLY_EXCLUSIVE_UPGRADES = TagKey.create(Registries.ITEM, modId("mutually_exclusive_upgrades"));
+        public static final TagKey<Item> ELECTRIC_FURNACE_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/electric_furnace"));
+        public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/macerator"));
+        public static final TagKey<Item> COMPRESSOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/compressor"));
+        public static final TagKey<Item> EXTRACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/extractor"));
 
         public static final TagKey<Item> BATTERY_BOX_BATTERIES = TagKey.create(Registries.ITEM, modId("battery_box_batteries"));
     }

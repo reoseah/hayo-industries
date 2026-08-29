@@ -102,7 +102,7 @@ public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends 
         var font = Minecraft.getInstance().font;
         graphics.text(font, EnergyTexts.amount(energyCost), x + 19, 24, 0xFF404040, false);
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
-            var extraChance = Component.translatable("hayo.chance.percentage", String.format("%.0f", 100 * machineRecipe.extraResultChance));
+            var extraChance = Component.translatable("hayo.chance", String.format("%.0f", 100 * machineRecipe.extraResultChance));
             graphics.text(font, extraChance, x + 85, 24, 0xFF404040, false);
         }
     }
