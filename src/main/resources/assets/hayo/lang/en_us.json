@@ -76,6 +76,7 @@
   "item.hayo.raw_iridium": "Raw Iridium",
   "item.hayo.refined_iron_ingot": "Refined Iron Ingot",
   "item.hayo.silicon_bronze_ingot": "Silicon Bronze Ingot",
+  "item.hayo.silicon_bronze_nugget": "Silicon Bronze Nugget",
   "item.hayo.sticky_resin": "Sticky Resin",
   "item.hayo.rubber": "Rubber",
   "item.hayo.copper_wire": "Copper Wire",
@@ -96,6 +97,7 @@
   "item.hayo.smoking_upgrade": "Artificial Smoking Upgrade",
   "item.hayo.induction_upgrade": "Inductive Heating Upgrade",
   "item.hayo.nutrient_dispenser_upgrade": "Nutrient Dispenser Upgrade",
+  "item.hayo.sunnarium_concentrator_upgrade": "Sunnarium Handler Upgrade",
   "tag.item.c.wrenches": "Wrenches",
   "tag.item.c.dusts.coal": "Coal Dusts",
   "tag.item.c.dusts.copper": "Copper Dusts",
@@ -165,5 +167,6 @@
   "hayo.machine.default_recipe": "Default recipe:",
   "hayo.machine.recipe_cost": " %s ε (%s ε base, %s%%)",
   "hayo.machine.recipe_duration": " %s s at %s ε/t (%s s base, %s%%)",
-  "hayo.damage_reduction": "+%s%% Damage Reduction"
+  "hayo.damage_reduction": "+%s%% Damage Reduction",
+  "hayo.upgrades.allows_creating_nether_star": " Allows creating Nether Star"
 }

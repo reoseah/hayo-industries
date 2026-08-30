@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": [
+    "hayo:silicon_bronze_sword",
+    "hayo:silicon_bronze_shovel",
+    "hayo:silicon_bronze_pickaxe",
+    "hayo:silicon_bronze_axe",
+    "hayo:silicon_bronze_hoe"
+  ],
+  "result": {
+    "id": "hayo:silicon_bronze_nugget"
+  }
+}

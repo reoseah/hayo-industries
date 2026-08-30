@@ -2,16 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "B#B",
+    " # ",
     "XCX"
   ],
   "key": {
     "C": "hayo:advanced_circuit",
     "X": "hayo:power_cable",
-    "B": "minecraft:glass_bottle",
-    "#": "minecraft:hopper"
+    "#": "hayo:advanced_machine_block"
   },
   "result": {
-    "id": "hayo:nutrient_dispenser_upgrade"
+    "id": "hayo:streamline_overhaul_upgrade"
   }
 }

@@ -1,9 +1,9 @@
 {
-  "type": "minecraft:blasting",
+  "type": "minecraft:smelting",
   "category": "misc",
-  "cookingtime": 100,
+  "cookingtime": 200,
   "experience": 0.1,
-  "ingredient": "hayo:wrench",
+  "ingredient": "hayo:copper_wire",
   "result": {
     "id": "minecraft:copper_nugget"
   }

@@ -5,6 +5,7 @@ import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
 import hayo.energy.item.EnergyComponents;
 import hayo.processing_machine.MachineContainerData;
+import hayo.processing_machine.classic.MachineUpgradeSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,6 +14,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -38,14 +40,13 @@ public class MatterGeneratorMenu extends HayoContainerMenu {
 
         this.addSlot(new Slot(container, 0, 56, 34));
         this.addSlot(new ResultSlot(container, 1, 116, 26));
+        this.addSlot(new MachineUpgradeSlot(container, 2, 8, 16, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 3));
+        this.addSlot(new MachineUpgradeSlot(container, 3, 8, 34, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 3));
 
         this.addStandardInventorySlots(inventory, 8, 110);
 
         var level = inventory.player.level();
-        this.recipes = level.recipeAccess().getSynchronizedRecipes().getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING)
-                .stream()
-                .sorted((holder1, holder2) -> compare(holder1.value(), holder2.value()))
-                .toList();
+        this.recipes = level.recipeAccess().getSynchronizedRecipes().getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING).stream().sorted((holder1, holder2) -> compare(holder1.value(), holder2.value())).toList();
 
         this.selectedRecipe = (container instanceof MatterGeneratorBlockEntity entity) ? createSelectedIdx(entity, this.recipes) : DataSlot.standalone();
         this.addDataSlot(this.selectedRecipe);
@@ -99,18 +100,25 @@ public class MatterGeneratorMenu extends HayoContainerMenu {
     protected boolean handleQuickMoveFromInventory(ItemStack stack, Player player, int index) {
         if (EnergyComponents.chargesBlocks(stack)) {
             return this.moveItemStackTo(stack, 0, 1, false);
+        } else if (stack.is(Hayo.ItemTags.MATTER_GENERATOR_UPGRADES)) {
+            return this.moveItemStackTo(stack, 2, 3, false);
         }
         return false;
     }
 
     @Override
     public boolean clickMenuButton(Player player, int buttonId) {
-        if (buttonId >= 0 && buttonId < this.recipes.size()) {
+        if (buttonId >= 0 && buttonId < this.recipes.size() && this.recipes.get(buttonId).value().matches(this.createInput(), player.level())) {
             this.selectedRecipe.set(buttonId);
 
             return true;
         }
 
         return super.clickMenuButton(player, buttonId);
+    }
+
+    @NonNull
+    public MatterGeneratorRecipeInput createInput() {
+        return new MatterGeneratorRecipeInput(List.of(this.container.getItem(2), this.container.getItem(3)));
     }
 }

@@ -95,7 +95,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected abstract I createRecipeInput();
 
-    protected abstract boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, I recipeInput);
+    protected abstract boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, I input);
 
     protected abstract void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, I input);
 

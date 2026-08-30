@@ -24,6 +24,7 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
     public static final Identifier RECIPE = Hayo.modId("recipe_button/default");
     public static final Identifier RECIPE_SELECTED = Hayo.modId("recipe_button/selected");
     public static final Identifier RECIPE_HIGHLIGHTED = Hayo.modId("recipe_button/highlighted");
+    public static final Identifier RECIPE_DISABLED = Hayo.modId("recipe_button/disabled");
     public static final Identifier SCROLLER_BACKGROUND = Hayo.modId("scroller/background");
     public static final Identifier SCROLLER = Hayo.modId("scroller/default");
     public static final Identifier SCROLLER_DISABLED = Hayo.modId("scroller/disabled");
@@ -47,6 +48,7 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
     @Override
     public void init() {
         super.init();
+
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 
@@ -58,6 +60,7 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
 
         HayoGuiSprites.blitSlot(graphics, this.leftPos + 55, this.topPos + 33);
         HayoGuiSprites.blitOutputSlot(graphics, this.leftPos + 112, this.topPos + 22);
+        HayoGuiSprites.blitUpgradeSlots(graphics, this.leftPos + 7, this.topPos + 15, 2);
         HayoGuiSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 109);
 
         EnergyGuiSprites.blitZap(graphics, this.leftPos + 57, this.topPos + 17, this.menu.machineData.energy(), this.menu.machineData.capacity());
@@ -70,6 +73,7 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
     protected void extractRecipeButtons(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RECIPE_BACKGROUND, this.leftPos + 8, this.topPos + 58, 2 + 18 * RECIPE_COLUMNS, 2 + 18 * RECIPE_ROWS);
 
+        var input = this.menu.createInput();
         for (int i = this.startIndex; i < this.startIndex + 16 && i < this.menu.recipes.size(); i++) {
             int pos = i - this.startIndex;
 
@@ -77,7 +81,9 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
             int y = this.topPos + 59 + (pos / RECIPE_COLUMNS) * 18;
 
             var sprite = RECIPE;
-            if (i == this.menu.getSelectedRecipe()) {
+            if (!this.menu.recipes.get(i).value().matches(input, this.minecraft.level)) {
+                sprite = RECIPE_DISABLED;
+            } else if (i == this.menu.getSelectedRecipe()) {
                 sprite = RECIPE_SELECTED;
             } else if (mouseX >= x && mouseY >= y && mouseX < x + 18 && mouseY < y + 18) {
                 sprite = RECIPE_HIGHLIGHTED;

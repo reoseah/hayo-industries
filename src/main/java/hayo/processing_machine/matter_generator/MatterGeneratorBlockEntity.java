@@ -22,9 +22,9 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGeneratingRecipe, EmptyRecipeInput> {
+public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGeneratingRecipe, MatterGeneratorRecipeInput> {
     public static final int CAPACITY = 10000, TRANSFER_LIMIT = 128, ENERGY_USE_RATE = 100;
-    public static final int SLOTS = 2, BATTERY = 0, OUTPUT = 1;
+    public static final int SLOTS = 4, BATTERY = 0, OUTPUT = 1, FIRST_UPGRADE = 2, UPGRADES = 2;
 
     public @Nullable Identifier selectedRecipeId;
 
@@ -74,8 +74,8 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
     }
 
     @Override
-    protected EmptyRecipeInput createRecipeInput() {
-        return EmptyRecipeInput.INSTANCE;
+    protected MatterGeneratorRecipeInput createRecipeInput() {
+        return new MatterGeneratorRecipeInput(this.stacks.subList(FIRST_UPGRADE, FIRST_UPGRADE + UPGRADES));
     }
 
     @Override
@@ -98,26 +98,29 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
 
     @SuppressWarnings("unchecked")
     @Override
-    public @Nullable RecipeHolder<MatterGeneratingRecipe> findMatchingRecipe(ServerLevel level, EmptyRecipeInput input) {
+    public @Nullable RecipeHolder<MatterGeneratingRecipe> findMatchingRecipe(ServerLevel level, MatterGeneratorRecipeInput input) {
         if (this.selectedRecipeId == null) {
             return null;
         }
-        if (this.lastRecipe != null) {
+        if (this.lastRecipe != null && this.lastRecipe.value().matches(input, level)) {
             return this.lastRecipe;
         }
-        return this.lastRecipe = (RecipeHolder<MatterGeneratingRecipe>) level.recipeAccess() //
-                .byKey(ResourceKey.create(Registries.RECIPE, this.selectedRecipeId)) //
-                .filter(holder -> holder.value().getType() == Hayo.RecipeTypes.MATTER_GENERATING) //
+        return this.lastRecipe = (RecipeHolder<MatterGeneratingRecipe>) level.recipeAccess()
+                .byKey(ResourceKey.create(Registries.RECIPE, this.selectedRecipeId))
+                .filter(holder -> holder.value().getType() == Hayo.RecipeTypes.MATTER_GENERATING)
+                .filter(holder -> ((MatterGeneratingRecipe) holder.value()).matches(input, level))
                 .orElse(null);
     }
 
     @Override
-    protected boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<MatterGeneratingRecipe> recipe, EmptyRecipeInput recipeInput) {
-        return recipe != null && this.canInsertToSlot(recipe.value().result().create(), OUTPUT);
+    protected boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<MatterGeneratingRecipe> recipe, MatterGeneratorRecipeInput input) {
+        return recipe != null
+                && recipe.value().matches(input, this.level)
+                && this.canInsertToSlot(recipe.value().result().create(), OUTPUT);
     }
 
     @Override
-    protected void craft(RegistryAccess registryAccess, RecipeHolder<MatterGeneratingRecipe> recipe, EmptyRecipeInput input) {
+    protected void craft(RegistryAccess registryAccess, RecipeHolder<MatterGeneratingRecipe> recipe, MatterGeneratorRecipeInput input) {
         var recipeOutput = recipe.value().assemble(input);
         var outputStack = this.stacks.get(OUTPUT);
         if (outputStack.isEmpty()) {

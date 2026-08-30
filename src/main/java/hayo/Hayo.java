@@ -54,17 +54,13 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Tool;
-import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -326,6 +322,7 @@ public class Hayo {
                     .component(EnergyComponents.STORES_ENERGY, new EnergyStorage(capacity, transferLimit))
                     .component(EnergyComponents.CHARGES_BLOCKS, Unit.INSTANCE);
         }
+
         public static final Item BATTERY = registerItem("battery", SimpleElectricItem::new, createBatteryProperties(10_000, 32));
         public static final Item ENERGY_CRYSTAL = registerItem("energy_crystal", SimpleElectricItem::new, createBatteryProperties(100_000, 128));
         public static final Item LAPOTRON_CRYSTAL = registerItem("lapotron_crystal", SimpleElectricItem::new, createBatteryProperties(1_000_000, 512).rarity(Rarity.RARE));
@@ -432,6 +429,7 @@ public class Hayo {
         public static final Item RAW_IRIDIUM = registerItem("raw_iridium", new Item.Properties().rarity(Rarity.RARE));
         public static final Item REFINED_IRON_INGOT = registerItem("refined_iron_ingot");
         public static final Item SILICON_BRONZE_INGOT = registerItem("silicon_bronze_ingot");
+        public static final Item SILICON_BRONZE_NUGGET = registerItem("silicon_bronze_nugget");
 
         public static final Item STICKY_RESIN = registerItem("sticky_resin");
         public static final Item RUBBER = registerItem("rubber");
@@ -446,12 +444,7 @@ public class Hayo {
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
         public static final Item CANISTER = registerItem("canister");
-        public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food(
-                new FoodProperties(4, 8F, false),
-                Consumable.builder().onConsume(
-                        new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.HUNGER, 300), 0.15F)
-                ).build())
-        );
+        public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food(new FoodProperties(4, 8F, false)));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade",
                 props -> new ItemWithTooltip(
@@ -507,6 +500,15 @@ public class Hayo {
                         Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.extractor")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.use_nutrient_paste_recipes").withStyle(ChatFormatting.DARK_AQUA)
+                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
+        );
+
+        public static final Item SUNNARIUM_CONCENTRATOR_UPGRADE = registerItem("sunnarium_concentrator_upgrade",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.matter_generator")).withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.allows_creating_nether_star").withStyle(ChatFormatting.DARK_AQUA)
                 ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
 
@@ -617,12 +619,13 @@ public class Hayo {
                 entries.accept(RAW_IRIDIUM);
                 entries.accept(REFINED_IRON_INGOT);
                 entries.accept(SILICON_BRONZE_INGOT);
+                entries.accept(SILICON_BRONZE_NUGGET);
+
                 entries.accept(STICKY_RESIN);
                 entries.accept(RUBBER);
                 entries.accept(COPPER_WIRE);
                 entries.accept(CIRCUIT);
                 entries.accept(ADVANCED_CIRCUIT);
-
                 entries.accept(MIXED_METAL_INGOT);
                 entries.accept(COMPOSITE_PLATE);
                 entries.accept(CARBON_MESH);
@@ -638,6 +641,7 @@ public class Hayo {
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
                 entries.accept(NUTRIENT_DISPENSER_UPGRADE);
+                entries.accept(SUNNARIUM_CONCENTRATOR_UPGRADE);
             });
         }
 
@@ -690,6 +694,7 @@ public class Hayo {
         public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/macerator"));
         public static final TagKey<Item> COMPRESSOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/compressor"));
         public static final TagKey<Item> EXTRACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/extractor"));
+        public static final TagKey<Item> MATTER_GENERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/matter_generator"));
 
         public static final TagKey<Item> BATTERY_BOX_BATTERIES = TagKey.create(Registries.ITEM, modId("battery_box_batteries"));
     }

@@ -3,17 +3,17 @@ package hayo.processing_machine.matter_generator;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 
-public enum EmptyRecipeInput implements RecipeInput {
-    INSTANCE;
+import java.util.List;
 
+public record MatterGeneratorRecipeInput(List<ItemStack> upgrades) implements RecipeInput {
     @Override
     public ItemStack getItem(int index) {
-        return ItemStack.EMPTY;
+        return this.upgrades.get(index);
     }
 
     @Override
     public int size() {
-        return 0;
+        return this.upgrades.size();
     }
 
     @Override
