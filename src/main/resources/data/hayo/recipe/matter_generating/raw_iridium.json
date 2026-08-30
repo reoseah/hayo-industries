@@ -1,0 +1,7 @@
+{
+  "type": "hayo:matter_generating",
+  "energy_cost": 1000000,
+  "result": {
+    "id": "hayo:raw_iridium"
+  }
+}

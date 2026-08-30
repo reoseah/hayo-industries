@@ -190,11 +190,15 @@ public class Hayo {
         public static final Block RUBBER_SLAB = register("rubber_slab", SlabBlock::new, RUBBER_PROPERTIES);
         public static final Block RUBBER_DOOR = register("rubber_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
 
+        public static final Block IRIDIUM_ORE = register("iridium_ore", Block::new, BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.DIAMOND_ORE));
+        public static final Block DEEPSLATE_IRIDIUM_ORE = register("deepslate_iridium_ore", Block::new, BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.DEEPSLATE_DIAMOND_ORE));
+
         public static final Block MACHINE_BLOCK = register("machine_block", Block::new, MACHINE_PROPS);
         public static final Block ADVANCED_MACHINE_BLOCK = register("advanced_machine_block", Block::new, BlockBehaviour.Properties.of().strength(15F).sound(SoundType.METAL).mapColor(MapColor.METAL));
         public static final Block REFINED_IRON_BLOCK = register("refined_iron_block", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.METAL).mapColor(MapColor.METAL));
         public static final Block SILICON_BRONZE_BLOCK = register("silicon_bronze_block", Block::new, BlockBehaviour.Properties.of().strength(3F, 15F).sound(SoundType.METAL).mapColor(MapColor.COLOR_ORANGE));
         public static final Block RAW_SILICON_BLOCK = register("raw_silicon_block", Block::new, BlockBehaviour.Properties.of().strength(3F).mapColor(MapColor.COLOR_BLACK));
+        public static final Block RAW_IRIDIUM_BLOCK = register("raw_iridium_block", Block::new, BlockBehaviour.Properties.of().strength(3F).mapColor(MapColor.SNOW));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         public static final Block CHIPBOARD_DOOR = register("chipboard_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
@@ -273,11 +277,15 @@ public class Hayo {
         public static final Item RUBBER_SLAB = registerBlock(Blocks.RUBBER_SLAB);
         public static final Item RUBBER_DOOR = registerBlock(Blocks.RUBBER_DOOR);
 
+        public static final Item IRIDIUM_ORE = registerBlock(Blocks.IRIDIUM_ORE);
+        public static final Item DEEPSLATE_IRIDIUM_ORE = registerBlock(Blocks.DEEPSLATE_IRIDIUM_ORE);
+
         public static final Item MACHINE_BLOCK = registerBlock(Blocks.MACHINE_BLOCK);
         public static final Item ADVANCED_MACHINE_BLOCK = registerBlock(Blocks.ADVANCED_MACHINE_BLOCK);
         public static final Item REFINED_IRON_BLOCK = registerBlock(Blocks.REFINED_IRON_BLOCK);
         public static final Item SILICON_BRONZE_BLOCK = registerBlock(Blocks.SILICON_BRONZE_BLOCK);
         public static final Item RAW_SILICON_BLOCK = registerBlock(Blocks.RAW_SILICON_BLOCK);
+        public static final Item RAW_IRIDIUM_BLOCK = registerBlock(Blocks.RAW_IRIDIUM_BLOCK);
 
         public static final Item CHIPBOARD = registerBlock(Blocks.CHIPBOARD);
         public static final Item CHIPBOARD_DOOR = registerBlock(Blocks.CHIPBOARD_DOOR);
@@ -543,12 +551,17 @@ public class Hayo {
                 entries.accept(RUBBER_SLAB);
                 entries.accept(RUBBER_DOOR);
 
+                entries.accept(IRIDIUM_ORE);
+                entries.accept(DEEPSLATE_IRIDIUM_ORE);
+
                 entries.accept(MACHINE_BLOCK);
                 entries.accept(ADVANCED_MACHINE_BLOCK);
                 entries.accept(REFINED_IRON_BLOCK);
                 entries.accept(SILICON_BRONZE_BLOCK);
                 entries.accept(GLAZED_REINFORCED_STONE);
                 entries.accept(RAW_SILICON_BLOCK);
+                entries.accept(RAW_IRIDIUM_BLOCK);
+
                 entries.accept(CHIPBOARD);
                 entries.accept(CHIPBOARD_DOOR);
                 entries.accept(REINFORCED_STONE);
