@@ -1,0 +1,9 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "minecraft:heavy_weighted_pressure_plate",
+  "energy_cost": 400,
+  "result": {
+    "id": "hayo:iron_dust",
+    "count": 2
+  }
+}

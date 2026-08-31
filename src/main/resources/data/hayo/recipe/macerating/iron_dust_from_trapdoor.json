@@ -1,0 +1,9 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "minecraft:bucket",
+  "energy_cost": 400,
+  "result": {
+    "id": "hayo:iron_dust",
+    "count": 4
+  }
+}

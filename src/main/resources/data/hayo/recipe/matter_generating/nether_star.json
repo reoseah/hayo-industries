@@ -3,6 +3,6 @@
   "energy_cost": 10000000,
   "required_upgrade": "hayo:sunnarium_concentrator_upgrade",
   "result": {
-    "id": "hayo:nether_star_dust"
+    "id": "minecraft:nether_star"
   }
 }

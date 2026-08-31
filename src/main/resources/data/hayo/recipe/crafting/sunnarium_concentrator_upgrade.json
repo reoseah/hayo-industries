@@ -8,7 +8,7 @@
   "key": {
     "#": "hayo:advanced_circuit",
     "X": "hayo:power_cable",
-    "N": "#c:dusts/nether_star"
+    "N": "minecraft:nether_star"
   },
   "result": {
     "id": "hayo:sunnarium_concentrator_upgrade"

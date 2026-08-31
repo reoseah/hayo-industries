@@ -1,9 +1,0 @@
-{
-  "type": "hayo:compressing",
-  "ingredient": "hayo:nether_star_dust",
-  "energy_cost": 480,
-  "result": {
-    "id": "minecraft:nether_star",
-    "count": 1
-  }
-}

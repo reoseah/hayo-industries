@@ -1,8 +1,0 @@
-{
-  "type": "hayo:macerating",
-  "ingredient": "#c:nether_stars",
-  "energy_cost": 400,
-  "result": {
-    "id": "hayo:nether_star_dust"
-  }
-}

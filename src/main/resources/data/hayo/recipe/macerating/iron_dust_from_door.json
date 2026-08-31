@@ -1,0 +1,9 @@
+{
+  "type": "hayo:macerating",
+  "ingredient": "minecraft:iron_door",
+  "energy_cost": 400,
+  "result": {
+    "id": "hayo:iron_dust",
+    "count": 2
+  }
+}

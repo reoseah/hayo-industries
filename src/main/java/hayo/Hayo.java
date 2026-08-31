@@ -429,7 +429,6 @@ public class Hayo {
         public static final Item GOLD_DUST = registerItem("gold_dust");
         public static final Item DIAMOND_DUST = registerItem("diamond_dust");
         public static final Item ENDER_PEARL_DUST = registerItem("ender_pearl_dust");
-        public static final Item NETHER_STAR_DUST = registerItem("nether_star_dust", new Item.Properties().component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true).rarity(Rarity.UNCOMMON));
         public static final Item SILICON_DUST = registerItem("silicon_dust");
         public static final Item SILICON_BRONZE_DUST = registerItem("silicon_bronze_dust");
 
@@ -624,7 +623,6 @@ public class Hayo {
                 entries.accept(GOLD_DUST);
                 entries.accept(DIAMOND_DUST);
                 entries.accept(ENDER_PEARL_DUST);
-                entries.accept(NETHER_STAR_DUST);
                 entries.accept(SILICON_DUST);
                 entries.accept(SILICON_BRONZE_DUST);
 
