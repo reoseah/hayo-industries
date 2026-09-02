@@ -69,11 +69,7 @@ public class EnergyComponents {
         return stack;
     }
 
-    public static ItemStack withEnergy(Item item, int amount) {
-        return setEnergy(new ItemStack(item), amount);
-    }
-
-    public static ItemStack withFullEnergy(Item item) {
+    public static ItemStack chargedStack(Item item) {
         var stack = new ItemStack(item);
         return setEnergy(stack, getCapacity(stack));
     }

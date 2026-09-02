@@ -1,0 +1,8 @@
+{
+  "type": "hayo:matter_generating",
+  "energy_cost": 200000,
+  "required_upgrade": "hayo:overworld_life_crystal_memory",
+  "result": {
+    "id": "minecraft:cocoa_beans"
+  }
+}

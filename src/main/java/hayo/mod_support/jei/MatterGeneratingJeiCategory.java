@@ -19,10 +19,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+
+import static hayo.mod_support.jei.SingleItemRecipeCategory.UPGRADE_SLOT_DRAWABLE;
 
 public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder<MatterGeneratingRecipe>> {
     private static final int TICK_IN_MILLISECONDS = 50;
@@ -45,7 +48,7 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
 
     @Override
     public int getWidth() {
-        return 80;
+        return 80 + 20;
     }
 
     @Override
@@ -59,27 +62,34 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<MatterGeneratingRecipe> recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 59, 5) //
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<MatterGeneratingRecipe> holder, IFocusGroup focuses) {
+        if (holder.value().requiredUpgrade().value() != Items.AIR) {
+            builder.addSlot(RecipeIngredientRole.INPUT, 1, 5)
+                    .setBackground(UPGRADE_SLOT_DRAWABLE, -1, -1)
+                    .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.required_upgrade").withStyle(ChatFormatting.YELLOW)))
+                    .add(holder.value().requiredUpgrade().value());
+        }
+
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 20+59, 5) //
                 .setOutputSlotBackground() //
-                .add(recipe.value().result().create());
+                .add(holder.value().result().create());
     }
 
     @Override
-    public void draw(RecipeHolder<MatterGeneratingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        EnergyGuiSprites.blitZap(graphics, 3, 6, 10, 14);
+    public void draw(RecipeHolder<MatterGeneratingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+        EnergyGuiSprites.blitZap(graphics, 20 + 3, 5, 10, 14);
 
-        int energyCost = recipe.value().energyCost();
+        int energyCost = holder.value().energyCost();
         float fill = (System.currentTimeMillis() / TICK_IN_MILLISECONDS * ElectricFurnaceBlockEntity.ENERGY_USE_RATE) % energyCost;
-        HayoGuiSprites.blitRecipeArrow(graphics, 24, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, (int) fill, energyCost);
+        HayoGuiSprites.blitRecipeArrow(graphics, 20 + 24, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, (int) fill, energyCost);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 1, 28, 0xFF404040, false);
     }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<MatterGeneratingRecipe> holder, IRecipeSlotsView slots, double mouseX, double mouseY) {
-        if (mouseX >= 3 && mouseX <= 3 + 14 && mouseY >= 6 && mouseY <= 6 + 14 //
-                || mouseX > 22 && mouseX <= 22 + 24 && mouseY > 4 && mouseY <= 4 + 16) {
+        if (mouseX >= 20 + 3 && mouseX <= 20 + 3 + 14 && mouseY >= 5 && mouseY <= 5 + 14 //
+                || mouseX > 20 + 22 && mouseX <= 20 + 22 + 24 && mouseY > 4 && mouseY <= 4 + 16) {
             var recipe = holder.value();
             float duration = Mth.positiveCeilDiv(recipe.energyCost(), MatterGeneratorBlockEntity.ENERGY_USE_RATE) / 20F;
 

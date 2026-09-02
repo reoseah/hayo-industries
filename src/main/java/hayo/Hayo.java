@@ -124,15 +124,27 @@ public class Hayo {
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.NUTRIENT_EXTRACTING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
 
-        BiomeModifications.create(modId("rubber_trees"))
-                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_FOREST)
-                                .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
-                                .or(BiomeSelectors.tag(BiomeTags.IS_JUNGLE))
-                                .or(BiomeSelectors.includeByKey(Biomes.SWAMP)),
-                        (_, modification) -> {
-                            var feature = modKey(Registries.PLACED_FEATURE, "rubber_tree_patch");
-                            modification.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, feature);
-                        });
+        BiomeModifications.create(modId("rubber_trees")).add(
+                ModificationPhase.ADDITIONS,
+                BiomeSelectors.tag(BiomeTags.IS_FOREST)
+                        .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_JUNGLE))
+                        .or(BiomeSelectors.includeByKey(Biomes.SWAMP)),
+                (_, modificationCtx) -> {
+                    var feature = modKey(Registries.PLACED_FEATURE, "rubber_tree_patch");
+                    modificationCtx.getGenerationSettings()
+                            .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, feature);
+                }
+        );
+        BiomeModifications.create(modId("iridium_ore")).add(
+                ModificationPhase.ADDITIONS,
+                BiomeSelectors.tag(BiomeTags.IS_OVERWORLD),
+                (_, modificationCtx) -> {
+                    var feature = modKey(Registries.PLACED_FEATURE, "iridium_ore");
+                    modificationCtx.getGenerationSettings()
+                            .addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, feature);
+                }
+        );
     }
 
     @Environment(EnvType.CLIENT)
@@ -460,7 +472,8 @@ public class Hayo {
                         Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.recipe_cost", "+25%").withStyle(ChatFormatting.DARK_AQUA)
-                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade",
                 props -> new ItemWithTooltip(
@@ -468,7 +481,8 @@ public class Hayo {
                         Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.energy_capacity", "+10000").withStyle(ChatFormatting.DARK_AQUA)
-                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item STREAMLINE_OVERHAUL_UPGRADE = registerItem("streamline_overhaul_upgrade",
                 props -> new ItemWithTooltip(
@@ -480,7 +494,8 @@ public class Hayo {
                         Component.translatable("hayo.upgrades.heat2").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.heat3").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.heat4").withStyle(ChatFormatting.DARK_AQUA)
-                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade",
                 props -> new ItemWithTooltip(
@@ -489,7 +504,8 @@ public class Hayo {
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.electric_furnace")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.use_blasting_recipes").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA)
-                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
         public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade",
                 props -> new ItemWithTooltip(
@@ -507,7 +523,8 @@ public class Hayo {
                         Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.extractor")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.use_nutrient_paste_recipes").withStyle(ChatFormatting.DARK_AQUA)
-                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
 
         public static final Item SUNNARIUM_CONCENTRATOR_UPGRADE = registerItem("sunnarium_concentrator_upgrade",
@@ -516,7 +533,17 @@ public class Hayo {
                         Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.matter_generator")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.allows_creating_nether_star").withStyle(ChatFormatting.DARK_AQUA)
-                ), new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
+        );
+        public static final Item OVERWORLD_LIFE_CRYSTAL_MEMORY = registerItem("overworld_life_crystal_memory",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.matter_generator")).withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.allows_creating_overworld_plants").withStyle(ChatFormatting.DARK_AQUA)
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
 
         public static void initialize() {
@@ -579,41 +606,41 @@ public class Hayo {
                 entries.accept(FLAK_CHESTPLATE);
 
                 entries.accept(BATTERY);
-                entries.accept(EnergyComponents.withFullEnergy(BATTERY));
+                entries.accept(EnergyComponents.chargedStack(BATTERY));
                 entries.accept(ENERGY_CRYSTAL);
-                entries.accept(EnergyComponents.withFullEnergy(ENERGY_CRYSTAL));
+                entries.accept(EnergyComponents.chargedStack(ENERGY_CRYSTAL));
                 entries.accept(LAPOTRON_CRYSTAL);
-                entries.accept(EnergyComponents.withFullEnergy(LAPOTRON_CRYSTAL));
+                entries.accept(EnergyComponents.chargedStack(LAPOTRON_CRYSTAL));
 
                 entries.accept(CHAINSAW, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(CHAINSAW));
+                entries.accept(EnergyComponents.chargedStack(CHAINSAW));
                 entries.accept(DRILL, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(DRILL));
+                entries.accept(EnergyComponents.chargedStack(DRILL));
                 entries.accept(DIAMOND_DRILL, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(DIAMOND_DRILL));
+                entries.accept(EnergyComponents.chargedStack(DIAMOND_DRILL));
 
                 entries.accept(BATTERY_PACK, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(BATTERY_PACK));
+                entries.accept(EnergyComponents.chargedStack(BATTERY_PACK));
                 entries.accept(ADVANCED_BATTERY_PACK, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(ADVANCED_BATTERY_PACK));
+                entries.accept(EnergyComponents.chargedStack(ADVANCED_BATTERY_PACK));
 
                 entries.accept(NANO_HELMET, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(NANO_HELMET));
+                entries.accept(EnergyComponents.chargedStack(NANO_HELMET));
                 entries.accept(NANO_CHESTPLATE, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(NANO_CHESTPLATE));
+                entries.accept(EnergyComponents.chargedStack(NANO_CHESTPLATE));
                 entries.accept(NANO_LEGGINGS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(NANO_LEGGINGS));
+                entries.accept(EnergyComponents.chargedStack(NANO_LEGGINGS));
                 entries.accept(NANO_BOOTS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(NANO_BOOTS));
+                entries.accept(EnergyComponents.chargedStack(NANO_BOOTS));
 
                 entries.accept(QUANTUM_HELMET, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_HELMET));
+                entries.accept(EnergyComponents.chargedStack(QUANTUM_HELMET));
                 entries.accept(QUANTUM_CHESTPLATE, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_CHESTPLATE));
+                entries.accept(EnergyComponents.chargedStack(QUANTUM_CHESTPLATE));
                 entries.accept(QUANTUM_LEGGINGS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_LEGGINGS));
+                entries.accept(EnergyComponents.chargedStack(QUANTUM_LEGGINGS));
                 entries.accept(QUANTUM_BOOTS, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-                entries.accept(EnergyComponents.withFullEnergy(QUANTUM_BOOTS));
+                entries.accept(EnergyComponents.chargedStack(QUANTUM_BOOTS));
 
                 entries.accept(WOOD_DUST);
                 entries.accept(STONE_DUST);
@@ -653,6 +680,7 @@ public class Hayo {
                 entries.accept(SMOKING_UPGRADE);
                 entries.accept(NUTRIENT_DISPENSER_UPGRADE);
                 entries.accept(SUNNARIUM_CONCENTRATOR_UPGRADE);
+                entries.accept(OVERWORLD_LIFE_CRYSTAL_MEMORY);
             });
         }
 

@@ -1,6 +1,9 @@
 {
   "type": "hayo:macerating",
-  "ingredient": "#c:ores/gold",
+  "ingredient": [
+    "minecraft:gold_ore",
+    "minecraft:deepslate_gold_ore"
+  ],
   "energy_cost": 400,
   "result": {
     "id": "hayo:gold_dust",

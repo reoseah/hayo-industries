@@ -1,5 +1,6 @@
 package hayo.processing_machine.matter_generator;
 
+import com.google.common.collect.Lists;
 import hayo.Hayo;
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
@@ -13,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
 
 import java.util.List;
 import java.util.Optional;
@@ -112,9 +114,9 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
             return;
         }
         if (this.isHovering(80, 25, 24, 16, mouseX, mouseY) && this.menu.machineData.recipeCost() > 0) {
-            var tooltip = List.<Component>of( //
-                    EnergyTexts.amountWithCapacityAndPercentage(this.menu.machineData.recipeProgress(), this.menu.machineData.recipeCost()), //
-                    EnergyTexts.durationAtAmountPerTick(this.menu.machineData.recipeDuration(), this.menu.machineData.energyUseRate()).withStyle(ChatFormatting.GRAY) //
+            var tooltip = List.<Component>of(
+                    EnergyTexts.amountWithCapacityAndPercentage(this.menu.machineData.recipeProgress(), this.menu.machineData.recipeCost()),
+                    EnergyTexts.durationAtAmountPerTick(this.menu.machineData.recipeDuration(), this.menu.machineData.energyUseRate()).withStyle(ChatFormatting.GRAY)
             );
             graphics.setTooltipForNextFrame(this.font, tooltip, Optional.empty(), mouseX, mouseY);
             return;
@@ -127,10 +129,20 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
 
             if (idx >= 0 && idx < this.menu.recipes.size()) {
                 var recipe = this.menu.recipes.get(idx).value();
-                graphics.setTooltipForNextFrame(this.font, List.of( //
-                        recipe.result().create().getStyledHoverName(), //
-                        EnergyTexts.amount(recipe.energyCost()).withStyle(ChatFormatting.GRAY) //
-                ), Optional.empty(), mouseX, mouseY);
+                var tooltip = Lists.<Component>newArrayList(
+                        recipe.result().create().getStyledHoverName(),
+                        EnergyTexts.amount(recipe.energyCost()).withStyle(ChatFormatting.GRAY)
+                );
+
+                var upgrade = recipe.requiredUpgrade().value();
+                if (upgrade != Items.AIR) {
+                    tooltip.add(Component.empty());
+
+                    boolean matches = recipe.matches(this.menu.createInput(), this.minecraft.level);
+                    tooltip.add(Component.translatable("hayo.required_upgrade_name", upgrade.getName(upgrade.getDefaultInstance())).withStyle(matches ? ChatFormatting.GREEN : ChatFormatting.RED));
+                }
+
+                graphics.setTooltipForNextFrame(this.font, tooltip, Optional.empty(), mouseX, mouseY);
                 return;
             }
         }
@@ -151,7 +163,7 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
         }
 
         if (this.isScrollBarActive()) {
-            if (event.x() >= this.leftPos + 156 && event.x() < this.leftPos + 156 + 12 //
+            if (event.x() >= this.leftPos + 156 && event.x() < this.leftPos + 156 + 12
                     && event.y() >= this.topPos + 59 && event.y() < this.topPos + 59 + 36) {
                 this.scrolling = true;
             }

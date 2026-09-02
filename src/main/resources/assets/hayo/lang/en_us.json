@@ -100,6 +100,7 @@
   "item.hayo.induction_upgrade": "Inductive Heating Upgrade",
   "item.hayo.nutrient_dispenser_upgrade": "Nutrient Dispenser Upgrade",
   "item.hayo.sunnarium_concentrator_upgrade": "Sunnarium Handler Upgrade",
+  "item.hayo.overworld_life_crystal_memory": "Overworld Life Crystal Memory",
   "tag.item.c.wrenches": "Wrenches",
   "tag.item.c.dusts.coal": "Coal Dusts",
   "tag.item.c.dusts.copper": "Copper Dusts",
@@ -170,5 +171,7 @@
   "hayo.machine.recipe_cost": " %s ε (%s ε base, %s%%)",
   "hayo.machine.recipe_duration": " %s s at %s ε/t (%s s base, %s%%)",
   "hayo.damage_reduction": "+%s%% Damage Reduction",
-  "hayo.upgrades.allows_creating_nether_star": " Allows creating Nether Star"
+  "hayo.upgrades.allows_creating_nether_star": " Allows creating Nether Star",
+  "hayo.upgrades.allows_creating_overworld_plants": " Allows creating Overworld plants",
+  "hayo.required_upgrade_name": "Requires %s"
 }
