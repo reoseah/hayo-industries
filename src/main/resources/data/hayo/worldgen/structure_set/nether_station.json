@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "hayo:nether_station",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 4321234,
+    "spacing": 16,
+    "separation": 4
+  }
+}

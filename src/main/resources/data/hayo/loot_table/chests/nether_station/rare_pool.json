@@ -1,0 +1,30 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "name": "hayo:raw_iridium"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "name": "hayo:lapotron_crystal"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "name": "hayo:energy_crystal",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": { "min": 2, "max": 4 }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

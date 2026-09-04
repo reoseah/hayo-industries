@@ -17,6 +17,8 @@ import hayo.generator.GeneratorBlock;
 import hayo.generator.GeneratorBlockEntity;
 import hayo.generator.GeneratorMenu;
 import hayo.generator.GeneratorScreen;
+import hayo.nether_station.NetherStationPiece;
+import hayo.nether_station.NetherStationStructure;
 import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.*;
 import hayo.rubber_tree.ResinProducingLogBlock;
@@ -77,8 +79,12 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,6 +112,8 @@ public class Hayo {
             Optional.empty(),
             Optional.empty());
 
+    public static final ResourceKey<LootTable> NETHER_STATION_CHEST = modKey(Registries.LOOT_TABLE, "chests/nether_station");
+
     public static void initialize() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modId("main"), TAB);
 
@@ -116,6 +124,8 @@ public class Hayo {
         FoliagePlacerTypes.initialize();
         RecipeTypes.initialize();
         RecipeSerializers.initialize();
+        StructureTypes.initialize();
+        StructurePieceTypes.initialize();
         SoundEvents.initialize();
 
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MACERATING);
@@ -834,6 +844,32 @@ public class Hayo {
 
         private static <T extends Recipe<?>> RecipeSerializer<T> register(String name, RecipeSerializer<T> serializer) {
             return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, modId(name), serializer);
+        }
+    }
+
+    public static class StructureTypes {
+        public static final StructureType<NetherStationStructure> NETHER_STATION = register("nether_station", NetherStationStructure.CODEC);
+
+        public static void initialize() {
+        }
+
+        private static <S extends Structure> StructureType<S> register(String name, MapCodec<S> codec) {
+            return Registry.register(BuiltInRegistries.STRUCTURE_TYPE, modId(name), () -> codec);
+        }
+    }
+
+    public static class StructurePieceTypes {
+        public static final StructurePieceType NETHER_STATION = register("nether_station", NetherStationPiece::new);
+
+        public static void initialize() {
+        }
+
+        private static StructurePieceType register(String name, StructurePieceType.ContextlessType type) {
+            return register(name, (StructurePieceType) type);
+        }
+
+        private static StructurePieceType register(String name, StructurePieceType type) {
+            return Registry.register(BuiltInRegistries.STRUCTURE_PIECE, modId(name), type);
         }
     }
 
