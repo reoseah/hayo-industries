@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "hayo:block/advanced_energy_storage_unit",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "hayo:block/advanced_energy_storage_unit"
+    },
+    "facing=north": {
+      "model": "hayo:block/advanced_energy_storage_unit_horizontal"
+    },
+    "facing=east": {
+      "model": "hayo:block/advanced_energy_storage_unit_horizontal",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hayo:block/advanced_energy_storage_unit_horizontal",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hayo:block/advanced_energy_storage_unit_horizontal",
+      "y": 270
+    }
+  }
+}

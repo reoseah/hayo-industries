@@ -1,9 +1,0 @@
-{
-  "parent": "block/orientable",
-  "textures": {
-    "particle": "hayo:block/lapotron_energy_storage_output",
-    "top": "hayo:block/lapotron_energy_storage",
-    "front": "hayo:block/lapotron_energy_storage_output",
-    "side": "hayo:block/lapotron_energy_storage"
-  }
-}

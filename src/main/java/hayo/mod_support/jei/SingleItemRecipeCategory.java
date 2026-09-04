@@ -83,7 +83,7 @@ public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends 
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, x + 85, 1)
                     .setStandardSlotBackground()
-                    .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.chance.words", machineRecipe.extraResultChance * 100).withStyle(ChatFormatting.YELLOW)))
+                    .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.chance.tooltip", machineRecipe.extraResultChance * 100).withStyle(ChatFormatting.YELLOW)))
                     .add(holder.value().result().create().copyWithCount(1));
         }
     }

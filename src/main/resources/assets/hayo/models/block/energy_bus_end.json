@@ -3,7 +3,7 @@
   "textures": {
     "particle": "#side",
     "side": "hayo:block/energy_bus",
-    "end": "hayo:block/lapotron_energy_storage_output"
+    "end": "hayo:block/advanced_energy_storage_unit_output"
   },
   "elements": [
     {

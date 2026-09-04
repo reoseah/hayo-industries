@@ -30,13 +30,13 @@ public class CrystalEnergyStorageBlock extends DirectionalElectricalBlock implem
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CrystalEnergyStorageBlockEntity(pos, state);
+        return new EnergyStorageUnitBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, Hayo.BlockEntityTypes.CRYSTAL_ENERGY_STORAGE, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
+        return createTickerHelper(type, Hayo.BlockEntityTypes.ENERGY_STORAGE_UNIT, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
     }
 
     @Override

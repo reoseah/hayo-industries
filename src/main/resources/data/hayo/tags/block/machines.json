@@ -9,7 +9,7 @@
     "hayo:compressor",
     "hayo:matter_generator",
     "hayo:battery_box",
-    "hayo:crystal_energy_storage",
-    "hayo:lapotron_energy_storage"
+    "hayo:energy_storage_unit",
+    "hayo:advanced_energy_storage_unit"
   ]
 }

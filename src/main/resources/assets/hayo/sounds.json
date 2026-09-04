@@ -1,6 +1,6 @@
 {
-  "sticky_resin_gather": {
-    "subtitle": "subtitles.hayo.sticky_resin_gather",
+  "sticky_resin_collect": {
+    "subtitle": "subtitles.hayo.sticky_resin_collect",
     "sounds": [
       "minecraft:mob/slime/big1",
       "minecraft:mob/slime/big2",

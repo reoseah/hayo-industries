@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "hayo:block/energy_storage_unit_horizontal"
+  }
+}

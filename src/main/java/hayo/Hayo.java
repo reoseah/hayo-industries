@@ -36,6 +36,8 @@ import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
+import net.fabricmc.fabric.api.registry.CompostableRegistry;
+import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -191,8 +193,8 @@ public class Hayo {
         public static final Block SOLAR_PANEL = register("solar_panel", SolarPanelBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.COLOR_BLUE));
 
         public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
-        public static final Block CRYSTAL_ENERGY_STORAGE = register("crystal_energy_storage", CrystalEnergyStorageBlock::new, MACHINE_PROPS);
-        public static final Block LAPOTRON_ENERGY_STORAGE = register("lapotron_energy_storage", LapotronEnergyStorageBlock::new, MACHINE_PROPS);
+        public static final Block ENERGY_STORAGE_UNIT = register("energy_storage_unit", CrystalEnergyStorageBlock::new, MACHINE_PROPS);
+        public static final Block ADVANCED_ENERGY_STORAGE_UNIT = register("advanced_energy_storage_unit", LapotronEnergyStorageBlock::new, MACHINE_PROPS);
 
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
         public static final CableBlock QUADRUPLE_POWER_CABLE = register("quadruple_power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
@@ -280,8 +282,8 @@ public class Hayo {
         ));
 
         public static final Item BATTERY_BOX = registerBlock(Blocks.BATTERY_BOX);
-        public static final Item CRYSTAL_ENERGY_STORAGE = registerBlock(Blocks.CRYSTAL_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
-        public static final Item LAPOTRON_ENERGY_STORAGE = registerBlock(Blocks.LAPOTRON_ENERGY_STORAGE, new Item.Properties().rarity(Rarity.RARE));
+        public static final Item ENERGY_STORAGE_UNIT = registerBlock(Blocks.ENERGY_STORAGE_UNIT, new Item.Properties().rarity(Rarity.RARE));
+        public static final Item ADVANCED_ENERGY_STORAGE_UNIT = registerBlock(Blocks.ADVANCED_ENERGY_STORAGE_UNIT, new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, properties, EnergyTexts.maxRate(block.transferLimit).withStyle(ChatFormatting.GRAY)));
         public static final Item QUANDRUPLE_POWER_CABLE = registerBlock(Blocks.QUADRUPLE_POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, properties, EnergyTexts.maxRate(block.transferLimit).withStyle(ChatFormatting.GRAY)));
@@ -557,6 +559,14 @@ public class Hayo {
         );
 
         public static void initialize() {
+            CompostableRegistry.INSTANCE.add(WOOD_DUST, 0.15F);
+            CompostableRegistry.INSTANCE.add(COMPRESSED_PLANTS, 1F);
+
+            FuelValueEvents.BUILD.register((builder, _) -> {
+                builder.add(TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "dusts/wood")), 100);
+                builder.add(RUBBER, 200);
+            });
+
             CreativeModeTabEvents.modifyOutputEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
                 entries.accept(ELECTRIC_FURNACE);
                 entries.accept(MACERATOR);
@@ -568,8 +578,8 @@ public class Hayo {
                 entries.accept(SOLAR_PANEL);
 
                 entries.accept(BATTERY_BOX);
-                entries.accept(CRYSTAL_ENERGY_STORAGE);
-                entries.accept(LAPOTRON_ENERGY_STORAGE);
+                entries.accept(ENERGY_STORAGE_UNIT);
+                entries.accept(ADVANCED_ENERGY_STORAGE_UNIT);
 
                 entries.accept(POWER_CABLE);
                 entries.accept(QUANDRUPLE_POWER_CABLE);
@@ -756,8 +766,8 @@ public class Hayo {
         public static final BlockEntityType<ExtractorBlockEntity> EXTRACTOR = register("extractor", ExtractorBlockEntity::new, Blocks.EXTRACTOR);
         public static final BlockEntityType<MatterGeneratorBlockEntity> MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlockEntity::new, Blocks.MATTER_GENERATOR);
         public static final BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX = register("battery_box", BatteryBoxBlockEntity::new, Blocks.BATTERY_BOX);
-        public static final BlockEntityType<CrystalEnergyStorageBlockEntity> CRYSTAL_ENERGY_STORAGE = register("crystal_energy_storage", CrystalEnergyStorageBlockEntity::new, Blocks.CRYSTAL_ENERGY_STORAGE);
-        public static final BlockEntityType<LapotronEnergyStorageBlockEntity> LAPOTRON_ENERGY_STORAGE = register("lapotron_energy_storage", LapotronEnergyStorageBlockEntity::new, Blocks.LAPOTRON_ENERGY_STORAGE);
+        public static final BlockEntityType<EnergyStorageUnitBlockEntity> ENERGY_STORAGE_UNIT = register("energy_storage_unit", EnergyStorageUnitBlockEntity::new, Blocks.ENERGY_STORAGE_UNIT);
+        public static final BlockEntityType<AdvancedEnergyStorageUnitBlockEntity> ADVANCED_ENERGY_STORAGE_UNIT = register("advanced_energy_storage_unit", AdvancedEnergyStorageUnitBlockEntity::new, Blocks.ADVANCED_ENERGY_STORAGE_UNIT);
 
         public static void initialize() {
         }
@@ -874,7 +884,7 @@ public class Hayo {
     }
 
     public static final class SoundEvents {
-        public static final SoundEvent STICKY_RESIN_GATHER = register("sticky_resin_gather");
+        public static final SoundEvent STICKY_RESIN_COLLECT = register("sticky_resin_collect");
         public static final SoundEvent WRENCH_USE = register("wrench_use");
 
         public static void initialize() {

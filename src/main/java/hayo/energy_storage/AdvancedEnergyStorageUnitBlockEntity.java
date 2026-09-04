@@ -5,17 +5,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class LapotronEnergyStorageBlockEntity extends EnergyStorageBlockEntity {
+public class AdvancedEnergyStorageUnitBlockEntity extends EnergyStorageBlockEntity {
     public static final int CAPACITY = 4_000_000;
     public static final int TRANSFER_LIMIT = 512;
 
-    public LapotronEnergyStorageBlockEntity(BlockPos pos, BlockState state) {
-        super(Hayo.BlockEntityTypes.LAPOTRON_ENERGY_STORAGE, pos, state);
+    public AdvancedEnergyStorageUnitBlockEntity(BlockPos pos, BlockState state) {
+        super(Hayo.BlockEntityTypes.ADVANCED_ENERGY_STORAGE_UNIT, pos, state);
     }
 
     @Override
     public Component getDefaultName() {
-        return Component.translatable("block.hayo.lapotron_energy_storage");
+        return Component.translatable("block.hayo.advanced_energy_storage_unit");
     }
 
     @Override

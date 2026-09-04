@@ -30,13 +30,13 @@ public class LapotronEnergyStorageBlock extends DirectionalElectricalBlock imple
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new LapotronEnergyStorageBlockEntity(pos, state);
+        return new AdvancedEnergyStorageUnitBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, Hayo.BlockEntityTypes.LAPOTRON_ENERGY_STORAGE, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
+        return createTickerHelper(type, Hayo.BlockEntityTypes.ADVANCED_ENERGY_STORAGE_UNIT, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
     }
 
     @Override

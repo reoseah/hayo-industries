@@ -65,7 +65,7 @@ public class ResinProducingLogBlock extends Block {
             var side = level.getBlockState(pos).getValue(FACING);
             if (side == hitResult.getDirection()) {
                 level.setBlockAndUpdate(pos, state.setValue(HAS_RESIN, false));
-                level.playSound(player, player.getX(), player.getY(), player.getZ(), Hayo.SoundEvents.STICKY_RESIN_GATHER, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(player, player.getX(), player.getY(), player.getZ(), Hayo.SoundEvents.STICKY_RESIN_COLLECT, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                 Block.popResourceFromFace(level, pos, side, new ItemStack(Hayo.Items.STICKY_RESIN));
 
