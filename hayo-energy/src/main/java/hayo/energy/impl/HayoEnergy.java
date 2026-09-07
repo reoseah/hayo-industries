@@ -24,13 +24,13 @@ public class HayoEnergy {
     public static final String MOD_ID = "hayoenergy";
     public static final String MAIN_MOD_ID = "hayo";
 
-    public static final AttachmentType<EnergyGridImpl> ENERGY_GRID = AttachmentRegistry.create(modId("energy_grid"));
+    public static final AttachmentType<EnergyGrid> ENERGY_GRID = AttachmentRegistry.create(modId("energy_grid"));
 
-    public static final AttachmentType<EnergyGridImpl.PersistentData> ENERGY_GRID_CHUNK = AttachmentRegistry.create(
+    public static final AttachmentType<EnergyGrid.PersistentData> ENERGY_GRID_CHUNK = AttachmentRegistry.create(
             modId("energy_grid_chunk"),
             builder -> builder
-                    .initializer(EnergyGridImpl.PersistentData::new)
-                    .persistent(EnergyGridImpl.PersistentData.CODEC.codec()));
+                    .initializer(EnergyGrid.PersistentData::new)
+                    .persistent(EnergyGrid.PersistentData.CODEC.codec()));
 
     public static final CustomPacketPayload.Type<CableDestroyProgressPayload> CABLE_DESTROY_PROGRESS = new CustomPacketPayload.Type<>(modId("cable_destroy_progress"));
 
@@ -57,13 +57,13 @@ public class HayoEnergy {
             if (generated) {
                 return;
             }
-            EnergyGridImpl.getOrCreate(level).onChunkLoad(chunk);
+            EnergyGrid.getOrCreate(level).onChunkLoad(chunk);
         });
         ServerChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
-            EnergyGridImpl.getOrCreate(level).onChunkUnload(chunk);
+            EnergyGrid.getOrCreate(level).onChunkUnload(chunk);
         });
         ServerTickEvents.END_LEVEL_TICK.register(level -> {
-            EnergyGridImpl.getOrCreate(level).onLevelTickEnd();
+            EnergyGrid.getOrCreate(level).onLevelTickEnd();
 
             tickPlayerInventories(level);
         });

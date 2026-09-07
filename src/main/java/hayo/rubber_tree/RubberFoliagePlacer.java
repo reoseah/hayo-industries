@@ -22,7 +22,6 @@ public class RubberFoliagePlacer extends FoliagePlacer {
         return Hayo.FoliagePlacerTypes.RUBBER;
     }
 
-
     @Override
     protected void createFoliage(WorldGenLevel level, FoliageSetter foliageSetter, RandomSource random, TreeConfiguration config, int treeHeight, FoliageAttachment attachment, int foliageHeight, int leafRadius, int offset) {
         int dy = offset;

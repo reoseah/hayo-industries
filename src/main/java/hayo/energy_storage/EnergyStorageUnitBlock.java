@@ -16,10 +16,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class CrystalEnergyStorageBlock extends DirectionalElectricalBlock implements EnergyReceiver, EnergySender {
-    public static final MapCodec<CrystalEnergyStorageBlock> CODEC = simpleCodec(CrystalEnergyStorageBlock::new);
+public class EnergyStorageUnitBlock extends DirectionalElectricalBlock implements EnergyReceiver, EnergySender {
+    public static final MapCodec<EnergyStorageUnitBlock> CODEC = simpleCodec(EnergyStorageUnitBlock::new);
 
-    public CrystalEnergyStorageBlock(Properties properties) {
+    public EnergyStorageUnitBlock(Properties properties) {
         super(properties);
     }
 

@@ -3,7 +3,7 @@ package hayo.generator;
 import hayo.Hayo;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
 import hayo.common.blockentity.SimpleContainerBlockEntity;
-import hayo.energy.block.EnergyGrid;
+import hayo.energy.block.EnergyAPI;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -61,7 +61,7 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
 
         if (entity.storedEnergy > 0) {
             int sendable = Math.min(entity.storedEnergy, TRANSFER_LIMIT);
-            int sent = EnergyGrid.trySendToAllSides(sendable, (ServerLevel) level, pos);
+            int sent = EnergyAPI.trySendToAllSides(sendable, (ServerLevel) level, pos);
             if (sent > 0) {
                 entity.storedEnergy -= sent;
                 entity.setChanged();

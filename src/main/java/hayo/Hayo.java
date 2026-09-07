@@ -5,7 +5,7 @@ import hayo.battery_box.BatteryBoxBlock;
 import hayo.battery_box.BatteryBoxBlockEntity;
 import hayo.battery_box.BatteryBoxMenu;
 import hayo.battery_box.BatteryBoxScreen;
-import hayo.cable.CableBlock;
+import hayo.cable.CableImplBlock;
 import hayo.common.item.BlockItemWithTooltip;
 import hayo.common.item.ItemWithTooltip;
 import hayo.common.item.SimpleElectricItem;
@@ -24,6 +24,7 @@ import hayo.processing_machine.matter_generator.*;
 import hayo.rubber_tree.ResinProducingLogBlock;
 import hayo.rubber_tree.RubberFoliagePlacer;
 import hayo.solar_panel.SolarPanelBlock;
+import hayo.solar_panel.SolarPanelBlockEntity;
 import hayo.wrench.WrenchItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -193,12 +194,12 @@ public class Hayo {
         public static final Block SOLAR_PANEL = register("solar_panel", SolarPanelBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.COLOR_BLUE));
 
         public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
-        public static final Block ENERGY_STORAGE_UNIT = register("energy_storage_unit", CrystalEnergyStorageBlock::new, MACHINE_PROPS);
-        public static final Block ADVANCED_ENERGY_STORAGE_UNIT = register("advanced_energy_storage_unit", LapotronEnergyStorageBlock::new, MACHINE_PROPS);
+        public static final Block ENERGY_STORAGE_UNIT = register("energy_storage_unit", EnergyStorageUnitBlock::new, MACHINE_PROPS);
+        public static final Block ADVANCED_ENERGY_STORAGE_UNIT = register("advanced_energy_storage_unit", AdvancedEnergyStorageUnitBlock::new, MACHINE_PROPS);
 
-        public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final CableBlock QUADRUPLE_POWER_CABLE = register("quadruple_power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final CableBlock ENERGY_BUS = register("energy_bus", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
+        public static final CableImplBlock POWER_CABLE = register("power_cable", properties -> new CableImplBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final CableImplBlock QUADRUPLE_POWER_CABLE = register("quadruple_power_cable", properties -> new CableImplBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+        public static final CableImplBlock ENERGY_BUS = register("energy_bus", properties -> new CableImplBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
 
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
         public static final Block RESIN_PRODUCING_RUBBER_LOG = register("resin_producing_rubber_log", ResinProducingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
@@ -760,6 +761,7 @@ public class Hayo {
 
     public static class BlockEntityTypes {
         public static final BlockEntityType<GeneratorBlockEntity> GENERATOR = register("generator", GeneratorBlockEntity::new, Blocks.GENERATOR);
+        public static final BlockEntityType<SolarPanelBlockEntity> SOLAR_PANEL = register("solar_panel", SolarPanelBlockEntity::new, Blocks.SOLAR_PANEL);
         public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlockEntity::new, Blocks.ELECTRIC_FURNACE);
         public static final BlockEntityType<MaceratorBlockEntity> MACERATOR = register("macerator", MaceratorBlockEntity::new, Blocks.MACERATOR);
         public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR = register("compressor", CompressorBlockEntity::new, Blocks.COMPRESSOR);

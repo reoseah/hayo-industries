@@ -1,8 +1,8 @@
 package hayo.cable;
 
-import hayo.energy.block.EnergyGrid;
-import hayo.energy.block.EnergyHandler;
-import hayo.energy.block.EnergyTransferrer;
+import hayo.energy.block.BaseEnergyBlock;
+import hayo.energy.block.EnergyAPI;
+import hayo.energy.block.EnergyCable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -19,11 +19,11 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
-public class CableBlock extends Block implements EnergyTransferrer {
+public class CableImplBlock extends Block implements EnergyCable {
     public final int transferLimit;
     protected final VoxelShape[] shapes;
 
-    public CableBlock(int transferLimit, int radius, Properties settings) {
+    public CableImplBlock(int transferLimit, int radius, Properties settings) {
         super(settings);
         this.transferLimit = transferLimit;
         this.shapes = CableShapeCache.getOrCreate(radius);
@@ -70,7 +70,7 @@ public class CableBlock extends Block implements EnergyTransferrer {
     protected boolean connectsTo(LevelReader level, BlockPos pos, Direction side) {
         var neighborState = level.getBlockState(pos.relative(side));
         var block = neighborState.getBlock();
-        if (block instanceof EnergyHandler electricBlock) {
+        if (block instanceof BaseEnergyBlock electricBlock) {
             BlockPos pos1 = pos.relative(side);
             return electricBlock.connectsToCables(neighborState, level, pos1, side.getOpposite());
         }
@@ -81,7 +81,7 @@ public class CableBlock extends Block implements EnergyTransferrer {
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
         super.destroy(level, pos, state);
         if (level instanceof ServerLevel serverLevel) {
-            EnergyGrid.remove(serverLevel, pos);
+            EnergyAPI.remove(serverLevel, pos);
         }
     }
 
@@ -89,7 +89,7 @@ public class CableBlock extends Block implements EnergyTransferrer {
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
         super.playerDestroy(level, player, pos, state, blockEntity, tool);
         if (level instanceof ServerLevel serverLevel) {
-            EnergyGrid.remove(serverLevel, pos);
+            EnergyAPI.remove(serverLevel, pos);
         }
     }
 
@@ -97,7 +97,7 @@ public class CableBlock extends Block implements EnergyTransferrer {
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if (level instanceof ServerLevel serverLevel) {
-            EnergyGrid.addOrUpdate(serverLevel, pos);
+            EnergyAPI.addOrUpdate(serverLevel, pos);
         }
     }
 

@@ -1,7 +1,10 @@
 package hayo.wrench;
 
 import hayo.Hayo;
+import hayo.energy.block.BaseEnergyBlock;
+import hayo.energy.block.EnergyAPI;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
@@ -19,6 +22,8 @@ public class WrenchItem extends Item {
         var pos = context.getClickedPos();
         var state = level.getBlockState(pos);
 
+        boolean change = false;
+
         if (state.is(Hayo.HBlockTags.ROTATABLE_WITH_WRENCH)) {
             if (state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
                 var currentFacing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
@@ -28,7 +33,7 @@ public class WrenchItem extends Item {
                 if (currentFacing != playerFacing) {
                     level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.HORIZONTAL_FACING, playerFacing));
                     level.playSound(context.getPlayer(), pos, Hayo.SoundEvents.WRENCH_USE, SoundSource.PLAYERS);
-                    return InteractionResult.SUCCESS;
+                    change = true;
                 }
             } else if (state.hasProperty(BlockStateProperties.FACING)) {
                 var currentFacing = state.getValue(BlockStateProperties.FACING);
@@ -36,9 +41,20 @@ public class WrenchItem extends Item {
                 if (currentFacing != playerFacing) {
                     level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.FACING, playerFacing));
                     level.playSound(context.getPlayer(), pos, Hayo.SoundEvents.WRENCH_USE, SoundSource.PLAYERS);
-                    return InteractionResult.SUCCESS;
+                    change = true;
                 }
             }
+        }
+
+        if (change
+                && state.getBlock() instanceof BaseEnergyBlock
+                && level instanceof ServerLevel serverLevel
+                && EnergyAPI.isTracked(serverLevel, pos)) {
+            EnergyAPI.addOrUpdate(serverLevel, pos);
+        }
+
+        if (change) {
+            return InteractionResult.SUCCESS;
         }
 
         return super.useOn(context);

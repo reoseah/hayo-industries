@@ -1,7 +1,7 @@
 package hayo.energy.impl;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ByteMap;
+import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -11,18 +11,18 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.ChunkPos;
 
 public record CableDestroyProgressPayload(ChunkPos chunkPos,
-                                          Object2IntMap<BlockPos> destroyProgress) implements CustomPacketPayload {
+                                          Object2ByteMap<BlockPos> destroyProgress) implements CustomPacketPayload {
     /// ClientLevel#destroyBlockProgress uses this to remove a crack overlay
-    public static final int CLEAR_STAGE = -1;
+    public static final byte CLEAR_STAGE = -1;
 
     public static final StreamCodec<FriendlyByteBuf, CableDestroyProgressPayload> STREAM_CODEC = CustomPacketPayload.codec(CableDestroyProgressPayload::write, CableDestroyProgressPayload::read);
 
     public static void receive(CableDestroyProgressPayload payload, ClientPlayNetworking.Context context) {
         var level = context.client().level;
 
-        for (var destructionEntry : payload.destroyProgress().object2IntEntrySet()) {
+        for (var destructionEntry : payload.destroyProgress().object2ByteEntrySet()) {
             var pos = destructionEntry.getKey();
-            var value = destructionEntry.getIntValue();
+            var value = destructionEntry.getByteValue();
 
             level.destroyBlockProgress(-Math.abs(pos.hashCode()), pos, value);
             if (value > 0) {
@@ -40,33 +40,33 @@ public record CableDestroyProgressPayload(ChunkPos chunkPos,
 
     public static CableDestroyProgressPayload read(FriendlyByteBuf buffer) {
         var chunkPos = ChunkPos.STREAM_CODEC.decode(buffer);
-        var destructionProgress = readBlockPosToIntMap(buffer, chunkPos);
+        var destructionProgress = readBlockPosMap(buffer, chunkPos);
 
         return new CableDestroyProgressPayload(chunkPos, destructionProgress);
     }
 
     private void write(FriendlyByteBuf buf) {
         ChunkPos.STREAM_CODEC.encode(buf, this.chunkPos);
-        writeBlockPosToIntMap(buf, this.chunkPos, this.destroyProgress);
+        writeBlockPosMap(buf, this.chunkPos, this.destroyProgress);
     }
 
-    private static void writeBlockPosToIntMap(FriendlyByteBuf buffer, ChunkPos chunkPos, Object2IntMap<BlockPos> values) {
+    private static void writeBlockPosMap(FriendlyByteBuf buffer, ChunkPos chunkPos, Object2ByteMap<BlockPos> values) {
         buffer.writeVarInt(values.size());
 
-        for (var entry : values.object2IntEntrySet()) {
+        for (var entry : values.object2ByteEntrySet()) {
             var pos = entry.getKey();
             assert chunkPos.contains(pos);
 
             int serializedPos = (pos.getY() << 8) | ((pos.getZ() & 0b1111) << 4) | (pos.getX() & 0b1111);
             buffer.writeVarInt(serializedPos);
 
-            buffer.writeVarInt(entry.getIntValue());
+            buffer.writeByte(entry.getByteValue());
         }
     }
 
-    private static Object2IntMap<BlockPos> readBlockPosToIntMap(FriendlyByteBuf buffer, ChunkPos chunkPos) {
+    private static Object2ByteMap<BlockPos> readBlockPosMap(FriendlyByteBuf buffer, ChunkPos chunkPos) {
         int size = buffer.readVarInt();
-        var map = new Object2IntOpenHashMap<BlockPos>(size);
+        var map = new Object2ByteOpenHashMap<BlockPos>(size);
 
         for (int i = 0; i < size; i++) {
             var serializedPos = buffer.readVarInt();
@@ -75,7 +75,7 @@ public record CableDestroyProgressPayload(ChunkPos chunkPos,
             var y = serializedPos >>> 8;
             var pos = new BlockPos(chunkPos.x() * 16 + x, y, chunkPos.z() * 16 + z);
 
-            var value = buffer.readVarInt();
+            var value = buffer.readByte();
 
             map.put(pos, value);
         }
