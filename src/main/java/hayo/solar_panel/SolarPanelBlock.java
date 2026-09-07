@@ -2,8 +2,8 @@ package hayo.solar_panel;
 
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
-import hayo.energy.block.EnergyAPI;
 import hayo.energy.block.EnergyCable;
+import hayo.energy.block.EnergyGrid;
 import hayo.energy.block.EnergySender;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -72,7 +72,7 @@ public class SolarPanelBlock extends BaseEntityBlock implements EnergySender, En
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
         super.destroy(level, pos, state);
         if (level instanceof ServerLevel serverLevel) {
-            EnergyAPI.remove(serverLevel, pos);
+            EnergyGrid.remove(serverLevel, pos);
         }
     }
 
@@ -80,7 +80,7 @@ public class SolarPanelBlock extends BaseEntityBlock implements EnergySender, En
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
         super.playerDestroy(level, player, pos, state, blockEntity, tool);
         if (level instanceof ServerLevel serverLevel) {
-            EnergyAPI.remove(serverLevel, pos);
+            EnergyGrid.remove(serverLevel, pos);
         }
     }
 
@@ -88,7 +88,7 @@ public class SolarPanelBlock extends BaseEntityBlock implements EnergySender, En
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if (state.getBlock() != oldState.getBlock() && level instanceof ServerLevel serverLevel) {
-            EnergyAPI.addOrUpdate(serverLevel, pos);
+            EnergyGrid.addOrUpdate(serverLevel, pos);
         }
     }
 }

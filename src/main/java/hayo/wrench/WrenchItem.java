@@ -2,7 +2,7 @@ package hayo.wrench;
 
 import hayo.Hayo;
 import hayo.energy.block.BaseEnergyBlock;
-import hayo.energy.block.EnergyAPI;
+import hayo.energy.block.EnergyGrid;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -49,8 +49,8 @@ public class WrenchItem extends Item {
         if (change
                 && state.getBlock() instanceof BaseEnergyBlock
                 && level instanceof ServerLevel serverLevel
-                && EnergyAPI.isTracked(serverLevel, pos)) {
-            EnergyAPI.addOrUpdate(serverLevel, pos);
+                && EnergyGrid.isTracked(serverLevel, pos)) {
+            EnergyGrid.addOrUpdate(serverLevel, pos);
         }
 
         if (change) {

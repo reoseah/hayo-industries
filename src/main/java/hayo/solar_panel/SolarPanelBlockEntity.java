@@ -1,7 +1,7 @@
 package hayo.solar_panel;
 
 import hayo.Hayo;
-import hayo.energy.block.EnergyAPI;
+import hayo.energy.block.EnergyGrid;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -17,7 +17,7 @@ public class SolarPanelBlockEntity extends BlockEntity {
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, SolarPanelBlockEntity be) {
         if (level.canSeeSky(pos.above()) && level.isBrightOutside() && level.getSkyDarken() == 0) {
-            EnergyAPI.trySendToAllSides(ENERGY_PRODUCTION, (ServerLevel) level, pos);
+            EnergyGrid.trySendToAllSides(ENERGY_PRODUCTION, (ServerLevel) level, pos);
         }
     }
 }

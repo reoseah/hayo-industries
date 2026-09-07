@@ -2,7 +2,7 @@ package hayo.common.block;
 
 import hayo.common.blockentity.SimpleElectricBlockEntity;
 import hayo.energy.block.BaseEnergyBlock;
-import hayo.energy.block.EnergyAPI;
+import hayo.energy.block.EnergyGrid;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -71,7 +71,7 @@ public abstract class DirectionalElectricalBlock extends BaseEntityBlock impleme
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
         super.destroy(level, pos, state);
         if (level instanceof ServerLevel serverLevel) {
-            EnergyAPI.remove(serverLevel, pos);
+            EnergyGrid.remove(serverLevel, pos);
         }
     }
 
@@ -79,7 +79,7 @@ public abstract class DirectionalElectricalBlock extends BaseEntityBlock impleme
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
         super.playerDestroy(level, player, pos, state, blockEntity, tool);
         if (level instanceof ServerLevel serverLevel) {
-            EnergyAPI.remove(serverLevel, pos);
+            EnergyGrid.remove(serverLevel, pos);
         }
     }
 
@@ -87,7 +87,7 @@ public abstract class DirectionalElectricalBlock extends BaseEntityBlock impleme
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if (state.getBlock() != oldState.getBlock() && level instanceof ServerLevel serverLevel) {
-            EnergyAPI.addOrUpdate(serverLevel, pos);
+            EnergyGrid.addOrUpdate(serverLevel, pos);
         }
     }
 

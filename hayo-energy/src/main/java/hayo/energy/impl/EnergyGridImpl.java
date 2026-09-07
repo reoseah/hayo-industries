@@ -27,19 +27,19 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class EnergyGrid {
-    public static final Logger LOGGER = LoggerFactory.getLogger("HAYO/EnergyGrid");
+public class EnergyGridImpl {
+    public static final Logger LOGGER = LoggerFactory.getLogger("HAYO/EnergyGridImpl");
 
     protected final ServerLevel level;
     protected final Map<Pair<BlockPos, @Nullable Direction>, List<TransferPath>> pathCache = new HashMap<>();
     protected final Map<ChunkPos, TickData> tickData = new HashMap<>();
 
-    public EnergyGrid(ServerLevel level) {
+    public EnergyGridImpl(ServerLevel level) {
         this.level = level;
     }
 
-    public static EnergyGrid getOrCreate(ServerLevel level) {
-        return level.getAttachedOrCreate(HayoEnergy.ENERGY_GRID, () -> new EnergyGrid(level));
+    public static EnergyGridImpl getOrCreate(ServerLevel level) {
+        return level.getAttachedOrCreate(HayoEnergy.ENERGY_GRID, () -> new EnergyGridImpl(level));
     }
 
     public int sendEnergy(int amount, BlockPos pos, @Nullable Direction sendingFace) {

@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public enum CableShapeCache {
+public enum CableShapes {
     ;
 
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
@@ -20,10 +20,10 @@ public enum CableShapeCache {
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
     public static final BooleanProperty WEST = BlockStateProperties.WEST;
 
-    private static final IntObjectMap<VoxelShape[]> SHAPES_BY_RADIUS = new IntObjectHashMap<>();
+    private static final IntObjectMap<VoxelShape[]> CACHE = new IntObjectHashMap<>();
 
     public static VoxelShape[] getOrCreate(int radius) {
-        return SHAPES_BY_RADIUS.computeIfAbsent(radius, (r) -> {
+        return CACHE.computeIfAbsent(radius, (r) -> {
             var shapes = new VoxelShape[64];
 
             float min = 8 - r;

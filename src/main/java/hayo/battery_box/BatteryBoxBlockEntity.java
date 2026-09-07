@@ -3,7 +3,7 @@ package hayo.battery_box;
 import hayo.Hayo;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
 import hayo.common.blockentity.SimpleElectricBlockEntity;
-import hayo.energy.block.EnergyAPI;
+import hayo.energy.block.EnergyGrid;
 import hayo.energy.item.EnergyComponents;
 import lombok.Getter;
 import lombok.Setter;
@@ -68,7 +68,7 @@ public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements 
 
         int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - entity.outputPerTick);
         if (limit > 0) {
-            int transfer = EnergyAPI.trySend(limit, (ServerLevel) level, pos, state.getValue(HorizontalDirectionalElectricalBlock.FACING));
+            int transfer = EnergyGrid.trySend(limit, (ServerLevel) level, pos, state.getValue(HorizontalDirectionalElectricalBlock.FACING));
             if (transfer > 0) {
                 entity.extractFromBatteries(transfer);
                 entity.storedEnergy -= transfer;
