@@ -13,5 +13,6 @@
   "hayo.energy.max_transfer": "%s ε/t max. transfer",
   "hayo.energy.amount_and_percentage": "%s ε (%s%%)",
   "hayo.energy.amount_with_capacity_and_percentage": "%s / %s ε (%s%%)",
-  "hayo.energy.duration_at_amount_per_tick": "%s s using %s ε/t"
+  "hayo.energy.duration_at_amount_per_tick": "%s s using %s ε/t",
+  "hayo.energy_per_damage": "-%s Energy per Damage"
 }

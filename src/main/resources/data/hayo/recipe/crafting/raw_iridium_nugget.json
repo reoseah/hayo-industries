@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:raw_materials/iridium"
+  ],
+  "result": {
+    "id": "hayo:raw_iridium_nugget",
+    "count": 9
+  }
+}

@@ -75,7 +75,6 @@
   "item.hayo.silicon_dust": "Silicon Dust",
   "item.hayo.silicon_bronze_dust": "Silicon Bronze Dust",
   "item.hayo.raw_silicon": "Raw Silicon",
-  "item.hayo.raw_iridium": "Raw Iridium",
   "item.hayo.refined_iron_ingot": "Refined Iron Ingot",
   "item.hayo.silicon_bronze_ingot": "Silicon Bronze Ingot",
   "item.hayo.silicon_bronze_nugget": "Silicon Bronze Nugget",
@@ -88,6 +87,8 @@
   "item.hayo.composite_plate": "Composite Plating",
   "item.hayo.carbon_mesh": "Carbon Mesh",
   "item.hayo.carbon_plate": "Carbon Plate",
+  "item.hayo.raw_iridium_nugget": "Raw Iridium Nugget",
+  "item.hayo.raw_iridium": "Raw Iridium",
   "item.hayo.quantum_plate": "Quantum Energy Shielding",
   "item.hayo.compressed_plants": "Compressed Plants",
   "item.hayo.canister": "Canister",
@@ -171,6 +172,7 @@
   "hayo.upgrades.heat4": "-0.04% Heat per tick when idle",
   "hayo.upgrades.allows_creating_nether_star": " Allows creating Nether Star",
   "hayo.upgrades.allows_creating_overworld_plants": " Allows creating Overworld plants",
-  "hayo.damage_reduction": "+%s%% Damage Reduction",
-  "hayo.required_upgrade_name": "Requires %s"
+  "hayo.damage_reduction": " %s%% Damage Reduction",
+  "hayo.required_upgrade_name": "Requires %s",
+  "block.hayo.multifunctional_reactor": "Multifunctional Reactor"
 }

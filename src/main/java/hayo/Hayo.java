@@ -21,6 +21,10 @@ import hayo.nether_station.NetherStationPiece;
 import hayo.nether_station.NetherStationStructure;
 import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.*;
+import hayo.multifunctional_reactor.MultifunctionalReactorBlock;
+import hayo.multifunctional_reactor.MultifunctionalReactorBlockEntity;
+import hayo.multifunctional_reactor.MultifunctionalReactorMenu;
+import hayo.multifunctional_reactor.MultifunctionalReactorScreen;
 import hayo.rubber_tree.ResinProducingLogBlock;
 import hayo.rubber_tree.RubberFoliagePlacer;
 import hayo.solar_panel.SolarPanelBlock;
@@ -188,6 +192,7 @@ public class Hayo {
         public static final Block MACERATOR = register("macerator", MaceratorBlock::new, LIT_MACHINE_PROPS);
         public static final Block COMPRESSOR = register("compressor", CompressorBlock::new, LIT_MACHINE_PROPS);
         public static final Block EXTRACTOR = register("extractor", ExtractorBlock::new, LIT_MACHINE_PROPS);
+        public static final Block MULTIFUNCTIONAL_REACTOR = register("multifunctional_reactor", MultifunctionalReactorBlock::new, LIT_MACHINE_PROPS);
         public static final Block MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlock::new, LIT_MACHINE_PROPS);
 
         public static final Block GENERATOR = register("generator", GeneratorBlock::new, LIT_MACHINE_PROPS);
@@ -274,6 +279,7 @@ public class Hayo {
         public static final Item MACERATOR = registerBlock(Blocks.MACERATOR);
         public static final Item COMPRESSOR = registerBlock(Blocks.COMPRESSOR);
         public static final Item EXTRACTOR = registerBlock(Blocks.EXTRACTOR);
+        public static final Item MULTIFUNCTIONAL_REACTOR = registerBlock(Blocks.MULTIFUNCTIONAL_REACTOR);
         public static final Item MATTER_GENERATOR = registerBlock(Blocks.MATTER_GENERATOR, new Item.Properties().rarity(Rarity.EPIC));
 
         public static final Item GENERATOR = registerBlock(Blocks.GENERATOR);
@@ -458,7 +464,6 @@ public class Hayo {
         public static final Item SILICON_BRONZE_DUST = registerItem("silicon_bronze_dust");
 
         public static final Item RAW_SILICON = registerItem("raw_silicon");
-        public static final Item RAW_IRIDIUM = registerItem("raw_iridium", new Item.Properties().rarity(Rarity.RARE));
         public static final Item REFINED_IRON_INGOT = registerItem("refined_iron_ingot");
         public static final Item SILICON_BRONZE_INGOT = registerItem("silicon_bronze_ingot");
         public static final Item SILICON_BRONZE_NUGGET = registerItem("silicon_bronze_nugget");
@@ -473,6 +478,8 @@ public class Hayo {
         public static final Item CARBON_MESH = registerItem("carbon_mesh");
         public static final Item CARBON_PLATE = registerItem("carbon_plate", new Item.Properties().rarity(Rarity.RARE));
 
+        public static final Item RAW_IRIDIUM_NUGGET = registerItem("raw_iridium_nugget", new Item.Properties().rarity(Rarity.RARE));
+        public static final Item RAW_IRIDIUM = registerItem("raw_iridium", new Item.Properties().rarity(Rarity.RARE));
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
         public static final Item CANISTER = registerItem("canister");
@@ -573,6 +580,7 @@ public class Hayo {
                 entries.accept(MACERATOR);
                 entries.accept(COMPRESSOR);
                 entries.accept(EXTRACTOR);
+                entries.accept(MULTIFUNCTIONAL_REACTOR);
                 entries.accept(MATTER_GENERATOR);
 
                 entries.accept(GENERATOR);
@@ -605,7 +613,6 @@ public class Hayo {
                 entries.accept(ADVANCED_MACHINE_BLOCK);
                 entries.accept(REFINED_IRON_BLOCK);
                 entries.accept(SILICON_BRONZE_BLOCK);
-                entries.accept(GLAZED_REINFORCED_STONE);
                 entries.accept(RAW_SILICON_BLOCK);
                 entries.accept(RAW_IRIDIUM_BLOCK);
 
@@ -614,6 +621,7 @@ public class Hayo {
                 entries.accept(REINFORCED_STONE);
                 entries.accept(REINFORCED_STONE_STAIRS);
                 entries.accept(REINFORCED_STONE_SLAB);
+                entries.accept(GLAZED_REINFORCED_STONE);
                 entries.accept(REINFORCED_GLASS);
                 entries.accept(REINFORCED_DOOR);
                 entries.accept(REINFORCED_TRAPDOOR);
@@ -675,7 +683,6 @@ public class Hayo {
                 entries.accept(SILICON_BRONZE_DUST);
 
                 entries.accept(RAW_SILICON);
-                entries.accept(RAW_IRIDIUM);
                 entries.accept(REFINED_IRON_INGOT);
                 entries.accept(SILICON_BRONZE_INGOT);
                 entries.accept(SILICON_BRONZE_NUGGET);
@@ -689,6 +696,8 @@ public class Hayo {
                 entries.accept(COMPOSITE_PLATE);
                 entries.accept(CARBON_MESH);
                 entries.accept(CARBON_PLATE);
+                entries.accept(RAW_IRIDIUM_NUGGET);
+                entries.accept(RAW_IRIDIUM);
                 entries.accept(QUANTUM_PLATE);
                 entries.accept(COMPRESSED_PLANTS);
                 entries.accept(CANISTER);
@@ -754,6 +763,7 @@ public class Hayo {
         public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/macerator"));
         public static final TagKey<Item> COMPRESSOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/compressor"));
         public static final TagKey<Item> EXTRACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/extractor"));
+        public static final TagKey<Item> MULTIFUNCTIONAL_REACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/multifunctional_reactor"));
         public static final TagKey<Item> MATTER_GENERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/matter_generator"));
 
         public static final TagKey<Item> BATTERY_BOX_BATTERIES = TagKey.create(Registries.ITEM, modId("battery_box_batteries"));
@@ -766,6 +776,7 @@ public class Hayo {
         public static final BlockEntityType<MaceratorBlockEntity> MACERATOR = register("macerator", MaceratorBlockEntity::new, Blocks.MACERATOR);
         public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR = register("compressor", CompressorBlockEntity::new, Blocks.COMPRESSOR);
         public static final BlockEntityType<ExtractorBlockEntity> EXTRACTOR = register("extractor", ExtractorBlockEntity::new, Blocks.EXTRACTOR);
+        public static final BlockEntityType<MultifunctionalReactorBlockEntity> MULTIFUNCTIONAL_REACTOR = register("multifunctional_reactor", MultifunctionalReactorBlockEntity::new, Blocks.MULTIFUNCTIONAL_REACTOR);
         public static final BlockEntityType<MatterGeneratorBlockEntity> MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlockEntity::new, Blocks.MATTER_GENERATOR);
         public static final BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX = register("battery_box", BatteryBoxBlockEntity::new, Blocks.BATTERY_BOX);
         public static final BlockEntityType<EnergyStorageUnitBlockEntity> ENERGY_STORAGE_UNIT = register("energy_storage_unit", EnergyStorageUnitBlockEntity::new, Blocks.ENERGY_STORAGE_UNIT);
@@ -786,6 +797,7 @@ public class Hayo {
         public static final MenuType<MaceratorMenu> MACERATOR = register("macerator", MaceratorMenu::new);
         public static final MenuType<CompressorMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
         public static final MenuType<ExtractorMenu> EXTRACTOR = register("extractor", ExtractorMenu::new);
+        public static final MenuType<MultifunctionalReactorMenu> MULTIFUNCTIONAL_REACTOR = register("multifunctional_reactor", MultifunctionalReactorMenu::new);
         public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
         public static final MenuType<EnergyStorageMenu> ENERGY_STORAGE = register("energy_storage", EnergyStorageMenu::new);
         public static final MenuType<BatteryBoxMenu> BATTERY_BOX = register("battery_box", BatteryBoxMenu::new);
@@ -803,6 +815,7 @@ public class Hayo {
             MenuScreens.register(MACERATOR, ClassicMachineScreen::createMacerator);
             MenuScreens.register(COMPRESSOR, ClassicMachineScreen::createCompressor);
             MenuScreens.register(EXTRACTOR, ClassicMachineScreen::createExtractor);
+            MenuScreens.register(MULTIFUNCTIONAL_REACTOR, MultifunctionalReactorScreen::new);
             MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
             MenuScreens.register(ENERGY_STORAGE, EnergyStorageScreen::new);
             MenuScreens.register(BATTERY_BOX, BatteryBoxScreen::new);

@@ -10,8 +10,7 @@ import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
-/// Item stack energy as a "range property" based on which you can decide
-/// texture/model in the item's JSON file (`assets/[modid]/items/[id].json`).
+/// Energy in an item stack as a ranged property for item definitions.
 ///
 /// E.g.:
 /// ```json

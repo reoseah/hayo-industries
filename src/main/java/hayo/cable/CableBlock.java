@@ -19,6 +19,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
+// TODO: extend vanilla PipeBlock class?
 public class CableBlock extends Block implements EnergyCable {
     public final int transferLimit;
     protected final VoxelShape[] shapes;

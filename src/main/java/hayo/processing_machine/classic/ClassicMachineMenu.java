@@ -32,13 +32,13 @@ public abstract class ClassicMachineMenu extends HayoContainerMenu {
         this.upgradeData = upgradeData;
         this.addDataSlots(this.upgradeData);
 
-        this.addSlot(new Slot(container, ClassicMachineBlockEntity.INPUT, 47, 18));
-        this.addSlot(new Slot(container, ClassicMachineBlockEntity.BATTERY, 47, 54));
-        this.addSlot(new ResultSlot(container, ClassicMachineBlockEntity.OUTPUT, 107, 36));
-        this.addSlot(new MachineUpgradeSlot(container, 3, 152, 8, this.getUpgradeTag(), 3, 6));
-        this.addSlot(new MachineUpgradeSlot(container, 4, 152, 26, this.getUpgradeTag(), 3, 6));
-        this.addSlot(new MachineUpgradeSlot(container, 5, 152, 44, this.getUpgradeTag(), 3, 6));
-        this.addSlot(new MachineUpgradeSlot(container, 6, 152, 62, this.getUpgradeTag(), 3, 6));
+        this.addSlot(new Slot(container, 0, 47, 18));
+        this.addSlot(new Slot(container, 1, 47, 54));
+        this.addSlot(new ResultSlot(container, 2, 107, 36));
+        this.addSlot(new MachineUpgradeSlot(container, 3, 152, 8, this.getUpgradeTag(), 3, 4));
+        this.addSlot(new MachineUpgradeSlot(container, 4, 152, 26, this.getUpgradeTag(), 3, 4));
+        this.addSlot(new MachineUpgradeSlot(container, 5, 152, 44, this.getUpgradeTag(), 3, 4));
+        this.addSlot(new MachineUpgradeSlot(container, 6, 152, 62, this.getUpgradeTag(), 3, 4));
         this.addStandardInventorySlots(inventory, 8, 84);
     }
 

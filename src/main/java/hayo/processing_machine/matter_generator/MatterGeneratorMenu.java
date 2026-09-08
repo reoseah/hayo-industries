@@ -40,8 +40,8 @@ public class MatterGeneratorMenu extends HayoContainerMenu {
 
         this.addSlot(new Slot(container, 0, 56, 34));
         this.addSlot(new ResultSlot(container, 1, 116, 26));
-        this.addSlot(new MachineUpgradeSlot(container, 2, 8, 16, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 3));
-        this.addSlot(new MachineUpgradeSlot(container, 3, 8, 34, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 3));
+        this.addSlot(new MachineUpgradeSlot(container, 2, 8, 16, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 2));
+        this.addSlot(new MachineUpgradeSlot(container, 3, 8, 34, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 2));
 
         this.addStandardInventorySlots(inventory, 8, 110);
 

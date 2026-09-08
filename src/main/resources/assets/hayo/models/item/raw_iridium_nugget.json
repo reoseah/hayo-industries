@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hayo:item/raw_iridium_nugget"
+  }
+}
