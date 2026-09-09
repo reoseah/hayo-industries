@@ -11,7 +11,6 @@ import hayo.common.item.ItemWithTooltip;
 import hayo.common.item.SimpleElectricItem;
 import hayo.energy.EnergyTexts;
 import hayo.energy.item.*;
-import hayo.energy_armor.EnergyArmorOverlayRenderer;
 import hayo.energy_storage.*;
 import hayo.generator.GeneratorBlock;
 import hayo.generator.GeneratorBlockEntity;
@@ -30,13 +29,9 @@ import hayo.rubber_tree.RubberFoliagePlacer;
 import hayo.solar_panel.SolarPanelBlock;
 import hayo.solar_panel.SolarPanelBlockEntity;
 import hayo.wrench.WrenchItem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
-import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -46,7 +41,6 @@ import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -162,18 +156,6 @@ public class Hayo {
                             .addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, feature);
                 }
         );
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void initializeClient() {
-        BlockColorRegistry.register((_, level, pos, tintValues) -> tintValues.add(level != null && pos != null ? BiomeColors.getAverageFoliageColor(level, pos) : 0xff48b518), Blocks.RUBBER_LEAVES);
-
-        MenuTypes.initializeClient();
-
-        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, EnergyArmorOverlayRenderer.NANO, EnergyArmorOverlayRenderer.QUANTUM_OVERLAY), Items.NANO_HELMET, Items.NANO_CHESTPLATE, Items.NANO_BOOTS);
-        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, EnergyArmorOverlayRenderer.LEGS_NANO, EnergyArmorOverlayRenderer.LEGS_QUANTUM_OVERLAY), Items.NANO_LEGGINGS);
-        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, EnergyArmorOverlayRenderer.QUANTUM, EnergyArmorOverlayRenderer.QUANTUM_OVERLAY), Items.QUANTUM_HELMET, Items.QUANTUM_CHESTPLATE, Items.QUANTUM_BOOTS);
-        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, EnergyArmorOverlayRenderer.LEGS_QUANTUM, EnergyArmorOverlayRenderer.LEGS_QUANTUM_OVERLAY), Items.QUANTUM_LEGGINGS);
     }
 
     public static Identifier modId(String path) {
@@ -580,7 +562,7 @@ public class Hayo {
                 entries.accept(MACERATOR);
                 entries.accept(COMPRESSOR);
                 entries.accept(EXTRACTOR);
-                entries.accept(MULTIFUNCTIONAL_REACTOR);
+//                entries.accept(MULTIFUNCTIONAL_REACTOR);
                 entries.accept(MATTER_GENERATOR);
 
                 entries.accept(GENERATOR);

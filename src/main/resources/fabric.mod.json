@@ -11,7 +11,7 @@
     "homepage": "https://github.com/reoseah/hayo-industries",
     "sources": "https://github.com/reoseah/hayo-industries"
   },
-  "license": "EU PL",
+  "license": "EUPL-1.2",
   "icon": "assets/hayo/icon.png",
   "environment": "*",
   "entrypoints": {
@@ -19,7 +19,7 @@
       "hayo.Hayo::initialize"
     ],
     "client": [
-      "hayo.Hayo::initializeClient"
+      "hayo.HayoClient::initialize"
     ],
     "jei_mod_plugin": [
       "hayo.mod_support.jei.HayoJeiPlugin"
@@ -31,7 +31,7 @@
   "accessWidener": "hayo.classtweaker",
   "depends": {
     "fabricloader": ">=0.17.3",
-    "minecraft": ">=26",
+    "minecraft": "26.2",
     "java": ">=21",
     "fabric-api": "*",
     "hayo-energy": "*"

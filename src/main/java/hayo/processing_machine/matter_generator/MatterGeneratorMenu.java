@@ -101,7 +101,7 @@ public class MatterGeneratorMenu extends HayoContainerMenu {
         if (EnergyComponents.chargesBlocks(stack)) {
             return this.moveItemStackTo(stack, 0, 1, false);
         } else if (stack.is(Hayo.ItemTags.MATTER_GENERATOR_UPGRADES)) {
-            return this.moveItemStackTo(stack, 2, 3, false);
+            return this.moveItemStackTo(stack, 2, 4, false);
         }
         return false;
     }
