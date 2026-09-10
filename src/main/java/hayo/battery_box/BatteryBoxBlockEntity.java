@@ -2,7 +2,7 @@ package hayo.battery_box;
 
 import hayo.Hayo;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
-import hayo.common.blockentity.SimpleElectricBlockEntity;
+import hayo.common.blockentity.EnergyReceiverBlockEntity;
 import hayo.energy.block.EnergyGrid;
 import hayo.energy.item.EnergyComponents;
 import lombok.Getter;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-public class BatteryBoxBlockEntity extends SimpleElectricBlockEntity implements WorldlyContainer, MenuProvider {
+public class BatteryBoxBlockEntity extends EnergyReceiverBlockEntity implements WorldlyContainer, MenuProvider {
     public static final int BATTERIES = 6, CHARGING_SLOT = 6, SLOTS = 7;
 
     @Getter

@@ -128,4 +128,11 @@ public abstract class SimpleContainerBlockEntity extends BlockEntity implements 
     public Component getName() {
         return this.customName != null ? this.customName : this.getDefaultName();
     }
+
+    protected boolean canInsertToSlot(ItemStack stack, int slot) {
+        var currentStack = this.stacks.get(slot);
+        return currentStack.isEmpty()
+                || ItemStack.isSameItemSameComponents(currentStack, stack)
+                && currentStack.getCount() + stack.getCount() <= Math.min(stack.getMaxStackSize(), this.getMaxStackSize(stack));
+    }
 }

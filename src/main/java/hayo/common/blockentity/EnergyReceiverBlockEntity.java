@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 
-public abstract class SimpleElectricBlockEntity extends SimpleContainerBlockEntity {
+public abstract class EnergyReceiverBlockEntity extends SimpleContainerBlockEntity {
     @Getter
     @Setter
     protected int storedEnergy;
@@ -22,7 +22,7 @@ public abstract class SimpleElectricBlockEntity extends SimpleContainerBlockEnti
     @Setter
     protected int inputPerTick;
 
-    public SimpleElectricBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, NonNullList<ItemStack> stacks) {
+    public EnergyReceiverBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, NonNullList<ItemStack> stacks) {
         super(type, pos, state, stacks);
     }
 

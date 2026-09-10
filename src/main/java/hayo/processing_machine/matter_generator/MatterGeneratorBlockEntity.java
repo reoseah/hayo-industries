@@ -4,7 +4,6 @@ import hayo.Hayo;
 import hayo.processing_machine.MachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -24,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 
 public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGeneratingRecipe, MatterGeneratorRecipeInput> {
     public static final int CAPACITY = 10000, TRANSFER_LIMIT = 128, ENERGY_USE_RATE = 100;
-    public static final int SLOTS = 4, BATTERY = 0, OUTPUT = 1, FIRST_UPGRADE = 2, UPGRADES = 2;
+    public static final int SLOTS = 4, BATTERY = 0, OUTPUT = 1, UPGRADE_1 = 2, UPGRADES = 2;
 
     public @Nullable Identifier selectedRecipeId;
 
@@ -75,7 +74,7 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
 
     @Override
     protected MatterGeneratorRecipeInput createRecipeInput() {
-        return new MatterGeneratorRecipeInput(this.stacks.subList(FIRST_UPGRADE, FIRST_UPGRADE + UPGRADES));
+        return new MatterGeneratorRecipeInput(this.stacks.subList(UPGRADE_1, UPGRADE_1 + UPGRADES));
     }
 
     @Override
@@ -113,14 +112,14 @@ public class MatterGeneratorBlockEntity extends MachineBlockEntity<MatterGenerat
     }
 
     @Override
-    protected boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<MatterGeneratingRecipe> recipe, MatterGeneratorRecipeInput input) {
+    protected boolean canCraft(@Nullable RecipeHolder<MatterGeneratingRecipe> recipe, MatterGeneratorRecipeInput input) {
         return recipe != null
                 && recipe.value().matches(input, this.level)
                 && this.canInsertToSlot(recipe.value().result().create(), OUTPUT);
     }
 
     @Override
-    protected void craft(RegistryAccess registryAccess, RecipeHolder<MatterGeneratingRecipe> recipe, MatterGeneratorRecipeInput input) {
+    protected void craft(RecipeHolder<MatterGeneratingRecipe> recipe, MatterGeneratorRecipeInput input) {
         var recipeOutput = recipe.value().assemble(input);
         var outputStack = this.stacks.get(OUTPUT);
         if (outputStack.isEmpty()) {

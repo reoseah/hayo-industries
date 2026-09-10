@@ -8,7 +8,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 
-@Accessors(fluent = true)
 public abstract class ClassicMachineRecipe extends SingleItemRecipe {
     public final int inputCount;
     public final float extraResultChance;

@@ -1,7 +1,7 @@
 package hayo.energy_storage;
 
 import hayo.common.block.DirectionalElectricalBlock;
-import hayo.common.blockentity.SimpleElectricBlockEntity;
+import hayo.common.blockentity.EnergyReceiverBlockEntity;
 import hayo.energy.block.EnergyGrid;
 import hayo.energy.item.EnergyComponents;
 import lombok.Getter;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public abstract class EnergyStorageBlockEntity extends SimpleElectricBlockEntity implements WorldlyContainer, MenuProvider {
+public abstract class EnergyStorageBlockEntity extends EnergyReceiverBlockEntity implements WorldlyContainer, MenuProvider {
     public static final int DISCHARGE_SLOT = 0, CHARGE_SLOT = 1, SLOTS = 2;
 
     @Getter

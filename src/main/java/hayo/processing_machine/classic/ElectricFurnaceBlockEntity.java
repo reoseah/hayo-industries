@@ -93,7 +93,7 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
         super.updateUpgradeState();
 
         var mode = ElectricFurnaceMode.SMELTING;
-        for (int i = FIRST_UPGRADE; i < FIRST_UPGRADE + UPGRADES; i++) {
+        for (int i = UPGRADE_1; i < UPGRADE_1 + UPGRADES; i++) {
             var stack = this.stacks.get(i);
             if (stack.is(Hayo.Items.BLASTING_UPGRADE)) {
                 mode = ElectricFurnaceMode.BLASTING;

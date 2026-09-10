@@ -1,6 +1,6 @@
 package hayo.common.block;
 
-import hayo.common.blockentity.SimpleElectricBlockEntity;
+import hayo.common.blockentity.EnergyReceiverBlockEntity;
 import hayo.energy.block.BaseEnergyBlock;
 import hayo.energy.block.EnergyGrid;
 import net.minecraft.core.BlockPos;
@@ -92,14 +92,14 @@ public abstract class DirectionalElectricalBlock extends BaseEntityBlock impleme
     }
 
     public int getReceivableEnergy(ServerLevel level, BlockPos pos, Direction side) {
-        if (level.getBlockEntity(pos) instanceof SimpleElectricBlockEntity entity) {
+        if (level.getBlockEntity(pos) instanceof EnergyReceiverBlockEntity entity) {
             return entity.getReceivableEnergy();
         }
         return 0;
     }
 
     public int receiveEnergy(int amount, ServerLevel level, BlockPos pos, Direction side) {
-        if (level.getBlockEntity(pos) instanceof SimpleElectricBlockEntity entity) {
+        if (level.getBlockEntity(pos) instanceof EnergyReceiverBlockEntity entity) {
             return entity.receiveEnergy(amount);
         }
         return 0;

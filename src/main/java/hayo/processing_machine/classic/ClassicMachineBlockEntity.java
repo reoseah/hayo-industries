@@ -6,7 +6,6 @@ import hayo.processing_machine.UpgradableMachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.inventory.ContainerData;
@@ -24,7 +23,7 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     public static final int INPUT = 0;
     public static final int BATTERY = 1;
     public static final int OUTPUT = 2;
-    public static final int FIRST_UPGRADE = 3;
+    public static final int UPGRADE_1 = 3;
     public static final int UPGRADES = 4;
 
     protected ClassicMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -33,7 +32,7 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
 
     @Override
     protected IntRange getUpgradeSlots() {
-        return new IntRange(FIRST_UPGRADE, FIRST_UPGRADE + UPGRADES);
+        return new IntRange(UPGRADE_1, UPGRADE_1 + UPGRADES);
     }
 
     @Override
@@ -47,7 +46,7 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     }
 
     @Override
-    public boolean canCraft(RegistryAccess registryAccess, @Nullable RecipeHolder<R> recipe, SingleRecipeInput input) {
+    public boolean canCraft(@Nullable RecipeHolder<R> recipe, SingleRecipeInput input) {
         if (recipe == null || input.isEmpty()) {
             return false;
         }
@@ -63,7 +62,7 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     }
 
     @Override
-    public void craft(RegistryAccess registryAccess, RecipeHolder<R> recipe, SingleRecipeInput input) {
+    public void craft(RecipeHolder<R> recipe, SingleRecipeInput input) {
         var inputStack = this.stacks.get(INPUT);
         if (recipe.value() instanceof ClassicMachineRecipe machineRecipe) {
             inputStack.shrink(machineRecipe.inputCount);

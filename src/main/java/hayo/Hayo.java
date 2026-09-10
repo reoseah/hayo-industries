@@ -16,14 +16,11 @@ import hayo.generator.GeneratorBlock;
 import hayo.generator.GeneratorBlockEntity;
 import hayo.generator.GeneratorMenu;
 import hayo.generator.GeneratorScreen;
+import hayo.multifunctional_reactor.*;
 import hayo.nether_station.NetherStationPiece;
 import hayo.nether_station.NetherStationStructure;
 import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.*;
-import hayo.multifunctional_reactor.MultifunctionalReactorBlock;
-import hayo.multifunctional_reactor.MultifunctionalReactorBlockEntity;
-import hayo.multifunctional_reactor.MultifunctionalReactorMenu;
-import hayo.multifunctional_reactor.MultifunctionalReactorScreen;
 import hayo.rubber_tree.ResinProducingLogBlock;
 import hayo.rubber_tree.RubberFoliagePlacer;
 import hayo.solar_panel.SolarPanelBlock;
@@ -823,6 +820,7 @@ public class Hayo {
         public static final RecipeType<ExtractingRecipe> EXTRACTING = register("extracting");
         public static final RecipeType<NutrientExtractingRecipe> NUTRIENT_EXTRACTING = register("nutrient_paste_extracting");
         public static final RecipeType<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating");
+        public static final RecipeType<DrainingRecipe> DRAINING = register("draining");
 
         public static void initialize() {
         }
@@ -845,6 +843,7 @@ public class Hayo {
         public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", ClassicMachineRecipe.createCodec(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<NutrientExtractingRecipe> NUTRIENT_EXTRACTING = register("nutrient_paste_extracting", ClassicMachineRecipe.createCodec(NutrientExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
+        public static final RecipeSerializer<DrainingRecipe> DRAINING = register("draining", new RecipeSerializer<>(DrainingRecipe.CODEC, DrainingRecipe.STREAM_CODEC));
 
         public static void initialize() {
         }
