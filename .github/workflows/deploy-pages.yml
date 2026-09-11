@@ -12,12 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - run: cd pages
+
       - run: corepack enable
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
-
-      - run: cd pages
+          node-version: "24"
 
       - run: npx nypm install
       - run: npm run build
