@@ -6,6 +6,7 @@
   "block.hayo.macerator": "Macerator",
   "block.hayo.extractor": "Extractor",
   "block.hayo.compressor": "Compressor",
+  "block.hayo.multifunctional_reactor": "Multifunctional Reactor",
   "block.hayo.matter_generator": "Matter Generator",
   "block.hayo.battery_box": "Battery Box",
   "block.hayo.energy_storage_unit": "Energy Storage Unit",
@@ -173,6 +174,5 @@
   "hayo.upgrades.allows_creating_nether_star": " Allows creating Nether Star",
   "hayo.upgrades.allows_creating_overworld_plants": " Allows creating Overworld plants",
   "hayo.damage_reduction": " %s%% Damage Reduction",
-  "hayo.required_upgrade_name": "Requires %s",
-  "block.hayo.multifunctional_reactor": "Multifunctional Reactor"
+  "hayo.required_upgrade_name": "Requires %s"
 }
