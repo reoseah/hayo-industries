@@ -6,6 +6,7 @@ import {defineConfig} from "vite";
 
 // https://github.com/solidjs/templates/blob/3f45de8d6672d0998f295a9a9423909c7e36b021/solid-v2/ssg/vite.config.ts
 export default defineConfig({
+    base: '/hayo-industries/',
     plugins: [
         solid({
             start: true,
