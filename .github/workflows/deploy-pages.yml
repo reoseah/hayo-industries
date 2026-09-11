@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: pages
+
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/setup@v2
@@ -29,14 +29,16 @@ jobs:
 
       - name: Install dependencies
         run: pnpm ci
+        working-directory: pages
 
       - name: Build
         run: pnpm run build
+        working-directory: pages
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: ./.output/public
+          path: pages/.output/public
 
   # Deployment job
   deploy:
