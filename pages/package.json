@@ -1,0 +1,32 @@
+{
+  "name": "@hayo/pages",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "keywords": [],
+  "author": "reoseah",
+  "license": "EUPL-1.2",
+  "packageManager": "pnpm@10.18.2",
+  "devDependencies": {
+    "@solidjs/diagnostics": "^2.0.0-rc.6",
+    "@solidjs/testing-library": "^1.0.0-beta.3",
+    "@solidjs/vite-plugin": "^3.0.0-next.39",
+    "@unocss/reset": "^66.10.1",
+    "filesystem-routing": "0.2.1",
+    "typescript": "^5.9.2",
+    "vite": "^8.1.5"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^1.0.0-next.2",
+    "@solidjs/prerender": "^0.2.0",
+    "@solidjs/router": "^2.0.0-next.21",
+    "@solidjs/web": "^2.0.0-rc.6",
+    "prerender-crawler": "^0.2.0",
+    "solid-js": "^2.0.0-rc.6"
+  }
+}

@@ -1,0 +1,1 @@
+Based on https://github.com/solidjs/templates/tree/solid-v2-ssg/solid-v2/ssg
