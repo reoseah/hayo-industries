@@ -24,6 +24,7 @@ jobs:
       - uses: pnpm/setup@v2
         with:
           working-directory: pages
+          version: 12.3.4
           cache: true
 
       - name: Install dependencies
