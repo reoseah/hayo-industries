@@ -1,4 +1,4 @@
 package hayo.energy.block;
 
-public interface EnergySender extends BaseEnergyBlock {
+public non-sealed interface EnergySender extends BaseEnergyBlock {
 }

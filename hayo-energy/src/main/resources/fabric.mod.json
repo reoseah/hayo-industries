@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "id": "hayo-energy",
   "name": "HAYO Energy",
-  "description": "Energy API written for HAYO Industries.",
+  "description": "Energy API for HAYO Industries.",
   "version": "${version}",
   "environment": "*",
-  "license": "WTFPL",
+  "license": "CC0",
   "entrypoints": {
     "main": [
       "hayo.energy.impl.HayoEnergy::initialize"

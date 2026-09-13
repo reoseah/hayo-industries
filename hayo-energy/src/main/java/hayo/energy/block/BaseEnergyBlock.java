@@ -6,7 +6,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 
 /// Base interface for blocks that interact with energy.
-public interface BaseEnergyBlock {
+public sealed interface BaseEnergyBlock permits EnergyReceiver, EnergySender, EnergyCable {
     default boolean connectsToCables(BlockState state, LevelReader level, BlockPos pos, Direction direction) {
         return true;
     }

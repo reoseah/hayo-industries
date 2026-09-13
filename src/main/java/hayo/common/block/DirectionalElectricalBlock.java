@@ -1,7 +1,6 @@
 package hayo.common.block;
 
 import hayo.common.blockentity.EnergyReceiverBlockEntity;
-import hayo.energy.block.BaseEnergyBlock;
 import hayo.energy.block.EnergyGrid;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +23,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
-public abstract class DirectionalElectricalBlock extends BaseEntityBlock implements BaseEnergyBlock {
+public abstract class DirectionalElectricalBlock extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
     protected DirectionalElectricalBlock(Properties properties) {

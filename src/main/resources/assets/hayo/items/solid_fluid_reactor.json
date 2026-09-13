@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "hayo:block/machine_block"
+    "model": "hayo:block/solid_fluid_reactor"
   }
 }

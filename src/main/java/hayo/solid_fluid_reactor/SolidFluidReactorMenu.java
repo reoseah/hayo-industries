@@ -1,4 +1,4 @@
-package hayo.multifunctional_reactor;
+package hayo.solid_fluid_reactor;
 
 import hayo.Hayo;
 import hayo.common.menu.HayoContainerMenu;
@@ -11,17 +11,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public class MultifunctionalReactorMenu extends HayoContainerMenu {
-    public MultifunctionalReactorMenu(int containerId, Inventory inventory) {
-        this(containerId, new SimpleContainer(MultifunctionalReactorBlockEntity.SLOTS), inventory);
+public class SolidFluidReactorMenu extends HayoContainerMenu {
+    public final SolidFluidReactorContainerData data;
+
+    public SolidFluidReactorMenu(int containerId, Inventory inventory) {
+        this(containerId, new SimpleContainer(SolidFluidReactorBlockEntity.SLOTS), new SolidFluidReactorContainerData.Clientside(), inventory);
     }
 
-    public MultifunctionalReactorMenu(int containerId, MultifunctionalReactorBlockEntity entity, Inventory inventory) {
-        this(containerId, (Container) entity, inventory);
+    public SolidFluidReactorMenu(int containerId, SolidFluidReactorBlockEntity entity, Inventory inventory) {
+        this(containerId, entity, new SolidFluidReactorContainerData.Serverside(entity), inventory);
     }
 
-    public MultifunctionalReactorMenu(int containerId, Container container, Inventory inventory) {
-        super(Hayo.MenuTypes.MULTIFUNCTIONAL_REACTOR, containerId, container);
+    public SolidFluidReactorMenu(int containerId, Container container, SolidFluidReactorContainerData data, Inventory inventory) {
+        super(Hayo.MenuTypes.SOLID_FLUID_REACTOR, containerId, container);
+
+        this.data = data;
+        this.addDataSlots(data);
 
         this.addSlot(new Slot(container, 0, 62, 17));
         this.addSlot(new Slot(container, 1, 8, 17));
@@ -33,7 +38,7 @@ public class MultifunctionalReactorMenu extends HayoContainerMenu {
         this.addSlot(new ResultSlot(container, 7, 8, 53));
         this.addSlot(new ResultSlot(container, 8, 170, 53));
         for (int i = 0; i < 4; i++) {
-            this.addSlot(new MachineUpgradeSlot(container, 9 + i, 206, 8 + 18 * i, Hayo.ItemTags.MULTIFUNCTIONAL_REACTOR_UPGRADES, 9, 4));
+            this.addSlot(new MachineUpgradeSlot(container, 9 + i, 206, 8 + 18 * i, Hayo.ItemTags.SOLID_FLUID_REACTOR_UPGRADES, 9, 4));
         }
 
         this.addStandardInventorySlots(inventory, 35, 84);

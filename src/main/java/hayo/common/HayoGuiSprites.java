@@ -86,4 +86,22 @@ public class HayoGuiSprites {
     public static void blitSmallArrowLeft(GuiGraphicsExtractor graphics, int x, int y) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SMALL_ARROW_LEFT, x, y, 9, 18);
     }
+
+    public static final Identifier FLUID_OVERLAY = Hayo.modId("fluid_overlay");
+
+    public static void blitFluidOverlay(GuiGraphicsExtractor graphics, int x, int y) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FLUID_OVERLAY, x, y, 18, 56);
+    }
+
+    public static final Identifier DRAINING_ARROW = Hayo.modId("draining_arrow");
+    public static final Identifier DRAINING_ARROW_OVERLAY = Hayo.modId("draining_arrow_overlay");
+
+    public static void blitDrainingArrow(GuiGraphicsExtractor graphics, int x, int y, int progress, int maxProgress) {
+//        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DRAINING_ARROW, x, y, 18, 14);
+
+        if (progress > 0 && maxProgress > 0) {
+            int length = Mth.clamp(1 + 18 * progress / maxProgress, 0, 18);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DRAINING_ARROW_OVERLAY, 18, 14, 0, 0, x, y, length, 14);
+        }
+    }
 }

@@ -1,7 +1,8 @@
-package hayo.multifunctional_reactor;
+package hayo.solid_fluid_reactor;
 
 import hayo.Hayo;
 import hayo.common.blockentity.EnergyReceiverBlockEntity;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -14,11 +15,12 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-public class MultifunctionalReactorBlockEntity extends EnergyReceiverBlockEntity {
+public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity {
     public static final int SLOTS = 13;
     public static final int INPUT = 0;
     public static final int DRAIN_INPUT = 1;
@@ -35,13 +37,18 @@ public class MultifunctionalReactorBlockEntity extends EnergyReceiverBlockEntity
     public static final int UPGRADE_1 = 9;
     public static final int UPGRADES = 4;
 
+    public static final int FLUID_CAPACITY = 4000;
+
+    @Getter
+    protected FluidStack inputFluid = FluidStack.EMPTY;
+
     protected final RecipeHandler<DrainingRecipe, SingleRecipeInput> draining = new RecipeHandler<>();
 
-    public MultifunctionalReactorBlockEntity(BlockPos pos, BlockState state) {
-        super(Hayo.BlockEntityTypes.MULTIFUNCTIONAL_REACTOR, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
+    public SolidFluidReactorBlockEntity(BlockPos pos, BlockState state) {
+        super(Hayo.BlockEntityTypes.SOLID_FLUID_REACTOR, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
     }
 
-    public static void tickServer(Level level, BlockPos pos, BlockState state, MultifunctionalReactorBlockEntity entity) {
+    public static void tickServer(Level level, BlockPos pos, BlockState state, SolidFluidReactorBlockEntity entity) {
         entity.chargeFromSlot(BATTERY);
         entity.storedEnergy -= entity.draining.tick(
                 Hayo.RecipeTypes.DRAINING,
@@ -56,12 +63,21 @@ public class MultifunctionalReactorBlockEntity extends EnergyReceiverBlockEntity
 
                     @Override
                     public boolean canCraft(RecipeHolder<DrainingRecipe> recipe, SingleRecipeInput input) {
-                        return entity.canInsertToSlot(recipe.value().assemble(input), DRAIN_OUTPUT);
+                        if (!entity.canInsertToSlot(recipe.value().assemble(input), DRAIN_OUTPUT)) {
+                            return false;
+                        }
+                        if (entity.inputFluid.fluid() == Fluids.EMPTY) {
+                            return true;
+                        }
+                        if (entity.inputFluid.holder() == recipe.value().fluid().holder()) {
+                            return FLUID_CAPACITY - entity.inputFluid.amount() >= recipe.value().fluid().amount();
+                        }
+                        return false;
                     }
 
                     @Override
                     public int getRecipeCost(DrainingRecipe recipe) {
-                        return recipe.energyCost;
+                        return recipe.energyCost();
                     }
 
                     @Override
@@ -75,6 +91,9 @@ public class MultifunctionalReactorBlockEntity extends EnergyReceiverBlockEntity
                         } else {
                             outputStack.grow(recipeOutput.getCount());
                         }
+
+                        entity.inputFluid = new FluidStack(recipe.value().fluid().holder(), entity.inputFluid.amount() + recipe.value().fluid().amount());
+                        entity.setChanged();
                     }
                 }
         );
@@ -83,12 +102,12 @@ public class MultifunctionalReactorBlockEntity extends EnergyReceiverBlockEntity
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("block.hayo.multifunctional_reactor");
+        return Component.translatable("block.hayo.solid_fluid_reactor");
     }
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new MultifunctionalReactorMenu(containerId, this, inventory);
+        return new SolidFluidReactorMenu(containerId, this, inventory);
     }
 
     @Override
@@ -104,12 +123,13 @@ public class MultifunctionalReactorBlockEntity extends EnergyReceiverBlockEntity
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        this.draining.save(output.child("draining"));
+        output.store("input_fluid", FluidStack.MAP_CODEC.codec(), this.inputFluid);
+        output.putInt("draining_progress", this.draining.progress);
     }
 
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.draining.load(input.childOrEmpty("draining"));
+        this.inputFluid = input.read("input_fluid", FluidStack.MAP_CODEC.codec()).orElse(FluidStack.EMPTY);
+        this.draining.progress = input.getIntOr("draining_progress", 0);
     }
-
 }

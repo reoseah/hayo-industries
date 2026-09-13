@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:multifunctional_reactor"
+          "name": "hayo:solid_fluid_reactor"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/multifunctional_reactor"
+  "random_sequence": "hayo:blocks/solid_fluid_reactor"
 }

@@ -1,4 +1,4 @@
-package hayo.multifunctional_reactor;
+package hayo.solid_fluid_reactor;
 
 import lombok.Getter;
 import net.minecraft.server.level.ServerLevel;
@@ -6,8 +6,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
 public class RecipeHandler<R extends Recipe<I>, I extends RecipeInput> {
@@ -16,14 +14,6 @@ public class RecipeHandler<R extends Recipe<I>, I extends RecipeInput> {
 
     @Getter
     protected int progress;
-
-    public void save(ValueOutput output) {
-        output.putInt("progress", this.progress);
-    }
-
-    public void load(ValueInput input) {
-        this.progress = input.getIntOr("progress", 0);
-    }
 
     public int tick(RecipeType<R> recipeType, I input, ServerLevel level, RecipeResourceState resourceState, Context<R, I> ctx) {
         if (input.isEmpty()) {

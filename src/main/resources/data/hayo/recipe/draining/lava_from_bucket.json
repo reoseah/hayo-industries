@@ -1,0 +1,12 @@
+{
+  "type": "hayo:draining",
+  "ingredient": "minecraft:lava_bucket",
+  "result": {
+    "id": "minecraft:bucket"
+  },
+  "energy_cost": 100,
+  "fluid": {
+    "id": "minecraft:lava",
+    "amount": 1000
+  }
+}
