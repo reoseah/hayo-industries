@@ -1,5 +1,6 @@
 package hayo.solid_fluid_reactor;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -22,6 +23,7 @@ public record FluidStack(Holder<Fluid> holder, int amount) {
             )
             .apply(instance, FluidStack::new)
     );
+    public static final Codec<FluidStack> CODEC = MAP_CODEC.codec();
     public static final StreamCodec<RegistryFriendlyByteBuf, FluidStack> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.holderRegistry(Registries.FLUID),
             FluidStack::holder,
@@ -29,6 +31,10 @@ public record FluidStack(Holder<Fluid> holder, int amount) {
             FluidStack::amount,
             FluidStack::new
     );
+
+    public FluidStack(Fluid fluid, int amount) {
+        this(fluid.builtInRegistryHolder(), amount);
+    }
 
     public Fluid fluid() {
         return this.holder.value();

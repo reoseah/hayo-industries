@@ -8,6 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 
+// TODO: extract into interface + default implementation
 public abstract class ClassicMachineRecipe extends SingleItemRecipe {
     public final int inputCount;
     public final float extraResultChance;

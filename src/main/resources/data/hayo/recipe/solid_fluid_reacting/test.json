@@ -1,0 +1,21 @@
+{
+  "type": "hayo:solid_fluid_reacting",
+  "input_item": "minecraft:bedrock",
+  "input_fluid": {
+    "id": [
+      "minecraft:water"
+    ],
+    "amount": 500
+  },
+  "result_items": [
+    {
+      "id": "minecraft:diamond",
+      "count": 2
+    }
+  ],
+  "result_fluid": {
+    "id": "minecraft:lava",
+    "amount": 100
+  },
+  "energy_cost": 1000
+}

@@ -66,6 +66,8 @@ public class HayoGuiSprites {
     public static final Identifier COMPRESSING_ARROW_OVERLAY = Hayo.modId("recipe_arrows/compressing_overlay");
     public static final Identifier EXTRACTING_ARROW = Hayo.modId("recipe_arrows/extracting");
     public static final Identifier EXTRACTING_ARROW_OVERLAY = Hayo.modId("recipe_arrows/extracting_overlay");
+    public static final Identifier REACTING_ARROW = Hayo.modId("recipe_arrows/reacting");
+    public static final Identifier REACTING_ARROW_OVERLAY = Hayo.modId("recipe_arrows/reacting_overlay");
 
     public static void blitRecipeArrow(GuiGraphicsExtractor graphics, int x, int y, Identifier arrow, Identifier arrowOverlay, int progress, int maxProgress) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, arrow, x, y, 24, 16);

@@ -16,7 +16,6 @@ import hayo.generator.GeneratorBlock;
 import hayo.generator.GeneratorBlockEntity;
 import hayo.generator.GeneratorMenu;
 import hayo.generator.GeneratorScreen;
-import hayo.solid_fluid_reactor.*;
 import hayo.nether_station.NetherStationPiece;
 import hayo.nether_station.NetherStationStructure;
 import hayo.processing_machine.classic.*;
@@ -25,6 +24,7 @@ import hayo.rubber_tree.ResinProducingLogBlock;
 import hayo.rubber_tree.RubberFoliagePlacer;
 import hayo.solar_panel.SolarPanelBlock;
 import hayo.solar_panel.SolarPanelBlockEntity;
+import hayo.solid_fluid_reactor.*;
 import hayo.wrench.WrenchItem;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -821,6 +821,7 @@ public class Hayo {
         public static final RecipeType<NutrientExtractingRecipe> NUTRIENT_EXTRACTING = register("nutrient_paste_extracting");
         public static final RecipeType<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating");
         public static final RecipeType<DrainingRecipe> DRAINING = register("draining");
+        public static final RecipeType<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting");
 
         public static void initialize() {
         }
@@ -844,6 +845,7 @@ public class Hayo {
         public static final RecipeSerializer<NutrientExtractingRecipe> NUTRIENT_EXTRACTING = register("nutrient_paste_extracting", ClassicMachineRecipe.createCodec(NutrientExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<DrainingRecipe> DRAINING = register("draining", new RecipeSerializer<>(DrainingRecipe.CODEC, DrainingRecipe.STREAM_CODEC));
+        public static final RecipeSerializer<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SolidFluidReactingRecipe.CODEC, SolidFluidReactingRecipe.STREAM_CODEC));
 
         public static void initialize() {
         }

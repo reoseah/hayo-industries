@@ -1,0 +1,20 @@
+{
+  "type": "hayo:draining",
+  "input": {
+    "fabric:type": "fabric:components",
+    "base": "minecraft:potion",
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:water"
+      }
+    }
+  },
+  "result_item": {
+    "id": "minecraft:glass_bottle"
+  },
+  "result_fluid": {
+    "id": "minecraft:water",
+    "amount": 250
+  },
+  "energy_cost": 25
+}

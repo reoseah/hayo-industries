@@ -40,14 +40,16 @@ public class SolidFluidReactorScreen extends AbstractContainerScreen<SolidFluidR
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.leftPos, this.topPos, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
 
-        var inputFluid = this.menu.data.inputFluid().value();
-        int inputFluidAmount = this.menu.data.inputFluidAmount();
-        this.extractFluidColumn(graphics, mouseX, mouseY, inputFluid, inputFluidAmount, 34, 15);
-
-        HayoGuiSprites.blitDrainingArrow(graphics, this.leftPos + 13, this.topPos + 36, this.menu.data.drainProgress(), this.menu.data.maxDrainProgress());
         EnergyGuiSprites.blitZap(graphics, this.leftPos + 63, this.topPos + 36, this.menu.data.energy(), this.menu.data.capacity());
 
-        HayoGuiSprites.blitFluidOverlay(graphics, this.leftPos + 142, this.topPos + 15);
+        var inputFluid = this.menu.data.inputFluid();
+        this.extractFluidColumn(graphics, mouseX, mouseY, inputFluid.fluid(), inputFluid.amount(), 34, 15);
+        HayoGuiSprites.blitDrainingArrow(graphics, this.leftPos + 13, this.topPos + 36, this.menu.data.drainProgress(), this.menu.data.maxDrainProgress());
+
+        var resultFluid = this.menu.data.resultFluid();
+        this.extractFluidColumn(graphics, mouseX, mouseY, resultFluid.fluid(), resultFluid.amount(), 142, 15);
+
+        HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 85, this.topPos + 34, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY, this.menu.data.reactProgress(), this.menu.data.maxReactProgress());
     }
 
     @Override
@@ -71,7 +73,7 @@ public class SolidFluidReactorScreen extends AbstractContainerScreen<SolidFluidR
                     Component.translatable("hayo.millibuckets_with_capacity_and_percentage",
                             fluidAmount,
                             SolidFluidReactorBlockEntity.FLUID_CAPACITY,
-                            String.format("%.0f", 100 * (float) fluidAmount / (float) SolidFluidReactorBlockEntity.FLUID_CAPACITY)
+                            100 * (float) fluidAmount / (float) SolidFluidReactorBlockEntity.FLUID_CAPACITY
                     ).withStyle(ChatFormatting.GRAY)
             ), Optional.empty(), mouseX, mouseY);
         }

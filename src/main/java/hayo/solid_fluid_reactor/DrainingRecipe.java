@@ -12,14 +12,18 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-public record DrainingRecipe(Ingredient input, ItemStackTemplate result, int energyCost,
-                             FluidStack fluid) implements Recipe<SingleRecipeInput> {
+public record DrainingRecipe(
+        Ingredient input,
+        ItemStackTemplate resultItem,
+        FluidStack resultFluid,
+        int energyCost
+) implements Recipe<SingleRecipeInput> {
     public static final MapCodec<DrainingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(
-                    Ingredient.CODEC.fieldOf("ingredient").forGetter(DrainingRecipe::input),
-                    ItemStackTemplate.CODEC.fieldOf("result").forGetter(DrainingRecipe::result),
-                    Codec.INT.fieldOf("energy_cost").forGetter(DrainingRecipe::energyCost),
-                    FluidStack.MAP_CODEC.codec().fieldOf("fluid").forGetter(DrainingRecipe::fluid)
+                    Ingredient.CODEC.fieldOf("input").forGetter(DrainingRecipe::input),
+                    ItemStackTemplate.CODEC.fieldOf("result_item").forGetter(DrainingRecipe::resultItem),
+                    FluidStack.MAP_CODEC.codec().fieldOf("result_fluid").forGetter(DrainingRecipe::resultFluid),
+                    Codec.INT.fieldOf("energy_cost").forGetter(DrainingRecipe::energyCost)
             )
             .apply(instance, DrainingRecipe::new)
     );
@@ -27,11 +31,11 @@ public record DrainingRecipe(Ingredient input, ItemStackTemplate result, int ene
             Ingredient.CONTENTS_STREAM_CODEC,
             DrainingRecipe::input,
             ItemStackTemplate.STREAM_CODEC,
-            DrainingRecipe::result,
+            DrainingRecipe::resultItem,
+            FluidStack.STREAM_CODEC,
+            DrainingRecipe::resultFluid,
             ByteBufCodecs.INT,
             DrainingRecipe::energyCost,
-            FluidStack.STREAM_CODEC,
-            DrainingRecipe::fluid,
             DrainingRecipe::new
     );
 
@@ -52,7 +56,7 @@ public record DrainingRecipe(Ingredient input, ItemStackTemplate result, int ene
 
     @Override
     public ItemStack assemble(SingleRecipeInput input) {
-        return this.result.create();
+        return this.resultItem.create();
     }
 
     @Override
