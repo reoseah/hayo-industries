@@ -26,8 +26,8 @@ public record SolidFluidReactingRecipe(
             .group(
                     Ingredient.CODEC.fieldOf("input_item").forGetter(SolidFluidReactingRecipe::inputItem),
                     FluidInput.NON_EMPTY_CODEC.fieldOf("input_fluid").forGetter(SolidFluidReactingRecipe::inputFluid),
-                    ItemStackTemplate.CODEC.listOf(0, 3).fieldOf("result_items").forGetter(SolidFluidReactingRecipe::resultItems),
-                    FluidStack.MAP_CODEC.fieldOf("result_fluid").forGetter(SolidFluidReactingRecipe::resultFluid),
+                    ItemStackTemplate.CODEC.listOf(0, 3).fieldOf("result_items").orElse(List.of()).forGetter(SolidFluidReactingRecipe::resultItems),
+                    FluidStack.MAP_CODEC.fieldOf("result_fluid").orElse(FluidStack.EMPTY).forGetter(SolidFluidReactingRecipe::resultFluid),
                     Codec.INT.fieldOf("energy_cost").forGetter(SolidFluidReactingRecipe::energyCost)
             )
             .apply(instance, SolidFluidReactingRecipe::new)
@@ -85,5 +85,10 @@ public record SolidFluidReactingRecipe(
     @Override
     public RecipeBookCategory recipeBookCategory() {
         return null;
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 }
