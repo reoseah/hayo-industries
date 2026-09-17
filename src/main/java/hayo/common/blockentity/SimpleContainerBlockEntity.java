@@ -1,5 +1,6 @@
 package hayo.common.blockentity;
 
+import hayo.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentGetter;
@@ -12,6 +13,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -20,6 +22,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 public abstract class SimpleContainerBlockEntity extends BlockEntity implements Container, Nameable, MenuProvider {
     protected final NonNullList<ItemStack> stacks;
@@ -134,5 +138,62 @@ public abstract class SimpleContainerBlockEntity extends BlockEntity implements 
         return currentStack.isEmpty()
                 || ItemStack.isSameItemSameComponents(currentStack, stack)
                 && currentStack.getCount() + stack.getCount() <= Math.min(stack.getMaxStackSize(), this.getMaxStackSize(stack));
+    }
+
+    public static boolean canInsertShapelessly(NonNullList<ItemStack> inventory, List<ItemStackTemplate> templates, int from, int to, int maxStackSize) {
+        if (templates.isEmpty()) {
+            return true;
+        }
+
+        var simulated = NonNullList.withSize(SolidFluidReactorBlockEntity.SLOTS, ItemStack.EMPTY);
+        for (int slot : SolidFluidReactorBlockEntity.OUTPUT_SLOTS) {
+            simulated.set(slot, inventory.get(slot).copy());
+        }
+
+        for (var template : templates) {
+            var resultStack = template.create();
+            if (!insertShapeless(simulated, resultStack, from, to, maxStackSize)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean insertShapeless(NonNullList<ItemStack> inventory, ItemStack stack, int from, int to, int maxStackSize) {
+        if (stack.isEmpty()) {
+            return true;
+        }
+
+        for (int slot = from; slot <= to; slot++) {
+            var current = inventory.get(slot);
+            if (!current.isEmpty() && ItemStack.isSameItemSameComponents(current, stack)) {
+                int maxCount = Math.min(stack.getMaxStackSize(), Math.min(maxStackSize, stack.getMaxStackSize()));
+                int available = maxCount - current.getCount();
+                if (available > 0) {
+                    int toAdd = Math.min(available, stack.getCount());
+                    current.grow(toAdd);
+                    stack.shrink(toAdd);
+                    if (stack.isEmpty()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        for (int slot = from; slot <= to; slot++) {
+            var current = inventory.get(slot);
+            if (current.isEmpty()) {
+                int maxCount = Math.min(stack.getMaxStackSize(), Math.min(maxStackSize, stack.getMaxStackSize()));
+                int toAdd = Math.min(maxCount, stack.getCount());
+                inventory.set(slot, stack.copyWithCount(toAdd));
+                stack.shrink(toAdd);
+                if (stack.isEmpty()) {
+                    return true;
+                }
+            }
+        }
+
+        return stack.isEmpty();
     }
 }

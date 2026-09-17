@@ -97,13 +97,24 @@ public class HayoGuiSprites {
 
     public static final Identifier DRAINING_ARROW = Hayo.modId("draining_arrow");
     public static final Identifier DRAINING_ARROW_OVERLAY = Hayo.modId("draining_arrow_overlay");
+    public static final Identifier FILLING_ARROW = Hayo.modId("filling_arrow");
+    public static final Identifier FILLING_ARROW_OVERLAY = Hayo.modId("filling_arrow_overlay");
 
     public static void blitDrainingArrow(GuiGraphicsExtractor graphics, int x, int y, int progress, int maxProgress) {
-//        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DRAINING_ARROW, x, y, 18, 14);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DRAINING_ARROW, x, y, 18, 14);
 
         if (progress > 0 && maxProgress > 0) {
             int length = Mth.clamp(1 + 18 * progress / maxProgress, 0, 18);
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DRAINING_ARROW_OVERLAY, 18, 14, 0, 0, x, y, length, 14);
+        }
+    }
+
+    public static void blitFillingArrow(GuiGraphicsExtractor graphics, int x, int y, int progress, int maxProgress) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FILLING_ARROW, x, y, 18, 14);
+
+        if (progress > 0 && maxProgress > 0) {
+            int length = Mth.clamp(1 + 18 * progress / maxProgress, 0, 18);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FILLING_ARROW_OVERLAY, 18, 14, 0, 0, x, y, length, 14);
         }
     }
 }

@@ -1,5 +1,5 @@
 {
-  "type": "hayo:draining",
+  "type": "hayo:fluid_draining",
   "input": {
     "fabric:type": "fabric:components",
     "base": "minecraft:potion",

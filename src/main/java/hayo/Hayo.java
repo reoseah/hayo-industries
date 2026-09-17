@@ -820,7 +820,8 @@ public class Hayo {
         public static final RecipeType<ExtractingRecipe> EXTRACTING = register("extracting");
         public static final RecipeType<NutrientExtractingRecipe> NUTRIENT_EXTRACTING = register("nutrient_paste_extracting");
         public static final RecipeType<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating");
-        public static final RecipeType<DrainingRecipe> DRAINING = register("draining");
+        public static final RecipeType<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining");
+        public static final RecipeType<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling");
         public static final RecipeType<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting");
 
         public static void initialize() {
@@ -844,7 +845,8 @@ public class Hayo {
         public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", ClassicMachineRecipe.createCodec(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<NutrientExtractingRecipe> NUTRIENT_EXTRACTING = register("nutrient_paste_extracting", ClassicMachineRecipe.createCodec(NutrientExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
-        public static final RecipeSerializer<DrainingRecipe> DRAINING = register("draining", new RecipeSerializer<>(DrainingRecipe.CODEC, DrainingRecipe.STREAM_CODEC));
+        public static final RecipeSerializer<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining", new RecipeSerializer<>(FluidDrainingRecipe.CODEC, FluidDrainingRecipe.STREAM_CODEC));
+        public static final RecipeSerializer<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling", new RecipeSerializer<>(FluidFillingRecipe.CODEC, FluidFillingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SolidFluidReactingRecipe.CODEC, SolidFluidReactingRecipe.STREAM_CODEC));
 
         public static void initialize() {

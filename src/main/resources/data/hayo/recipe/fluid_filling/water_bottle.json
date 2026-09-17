@@ -1,0 +1,17 @@
+{
+  "type": "hayo:fluid_filling",
+  "input_item": "minecraft:glass_bottle",
+  "input_fluid": {
+    "id": "minecraft:water",
+    "amount": 250
+  },
+  "result_item": {
+    "id": "minecraft:potion",
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:water"
+      }
+    }
+  },
+  "energy_cost": 25
+}

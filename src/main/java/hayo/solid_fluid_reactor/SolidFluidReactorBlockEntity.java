@@ -11,7 +11,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
@@ -21,13 +20,12 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
-
 public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity {
     public static final int SLOTS = 13;
+
     public static final int INPUT = 0;
-    public static final int DRAIN_INPUT = 1;
-    public static final int FILL_INPUT = 2;
+    public static final int INPUT_TANK_INPUT = 1;
+    public static final int OUTPUT_TANK_INPUT = 2;
 
     public static final int BATTERY = 3;
 
@@ -35,8 +33,8 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity {
     public static final int OUTPUT_2 = 5;
     public static final int OUTPUT_3 = 6;
     public static final int[] OUTPUT_SLOTS = {OUTPUT_1, OUTPUT_2, OUTPUT_3};
-    public static final int DRAIN_OUTPUT = 7;
-    public static final int FILL_OUTPUT = 8;
+    public static final int INPUT_TANK_OUTPUT = 7;
+    public static final int OUTPUT_TANK_OUTPUT = 8;
 
     public static final int UPGRADE_1 = 9;
     public static final int UPGRADES = 4;
@@ -50,8 +48,9 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity {
     @Getter
     protected FluidStack resultFluid = FluidStack.EMPTY;
 
-    protected final RecipeHandler<DrainingRecipe, SingleRecipeInput> draining = new RecipeHandler<>();
-    protected final RecipeHandler<SolidFluidReactingRecipe, ItemFluidPairRecipeInput> reacting = new RecipeHandler<>();
+    protected final RecipeState<FluidDrainingRecipe, SingleRecipeInput> inputDraining = new RecipeState<>();
+    protected final RecipeState<SolidFluidReactingRecipe, ItemFluidPairRecipeInput> reacting = new RecipeState<>();
+    protected final RecipeState<FluidFillingRecipe, ItemFluidPairRecipeInput> resultFilling = new RecipeState<>();
 
     public SolidFluidReactorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.SOLID_FLUID_REACTOR, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
@@ -59,14 +58,15 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity {
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, SolidFluidReactorBlockEntity entity) {
         entity.chargeFromSlot(BATTERY);
+        entity.resetEnergyPerTick();
         entity.storedEnergy -= entity.reacting.tick(
                 Hayo.RecipeTypes.SOLID_FLUID_REACTING,
                 new ItemFluidPairRecipeInput(entity.getItem(INPUT), entity.inputFluid),
                 (ServerLevel) level,
                 entity.storedEnergy >= REACTING_ENERGY_RATE
-                        ? new RecipeHandler.RecipeResourceState.Sufficient(REACTING_ENERGY_RATE)
-                        : new RecipeHandler.RecipeResourceState.NotSufficient(-2 * REACTING_ENERGY_RATE),
-                new RecipeHandler.Context<>() {
+                        ? new RecipeState.RecipeResourceState.Sufficient(REACTING_ENERGY_RATE)
+                        : new RecipeState.RecipeResourceState.NotSufficient(-2 * REACTING_ENERGY_RATE),
+                new RecipeState.Context<>() {
                     @Override
                     public void setChanged() {
                         entity.setChanged();
@@ -74,7 +74,7 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity {
 
                     @Override
                     public boolean canCraft(RecipeHolder<SolidFluidReactingRecipe> recipe, ItemFluidPairRecipeInput input) {
-                        if (!entity.canInsertResults(recipe.value().resultItems())) {
+                        if (!canInsertShapelessly(entity.stacks, recipe.value().resultItems(), OUTPUT_1, OUTPUT_3, entity.getMaxStackSize())) {
                             return false;
                         }
 
@@ -96,48 +96,41 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity {
                     }
 
                     @Override
-                    public void craft(RecipeHolder<SolidFluidReactingRecipe> recipe, ItemFluidPairRecipeInput input) {
+                    public void craft(RecipeHolder<SolidFluidReactingRecipe> recipeHolder, ItemFluidPairRecipeInput input) {
+                        var recipe = recipeHolder.value();
+
                         entity.stacks.get(INPUT).shrink(1);
-                        if (recipe.value().inputFluid().amount() > 0) {
-                            int remaining = entity.inputFluid.amount() - recipe.value().inputFluid().amount();
-                            entity.inputFluid = remaining > 0
-                                    ? new FluidStack(entity.inputFluid.holder(), remaining)
-                                    : FluidStack.EMPTY;
+                        if (recipe.inputFluid().amount() > 0) {
+                            entity.inputFluid = new FluidStack(entity.inputFluid.holder(), entity.inputFluid.amount() - recipe.inputFluid().amount());
                         }
 
-                        for (var template : recipe.value().resultItems()) {
-                            var resultStack = template.create();
-                            entity.insertIntoOutputSlots(entity.stacks, resultStack);
+                        for (var result : recipe.resultItems()) {
+                            insertShapeless(entity.stacks, result.create(), OUTPUT_1, OUTPUT_3, entity.getMaxStackSize());
                         }
 
-                        var resultFluid = recipe.value().resultFluid();
+                        var resultFluid = recipe.resultFluid();
                         if (!resultFluid.isEmpty()) {
-                            entity.resultFluid = new FluidStack(
-                                    resultFluid.holder(),
-                                    entity.resultFluid.amount() + resultFluid.amount()
-                            );
+                            entity.resultFluid = new FluidStack(resultFluid.holder(), entity.resultFluid.amount() + resultFluid.amount());
                         }
-
-                        entity.setChanged();
                     }
                 }
         );
-        entity.storedEnergy -= entity.draining.tick(
-                Hayo.RecipeTypes.DRAINING,
-                new SingleRecipeInput(entity.getItem(DRAIN_INPUT)),
+        entity.storedEnergy -= entity.inputDraining.tick(
+                Hayo.RecipeTypes.FLUID_DRAINING,
+                new SingleRecipeInput(entity.getItem(INPUT_TANK_INPUT)),
                 (ServerLevel) level,
                 entity.storedEnergy >= 1
-                        ? new RecipeHandler.RecipeResourceState.Sufficient(1)
-                        : new RecipeHandler.RecipeResourceState.NotSufficient(-2),
-                new RecipeHandler.Context<>() {
+                        ? new RecipeState.RecipeResourceState.Sufficient(1)
+                        : new RecipeState.RecipeResourceState.NotSufficient(-2),
+                new RecipeState.Context<>() {
                     @Override
                     public void setChanged() {
                         entity.setChanged();
                     }
 
                     @Override
-                    public boolean canCraft(RecipeHolder<DrainingRecipe> recipe, SingleRecipeInput input) {
-                        if (!entity.canInsertToSlot(recipe.value().assemble(input), DRAIN_OUTPUT)) {
+                    public boolean canCraft(RecipeHolder<FluidDrainingRecipe> recipe, SingleRecipeInput input) {
+                        if (!entity.canInsertToSlot(recipe.value().assemble(input), INPUT_TANK_OUTPUT)) {
                             return false;
                         }
                         if (entity.inputFluid.fluid() == Fluids.EMPTY) {
@@ -150,28 +143,65 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity {
                     }
 
                     @Override
-                    public int getRecipeCost(DrainingRecipe recipe) {
+                    public int getRecipeCost(FluidDrainingRecipe recipe) {
                         return recipe.energyCost();
                     }
 
                     @Override
-                    public void craft(RecipeHolder<DrainingRecipe> recipe, SingleRecipeInput input) {
-                        entity.stacks.get(DRAIN_INPUT).shrink(1);
+                    public void craft(RecipeHolder<FluidDrainingRecipe> recipeHolder, SingleRecipeInput input) {
+                        var recipe = recipeHolder.value();
 
-                        var recipeOutput = recipe.value().assemble(input);
-                        var outputStack = entity.stacks.get(DRAIN_OUTPUT);
-                        if (outputStack.isEmpty()) {
-                            entity.stacks.set(DRAIN_OUTPUT, recipeOutput);
+                        entity.stacks.get(INPUT_TANK_INPUT).shrink(1);
+                        entity.inputFluid = new FluidStack(recipe.resultFluid().holder(), entity.inputFluid.amount() + recipe.resultFluid().amount());
+
+                        var recipeOutput = recipe.assemble(input);
+                        var existingStack = entity.stacks.get(INPUT_TANK_OUTPUT);
+                        if (!existingStack.isEmpty()) {
+                            existingStack.grow(recipeOutput.getCount());
                         } else {
-                            outputStack.grow(recipeOutput.getCount());
+                            entity.stacks.set(INPUT_TANK_OUTPUT, recipeOutput);
                         }
-
-                        entity.inputFluid = new FluidStack(recipe.value().resultFluid().holder(), entity.inputFluid.amount() + recipe.value().resultFluid().amount());
-                        entity.setChanged();
                     }
                 }
         );
-        entity.resetEnergyPerTick();
+        entity.storedEnergy -= entity.resultFilling.tick(
+                Hayo.RecipeTypes.FLUID_FILLING,
+                new ItemFluidPairRecipeInput(entity.getItem(OUTPUT_TANK_INPUT), entity.resultFluid),
+                (ServerLevel) level,
+                entity.storedEnergy >= 1
+                        ? new RecipeState.RecipeResourceState.Sufficient(1)
+                        : new RecipeState.RecipeResourceState.NotSufficient(-2),
+                new RecipeState.Context<>() {
+                    @Override
+                    public void setChanged() {
+                        entity.setChanged();
+                    }
+
+                    @Override
+                    public boolean canCraft(RecipeHolder<FluidFillingRecipe> recipe, ItemFluidPairRecipeInput input) {
+                        return entity.canInsertToSlot(recipe.value().assemble(input), OUTPUT_TANK_OUTPUT);
+                    }
+
+                    @Override
+                    public int getRecipeCost(FluidFillingRecipe recipe) {
+                        return recipe.energyCost();
+                    }
+
+                    @Override
+                    public void craft(RecipeHolder<FluidFillingRecipe> recipe, ItemFluidPairRecipeInput input) {
+                        entity.stacks.get(OUTPUT_TANK_INPUT).shrink(1);
+                        entity.resultFluid = new FluidStack(entity.resultFluid.holder(), entity.resultFluid.amount() - recipe.value().inputFluid().amount());
+
+                        var recipeOutput = recipe.value().assemble(input);
+                        var existingStack = entity.stacks.get(OUTPUT_TANK_OUTPUT);
+                        if (!existingStack.isEmpty()) {
+                            existingStack.grow(recipeOutput.getCount());
+                        } else {
+                            entity.stacks.set(OUTPUT_TANK_OUTPUT, recipeOutput);
+                        }
+                    }
+                }
+        );
     }
 
     @Override
@@ -199,72 +229,17 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity {
         super.saveAdditional(output);
         output.store("input_fluid", FluidStack.CODEC, this.inputFluid);
         output.store("result_fluid", FluidStack.CODEC, this.resultFluid);
-        output.putInt("draining_progress", this.draining.progress);
+        output.putInt("input_filling_progress", this.inputDraining.progress);
         output.putInt("reacting_progress", this.reacting.progress);
+        output.putInt("result_draining_progress", this.resultFilling.progress);
     }
 
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.inputFluid = input.read("input_fluid", FluidStack.CODEC).orElse(FluidStack.EMPTY);
         this.resultFluid = input.read("result_fluid", FluidStack.CODEC).orElse(FluidStack.EMPTY);
-        this.draining.progress = input.getIntOr("draining_progress", 0);
+        this.inputDraining.progress = input.getIntOr("input_filling_progress", 0);
         this.reacting.progress = input.getIntOr("reacting_progress", 0);
-    }
-
-    private boolean canInsertResults(List<ItemStackTemplate> resultTemplates) {
-        if (resultTemplates.isEmpty()) {
-            return true;
-        }
-
-        var simulated = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
-        for (int slot : OUTPUT_SLOTS) {
-            simulated.set(slot, this.stacks.get(slot).copy());
-        }
-
-        for (var template : resultTemplates) {
-            var resultStack = template.create();
-            if (!this.insertIntoOutputSlots(simulated, resultStack)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean insertIntoOutputSlots(NonNullList<ItemStack> inventory, ItemStack stack) {
-        if (stack.isEmpty()) {
-            return true;
-        }
-
-        for (int slot : OUTPUT_SLOTS) {
-            var current = inventory.get(slot);
-            if (!current.isEmpty() && ItemStack.isSameItemSameComponents(current, stack)) {
-                int maxCount = Math.min(stack.getMaxStackSize(), this.getMaxStackSize(stack));
-                int available = maxCount - current.getCount();
-                if (available > 0) {
-                    int toAdd = Math.min(available, stack.getCount());
-                    current.grow(toAdd);
-                    stack.shrink(toAdd);
-                    if (stack.isEmpty()) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        for (int slot : OUTPUT_SLOTS) {
-            var current = inventory.get(slot);
-            if (current.isEmpty()) {
-                int maxCount = Math.min(stack.getMaxStackSize(), this.getMaxStackSize(stack));
-                int toAdd = Math.min(maxCount, stack.getCount());
-                inventory.set(slot, stack.copyWithCount(toAdd));
-                stack.shrink(toAdd);
-                if (stack.isEmpty()) {
-                    return true;
-                }
-            }
-        }
-
-        return stack.isEmpty();
+        this.resultFilling.progress = input.getIntOr("result_draining_progress", 0);
     }
 }

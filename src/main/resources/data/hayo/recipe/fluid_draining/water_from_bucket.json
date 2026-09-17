@@ -1,5 +1,5 @@
 {
-  "type": "hayo:draining",
+  "type": "hayo:fluid_draining",
   "input": "minecraft:water_bucket",
   "result_item": {
     "id": "minecraft:bucket"

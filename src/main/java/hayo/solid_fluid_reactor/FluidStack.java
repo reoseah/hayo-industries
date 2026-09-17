@@ -32,6 +32,12 @@ public record FluidStack(Holder<Fluid> holder, int amount) {
             FluidStack::new
     );
 
+    public FluidStack {
+        if (amount == 0) {
+            holder = Fluids.EMPTY.builtInRegistryHolder();
+        }
+    }
+
     public FluidStack(Fluid fluid, int amount) {
         this(fluid.builtInRegistryHolder(), amount);
     }

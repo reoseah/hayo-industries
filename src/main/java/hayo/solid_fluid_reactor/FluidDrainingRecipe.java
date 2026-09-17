@@ -12,41 +12,41 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-public record DrainingRecipe(
+public record FluidDrainingRecipe(
         Ingredient input,
         ItemStackTemplate resultItem,
         FluidStack resultFluid,
         int energyCost
 ) implements Recipe<SingleRecipeInput> {
-    public static final MapCodec<DrainingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+    public static final MapCodec<FluidDrainingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(
-                    Ingredient.CODEC.fieldOf("input").forGetter(DrainingRecipe::input),
-                    ItemStackTemplate.CODEC.fieldOf("result_item").forGetter(DrainingRecipe::resultItem),
-                    FluidStack.MAP_CODEC.codec().fieldOf("result_fluid").forGetter(DrainingRecipe::resultFluid),
-                    Codec.INT.fieldOf("energy_cost").forGetter(DrainingRecipe::energyCost)
+                    Ingredient.CODEC.fieldOf("input").forGetter(FluidDrainingRecipe::input),
+                    ItemStackTemplate.CODEC.fieldOf("result_item").forGetter(FluidDrainingRecipe::resultItem),
+                    FluidStack.MAP_CODEC.codec().fieldOf("result_fluid").forGetter(FluidDrainingRecipe::resultFluid),
+                    Codec.INT.fieldOf("energy_cost").forGetter(FluidDrainingRecipe::energyCost)
             )
-            .apply(instance, DrainingRecipe::new)
+            .apply(instance, FluidDrainingRecipe::new)
     );
-    public static final StreamCodec<RegistryFriendlyByteBuf, DrainingRecipe> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, FluidDrainingRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC,
-            DrainingRecipe::input,
+            FluidDrainingRecipe::input,
             ItemStackTemplate.STREAM_CODEC,
-            DrainingRecipe::resultItem,
+            FluidDrainingRecipe::resultItem,
             FluidStack.STREAM_CODEC,
-            DrainingRecipe::resultFluid,
+            FluidDrainingRecipe::resultFluid,
             ByteBufCodecs.INT,
-            DrainingRecipe::energyCost,
-            DrainingRecipe::new
+            FluidDrainingRecipe::energyCost,
+            FluidDrainingRecipe::new
     );
 
     @Override
     public RecipeType<? extends Recipe<SingleRecipeInput>> getType() {
-        return Hayo.RecipeTypes.DRAINING;
+        return Hayo.RecipeTypes.FLUID_DRAINING;
     }
 
     @Override
     public RecipeSerializer<? extends Recipe<SingleRecipeInput>> getSerializer() {
-        return Hayo.RecipeSerializers.DRAINING;
+        return Hayo.RecipeSerializers.FLUID_DRAINING;
     }
 
     @Override

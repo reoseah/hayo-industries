@@ -16,10 +16,10 @@ import net.minecraft.world.level.material.Fluids;
 
 import java.util.function.Predicate;
 
-public record FluidInput(HolderSet<Fluid> values, int amount) implements Predicate<FluidStack> {
-    public static final FluidInput EMPTY = new FluidInput(HolderSet.empty(), 0);
+public record FluidIngredientAmount(HolderSet<Fluid> values, int amount) implements Predicate<FluidStack> {
+    public static final FluidIngredientAmount EMPTY = new FluidIngredientAmount(HolderSet.empty(), 0);
 
-    public static final MapCodec<FluidInput> NON_EMPTY_CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+    public static final MapCodec<FluidIngredientAmount> NON_EMPTY_CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(
                     ExtraCodecs.nonEmptyHolderSet(
                                     HolderSetCodec.create(
@@ -34,18 +34,18 @@ public record FluidInput(HolderSet<Fluid> values, int amount) implements Predica
                                     )
                             )
                             .fieldOf("id")
-                            .forGetter(FluidInput::values),
-                    ExtraCodecs.POSITIVE_INT.fieldOf("amount").orElse(0).forGetter(FluidInput::amount)
+                            .forGetter(FluidIngredientAmount::values),
+                    ExtraCodecs.POSITIVE_INT.fieldOf("amount").orElse(0).forGetter(FluidIngredientAmount::amount)
             )
-            .apply(instance, FluidInput::new)
+            .apply(instance, FluidIngredientAmount::new)
     );
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FluidInput> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, FluidIngredientAmount> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.holderSet(Registries.FLUID),
-            FluidInput::values,
+            FluidIngredientAmount::values,
             ByteBufCodecs.VAR_INT,
-            FluidInput::amount,
-            FluidInput::new
+            FluidIngredientAmount::amount,
+            FluidIngredientAmount::new
     );
 
     @Override

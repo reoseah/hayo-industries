@@ -9,7 +9,7 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.material.Fluids;
 
 public interface SolidFluidReactorContainerData extends ContainerData {
-    int SIZE = 18;
+    int SIZE = 22;
 
     default int energy() {
         return (this.get(1) << 16) | (this.get(0) & 0xFFFF);
@@ -31,20 +31,28 @@ public interface SolidFluidReactorContainerData extends ContainerData {
         return new FluidStack(fluid, this.get(9));
     }
 
-    default int drainProgress() {
+    default int inputDrainingProgress() {
         return (this.get(11) << 16) | this.get(10) & 0xFFFF;
     }
 
-    default int maxDrainProgress() {
+    default int inputDrainingMaxProgress() {
         return (this.get(13) << 16) | this.get(12) & 0xFFFF;
     }
 
-    default int reactProgress() {
+    default int reactingProgress() {
         return (this.get(15) << 16) | this.get(14) & 0xFFFF;
     }
 
-    default int maxReactProgress() {
+    default int reactingMaxProgress() {
         return (this.get(17) << 16) | this.get(16) & 0xFFFF;
+    }
+
+    default int resultFillingProgress() {
+        return (this.get(19) << 16) | this.get(18) & 0xFFFF;
+    }
+
+    default int resultFillingMaxProgress() {
+        return (this.get(21) << 16) | this.get(20) & 0xFFFF;
     }
 
     class Clientside extends SimpleContainerData implements SolidFluidReactorContainerData {
@@ -79,13 +87,13 @@ public interface SolidFluidReactorContainerData extends ContainerData {
                 }
                 case 9 -> (short) this.entity.getResultFluid().amount();
 
-                case 10 -> this.entity.draining.progress & 0xFFFF;
-                case 11 -> this.entity.draining.progress >>> 16;
+                case 10 -> this.entity.inputDraining.progress & 0xFFFF;
+                case 11 -> this.entity.inputDraining.progress >>> 16;
                 case 12, 13 -> {
-                    var input = new SingleRecipeInput(this.entity.getItem(SolidFluidReactorBlockEntity.DRAIN_INPUT));
+                    var input = new SingleRecipeInput(this.entity.getItem(SolidFluidReactorBlockEntity.INPUT_TANK_INPUT));
                     var match = ((ServerLevel) this.entity.getLevel())
                             .recipeAccess()
-                            .getRecipeFor(Hayo.RecipeTypes.DRAINING, input, this.entity.getLevel(), this.entity.draining.lastMatch);
+                            .getRecipeFor(Hayo.RecipeTypes.FLUID_DRAINING, input, this.entity.getLevel(), this.entity.inputDraining.lastMatch);
                     int maxProgress = match.isPresent() ? match.get().value().energyCost() : 0;
                     yield dataId == 12 ? maxProgress & 0xFFFF : maxProgress >>> 16;
                 }
@@ -102,6 +110,20 @@ public interface SolidFluidReactorContainerData extends ContainerData {
                             .getRecipeFor(Hayo.RecipeTypes.SOLID_FLUID_REACTING, input, this.entity.getLevel(), this.entity.reacting.lastMatch);
                     int maxProgress = match.isPresent() ? match.get().value().energyCost() : 0;
                     yield dataId == 16 ? maxProgress & 0xFFFF : maxProgress >>> 16;
+                }
+
+                case 18 -> this.entity.resultFilling.progress & 0xFFFF;
+                case 19 -> this.entity.resultFilling.progress >>> 16;
+                case 20, 21 -> {
+                    var input = new ItemFluidPairRecipeInput(
+                            this.entity.getItem(SolidFluidReactorBlockEntity.OUTPUT_TANK_INPUT),
+                            this.entity.resultFluid
+                    );
+                    var match = ((ServerLevel) this.entity.getLevel())
+                            .recipeAccess()
+                            .getRecipeFor(Hayo.RecipeTypes.FLUID_FILLING, input, this.entity.getLevel(), this.entity.resultFilling.lastMatch);
+                    int maxProgress = match.isPresent() ? match.get().value().energyCost() : 0;
+                    yield dataId == 20 ? maxProgress & 0xFFFF : maxProgress >>> 16;
                 }
                 default -> 0;
             };

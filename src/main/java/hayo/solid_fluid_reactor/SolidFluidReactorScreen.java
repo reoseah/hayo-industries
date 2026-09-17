@@ -44,12 +44,13 @@ public class SolidFluidReactorScreen extends AbstractContainerScreen<SolidFluidR
 
         var inputFluid = this.menu.data.inputFluid();
         this.extractFluidColumn(graphics, mouseX, mouseY, inputFluid.fluid(), inputFluid.amount(), 34, 15);
-        HayoGuiSprites.blitDrainingArrow(graphics, this.leftPos + 13, this.topPos + 36, this.menu.data.drainProgress(), this.menu.data.maxDrainProgress());
+        HayoGuiSprites.blitDrainingArrow(graphics, this.leftPos + 13, this.topPos + 36, this.menu.data.inputDrainingProgress(), this.menu.data.inputDrainingMaxProgress());
 
         var resultFluid = this.menu.data.resultFluid();
         this.extractFluidColumn(graphics, mouseX, mouseY, resultFluid.fluid(), resultFluid.amount(), 142, 15);
+        HayoGuiSprites.blitFillingArrow(graphics, this.leftPos + 164, this.topPos + 36, this.menu.data.resultFillingProgress(), this.menu.data.resultFillingMaxProgress());
 
-        HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 85, this.topPos + 34, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY, this.menu.data.reactProgress(), this.menu.data.maxReactProgress());
+        HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 85, this.topPos + 34, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY, this.menu.data.reactingProgress(), this.menu.data.reactingMaxProgress());
     }
 
     @Override

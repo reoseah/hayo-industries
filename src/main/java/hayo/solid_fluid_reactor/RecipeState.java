@@ -8,7 +8,7 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.jspecify.annotations.Nullable;
 
-public class RecipeHandler<R extends Recipe<I>, I extends RecipeInput> {
+public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
     @Getter
     protected @Nullable RecipeHolder<R> lastMatch;
 
