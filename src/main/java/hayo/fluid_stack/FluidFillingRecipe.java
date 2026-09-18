@@ -1,4 +1,4 @@
-package hayo.solid_fluid_reactor;
+package hayo.fluid_stack;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -17,7 +17,7 @@ public record FluidFillingRecipe(
         FluidIngredientAmount inputFluid,
         ItemStackTemplate resultItem,
         int energyCost
-) implements Recipe<ItemFluidPairRecipeInput> {
+) implements Recipe<ItemFluidRecipeInput> {
     public static final MapCodec<FluidFillingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(
                     Ingredient.CODEC.fieldOf("input_item").forGetter(FluidFillingRecipe::inputItem),
@@ -41,12 +41,12 @@ public record FluidFillingRecipe(
     );
 
     @Override
-    public boolean matches(ItemFluidPairRecipeInput input, Level level) {
+    public boolean matches(ItemFluidRecipeInput input, Level level) {
         return this.inputItem.test(input.item()) && this.inputFluid.test(input.fluid());
     }
 
     @Override
-    public ItemStack assemble(ItemFluidPairRecipeInput input) {
+    public ItemStack assemble(ItemFluidRecipeInput input) {
         return this.resultItem.create();
     }
 
@@ -66,12 +66,12 @@ public record FluidFillingRecipe(
     }
 
     @Override
-    public RecipeSerializer<? extends Recipe<ItemFluidPairRecipeInput>> getSerializer() {
+    public RecipeSerializer<? extends Recipe<ItemFluidRecipeInput>> getSerializer() {
         return Hayo.RecipeSerializers.FLUID_FILLING;
     }
 
     @Override
-    public RecipeType<? extends Recipe<ItemFluidPairRecipeInput>> getType() {
+    public RecipeType<? extends Recipe<ItemFluidRecipeInput>> getType() {
         return Hayo.RecipeTypes.FLUID_FILLING;
     }
 

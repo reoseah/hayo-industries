@@ -1,9 +1,9 @@
-package hayo.solid_fluid_reactor;
+package hayo.fluid_stack;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 
-public record ItemFluidPairRecipeInput(ItemStack item, FluidStack fluid) implements RecipeInput {
+public record ItemFluidRecipeInput(ItemStack item, FluidStack fluid) implements RecipeInput {
     @Override
     public int size() {
         return 1;

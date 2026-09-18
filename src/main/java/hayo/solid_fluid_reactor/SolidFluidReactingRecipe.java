@@ -4,6 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hayo.Hayo;
+import hayo.fluid_stack.FluidIngredientAmount;
+import hayo.fluid_stack.FluidStack;
+import hayo.fluid_stack.ItemFluidRecipeInput;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -21,7 +24,7 @@ public record SolidFluidReactingRecipe(
         List<ItemStackTemplate> resultItems,
         FluidStack resultFluid,
         int energyCost
-) implements Recipe<ItemFluidPairRecipeInput> {
+) implements Recipe<ItemFluidRecipeInput> {
     public static final MapCodec<SolidFluidReactingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(
                     Ingredient.CODEC.fieldOf("input_item").forGetter(SolidFluidReactingRecipe::inputItem),
@@ -48,22 +51,22 @@ public record SolidFluidReactingRecipe(
     );
 
     @Override
-    public RecipeType<? extends Recipe<ItemFluidPairRecipeInput>> getType() {
+    public RecipeType<? extends Recipe<ItemFluidRecipeInput>> getType() {
         return Hayo.RecipeTypes.SOLID_FLUID_REACTING;
     }
 
     @Override
-    public RecipeSerializer<? extends Recipe<ItemFluidPairRecipeInput>> getSerializer() {
+    public RecipeSerializer<? extends Recipe<ItemFluidRecipeInput>> getSerializer() {
         return Hayo.RecipeSerializers.SOLID_FLUID_REACTING;
     }
 
     @Override
-    public boolean matches(ItemFluidPairRecipeInput input, Level level) {
+    public boolean matches(ItemFluidRecipeInput input, Level level) {
         return this.inputItem.test(input.item()) && this.inputFluid.test(input.fluid());
     }
 
     @Override
-    public ItemStack assemble(ItemFluidPairRecipeInput input) {
+    public ItemStack assemble(ItemFluidRecipeInput input) {
         throw new UnsupportedOperationException();
     }
 

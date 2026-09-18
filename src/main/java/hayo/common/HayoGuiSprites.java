@@ -89,10 +89,15 @@ public class HayoGuiSprites {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SMALL_ARROW_LEFT, x, y, 9, 18);
     }
 
-    public static final Identifier FLUID_OVERLAY = Hayo.modId("fluid_overlay");
+    public static final Identifier FLUID_TANK = Hayo.modId("fluid_tank");
+    public static final Identifier FLUID_TANK_OVERLAY = Hayo.modId("fluid_tank_overlay");
 
-    public static void blitFluidOverlay(GuiGraphicsExtractor graphics, int x, int y) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FLUID_OVERLAY, x, y, 18, 56);
+    public static void blitFluidTank(GuiGraphicsExtractor graphics, int x, int y) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FLUID_TANK, x, y, 18, 56);
+    }
+
+    public static void blitFluidTankOverlay(GuiGraphicsExtractor graphics, int x, int y) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FLUID_TANK_OVERLAY, x, y, 18, 56);
     }
 
     public static final Identifier DRAINING_ARROW = Hayo.modId("draining_arrow");

@@ -51,7 +51,11 @@ public abstract class ClassicMachineMenu extends HayoContainerMenu {
         if (stack.is(this.getUpgradeTag())) {
             return this.moveItemStackTo(stack, 3, 7, false);
         }
-        if (player.level().recipeAccess().getSynchronizedRecipes().getFirstMatch(this.getRecipeType(), new SingleRecipeInput(stack), player.level()).isPresent()) {
+        if (player.level()
+                .recipeAccess()
+                .getSynchronizedRecipes()
+                .getFirstMatch(this.getRecipeType(), new SingleRecipeInput(stack), player.level())
+                .isPresent()) {
             return this.moveItemStackTo(stack, 0, 1, false);
         }
         if (EnergyComponents.chargesBlocks(stack)) {

@@ -59,6 +59,7 @@ public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends 
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, T holder, IFocusGroup focuses) {
+        var recipe = holder.value();
         if (this.canHaveCatalyst() && !this.getCatalyst(holder).isEmpty()) {
             builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
                     .setBackground(UPGRADE_SLOT_DRAWABLE, -1, -1)
@@ -67,24 +68,24 @@ public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends 
         }
 
         int x = this.canHaveCatalyst() ? 20 : 0;
-        if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.inputCount != 1) {
+        if (recipe instanceof ClassicMachineRecipe machineRecipe && machineRecipe.inputCount != 1) {
             builder.addSlot(RecipeIngredientRole.INPUT, x + 1, 1)
                     .setStandardSlotBackground()
-                    .addItemStacks(holder.value().input().items().map(item -> new ItemStack(item, machineRecipe.inputCount)).toList());
+                    .addItemStacks(recipe.input().items().map(item -> new ItemStack(item, machineRecipe.inputCount)).toList());
         } else {
             builder.addSlot(RecipeIngredientRole.INPUT, x + 1, 1)
                     .setStandardSlotBackground()
-                    .add(holder.value().input());
+                    .add(recipe.input());
         }
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, x + 61, 5)
                 .setOutputSlotBackground()
-                .add(holder.value().result().create());
-        if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
+                .add(recipe.result().create());
+        if (recipe instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, x + 85, 1)
                     .setStandardSlotBackground()
                     .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.chance.tooltip", machineRecipe.extraResultChance * 100).withStyle(ChatFormatting.YELLOW)))
-                    .add(holder.value().result().create().copyWithCount(1));
+                    .add(recipe.result().create().copyWithCount(1));
         }
     }
 
@@ -96,8 +97,8 @@ public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends 
 
         int energyCost = this.getEnergyCost(holder);
         int energyUseRate = this.getEnergyUseRate(holder);
-        int fill = (int) ((int) System.currentTimeMillis() / 50 * energyUseRate) % energyCost;
-        HayoGuiSprites.blitRecipeArrow(graphics, x + 24, 4, this.getArrowSprite(), this.getArrowOverlaySprite(), (int) fill, energyCost);
+        int fill = (int) Math.abs((System.currentTimeMillis() / 50 * energyUseRate) % energyCost);
+        HayoGuiSprites.blitRecipeArrow(graphics, x + 24, 4, this.getArrowSprite(), this.getArrowOverlaySprite(), fill, energyCost);
 
         var font = Minecraft.getInstance().font;
         graphics.text(font, EnergyTexts.amount(energyCost), x + 19, 24, 0xFF404040, false);

@@ -2,6 +2,8 @@ package hayo.mod_support.jei;
 
 import hayo.Hayo;
 import hayo.common.HayoGuiSprites;
+import hayo.fluid_stack.FluidDrainingRecipe;
+import hayo.fluid_stack.FluidFillingRecipe;
 import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
 import mezz.jei.api.IModPlugin;
@@ -36,6 +38,8 @@ public class HayoJeiPlugin implements IModPlugin {
     public static final IRecipeType<RecipeHolder<ExtractingRecipe>> EXTRACTING = IRecipeType.create(Hayo.RecipeTypes.EXTRACTING);
     public static final IRecipeType<RecipeHolder<NutrientExtractingRecipe>> NUTRIENT_EXTRACTING = IRecipeType.create(Hayo.RecipeTypes.NUTRIENT_EXTRACTING);
     public static final IRecipeType<RecipeHolder<MatterGeneratingRecipe>> MATTER_GENERATING = IRecipeType.create(Hayo.RecipeTypes.MATTER_GENERATING);
+    public static final IRecipeType<RecipeHolder<FluidDrainingRecipe>> FLUID_DRAINING = IRecipeType.create(Hayo.RecipeTypes.FLUID_DRAINING);
+    public static final IRecipeType<RecipeHolder<FluidFillingRecipe>> FLUID_FILLING = IRecipeType.create(Hayo.RecipeTypes.FLUID_FILLING);
 
     @Override
     public Identifier getPluginUid() {
@@ -54,6 +58,8 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new ClassicMachineRecipeCategory(EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.extracting"), drawable.apply(Hayo.Items.EXTRACTOR)));
         registration.addRecipeCategories(new CatalyzedMachineRecipeCategory(NUTRIENT_EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.nutrient_extracting"), drawable.apply(Hayo.Items.EXTRACTOR), new ItemStack(Hayo.Items.NUTRIENT_DISPENSER_UPGRADE)));
         registration.addRecipeCategories(new MatterGeneratingJeiCategory(drawable.apply(Hayo.Items.MATTER_GENERATOR)));
+        registration.addRecipeCategories(new FluidDrainingJeiCategory(drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR)));
+        registration.addRecipeCategories(new FluidFillingJeiCategory(drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR)));
     }
 
     @Override
@@ -69,6 +75,8 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipes(EXTRACTING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.EXTRACTING)));
         registration.addRecipes(NUTRIENT_EXTRACTING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.NUTRIENT_EXTRACTING)));
         registration.addRecipes(MATTER_GENERATING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING)));
+        registration.addRecipes(FLUID_DRAINING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.FLUID_DRAINING)));
+        registration.addRecipes(FLUID_FILLING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.FLUID_FILLING)));
     }
 
     @Override
@@ -82,6 +90,7 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addCraftingStation(EXTRACTING, new ItemStack(Hayo.Items.EXTRACTOR));
         registration.addCraftingStation(NUTRIENT_EXTRACTING, new ItemStack(Hayo.Items.EXTRACTOR));
         registration.addCraftingStation(MATTER_GENERATING, new ItemStack(Hayo.Items.MATTER_GENERATOR));
+        registration.addCraftingStation(FLUID_DRAINING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
     }
 
     @Override

@@ -146,7 +146,7 @@ public abstract class SimpleContainerBlockEntity extends BlockEntity implements 
         }
 
         var simulated = NonNullList.withSize(SolidFluidReactorBlockEntity.SLOTS, ItemStack.EMPTY);
-        for (int slot : SolidFluidReactorBlockEntity.OUTPUT_SLOTS) {
+        for (int slot = from; slot <= to; slot++) {
             simulated.set(slot, inventory.get(slot).copy());
         }
 

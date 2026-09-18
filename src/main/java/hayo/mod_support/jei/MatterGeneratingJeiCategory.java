@@ -28,8 +28,6 @@ import java.util.List;
 import static hayo.mod_support.jei.SingleItemRecipeCategory.UPGRADE_SLOT_DRAWABLE;
 
 public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder<MatterGeneratingRecipe>> {
-    private static final int TICK_IN_MILLISECONDS = 50;
-
     private final IDrawable icon;
 
     public MatterGeneratingJeiCategory(IDrawable icon) {
@@ -48,7 +46,7 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
 
     @Override
     public int getWidth() {
-        return 80 + 20;
+        return 100;
     }
 
     @Override
@@ -70,26 +68,26 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
                     .add(holder.value().requiredUpgrade().value());
         }
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 20+59, 5) //
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 79, 5) //
                 .setOutputSlotBackground() //
                 .add(holder.value().result().create());
     }
 
     @Override
     public void draw(RecipeHolder<MatterGeneratingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        EnergyGuiSprites.blitZap(graphics, 20 + 3, 5, 10, 14);
+        EnergyGuiSprites.blitZap(graphics, 23, 5, 10, 14);
 
         int energyCost = holder.value().energyCost();
-        float fill = (System.currentTimeMillis() / TICK_IN_MILLISECONDS * ElectricFurnaceBlockEntity.ENERGY_USE_RATE) % energyCost;
-        HayoGuiSprites.blitRecipeArrow(graphics, 20 + 24, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, (int) fill, energyCost);
+        float fill = (System.currentTimeMillis() / 50 * ElectricFurnaceBlockEntity.ENERGY_USE_RATE) % energyCost;
+        HayoGuiSprites.blitRecipeArrow(graphics, 44, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, (int) fill, energyCost);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 1, 28, 0xFF404040, false);
     }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<MatterGeneratingRecipe> holder, IRecipeSlotsView slots, double mouseX, double mouseY) {
-        if (mouseX >= 20 + 3 && mouseX <= 20 + 3 + 14 && mouseY >= 5 && mouseY <= 5 + 14 //
-                || mouseX > 20 + 22 && mouseX <= 20 + 22 + 24 && mouseY > 4 && mouseY <= 4 + 16) {
+        if (mouseX >= 23 && mouseX <= 23 + 14 && mouseY >= 5 && mouseY <= 5 + 14 //
+                || mouseX > 42 && mouseX <= 42 + 24 && mouseY > 4 && mouseY <= 4 + 16) {
             var recipe = holder.value();
             float duration = Mth.positiveCeilDiv(recipe.energyCost(), MatterGeneratorBlockEntity.ENERGY_USE_RATE) / 20F;
 

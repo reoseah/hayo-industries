@@ -12,6 +12,8 @@ import hayo.common.item.SimpleElectricItem;
 import hayo.energy.EnergyTexts;
 import hayo.energy.item.*;
 import hayo.energy_storage.*;
+import hayo.fluid_stack.FluidDrainingRecipe;
+import hayo.fluid_stack.FluidFillingRecipe;
 import hayo.generator.GeneratorBlock;
 import hayo.generator.GeneratorBlockEntity;
 import hayo.generator.GeneratorMenu;
@@ -131,8 +133,11 @@ public class Hayo {
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.EXTRACTING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.NUTRIENT_EXTRACTING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.FLUID_DRAINING);
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.FLUID_FILLING);
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.SOLID_FLUID_REACTING);
 
-        BiomeModifications.create(modId("rubber_trees")).add(
+        BiomeModifications.create(modId("rubber_tree_patch")).add(
                 ModificationPhase.ADDITIONS,
                 BiomeSelectors.tag(BiomeTags.IS_FOREST)
                         .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
@@ -159,8 +164,8 @@ public class Hayo {
         return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
-    public static <T> ResourceKey<T> modKey(ResourceKey<? extends Registry<T>> registryKey, String location) {
-        return ResourceKey.create(registryKey, modId(location));
+    public static <T> ResourceKey<T> modKey(ResourceKey<? extends Registry<T>> registryKey, String path) {
+        return ResourceKey.create(registryKey, modId(path));
     }
 
     public static class Blocks {

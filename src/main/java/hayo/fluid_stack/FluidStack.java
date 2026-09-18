@@ -1,4 +1,4 @@
-package hayo.solid_fluid_reactor;
+package hayo.fluid_stack;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -47,6 +47,6 @@ public record FluidStack(Holder<Fluid> holder, int amount) {
     }
 
     public boolean isEmpty() {
-        return this.amount == 0;
+        return this.holder == Fluids.EMPTY.builtInRegistryHolder() || this.amount == 0;
     }
 }

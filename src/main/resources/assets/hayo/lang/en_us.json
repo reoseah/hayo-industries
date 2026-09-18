@@ -176,5 +176,7 @@
   "hayo.damage_reduction": " %s%% Damage Reduction",
   "hayo.required_upgrade_name": "Requires %s",
   "hayo.millibuckets_with_capacity_and_percentage": "%s / %s mB (%s%%)",
-  "hayo.empty": "Empty"
+  "hayo.empty": "Empty",
+  "hayo.recipe_type.fluid_draining": "Fluid Draining",
+  "hayo.accepts_fluids": "Accepts fluids:"
 }

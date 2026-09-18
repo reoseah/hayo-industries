@@ -1,6 +1,8 @@
 package hayo.solid_fluid_reactor;
 
 import hayo.Hayo;
+import hayo.fluid_stack.FluidStack;
+import hayo.fluid_stack.ItemFluidRecipeInput;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.ContainerData;
@@ -101,7 +103,7 @@ public interface SolidFluidReactorContainerData extends ContainerData {
                 case 14 -> this.entity.reacting.progress & 0xFFFF;
                 case 15 -> this.entity.reacting.progress >>> 16;
                 case 16, 17 -> {
-                    var input = new ItemFluidPairRecipeInput(
+                    var input = new ItemFluidRecipeInput(
                             this.entity.getItem(SolidFluidReactorBlockEntity.INPUT),
                             this.entity.inputFluid
                     );
@@ -115,7 +117,7 @@ public interface SolidFluidReactorContainerData extends ContainerData {
                 case 18 -> this.entity.resultFilling.progress & 0xFFFF;
                 case 19 -> this.entity.resultFilling.progress >>> 16;
                 case 20, 21 -> {
-                    var input = new ItemFluidPairRecipeInput(
+                    var input = new ItemFluidRecipeInput(
                             this.entity.getItem(SolidFluidReactorBlockEntity.OUTPUT_TANK_INPUT),
                             this.entity.resultFluid
                     );
@@ -132,6 +134,16 @@ public interface SolidFluidReactorContainerData extends ContainerData {
         @Override
         public void set(int dataId, int value) {
 
+        }
+
+        @Override
+        public FluidStack inputFluid() {
+            return this.entity.inputFluid;
+        }
+
+        @Override
+        public FluidStack resultFluid() {
+            return this.entity.resultFluid;
         }
     }
 }

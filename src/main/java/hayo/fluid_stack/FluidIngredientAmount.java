@@ -1,4 +1,4 @@
-package hayo.solid_fluid_reactor;
+package hayo.fluid_stack;
 
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
