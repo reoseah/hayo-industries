@@ -1,0 +1,12 @@
+{
+  "type": "hayo:fluid_filling",
+  "input_item": "minecraft:bucket",
+  "input_fluid": {
+    "id": "hayo:chemfuel",
+    "amount": 1000
+  },
+  "result_item": {
+    "id": "hayo:chemfuel_bucket"
+  },
+  "energy_cost": 100
+}
