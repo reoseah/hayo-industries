@@ -20,14 +20,25 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleItemRecipe;
+import org.jspecify.annotations.Nullable;
 
-public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends SingleItemRecipe>> implements IRecipeCategory<T> {
+public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends SingleItemRecipe>> implements IRecipeCategory<T> {
     public static final IDrawable UPGRADE_SLOT_DRAWABLE = new DrawableSprite(Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.GUI), HayoGuiSprites.UPGRADE_SLOT, 18, 18);
 
-    protected abstract boolean canHaveCatalyst();
+    private final IDrawable icon;
+    public final @Nullable ItemStack requiredUpgrade;
 
-    protected ItemStack getCatalyst(T holder) {
-        return ItemStack.EMPTY;
+    protected SingleItemJeiCategory(IDrawable icon, @Nullable ItemStack requiredUpgrade) {
+        this.icon = icon;
+        this.requiredUpgrade = requiredUpgrade;
+    }
+
+    protected final boolean canHaveCatalyst() {
+        return this.requiredUpgrade != null;
+    }
+
+    protected final ItemStack getCatalyst(T holder) {
+        return this.requiredUpgrade;
     }
 
     protected abstract boolean canHaveSecondaryResult();
@@ -39,6 +50,11 @@ public abstract class SingleItemRecipeCategory<T extends RecipeHolder<? extends 
     protected abstract Identifier getArrowSprite();
 
     protected abstract Identifier getArrowOverlaySprite();
+
+    @Override
+    public final IDrawable getIcon() {
+        return this.icon;
+    }
 
     @Override
     public int getWidth() {

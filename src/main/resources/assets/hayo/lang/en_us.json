@@ -178,5 +178,7 @@
   "hayo.millibuckets_with_capacity_and_percentage": "%s / %s mB (%s%%)",
   "hayo.empty": "Empty",
   "hayo.recipe_type.fluid_draining": "Fluid Draining",
-  "hayo.accepts_fluids": "Accepts fluids:"
+  "hayo.accepts_fluids": "Accepts fluids:",
+  "hayo.recipe_type.solid_fluid_reacting": "Solid/Fluid Reacting",
+  "hayo.recipe_type.fluid_filling": "Fluid Filling"
 }

@@ -3,9 +3,9 @@ package hayo.mod_support.jei;
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
+import hayo.fluid_stack.FluidDrainingRecipe;
 import hayo.fluid_stack.FluidGuiRendering;
 import hayo.processing_machine.classic.ElectricFurnaceBlockEntity;
-import hayo.fluid_stack.FluidDrainingRecipe;
 import hayo.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -75,7 +75,7 @@ public class FluidDrainingJeiCategory implements IRecipeCategory<RecipeHolder<Fl
                 graphics,
                 holder.value().resultFluid(),
                 SolidFluidReactorBlockEntity.FLUID_CAPACITY,
-                (int) (topLeft.x + 1 + 18 + 9),
+                (int) (topLeft.x + 18 + 9),
                 (int) topLeft.y - 1,
                 (int) (topLeft.x + mouseX),
                 (int) (topLeft.y + mouseY));
@@ -83,6 +83,6 @@ public class FluidDrainingJeiCategory implements IRecipeCategory<RecipeHolder<Fl
 
         EnergyGuiSprites.blitZap(graphics, 51, 19, 10, 14);
 
-        graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 51, 45, 0xFF404040, false);
+        graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 50, 42, 0xFF404040, false);
     }
 }

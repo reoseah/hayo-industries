@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-import static hayo.mod_support.jei.SingleItemRecipeCategory.UPGRADE_SLOT_DRAWABLE;
+import static hayo.mod_support.jei.SingleItemJeiCategory.UPGRADE_SLOT_DRAWABLE;
 
 public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder<MatterGeneratingRecipe>> {
     private final IDrawable icon;

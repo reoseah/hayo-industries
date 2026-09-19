@@ -5,22 +5,23 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jspecify.annotations.Nullable;
 
-public class ClassicMachineRecipeCategory extends SingleItemRecipeCategory<RecipeHolder<ClassicMachineRecipe>> {
+public class ClassicMachineJeiCategory extends SingleItemJeiCategory<RecipeHolder<ClassicMachineRecipe>> {
     private final IRecipeType<RecipeHolder<ClassicMachineRecipe>> type;
     private final int energyUseRate;
     private final Identifier arrow, arrowOverlay;
     private final Component title;
-    private final IDrawable icon;
 
-    public ClassicMachineRecipeCategory(IRecipeType<? extends RecipeHolder<? extends ClassicMachineRecipe>> type, int energyUseRate, Identifier arrow, Identifier arrowOverlay, Component title, IDrawable icon) {
+    public ClassicMachineJeiCategory(IRecipeType<? extends RecipeHolder<? extends ClassicMachineRecipe>> type, int energyUseRate, Identifier arrow, Identifier arrowOverlay, Component title, IDrawable icon, @Nullable ItemStack requiredUpgrade) {
+        super(icon, requiredUpgrade);
         this.type = (IRecipeType<RecipeHolder<ClassicMachineRecipe>>) type;
         this.energyUseRate = energyUseRate;
         this.arrow = arrow;
         this.arrowOverlay = arrowOverlay;
         this.title = title;
-        this.icon = icon;
     }
 
     @Override
@@ -31,16 +32,6 @@ public class ClassicMachineRecipeCategory extends SingleItemRecipeCategory<Recip
     @Override
     public Component getTitle() {
         return this.title;
-    }
-
-    @Override
-    public IDrawable getIcon() {
-        return this.icon;
-    }
-
-    @Override
-    protected boolean canHaveCatalyst() {
-        return false;
     }
 
     @Override

@@ -6,6 +6,7 @@ import hayo.fluid_stack.FluidDrainingRecipe;
 import hayo.fluid_stack.FluidFillingRecipe;
 import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
+import hayo.solid_fluid_reactor.SolidFluidReactingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -40,6 +41,7 @@ public class HayoJeiPlugin implements IModPlugin {
     public static final IRecipeType<RecipeHolder<MatterGeneratingRecipe>> MATTER_GENERATING = IRecipeType.create(Hayo.RecipeTypes.MATTER_GENERATING);
     public static final IRecipeType<RecipeHolder<FluidDrainingRecipe>> FLUID_DRAINING = IRecipeType.create(Hayo.RecipeTypes.FLUID_DRAINING);
     public static final IRecipeType<RecipeHolder<FluidFillingRecipe>> FLUID_FILLING = IRecipeType.create(Hayo.RecipeTypes.FLUID_FILLING);
+    public static final IRecipeType<RecipeHolder<SolidFluidReactingRecipe>> SOLID_FLUID_REACTING = IRecipeType.create(Hayo.RecipeTypes.SOLID_FLUID_REACTING);
 
     @Override
     public Identifier getPluginUid() {
@@ -50,16 +52,22 @@ public class HayoJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         Function<Item, IDrawable> drawable = (item) -> registration.getJeiHelpers().getGuiHelper().createDrawableItemLike(item);
 
-        registration.addRecipeCategories(new ElectricCookingCategory(ELECTRIC_SMELTING, Component.translatable("hayo.recipe_type.electric_smelting"), drawable.apply(Hayo.Items.ELECTRIC_FURNACE)));
-        registration.addRecipeCategories(new ElectricCookingCategory(ELECTRIC_BLASTING, Component.translatable("hayo.recipe_type.electric_blasting"), drawable.apply(Hayo.Items.ELECTRIC_FURNACE)));
-        registration.addRecipeCategories(new ElectricCookingCategory(ELECTRIC_SMOKING, Component.translatable("hayo.recipe_type.electric_smoking"), drawable.apply(Hayo.Items.ELECTRIC_FURNACE)));
-        registration.addRecipeCategories(new ClassicMachineRecipeCategory(MACERATING, 2, HayoGuiSprites.MACERATING_ARROW, HayoGuiSprites.MACERATING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.macerating"), drawable.apply(Hayo.Items.MACERATOR)));
-        registration.addRecipeCategories(new ClassicMachineRecipeCategory(COMPRESSING, 2, HayoGuiSprites.COMPRESSING_ARROW, HayoGuiSprites.COMPRESSING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.compressing"), drawable.apply(Hayo.Items.COMPRESSOR)));
-        registration.addRecipeCategories(new ClassicMachineRecipeCategory(EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.extracting"), drawable.apply(Hayo.Items.EXTRACTOR)));
-        registration.addRecipeCategories(new CatalyzedMachineRecipeCategory(NUTRIENT_EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.nutrient_extracting"), drawable.apply(Hayo.Items.EXTRACTOR), new ItemStack(Hayo.Items.NUTRIENT_DISPENSER_UPGRADE)));
+        var electricFurnace = drawable.apply(Hayo.Items.ELECTRIC_FURNACE);
+        registration.addRecipeCategories(new ElectricCookingCategory(ELECTRIC_SMELTING, Component.translatable("hayo.recipe_type.electric_smelting"), electricFurnace, null));
+        registration.addRecipeCategories(new ElectricCookingCategory(ELECTRIC_BLASTING, Component.translatable("hayo.recipe_type.electric_blasting"), electricFurnace, new ItemStack(Hayo.Items.BLASTING_UPGRADE)));
+        registration.addRecipeCategories(new ElectricCookingCategory(ELECTRIC_SMOKING, Component.translatable("hayo.recipe_type.electric_smoking"), electricFurnace, new ItemStack(Hayo.Items.SMOKING_UPGRADE)));
+
+        registration.addRecipeCategories(new ClassicMachineJeiCategory(MACERATING, 2, HayoGuiSprites.MACERATING_ARROW, HayoGuiSprites.MACERATING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.macerating"), drawable.apply(Hayo.Items.MACERATOR), null));
+        registration.addRecipeCategories(new ClassicMachineJeiCategory(COMPRESSING, 2, HayoGuiSprites.COMPRESSING_ARROW, HayoGuiSprites.COMPRESSING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.compressing"), drawable.apply(Hayo.Items.COMPRESSOR), null));
+        var extractor = drawable.apply(Hayo.Items.EXTRACTOR);
+        registration.addRecipeCategories(new ClassicMachineJeiCategory(EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.extracting"), extractor, null));
+        registration.addRecipeCategories(new ClassicMachineJeiCategory(NUTRIENT_EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.nutrient_extracting"), extractor, new ItemStack(Hayo.Items.NUTRIENT_DISPENSER_UPGRADE)));
+
         registration.addRecipeCategories(new MatterGeneratingJeiCategory(drawable.apply(Hayo.Items.MATTER_GENERATOR)));
+
         registration.addRecipeCategories(new FluidDrainingJeiCategory(drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR)));
         registration.addRecipeCategories(new FluidFillingJeiCategory(drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR)));
+        registration.addRecipeCategories(new SolidFluidReactingCategory(drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR)));
     }
 
     @Override
@@ -77,6 +85,7 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipes(MATTER_GENERATING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING)));
         registration.addRecipes(FLUID_DRAINING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.FLUID_DRAINING)));
         registration.addRecipes(FLUID_FILLING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.FLUID_FILLING)));
+        registration.addRecipes(SOLID_FLUID_REACTING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.SOLID_FLUID_REACTING)));
     }
 
     @Override
@@ -91,6 +100,8 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addCraftingStation(NUTRIENT_EXTRACTING, new ItemStack(Hayo.Items.EXTRACTOR));
         registration.addCraftingStation(MATTER_GENERATING, new ItemStack(Hayo.Items.MATTER_GENERATOR));
         registration.addCraftingStation(FLUID_DRAINING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
+        registration.addCraftingStation(FLUID_FILLING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
+        registration.addCraftingStation(SOLID_FLUID_REACTING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
     }
 
     @Override

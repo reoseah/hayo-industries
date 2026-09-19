@@ -37,7 +37,7 @@ public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<Flu
 
     @Override
     public Component getTitle() {
-        return Component.translatable("hayo.recipe_type.fluid_draining");
+        return Component.translatable("hayo.recipe_type.fluid_filling");
     }
 
     @Override
@@ -59,16 +59,16 @@ public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<Flu
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<FluidFillingRecipe> holder, IFocusGroup focuses) {
         var recipe = holder.value();
 
-        builder.addSlot(RecipeIngredientRole.INPUT, 1 + 18 + 9, 1).add(recipe.inputItem()).setStandardSlotBackground();
+        builder.addSlot(RecipeIngredientRole.INPUT, 28, 1).add(recipe.inputItem()).setStandardSlotBackground();
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).add(recipe.inputFluid().values().stream().findAny().map(Holder::value).orElse(Fluids.EMPTY), recipe.inputFluid().amount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 1 + 18 + 9, 37).add(recipe.resultItem()).setStandardSlotBackground();
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 28, 37).add(recipe.resultItem()).setStandardSlotBackground();
     }
 
     @Override
     public void draw(RecipeHolder<FluidFillingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         int energyCost = holder.value().energyCost();
         float fill = (System.currentTimeMillis() / 50 * ElectricFurnaceBlockEntity.ENERGY_USE_RATE) % energyCost;
-        HayoGuiSprites.blitFillingArrow(graphics, 6+16, 20, (int) fill, energyCost);
+        HayoGuiSprites.blitFillingArrow(graphics, 22, 20, (int) fill, energyCost);
 
         var topLeft = graphics.pose().transform(new Vector3f(0, 0, 1));
         graphics.pose().pushMatrix();
@@ -77,7 +77,7 @@ public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<Flu
                 graphics,
                 holder.value().inputFluid(),
                 SolidFluidReactorBlockEntity.FLUID_CAPACITY,
-                (int) (topLeft.x + 1),
+                (int) (topLeft.x ),
                 (int) topLeft.y - 1,
                 (int) (topLeft.x + mouseX),
                 (int) (topLeft.y + mouseY));
@@ -85,6 +85,6 @@ public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<Flu
 
         EnergyGuiSprites.blitZap(graphics, 51, 19, 10, 14);
 
-        graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 51, 45, 0xFF404040, false);
+        graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 50, 42, 0xFF404040, false);
     }
 }

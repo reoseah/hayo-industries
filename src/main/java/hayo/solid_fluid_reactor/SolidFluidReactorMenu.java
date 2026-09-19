@@ -3,6 +3,7 @@ package hayo.solid_fluid_reactor;
 import hayo.Hayo;
 import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
+import hayo.energy.item.EnergyComponents;
 import hayo.fluid_stack.ItemFluidRecipeInput;
 import hayo.processing_machine.classic.MachineUpgradeSlot;
 import net.minecraft.world.Container;
@@ -50,6 +51,10 @@ public class SolidFluidReactorMenu extends HayoContainerMenu {
     protected boolean handleQuickMoveFromInventory(ItemStack stack, Player player, int index) {
         if (stack.is(Hayo.ItemTags.SOLID_FLUID_REACTOR_UPGRADES)) {
             return this.moveItemStackTo(stack, SolidFluidReactorBlockEntity.UPGRADE_1, SolidFluidReactorBlockEntity.UPGRADE_1 + SolidFluidReactorBlockEntity.UPGRADES, false);
+        }
+
+        if (EnergyComponents.chargesBlocks(stack)) {
+            return this.moveItemStackTo(stack, SolidFluidReactorBlockEntity.BATTERY, SolidFluidReactorBlockEntity.BATTERY + 1, false);
         }
 
         if (player.level()
