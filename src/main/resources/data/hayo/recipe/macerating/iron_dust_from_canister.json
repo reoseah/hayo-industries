@@ -1,9 +1,0 @@
-{
-  "type": "hayo:macerating",
-  "ingredient": "hayo:canister",
-  "energy_cost": 400,
-  "result": {
-    "id": "hayo:iron_dust",
-    "count": 7
-  }
-}

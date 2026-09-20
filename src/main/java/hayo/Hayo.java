@@ -122,7 +122,6 @@ public class Hayo {
         Blocks.initialize();
         Items.initialize();
         BlockEntityTypes.initialize();
-        Fluids.initialize();
         MenuTypes.initialize();
         FoliagePlacerTypes.initialize();
         RecipeTypes.initialize();
@@ -229,25 +228,9 @@ public class Hayo {
         public static final Block REINFORCED_DOOR = register("reinforced_door", props -> new DoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
         public static final Block REINFORCED_TRAPDOOR = register("reinforced_trapdoor", props -> new TrapDoorBlock(BlockSetType.IRON, props), BlockBehaviour.Properties.of().strength(3F, 20F).noOcclusion().sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE));
 
-        public static final Block CHEMFUEL = register(
-                "chemfuel",
-                properties -> new LiquidBlock(Fluids.CHEMFUEL, properties),
-                BlockBehaviour.Properties.of()
-                        .mapColor(MapColor.COLOR_ORANGE)
-                        .replaceable()
-                        .noCollision()
-                        .strength(100.0F)
-                        .pushReaction(PushReaction.DESTROY)
-                        .noLootTable()
-                        .liquid()
-                        .sound(SoundType.EMPTY)
-        );
-
         public static void initialize() {
             StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
             StrippableBlockRegistry.register(RUBBER_WOOD, STRIPPED_RUBBER_WOOD);
-
-            FlammableBlockRegistry.getDefaultInstance().add(Blocks.CHEMFUEL, 60, 5);
         }
 
         private static <T extends Block> T register(String name, Function<BlockBehaviour.Properties, T> constructor, BlockBehaviour.Properties properties) {
@@ -331,11 +314,6 @@ public class Hayo {
         public static final Item REINFORCED_STONE_SLAB = registerBlock(Blocks.REINFORCED_STONE_SLAB);
         public static final Item REINFORCED_DOOR = registerBlock(Blocks.REINFORCED_DOOR);
         public static final Item REINFORCED_TRAPDOOR = registerBlock(Blocks.REINFORCED_TRAPDOOR);
-
-        public static final Item CHEMFUEL_BUCKET = registerItem("chemfuel_bucket",
-                properties -> new BucketItem(Fluids.CHEMFUEL, properties),
-                new Item.Properties().craftRemainder(BUCKET).stacksTo(1)
-        );
 
         private static final TagKey<Item> COPPER_INGOTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"));
         public static final Item WRENCH = registerItem("wrench", WrenchItem::new, new Item.Properties()
@@ -634,8 +612,6 @@ public class Hayo {
                 entries.accept(REINFORCED_DOOR);
                 entries.accept(REINFORCED_TRAPDOOR);
 
-                entries.accept(CHEMFUEL_BUCKET);
-
                 entries.accept(WRENCH);
                 entries.accept(SILICON_BRONZE_SWORD);
                 entries.accept(SILICON_BRONZE_SHOVEL);
@@ -798,18 +774,6 @@ public class Hayo {
         public static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<T> constructor, Block... blocks) {
             var type = FabricBlockEntityTypeBuilder.create(constructor, blocks).build();
             return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, modId(name), type);
-        }
-    }
-
-    public static class Fluids {
-        public static final FlowingFluid CHEMFUEL = register("chemfuel", new ChemfuelFluid.Source());
-        public static final FlowingFluid FLOWING_CHEMFUEL = register("flowing_chemfuel", new ChemfuelFluid.Flowing());
-
-        public static void initialize() {
-        }
-
-        public static <T extends Fluid> T register(String name, T fluid) {
-            return Registry.register(BuiltInRegistries.FLUID, modId(name), fluid);
         }
     }
 
