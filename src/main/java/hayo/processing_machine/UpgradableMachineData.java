@@ -50,6 +50,14 @@ public interface UpgradableMachineData extends ContainerData {
         return this.get(14);
     }
 
+    default int getRecipeProgressPerTick() {
+        int energyUse = this.energyUseRate();
+        if (this.hasInductionUpgrade()) {
+            return 1 + (energyUse - 1) * this.inductionHeat() / UpgradableMachineBlockEntity.MAX_INDUCTION_HEAT;
+        }
+        return energyUse;
+    }
+
     class Clientside extends SimpleContainerData implements UpgradableMachineData {
         public Clientside() {
             super(SIZE);

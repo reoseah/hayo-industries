@@ -1,17 +1,14 @@
 package hayo.processing_machine.classic;
 
-import com.google.common.collect.Lists;
 import hayo.Hayo;
 import hayo.common.HayoGuiSprites;
-import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
-import hayo.processing_machine.UpgradableMachineBlockEntity;
+import hayo.processing_machine.MachineTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
@@ -83,8 +80,9 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
         HayoGuiSprites.blitUpgradeSlots(graphics, this.leftPos + 151, this.topPos + 7, 4);
         HayoGuiSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 83);
 
-        EnergyGuiSprites.blitZap(graphics, this.leftPos + 48, this.topPos + 37, this.menu.data.energy(), this.menu.data.capacity());
-        HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 70, this.topPos + 36, this.arrow, this.arrowOverlay, this.menu.data.recipeProgress(), this.menu.data.recipeCost());
+        var data = this.menu.data;
+        EnergyGuiSprites.blitZap(graphics, this.leftPos + 48, this.topPos + 37, data.energy(), data.capacity());
+        HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 70, this.topPos + 36, this.arrow, this.arrowOverlay, data.recipeProgress(), data.recipeCost());
     }
 
     @Override
@@ -92,29 +90,13 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
         super.extractTooltip(graphics, mouseX, mouseY);
 
         if (this.isHovering(48, 37, 14, 14, mouseX, mouseY)) {
-            List<Component> components = Lists.newArrayList(
-                    EnergyTexts.amountAndPercentage(this.menu.data.energy(), this.menu.data.capacity()),
-                    EnergyTexts.maxAmount(this.menu.data.capacity()).withStyle(ChatFormatting.GRAY),
-                    Component.translatable("hayo.machine.energy_use_with_base_and_bonus", this.menu.data.energyUseRate(), this.baseEnergyUse, String.format("%+.0f", this.menu.data.extraCraftingSpeed())).withStyle(ChatFormatting.GRAY)
+            graphics.setTooltipForNextFrame(
+                    this.font,
+                    MachineTexts.createUpgradableMachineTooltip(this.menu.data, this.defaultRecipeCost, this.baseEnergyUse),
+                    Optional.empty(),
+                    mouseX,
+                    mouseY
             );
-            if (this.menu.data.hasInductionUpgrade()) {
-                components.add(Component.translatable("hayo.machine.heat", String.format("%.1f", this.menu.data.inductionHeat() * 100F / UpgradableMachineBlockEntity.MAX_INDUCTION_HEAT), this.menu.getRecipeProgressPerTick()).withStyle(ChatFormatting.GRAY));
-            }
-
-            components.add(Component.empty());
-            if (this.menu.data.matchesRecipe()) {
-                components.add(Component.translatable("hayo.machine.current_recipe").withStyle(ChatFormatting.GRAY));
-            } else {
-                components.add(Component.translatable("hayo.machine.default_recipe").withStyle(ChatFormatting.GRAY));
-            }
-            components.add(Component.translatable("hayo.machine.recipe_cost", this.menu.data.recipeCost(), this.defaultRecipeCost, String.format("%+.0f", this.menu.data.extraRecipeCost())).withStyle(ChatFormatting.GRAY));
-
-            float duration = Mth.positiveCeilDiv(this.menu.data.recipeCost(), this.menu.getRecipeProgressPerTick()) / 20F;
-            float defaultDuration = Mth.positiveCeilDiv(this.defaultRecipeCost, this.baseEnergyUse) / 20F;
-            float relativeDuration = duration / defaultDuration * 100;
-            components.add(Component.translatable("hayo.machine.recipe_duration", String.format("%.0f", duration), this.menu.getRecipeProgressPerTick(), String.format("%.0f", defaultDuration), String.format("%.0f", relativeDuration)).withStyle(ChatFormatting.GRAY));
-
-            graphics.setTooltipForNextFrame(this.font, components, Optional.empty(), mouseX, mouseY);
         }
     }
 
@@ -131,7 +113,7 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
                 boolean repeats = false;
                 boolean conflicts = false;
 
-                for (var slot = 3; slot <= 7; slot++) {
+                for (var slot = 3; slot < 7; slot++) {
                     var installedUpgrade = this.menu.getSlot(slot).getItem();
                     if (stack == installedUpgrade) {
                         hoveringItself = true;

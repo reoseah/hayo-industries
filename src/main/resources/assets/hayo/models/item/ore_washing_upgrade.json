@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "hayo:item/orewasher_upgrade"
+    "layer0": "hayo:item/ore_washing_upgrade"
   }
 }

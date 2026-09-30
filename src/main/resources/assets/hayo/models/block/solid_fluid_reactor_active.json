@@ -8,12 +8,12 @@
     }
   },
   "textures": {
-    "particle": "hayo:block/solid_fluid_reactor_front",
+    "particle": "hayo:block/solid_fluid_reactor_front_active",
     "down": "hayo:block/refined_iron_block",
     "up": "hayo:block/solid_fluid_reactor_top",
-    "north": "hayo:block/solid_fluid_reactor_front",
-    "east": "hayo:block/solid_fluid_reactor_side",
+    "north": "hayo:block/solid_fluid_reactor_front_active",
+    "east": "hayo:block/solid_fluid_reactor_side_active",
     "south": "hayo:block/machine_side_with_vents",
-    "west": "hayo:block/solid_fluid_reactor_side"
+    "west": "hayo:block/solid_fluid_reactor_side_active"
   }
 }

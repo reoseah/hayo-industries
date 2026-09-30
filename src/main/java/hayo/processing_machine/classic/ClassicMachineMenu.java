@@ -3,7 +3,6 @@ package hayo.processing_machine.classic;
 import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
 import hayo.energy.item.EnergyComponents;
-import hayo.processing_machine.UpgradableMachineBlockEntity;
 import hayo.processing_machine.UpgradableMachineData;
 import hayo.processing_machine.UpgradeSlot;
 import net.minecraft.tags.TagKey;
@@ -57,13 +56,5 @@ public abstract class ClassicMachineMenu extends HayoContainerMenu {
             return this.moveItemStackTo(stack, 1, 2, false);
         }
         return false;
-    }
-
-    public int getRecipeProgressPerTick() {
-        int energyUse = this.data.energyUseRate();
-        if (this.data.hasInductionUpgrade()) {
-            return 1 + (energyUse - 1) * this.data.inductionHeat() / UpgradableMachineBlockEntity.MAX_INDUCTION_HEAT;
-        }
-        return energyUse;
     }
 }

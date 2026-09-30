@@ -524,13 +524,13 @@ public class Hayo {
                 props -> new ItemWithTooltip(
                         props,
                         Component.empty(),
-                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.extractor")).withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.solid_fluid_reactor")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.use_nutrient_paste_recipes").withStyle(ChatFormatting.DARK_AQUA)
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
 
-        public static final Item OREWASHER_UPGRADE = registerItem("orewasher_upgrade",
+        public static final Item ORE_WASHING_UPGRADE = registerItem("ore_washing_upgrade",
                 props -> new ItemWithTooltip(
                         props,
                         Component.empty(),
@@ -701,7 +701,7 @@ public class Hayo {
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
                 entries.accept(NUTRIENT_DISPENSER_UPGRADE);
-                entries.accept(OREWASHER_UPGRADE);
+                entries.accept(ORE_WASHING_UPGRADE);
                 entries.accept(SUNNARIUM_CONCENTRATOR_UPGRADE);
                 entries.accept(OVERWORLD_LIFE_CRYSTAL_MEMORY);
             });
