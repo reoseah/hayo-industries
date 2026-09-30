@@ -36,7 +36,6 @@ import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.registry.CompostableRegistry;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.ChatFormatting;
@@ -49,7 +48,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.references.BlockIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
@@ -84,7 +82,8 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerTy
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
-import net.minecraft.world.level.material.*;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +93,6 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.level.block.Blocks.leavesProperties;
 import static net.minecraft.world.level.block.Blocks.logProperties;
 
@@ -468,7 +466,6 @@ public class Hayo {
         public static final Item RAW_IRIDIUM = registerItem("raw_iridium", new Item.Properties().rarity(Rarity.RARE));
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
-        public static final Item CANISTER = registerItem("canister");
         public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food(new FoodProperties(4, 8F, false)));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade",
@@ -529,6 +526,16 @@ public class Hayo {
                         Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.extractor")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.use_nutrient_paste_recipes").withStyle(ChatFormatting.DARK_AQUA)
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
+        );
+
+        public static final Item OREWASHER_UPGRADE = registerItem("orewasher_upgrade",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.solid_fluid_reactor")).withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.use_ore_washing_recipes").withStyle(ChatFormatting.DARK_AQUA)
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
@@ -686,7 +693,6 @@ public class Hayo {
                 entries.accept(RAW_IRIDIUM);
                 entries.accept(QUANTUM_PLATE);
                 entries.accept(COMPRESSED_PLANTS);
-                entries.accept(CANISTER);
                 entries.accept(NUTRIENT_PASTE);
 
                 entries.accept(OVERCLOCK_UPGRADE);
@@ -695,6 +701,7 @@ public class Hayo {
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
                 entries.accept(NUTRIENT_DISPENSER_UPGRADE);
+                entries.accept(OREWASHER_UPGRADE);
                 entries.accept(SUNNARIUM_CONCENTRATOR_UPGRADE);
                 entries.accept(OVERWORLD_LIFE_CRYSTAL_MEMORY);
             });
@@ -854,7 +861,7 @@ public class Hayo {
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining", new RecipeSerializer<>(FluidDrainingRecipe.CODEC, FluidDrainingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling", new RecipeSerializer<>(FluidFillingRecipe.CODEC, FluidFillingRecipe.STREAM_CODEC));
-        public static final RecipeSerializer<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SolidFluidReactingRecipe.CODEC, SolidFluidReactingRecipe.STREAM_CODEC));
+        public static final RecipeSerializer<SimpleSolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SimpleSolidFluidReactingRecipe.CODEC, SimpleSolidFluidReactingRecipe.STREAM_CODEC));
 
         public static void initialize() {
         }

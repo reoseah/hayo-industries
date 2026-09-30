@@ -1,97 +1,56 @@
 package hayo.solid_fluid_reactor;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import hayo.Hayo;
 import hayo.fluid_stack.FluidIngredientAmount;
 import hayo.fluid_stack.FluidStack;
 import hayo.fluid_stack.ItemFluidRecipeInput;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
-import net.minecraft.world.item.crafting.*;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-// TODO: extract into interface + default implementation
-public record SolidFluidReactingRecipe(
-        Ingredient inputItem,
-        FluidIngredientAmount inputFluid,
-        List<ItemStackTemplate> resultItems,
-        FluidStack resultFluid,
-        int energyCost
-) implements Recipe<ItemFluidRecipeInput> {
-    public static final MapCodec<SolidFluidReactingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(
-                    Ingredient.CODEC.fieldOf("input_item").forGetter(SolidFluidReactingRecipe::inputItem),
-                    FluidIngredientAmount.NON_EMPTY_CODEC.fieldOf("input_fluid").forGetter(SolidFluidReactingRecipe::inputFluid),
-                    ItemStackTemplate.CODEC.listOf(0, 3).fieldOf("result_items").orElse(List.of()).forGetter(SolidFluidReactingRecipe::resultItems),
-                    FluidStack.MAP_CODEC.fieldOf("result_fluid").orElse(FluidStack.EMPTY).forGetter(SolidFluidReactingRecipe::resultFluid),
-                    Codec.INT.fieldOf("energy_cost").forGetter(SolidFluidReactingRecipe::energyCost)
-            )
-            .apply(instance, SolidFluidReactingRecipe::new)
-    );
+public interface SolidFluidReactingRecipe extends Recipe<ItemFluidRecipeInput> {
+    Ingredient inputItem();
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SolidFluidReactingRecipe> STREAM_CODEC = StreamCodec.composite(
-            Ingredient.CONTENTS_STREAM_CODEC,
-            SolidFluidReactingRecipe::inputItem,
-            FluidIngredientAmount.STREAM_CODEC,
-            SolidFluidReactingRecipe::inputFluid,
-            ItemStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            SolidFluidReactingRecipe::resultItems,
-            FluidStack.STREAM_CODEC,
-            SolidFluidReactingRecipe::resultFluid,
-            ByteBufCodecs.VAR_INT,
-            SolidFluidReactingRecipe::energyCost,
-            SolidFluidReactingRecipe::new
-    );
+    FluidIngredientAmount inputFluid();
+
+    List<ItemStackTemplate> resultItems();
+
+    FluidStack resultFluid();
+
+    int energyCost();
 
     @Override
-    public RecipeType<? extends Recipe<ItemFluidRecipeInput>> getType() {
-        return Hayo.RecipeTypes.SOLID_FLUID_REACTING;
-    }
-
-    @Override
-    public RecipeSerializer<? extends Recipe<ItemFluidRecipeInput>> getSerializer() {
-        return Hayo.RecipeSerializers.SOLID_FLUID_REACTING;
-    }
-
-    @Override
-    public boolean matches(ItemFluidRecipeInput input, Level level) {
-        return this.inputItem.test(input.item()) && this.inputFluid.test(input.fluid());
-    }
-
-    @Override
-    public ItemStack assemble(ItemFluidRecipeInput input) {
+    default ItemStack assemble(ItemFluidRecipeInput input) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean showNotification() {
+    default boolean showNotification() {
         return false;
     }
 
     @Override
-    public String group() {
+    default String group() {
         return "";
     }
 
     @Override
-    public PlacementInfo placementInfo() {
+    default PlacementInfo placementInfo() {
         return PlacementInfo.NOT_PLACEABLE;
     }
 
     @Override
-    public RecipeBookCategory recipeBookCategory() {
+    default @Nullable RecipeBookCategory recipeBookCategory() {
         return null;
     }
 
     @Override
-    public boolean isSpecial() {
+    default boolean isSpecial() {
         return true;
     }
 }

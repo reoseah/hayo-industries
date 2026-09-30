@@ -6,3 +6,4 @@ Silicon Carbide,"Made from Coal and Silicon dusts, come with set of tools or sub
 Resin Sapling trades,Trades similar to other sapling in Wandering Trader table; allows for some challenge runs
 Imitation Stone,"Crafted from Stone Dust and Sticky Resin, plus possibly a dye; imitating various stone types"
 Sparkless Crafting Table,Crafting table from Silicon Bronze; reference to IRL use of bronzes in specialized tools to avoid creating sparks in e.g. coal mines
+Varying amount fluid outputs,Allow recipes for fluid outputs create fluids in a range (between min/max) instead of a constant

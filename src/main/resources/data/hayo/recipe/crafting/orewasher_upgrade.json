@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "#B#",
+    "XCX"
+  ],
+  "key": {
+    "C": "hayo:circuit",
+    "X": "hayo:power_cable",
+    "B": "minecraft:bucket",
+    "#": "hayo:refined_iron_ingot"
+  },
+  "result": {
+    "id": "hayo:orewasher_upgrade"
+  }
+}

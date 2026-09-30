@@ -98,8 +98,8 @@
   "item.hayo.streamline_overhaul_upgrade": "Streamline Overhaul Upgrade",
   "item.hayo.blasting_upgrade": "Blast Smelting Upgrade",
   "item.hayo.smoking_upgrade": "Artificial Smoking Upgrade",
-  "item.hayo.induction_upgrade": "Inductive Heating Upgrade",
   "item.hayo.nutrient_dispenser_upgrade": "Nutrient Dispenser Upgrade",
+  "item.hayo.orewasher_upgrade": "Ore Washing Upgrade",
   "item.hayo.sunnarium_concentrator_upgrade": "Sunnarium Handler Upgrade",
   "item.hayo.overworld_life_crystal_memory": "Overworld Lifescan Memory",
   "tag.item.c.wrenches": "Wrenches",
@@ -179,5 +179,6 @@
   "hayo.recipe_type.fluid_draining": "Fluid Draining",
   "hayo.accepts_fluids": "Accepts fluids:",
   "hayo.recipe_type.solid_fluid_reacting": "Solid/Fluid Reacting",
-  "hayo.recipe_type.fluid_filling": "Fluid Filling"
+  "hayo.recipe_type.fluid_filling": "Fluid Filling",
+  "hayo.upgrades.use_ore_washing_recipes": " Use Ore Washing recipes"
 }
