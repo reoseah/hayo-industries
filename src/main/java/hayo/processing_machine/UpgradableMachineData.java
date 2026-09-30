@@ -3,8 +3,8 @@ package hayo.processing_machine;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 
-public interface MachineRecipeData extends ContainerData {
-    int SIZE = 10;
+public interface UpgradableMachineData extends ContainerData {
+    int SIZE = 15;
 
     default int energy() {
         return (this.get(1) << 16) | (this.get(0) & 0xFFFF);
@@ -30,13 +30,33 @@ public interface MachineRecipeData extends ContainerData {
         return this.get(9) == 1;
     }
 
-    class Clientside extends SimpleContainerData implements MachineRecipeData {
+    default float extraCraftingSpeed() {
+        return this.get(10);
+    }
+
+    default float extraRecipeCost() {
+        return this.get(11);
+    }
+
+    default int extraCapacity() {
+        return this.get(12);
+    }
+
+    default boolean hasInductionUpgrade() {
+        return this.get(13) == 1;
+    }
+
+    default int inductionHeat() {
+        return this.get(14);
+    }
+
+    class Clientside extends SimpleContainerData implements UpgradableMachineData {
         public Clientside() {
             super(SIZE);
         }
     }
 
-    record Serverside(UpgradableMachineBlockEntity<?, ?> entity) implements MachineRecipeData {
+    record Serverside(UpgradableMachineBlockEntity<?, ?> entity) implements UpgradableMachineData {
         @Override
         public int getCount() {
             return SIZE;
@@ -54,7 +74,11 @@ public interface MachineRecipeData extends ContainerData {
                 case 6 -> this.entity.getLastOrDefaultRecipeCost() & 0xFFFF;
                 case 7 -> this.entity.getLastOrDefaultRecipeCost() >>> 16;
                 case 8 -> this.entity.getEnergyUseRate();
-                case 9 -> this.entity.hasRecipe() ? 1 : 0;
+                case 9 -> this.entity.hasRecipe() ? 1 : 0; case 10 -> (int) (this.entity.extraCraftingSpeed * 100);
+                case 11 -> (int) (this.entity.extraRecipeCost * 100);
+                case 12 -> this.entity.extraCapacity;
+                case 13 -> this.entity.hasInductionUpgrade ? 1 : 0;
+                case 14 -> (this.entity.inductionHeat / 10) * 10;
                 default -> 0;
             };
         }

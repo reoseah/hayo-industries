@@ -53,6 +53,8 @@ public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implem
 
     public static void tickServer(Level level, BlockPos pos, BlockState state, MatterGeneratorBlockEntity entity) {
         entity.chargeFromSlot(BATTERY);
+        entity.resetEnergyPerTick();
+
         boolean wasProcessing = entity.recipeState.progress > 0;
 
         int energyUsed = entity.recipeState.tick(
@@ -67,7 +69,6 @@ public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implem
         if (wasProcessing != isProcessing) {
             level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, isProcessing));
         }
-        entity.resetEnergyPerTick();
     }
 
     @Override

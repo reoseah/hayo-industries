@@ -3,10 +3,9 @@ package hayo.processing_machine.classic;
 import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
 import hayo.energy.item.EnergyComponents;
-import hayo.processing_machine.MachineRecipeData;
-import hayo.processing_machine.UpgradeSlot;
 import hayo.processing_machine.UpgradableMachineBlockEntity;
-import hayo.processing_machine.MachineUpgradeData;
+import hayo.processing_machine.UpgradableMachineData;
+import hayo.processing_machine.UpgradeSlot;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,17 +20,12 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import org.jspecify.annotations.Nullable;
 
 public abstract class ClassicMachineMenu extends HayoContainerMenu {
-    public final MachineRecipeData machineData;
-    public final MachineUpgradeData upgradeData;
+    public final UpgradableMachineData data;
 
-    protected ClassicMachineMenu(@Nullable MenuType<?> menuType, int containerId, Container container, MachineRecipeData machineData, MachineUpgradeData upgradeData, Inventory inventory) {
+    protected ClassicMachineMenu(@Nullable MenuType<?> menuType, int containerId, Container container, UpgradableMachineData data, Inventory inventory) {
         super(menuType, containerId, container);
 
-        this.machineData = machineData;
-        this.addDataSlots(this.machineData);
-
-        this.upgradeData = upgradeData;
-        this.addDataSlots(this.upgradeData);
+        this.addDataSlots(this.data = data);
 
         this.addSlot(new Slot(container, 0, 47, 18));
         this.addSlot(new Slot(container, 1, 47, 54));
@@ -66,9 +60,9 @@ public abstract class ClassicMachineMenu extends HayoContainerMenu {
     }
 
     public int getRecipeProgressPerTick() {
-        int energyUse = this.machineData.energyUseRate();
-        if (this.upgradeData.hasInductionUpgrade()) {
-            return 1 + (energyUse - 1) * this.upgradeData.inductionHeat() / UpgradableMachineBlockEntity.MAX_INDUCTION_HEAT;
+        int energyUse = this.data.energyUseRate();
+        if (this.data.hasInductionUpgrade()) {
+            return 1 + (energyUse - 1) * this.data.inductionHeat() / UpgradableMachineBlockEntity.MAX_INDUCTION_HEAT;
         }
         return energyUse;
     }

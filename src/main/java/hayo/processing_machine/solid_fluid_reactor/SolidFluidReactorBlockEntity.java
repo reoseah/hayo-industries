@@ -2,10 +2,14 @@ package hayo.processing_machine.solid_fluid_reactor;
 
 import hayo.Hayo;
 import hayo.common.HayoContainerUtils;
-import hayo.common.blockentity.EnergyReceiverBlockEntity;
+import hayo.common.IntRange;
 import hayo.energy.item.EnergyComponents;
-import hayo.fluid_stack.*;
+import hayo.fluid_stack.FluidDrainingRecipe;
+import hayo.fluid_stack.FluidFillingRecipe;
+import hayo.fluid_stack.FluidStack;
+import hayo.fluid_stack.ItemFluidRecipeInput;
 import hayo.processing_machine.RecipeState;
+import hayo.processing_machine.UpgradableMachineBlockEntity;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,7 +31,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity implements WorldlyContainer {
+public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<SolidFluidReactingRecipe, ItemFluidRecipeInput> implements WorldlyContainer {
     public static final int SLOTS = 13;
 
     public static final int INPUT = 0, INPUT_TANK_INPUT = 1, OUTPUT_TANK_INPUT = 2;
@@ -45,7 +50,6 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity impl
     protected FluidStack resultFluid = FluidStack.EMPTY;
 
     protected final RecipeState<FluidDrainingRecipe, SingleRecipeInput> inputDraining = new RecipeState<>();
-    protected final RecipeState<SolidFluidReactingRecipe, ItemFluidRecipeInput> reacting = new RecipeState<>();
     protected final RecipeState<FluidFillingRecipe, ItemFluidRecipeInput> resultFilling = new RecipeState<>();
 
     public SolidFluidReactorBlockEntity(BlockPos pos, BlockState state) {
@@ -55,12 +59,8 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity impl
     public static void tickServer(Level level, BlockPos pos, BlockState state, SolidFluidReactorBlockEntity entity) {
         entity.chargeFromSlot(BATTERY);
         entity.resetEnergyPerTick();
-        entity.storedEnergy -= entity.reacting.tick(
-                Hayo.RecipeTypes.SOLID_FLUID_REACTING,
-                new ItemFluidRecipeInput(entity.getItem(INPUT), entity.inputFluid),
-                (ServerLevel) level,
-                new ReactingHelper(entity)
-        );
+
+        entity.tickRecipe((ServerLevel) level, pos, state);
         entity.storedEnergy -= entity.inputDraining.tick(
                 Hayo.RecipeTypes.FLUID_DRAINING,
                 new SingleRecipeInput(entity.getItem(INPUT_TANK_INPUT)),
@@ -86,13 +86,43 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity impl
     }
 
     @Override
-    public int getEnergyCapacity() {
+    protected int getEnergyTransferLimit() {
+        return 32;
+    }
+
+    @Override
+    protected int getBaseEnergyCapacity() {
         return 1000;
     }
 
     @Override
-    protected int getEnergyTransferLimit() {
-        return 32;
+    protected int getBaseEnergyUseRate() {
+        return REACTING_ENERGY_RATE;
+    }
+
+    @Override
+    protected RecipeType<SolidFluidReactingRecipe> getRecipeType() {
+        return Hayo.RecipeTypes.SOLID_FLUID_REACTING;
+    }
+
+    @Override
+    protected boolean isInputSlot(int slot) {
+        return slot == INPUT;
+    }
+
+    @Override
+    protected ItemFluidRecipeInput createRecipeInput() {
+        return new ItemFluidRecipeInput(this.getItem(INPUT), this.inputFluid);
+    }
+
+    @Override
+    protected int getBaseEnergyCost(@Nullable SolidFluidReactingRecipe recipe) {
+        return recipe != null ? recipe.energyCost : 1000;
+    }
+
+    @Override
+    protected IntRange getUpgradeSlots() {
+        return new IntRange(UPGRADE_1, UPGRADE_1 + UPGRADES);
     }
 
     @Override
@@ -101,7 +131,6 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity impl
         output.store("input_fluid", FluidStack.CODEC, this.inputFluid);
         output.store("result_fluid", FluidStack.CODEC, this.resultFluid);
         output.putInt("input_filling_progress", this.inputDraining.progress);
-        output.putInt("reacting_progress", this.reacting.progress);
         output.putInt("result_draining_progress", this.resultFilling.progress);
     }
 
@@ -110,7 +139,6 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity impl
         this.inputFluid = input.read("input_fluid", FluidStack.CODEC).orElse(FluidStack.EMPTY);
         this.resultFluid = input.read("result_fluid", FluidStack.CODEC).orElse(FluidStack.EMPTY);
         this.inputDraining.progress = input.getIntOr("input_filling_progress", 0);
-        this.reacting.progress = input.getIntOr("reacting_progress", 0);
         this.resultFilling.progress = input.getIntOr("result_draining_progress", 0);
     }
 
@@ -145,61 +173,46 @@ public class SolidFluidReactorBlockEntity extends EnergyReceiverBlockEntity impl
         return slot >= OUTPUT_1 && slot < UPGRADE_1;
     }
 
-    protected record ReactingHelper(
-            SolidFluidReactorBlockEntity entity) implements RecipeState.Context<SolidFluidReactingRecipe, ItemFluidRecipeInput> {
+    @Override
+    public RecipeState.EnergyState getEnergyState() {
+        return super.getEnergyState();
+    }
 
-        @Override
-        public void setChanged() {
-            this.entity.setChanged();
+    @Override
+    public boolean canCraft(RecipeHolder<SolidFluidReactingRecipe> recipe, ItemFluidRecipeInput input) {
+        if (!HayoContainerUtils.canInsertShapelessly(this.stacks, recipe.value().resultItems, OUTPUT_1, OUTPUT_3, this.getMaxStackSize())) {
+            return false;
         }
 
-        @Override
-        public RecipeState.EnergyState getEnergyState() {
-            return this.entity.storedEnergy >= REACTING_ENERGY_RATE
-                    ? new RecipeState.EnergyState.Sufficient(REACTING_ENERGY_RATE)
-                    : new RecipeState.EnergyState.NotSufficient(-2 * REACTING_ENERGY_RATE);
-        }
-
-        @Override
-        public boolean canCraft(RecipeHolder<SolidFluidReactingRecipe> recipe, ItemFluidRecipeInput input) {
-            if (!HayoContainerUtils.canInsertShapelessly(this.entity.stacks, recipe.value().resultItems, OUTPUT_1, OUTPUT_3, this.entity.getMaxStackSize())) {
+        var resultFluid = recipe.value().resultFluid;
+        if (!resultFluid.isEmpty()) {
+            if (this.resultFluid.fluid() != Fluids.EMPTY
+                    && this.resultFluid.holder() != resultFluid.holder()) {
                 return false;
             }
-
-            var resultFluid = recipe.value().resultFluid;
-            if (!resultFluid.isEmpty()) {
-                if (this.entity.resultFluid.fluid() != Fluids.EMPTY
-                        && this.entity.resultFluid.holder() != resultFluid.holder()) {
-                    return false;
-                }
-                return FLUID_CAPACITY - this.entity.resultFluid.amount() >= resultFluid.amount();
-            }
-
-            return true;
+            return FLUID_CAPACITY - this.resultFluid.amount() >= resultFluid.amount();
         }
 
-        @Override
-        public int getRecipeCost(SolidFluidReactingRecipe recipe) {
-            return recipe.energyCost;
+        return true;
+    }
+
+
+    @Override
+    public void craft(RecipeHolder<SolidFluidReactingRecipe> recipeHolder, ItemFluidRecipeInput input) {
+        var recipe = recipeHolder.value();
+
+        this.stacks.get(INPUT).shrink(1);
+        if (recipe.inputFluid.amount() > 0) {
+            this.inputFluid = new FluidStack(this.inputFluid.holder(), this.inputFluid.amount() - recipe.inputFluid.amount());
         }
 
-        @Override
-        public void craft(RecipeHolder<SolidFluidReactingRecipe> recipeHolder, ItemFluidRecipeInput input) {
-            var recipe = recipeHolder.value();
+        for (var result : recipe.resultItems) {
+            HayoContainerUtils.insertShapelessly(this.stacks, result.create(), OUTPUT_1, OUTPUT_3, this.getMaxStackSize());
+        }
 
-            this.entity.stacks.get(INPUT).shrink(1);
-            if (recipe.inputFluid.amount() > 0) {
-                this.entity.inputFluid = new FluidStack(this.entity.inputFluid.holder(), this.entity.inputFluid.amount() - recipe.inputFluid.amount());
-            }
-
-            for (var result : recipe.resultItems) {
-                HayoContainerUtils.insertShapelessly(this.entity.stacks, result.create(), OUTPUT_1, OUTPUT_3, this.entity.getMaxStackSize());
-            }
-
-            var resultFluid = recipe.resultFluid;
-            if (!resultFluid.isEmpty()) {
-                this.entity.resultFluid = new FluidStack(resultFluid.holder(), this.entity.resultFluid.amount() + resultFluid.amount());
-            }
+        var resultFluid = recipe.resultFluid;
+        if (!resultFluid.isEmpty()) {
+            this.resultFluid = new FluidStack(resultFluid.holder(), this.resultFluid.amount() + resultFluid.amount());
         }
     }
 

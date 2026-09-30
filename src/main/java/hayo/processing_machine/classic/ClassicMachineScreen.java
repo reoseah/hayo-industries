@@ -83,8 +83,8 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
         HayoGuiSprites.blitUpgradeSlots(graphics, this.leftPos + 151, this.topPos + 7, 4);
         HayoGuiSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 83);
 
-        EnergyGuiSprites.blitZap(graphics, this.leftPos + 48, this.topPos + 37, this.menu.machineData.energy(), this.menu.machineData.capacity());
-        HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 70, this.topPos + 36, this.arrow, this.arrowOverlay, this.menu.machineData.recipeProgress(), this.menu.machineData.recipeCost());
+        EnergyGuiSprites.blitZap(graphics, this.leftPos + 48, this.topPos + 37, this.menu.data.energy(), this.menu.data.capacity());
+        HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 70, this.topPos + 36, this.arrow, this.arrowOverlay, this.menu.data.recipeProgress(), this.menu.data.recipeCost());
     }
 
     @Override
@@ -93,23 +93,23 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
 
         if (this.isHovering(48, 37, 14, 14, mouseX, mouseY)) {
             List<Component> components = Lists.newArrayList(
-                    EnergyTexts.amountAndPercentage(this.menu.machineData.energy(), this.menu.machineData.capacity()),
-                    EnergyTexts.maxAmount(this.menu.machineData.capacity()).withStyle(ChatFormatting.GRAY),
-                    Component.translatable("hayo.machine.energy_use_with_base_and_bonus", this.menu.machineData.energyUseRate(), this.baseEnergyUse, String.format("%+.0f", this.menu.upgradeData.extraCraftingSpeed())).withStyle(ChatFormatting.GRAY)
+                    EnergyTexts.amountAndPercentage(this.menu.data.energy(), this.menu.data.capacity()),
+                    EnergyTexts.maxAmount(this.menu.data.capacity()).withStyle(ChatFormatting.GRAY),
+                    Component.translatable("hayo.machine.energy_use_with_base_and_bonus", this.menu.data.energyUseRate(), this.baseEnergyUse, String.format("%+.0f", this.menu.data.extraCraftingSpeed())).withStyle(ChatFormatting.GRAY)
             );
-            if (this.menu.upgradeData.hasInductionUpgrade()) {
-                components.add(Component.translatable("hayo.machine.heat", String.format("%.1f", this.menu.upgradeData.inductionHeat() * 100F / UpgradableMachineBlockEntity.MAX_INDUCTION_HEAT), this.menu.getRecipeProgressPerTick()).withStyle(ChatFormatting.GRAY));
+            if (this.menu.data.hasInductionUpgrade()) {
+                components.add(Component.translatable("hayo.machine.heat", String.format("%.1f", this.menu.data.inductionHeat() * 100F / UpgradableMachineBlockEntity.MAX_INDUCTION_HEAT), this.menu.getRecipeProgressPerTick()).withStyle(ChatFormatting.GRAY));
             }
 
             components.add(Component.empty());
-            if (this.menu.machineData.matchesRecipe()) {
+            if (this.menu.data.matchesRecipe()) {
                 components.add(Component.translatable("hayo.machine.current_recipe").withStyle(ChatFormatting.GRAY));
             } else {
                 components.add(Component.translatable("hayo.machine.default_recipe").withStyle(ChatFormatting.GRAY));
             }
-            components.add(Component.translatable("hayo.machine.recipe_cost", this.menu.machineData.recipeCost(), this.defaultRecipeCost, String.format("%+.0f", this.menu.upgradeData.extraRecipeCost())).withStyle(ChatFormatting.GRAY));
+            components.add(Component.translatable("hayo.machine.recipe_cost", this.menu.data.recipeCost(), this.defaultRecipeCost, String.format("%+.0f", this.menu.data.extraRecipeCost())).withStyle(ChatFormatting.GRAY));
 
-            float duration = Mth.positiveCeilDiv(this.menu.machineData.recipeCost(), this.menu.getRecipeProgressPerTick()) / 20F;
+            float duration = Mth.positiveCeilDiv(this.menu.data.recipeCost(), this.menu.getRecipeProgressPerTick()) / 20F;
             float defaultDuration = Mth.positiveCeilDiv(this.defaultRecipeCost, this.baseEnergyUse) / 20F;
             float relativeDuration = duration / defaultDuration * 100;
             components.add(Component.translatable("hayo.machine.recipe_duration", String.format("%.0f", duration), this.menu.getRecipeProgressPerTick(), String.format("%.0f", defaultDuration), String.format("%.0f", relativeDuration)).withStyle(ChatFormatting.GRAY));

@@ -5,6 +5,7 @@ import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
 import hayo.energy.item.EnergyComponents;
 import hayo.fluid_stack.ItemFluidRecipeInput;
+import hayo.processing_machine.UpgradableMachineData;
 import hayo.processing_machine.UpgradeSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -15,21 +16,22 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 
 public class SolidFluidReactorMenu extends HayoContainerMenu {
+    public final UpgradableMachineData machineData;
     public final SolidFluidReactorContainerData data;
 
     public SolidFluidReactorMenu(int containerId, Inventory inventory) {
-        this(containerId, new SimpleContainer(SolidFluidReactorBlockEntity.SLOTS), new SolidFluidReactorContainerData.Clientside(), inventory);
+        this(containerId, new SimpleContainer(SolidFluidReactorBlockEntity.SLOTS), new SolidFluidReactorContainerData.Clientside(), inventory, new UpgradableMachineData.Clientside());
     }
 
     public SolidFluidReactorMenu(int containerId, SolidFluidReactorBlockEntity entity, Inventory inventory) {
-        this(containerId, entity, new SolidFluidReactorContainerData.Serverside(entity), inventory);
+        this(containerId, entity, new SolidFluidReactorContainerData.Serverside(entity), inventory, new UpgradableMachineData.Serverside(entity));
     }
 
-    public SolidFluidReactorMenu(int containerId, Container container, SolidFluidReactorContainerData data, Inventory inventory) {
+    public SolidFluidReactorMenu(int containerId, Container container, SolidFluidReactorContainerData data, Inventory inventory, UpgradableMachineData machineData) {
         super(Hayo.MenuTypes.SOLID_FLUID_REACTOR, containerId, container);
 
-        this.data = data;
-        this.addDataSlots(data);
+        this.addDataSlots(this.machineData = machineData);
+        this.addDataSlots(this.data = data);
 
         this.addSlot(new Slot(container, 0, 62, 17));
         this.addSlot(new Slot(container, 1, 8, 17));
@@ -57,25 +59,13 @@ public class SolidFluidReactorMenu extends HayoContainerMenu {
             return this.moveItemStackTo(stack, SolidFluidReactorBlockEntity.BATTERY, SolidFluidReactorBlockEntity.BATTERY + 1, false);
         }
 
-        if (player.level()
-                .recipeAccess()
-                .getSynchronizedRecipes()
-                .getFirstMatch(Hayo.RecipeTypes.SOLID_FLUID_REACTING, new ItemFluidRecipeInput(stack, this.data.inputFluid()), player.level())
-                .isPresent()) {
+        if (player.level().recipeAccess().getSynchronizedRecipes().getFirstMatch(Hayo.RecipeTypes.SOLID_FLUID_REACTING, new ItemFluidRecipeInput(stack, this.data.inputFluid()), player.level()).isPresent()) {
             return this.moveItemStackTo(stack, SolidFluidReactorBlockEntity.INPUT, SolidFluidReactorBlockEntity.INPUT + 1, false);
         }
-        if (player.level()
-                .recipeAccess()
-                .getSynchronizedRecipes()
-                .getFirstMatch(Hayo.RecipeTypes.FLUID_DRAINING, new SingleRecipeInput(stack), player.level())
-                .isPresent()) {
+        if (player.level().recipeAccess().getSynchronizedRecipes().getFirstMatch(Hayo.RecipeTypes.FLUID_DRAINING, new SingleRecipeInput(stack), player.level()).isPresent()) {
             return this.moveItemStackTo(stack, SolidFluidReactorBlockEntity.INPUT_TANK_INPUT, SolidFluidReactorBlockEntity.INPUT_TANK_INPUT + 1, false);
         }
-        if (player.level()
-                .recipeAccess()
-                .getSynchronizedRecipes()
-                .getFirstMatch(Hayo.RecipeTypes.FLUID_FILLING, new ItemFluidRecipeInput(stack, this.data.resultFluid()), player.level())
-                .isPresent()) {
+        if (player.level().recipeAccess().getSynchronizedRecipes().getFirstMatch(Hayo.RecipeTypes.FLUID_FILLING, new ItemFluidRecipeInput(stack, this.data.resultFluid()), player.level()).isPresent()) {
             return this.moveItemStackTo(stack, SolidFluidReactorBlockEntity.OUTPUT_TANK_INPUT, SolidFluidReactorBlockEntity.OUTPUT_TANK_INPUT + 1, false);
         }
 

@@ -1,8 +1,7 @@
 package hayo.processing_machine.classic;
 
 import hayo.Hayo;
-import hayo.processing_machine.MachineRecipeData;
-import hayo.processing_machine.MachineUpgradeData;
+import hayo.processing_machine.UpgradableMachineData;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,8 +15,7 @@ public class MaceratorMenu extends ClassicMachineMenu {
         super(Hayo.MenuTypes.MACERATOR,
                 containerId,
                 new SimpleContainer(ClassicMachineBlockEntity.SLOTS),
-                new MachineRecipeData.Clientside(),
-                new MachineUpgradeData.Clientside(),
+                new UpgradableMachineData.Clientside(),
                 inventory);
     }
 
@@ -25,8 +23,7 @@ public class MaceratorMenu extends ClassicMachineMenu {
         super(Hayo.MenuTypes.MACERATOR,
                 containerId,
                 entity,
-                new MachineRecipeData.Serverside(entity),
-                new MachineUpgradeData.Serverside(entity),
+                new UpgradableMachineData.Serverside(entity),
                 inventory);
     }
 

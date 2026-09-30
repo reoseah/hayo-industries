@@ -22,8 +22,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extends RecipeInput> extends EnergyReceiverBlockEntity implements RecipeState.Context<R, I> {
     public static final int MAX_INDUCTION_HEAT = 10_000;
 
-    @Getter
-    protected RecipeState<R, I> recipeState = new RecipeState<>();
+    public RecipeState<R, I> recipeState = new RecipeState<>();
 
     @Getter
     protected float extraCraftingSpeed = 0;
