@@ -3,7 +3,6 @@ package hayo.processing_machine.matter_generator;
 import hayo.Hayo;
 import hayo.common.blockentity.EnergyReceiverBlockEntity;
 import hayo.processing_machine.RecipeState;
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
@@ -29,8 +28,8 @@ public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implem
     public static final int SLOTS = 4, BATTERY = 0, OUTPUT = 1, UPGRADE_1 = 2, UPGRADES = 2;
 
     public @Nullable Identifier selectedRecipeId;
-    @Getter
-    protected RecipeState<MatterGeneratingRecipe, MatterGeneratorRecipeInput> recipeState = new RecipeState<>() {
+
+    protected final RecipeState<MatterGeneratingRecipe, MatterGeneratorRecipeInput> recipeState = new RecipeState<>() {
         @SuppressWarnings("unchecked")
         @Override
         protected @Nullable RecipeHolder<MatterGeneratingRecipe> getMatchingRecipe(RecipeType<MatterGeneratingRecipe> recipeType, MatterGeneratorRecipeInput input, ServerLevel level) {
@@ -89,12 +88,14 @@ public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implem
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
+        output.putInt("recipe_progress", this.recipeState.progress);
         output.storeNullable("selected_recipe", Identifier.CODEC, this.selectedRecipeId);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
+        this.recipeState.progress = input.getIntOr("recipe_progress", 0);
         this.selectedRecipeId = input.read("selected_recipe", Identifier.CODEC).orElse(null);
     }
 
@@ -138,5 +139,4 @@ public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implem
     public AbstractContainerMenu createMenu(int menuId, Inventory inventory, Player player) {
         return new MatterGeneratorMenu(menuId, this, inventory);
     }
-
 }
