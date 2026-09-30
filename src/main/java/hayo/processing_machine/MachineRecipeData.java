@@ -3,7 +3,7 @@ package hayo.processing_machine;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 
-public interface MachineContainerData extends ContainerData {
+public interface MachineRecipeData extends ContainerData {
     int SIZE = 10;
 
     default int energy() {
@@ -30,13 +30,13 @@ public interface MachineContainerData extends ContainerData {
         return this.get(9) == 1;
     }
 
-    class Clientside extends SimpleContainerData implements MachineContainerData {
+    class Clientside extends SimpleContainerData implements MachineRecipeData {
         public Clientside() {
             super(SIZE);
         }
     }
 
-    record Serverside(MachineBlockEntity<?, ?> entity) implements MachineContainerData {
+    record Serverside(UpgradableMachineBlockEntity<?, ?> entity) implements MachineRecipeData {
         @Override
         public int getCount() {
             return SIZE;

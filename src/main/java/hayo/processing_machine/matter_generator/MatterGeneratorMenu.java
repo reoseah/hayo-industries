@@ -4,7 +4,7 @@ import hayo.Hayo;
 import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
 import hayo.energy.item.EnergyComponents;
-import hayo.processing_machine.MachineUpgradeSlot;
+import hayo.processing_machine.UpgradeSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -39,8 +39,8 @@ public class MatterGeneratorMenu extends HayoContainerMenu {
 
         this.addSlot(new Slot(container, 0, 56, 34));
         this.addSlot(new ResultSlot(container, 1, 116, 26));
-        this.addSlot(new MachineUpgradeSlot(container, 2, 8, 16, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 2));
-        this.addSlot(new MachineUpgradeSlot(container, 3, 8, 34, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 2));
+        this.addSlot(new UpgradeSlot(container, 2, 8, 16, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 2));
+        this.addSlot(new UpgradeSlot(container, 3, 8, 34, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 2));
 
         this.addStandardInventorySlots(inventory, 8, 110);
 

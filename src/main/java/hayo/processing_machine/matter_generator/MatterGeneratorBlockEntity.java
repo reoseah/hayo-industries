@@ -59,9 +59,6 @@ public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implem
                 Hayo.RecipeTypes.MATTER_GENERATING,
                 new MatterGeneratorRecipeInput(entity.stacks.subList(UPGRADE_1, UPGRADE_1 + UPGRADES)),
                 (ServerLevel) level,
-                entity.storedEnergy >= 1
-                        ? new RecipeState.RecipeResourceState.Sufficient(Math.min(entity.storedEnergy, ENERGY_USE_RATE))
-                        : new RecipeState.RecipeResourceState.NotSufficient(-2 * ENERGY_USE_RATE),
                 entity
         );
         entity.storedEnergy = Math.clamp(entity.storedEnergy - energyUsed, 0, CAPACITY);
@@ -104,6 +101,13 @@ public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implem
         this.selectedRecipeId = id;
         this.recipeState.progress = 0;
         this.setChanged();
+    }
+
+    @Override
+    public RecipeState.EnergyState getEnergyState() {
+        return this.storedEnergy >= 1
+                ? new RecipeState.EnergyState.Sufficient(Math.min(this.storedEnergy, ENERGY_USE_RATE))
+                : new RecipeState.EnergyState.NotSufficient(-2 * ENERGY_USE_RATE);
     }
 
     @Override

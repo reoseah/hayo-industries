@@ -3,7 +3,7 @@ package hayo.processing_machine;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 
-public interface UpgradableMachineContainerData extends ContainerData {
+public interface MachineUpgradeData extends ContainerData {
     int SIZE = 5;
 
     default float extraCraftingSpeed() {
@@ -26,13 +26,13 @@ public interface UpgradableMachineContainerData extends ContainerData {
         return this.get(4);
     }
 
-    class Clientside extends SimpleContainerData implements UpgradableMachineContainerData {
+    class Clientside extends SimpleContainerData implements MachineUpgradeData {
         public Clientside() {
             super(SIZE);
         }
     }
 
-    record Serverside(UpgradableMachineBlockEntity<?, ?> entity) implements UpgradableMachineContainerData {
+    record Serverside(UpgradableMachineBlockEntity<?, ?> entity) implements MachineUpgradeData {
         @Override
         public int getCount() {
             return SIZE;

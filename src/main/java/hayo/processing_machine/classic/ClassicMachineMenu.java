@@ -3,10 +3,10 @@ package hayo.processing_machine.classic;
 import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
 import hayo.energy.item.EnergyComponents;
-import hayo.processing_machine.MachineContainerData;
-import hayo.processing_machine.MachineUpgradeSlot;
+import hayo.processing_machine.MachineRecipeData;
+import hayo.processing_machine.UpgradeSlot;
 import hayo.processing_machine.UpgradableMachineBlockEntity;
-import hayo.processing_machine.UpgradableMachineContainerData;
+import hayo.processing_machine.MachineUpgradeData;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,10 +21,10 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import org.jspecify.annotations.Nullable;
 
 public abstract class ClassicMachineMenu extends HayoContainerMenu {
-    public final MachineContainerData machineData;
-    public final UpgradableMachineContainerData upgradeData;
+    public final MachineRecipeData machineData;
+    public final MachineUpgradeData upgradeData;
 
-    protected ClassicMachineMenu(@Nullable MenuType<?> menuType, int containerId, Container container, MachineContainerData machineData, UpgradableMachineContainerData upgradeData, Inventory inventory) {
+    protected ClassicMachineMenu(@Nullable MenuType<?> menuType, int containerId, Container container, MachineRecipeData machineData, MachineUpgradeData upgradeData, Inventory inventory) {
         super(menuType, containerId, container);
 
         this.machineData = machineData;
@@ -36,10 +36,10 @@ public abstract class ClassicMachineMenu extends HayoContainerMenu {
         this.addSlot(new Slot(container, 0, 47, 18));
         this.addSlot(new Slot(container, 1, 47, 54));
         this.addSlot(new ResultSlot(container, 2, 107, 36));
-        this.addSlot(new MachineUpgradeSlot(container, 3, 152, 8, this.getUpgradeTag(), 3, 4));
-        this.addSlot(new MachineUpgradeSlot(container, 4, 152, 26, this.getUpgradeTag(), 3, 4));
-        this.addSlot(new MachineUpgradeSlot(container, 5, 152, 44, this.getUpgradeTag(), 3, 4));
-        this.addSlot(new MachineUpgradeSlot(container, 6, 152, 62, this.getUpgradeTag(), 3, 4));
+        this.addSlot(new UpgradeSlot(container, 3, 152, 8, this.getUpgradeTag(), 3, 4));
+        this.addSlot(new UpgradeSlot(container, 4, 152, 26, this.getUpgradeTag(), 3, 4));
+        this.addSlot(new UpgradeSlot(container, 5, 152, 44, this.getUpgradeTag(), 3, 4));
+        this.addSlot(new UpgradeSlot(container, 6, 152, 62, this.getUpgradeTag(), 3, 4));
         this.addStandardInventorySlots(inventory, 8, 84);
     }
 

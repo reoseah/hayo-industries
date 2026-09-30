@@ -110,7 +110,8 @@ public interface SolidFluidReactorContainerData extends ContainerData {
                     var match = ((ServerLevel) this.entity.getLevel())
                             .recipeAccess()
                             .getRecipeFor(Hayo.RecipeTypes.SOLID_FLUID_REACTING, input, this.entity.getLevel(), this.entity.reacting.lastMatch);
-                    int maxProgress = match.isPresent() ? match.get().value().energyCost() : 0;
+                    int maxProgress;
+                    maxProgress = match.isPresent() ? match.get().value().energyCost : 0;
                     yield dataId == 16 ? maxProgress & 0xFFFF : maxProgress >>> 16;
                 }
 

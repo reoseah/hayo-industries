@@ -11,7 +11,7 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
     public @Nullable RecipeHolder<R> lastMatch;
     public int progress;
 
-    public int tick(RecipeType<R> recipeType, I input, ServerLevel level, RecipeResourceState resourceState, Context<R, I> ctx) {
+    public int tick(RecipeType<R> recipeType, I input, ServerLevel level, Context<R, I> ctx) {
         if (input.isEmpty()) {
             if (this.progress > 0) {
                 this.progress = 0;
@@ -32,17 +32,17 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
             this.lastMatch = match;
         }
 
-        return switch (resourceState) {
-            case RecipeResourceState.NotSufficient(int progressLossPerTick) -> {
+        return switch (ctx.getEnergyState()) {
+            case EnergyState.NotSufficient(int decayPerTick) -> {
                 if (this.progress <= 0) {
                     yield 0;
                 }
-                int progressChange = Math.min(-progressLossPerTick, this.progress);
+                int progressChange = Math.min(-decayPerTick, this.progress);
                 this.progress -= progressChange;
                 ctx.setChanged();
                 yield 0;
             }
-            case RecipeResourceState.Sufficient(int progressLimit) -> {
+            case EnergyState.Sufficient(int progressLimit) -> {
                 if (!ctx.canCraft(match, input)) {
                     yield 0;
                 }
@@ -66,16 +66,18 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
         return level.recipeAccess().getRecipeFor(recipeType, input, level, this.lastMatch).orElse(null);
     }
 
-    public sealed interface RecipeResourceState permits RecipeResourceState.NotSufficient, RecipeResourceState.Sufficient {
-        record NotSufficient(int progressLossPerTick) implements RecipeResourceState {
+    public sealed interface EnergyState permits EnergyState.NotSufficient, EnergyState.Sufficient {
+        record NotSufficient(int decayPerTick) implements EnergyState {
         }
 
-        record Sufficient(int progressLimit) implements RecipeResourceState {
+        record Sufficient(int progressLimit) implements EnergyState {
         }
     }
 
     public interface Context<R extends Recipe<I>, I extends RecipeInput> {
         void setChanged();
+
+        RecipeState.EnergyState getEnergyState();
 
         boolean canCraft(RecipeHolder<R> recipe, I input);
 

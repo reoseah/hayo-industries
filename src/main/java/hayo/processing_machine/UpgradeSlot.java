@@ -7,12 +7,12 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class MachineUpgradeSlot extends Slot {
+public class UpgradeSlot extends Slot {
     protected final TagKey<Item> upgrades;
     protected final int firstUpgrade;
     protected final int upgradeCount;
 
-    public MachineUpgradeSlot(Container container, int slot, int x, int y, TagKey<Item> upgrades, int firstUpgrade, int upgradeCount) {
+    public UpgradeSlot(Container container, int slot, int x, int y, TagKey<Item> upgrades, int firstUpgrade, int upgradeCount) {
         super(container, slot, x, y);
         this.upgrades = upgrades;
         this.firstUpgrade = firstUpgrade;

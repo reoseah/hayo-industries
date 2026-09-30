@@ -34,11 +34,11 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SolidFluidReactingRecipe> holder, IFocusGroup focuses) {
         var recipe = holder.value();
 
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).add(recipe.inputFluid().values().stream().findAny().map(Holder::value).orElse(Fluids.EMPTY), recipe.inputFluid().amount());
-        builder.addSlot(RecipeIngredientRole.INPUT, 28 - 5, 10).add(recipe.inputItem()).setStandardSlotBackground();
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 84, 1).add(getOptional(recipe.resultItems(), 0).map(ItemStackTemplate::create).orElse(ItemStack.EMPTY)).setStandardSlotBackground();
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 84, 19).add(getOptional(recipe.resultItems(), 1).map(ItemStackTemplate::create).orElse(ItemStack.EMPTY)).setStandardSlotBackground();
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 84, 37).add(getOptional(recipe.resultItems(), 2).map(ItemStackTemplate::create).orElse(ItemStack.EMPTY)).setStandardSlotBackground();
+        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).add(recipe.inputFluid.values().stream().findAny().map(Holder::value).orElse(Fluids.EMPTY), recipe.inputFluid.amount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 28 - 5, 10).add(recipe.inputItem).setStandardSlotBackground();
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 84, 1).add(getOptional(recipe.resultItems, 0).map(ItemStackTemplate::create).orElse(ItemStack.EMPTY)).setStandardSlotBackground();
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 84, 19).add(getOptional(recipe.resultItems, 1).map(ItemStackTemplate::create).orElse(ItemStack.EMPTY)).setStandardSlotBackground();
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 84, 37).add(getOptional(recipe.resultItems, 2).map(ItemStackTemplate::create).orElse(ItemStack.EMPTY)).setStandardSlotBackground();
     }
 
     public static <T> Optional<T> getOptional(List<T> list, int index) {
@@ -57,7 +57,7 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
         graphics.pose().translate(-topLeft.x, -topLeft.y);
         FluidGuiRendering.extractFluidTank(
                 graphics,
-                recipe.inputFluid(),
+                recipe.inputFluid,
                 SolidFluidReactorBlockEntity.FLUID_CAPACITY,
                 (int) (topLeft.x),
                 (int) topLeft.y - 1,
@@ -66,7 +66,7 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
 
         FluidGuiRendering.extractFluidTank(
                 graphics,
-                recipe.resultFluid(),
+                recipe.resultFluid,
                 SolidFluidReactorBlockEntity.FLUID_CAPACITY,
                 (int) (topLeft.x + 104),
                 (int) topLeft.y - 1,
@@ -77,12 +77,12 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
 
         EnergyGuiSprites.blitZap(graphics, 24, 29, 10, 14);
 
-        int energyCost = recipe.energyCost();
+        int energyCost = recipe.energyCost;
         int energyUseRate = SolidFluidReactorBlockEntity.REACTING_ENERGY_RATE;
         int fill = (int) Math.abs((System.currentTimeMillis() / 50 * energyUseRate) % energyCost);
         HayoGuiSprites.blitRecipeArrow(graphics, 49, 12, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY, fill, energyCost);
 
         var font = Minecraft.getInstance().font;
-        graphics.text(font, EnergyTexts.amount(recipe.energyCost()), 40, 33, 0xFF404040, false);
+        graphics.text(font, EnergyTexts.amount(recipe.energyCost), 40, 33, 0xFF404040, false);
     }
 }

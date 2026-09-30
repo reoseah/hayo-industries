@@ -861,7 +861,7 @@ public class Hayo {
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining", new RecipeSerializer<>(FluidDrainingRecipe.CODEC, FluidDrainingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling", new RecipeSerializer<>(FluidFillingRecipe.CODEC, FluidFillingRecipe.STREAM_CODEC));
-        public static final RecipeSerializer<SimpleSolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SimpleSolidFluidReactingRecipe.CODEC, SimpleSolidFluidReactingRecipe.STREAM_CODEC));
+        public static final RecipeSerializer<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SolidFluidReactingRecipe.CODEC, SolidFluidReactingRecipe.STREAM_CODEC));
 
         public static void initialize() {
         }

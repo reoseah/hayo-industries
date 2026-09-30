@@ -1,8 +1,8 @@
 package hayo.processing_machine.classic;
 
 import hayo.Hayo;
-import hayo.processing_machine.MachineContainerData;
-import hayo.processing_machine.UpgradableMachineContainerData;
+import hayo.processing_machine.MachineRecipeData;
+import hayo.processing_machine.MachineUpgradeData;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,8 +22,8 @@ public class ElectricFurnaceMenu extends ClassicMachineMenu {
         super(Hayo.MenuTypes.ELECTRIC_FURNACE,
                 containerId,
                 new SimpleContainer(ClassicMachineBlockEntity.SLOTS),
-                new MachineContainerData.Clientside(),
-                new UpgradableMachineContainerData.Clientside(),
+                new MachineRecipeData.Clientside(),
+                new MachineUpgradeData.Clientside(),
                 inventory);
         this.modeData = DataSlot.standalone();
         this.addDataSlot(this.modeData);
@@ -33,8 +33,8 @@ public class ElectricFurnaceMenu extends ClassicMachineMenu {
         super(Hayo.MenuTypes.ELECTRIC_FURNACE,
                 containerId,
                 entity,
-                new MachineContainerData.Serverside(entity),
-                new UpgradableMachineContainerData.Serverside(entity),
+                new MachineRecipeData.Serverside(entity),
+                new MachineUpgradeData.Serverside(entity),
                 inventory);
         this.modeData = new DataSlot() {
             @Override

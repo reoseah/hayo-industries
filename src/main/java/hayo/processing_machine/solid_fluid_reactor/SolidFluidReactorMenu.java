@@ -5,7 +5,7 @@ import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
 import hayo.energy.item.EnergyComponents;
 import hayo.fluid_stack.ItemFluidRecipeInput;
-import hayo.processing_machine.MachineUpgradeSlot;
+import hayo.processing_machine.UpgradeSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -41,7 +41,7 @@ public class SolidFluidReactorMenu extends HayoContainerMenu {
         this.addSlot(new ResultSlot(container, 7, 8, 53));
         this.addSlot(new ResultSlot(container, 8, 170, 53));
         for (int i = 0; i < 4; i++) {
-            this.addSlot(new MachineUpgradeSlot(container, 9 + i, 206, 8 + 18 * i, Hayo.ItemTags.SOLID_FLUID_REACTOR_UPGRADES, 9, 4));
+            this.addSlot(new UpgradeSlot(container, 9 + i, 206, 8 + 18 * i, Hayo.ItemTags.SOLID_FLUID_REACTOR_UPGRADES, 9, 4));
         }
 
         this.addStandardInventorySlots(inventory, 35, 84);
