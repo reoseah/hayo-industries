@@ -1,9 +1,10 @@
-package hayo.processing_machine;
+package hayo.processing_machine.matter_generator;
 
+import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 
-public interface MachineContainerData extends ContainerData {
+public interface MatterGeneratorContainerData extends ContainerData {
     int SIZE = 10;
 
     default int energy() {
@@ -22,21 +23,17 @@ public interface MachineContainerData extends ContainerData {
         return (this.get(7) << 16) | (this.get(6) & 0xFFFF);
     }
 
-    default int energyUseRate() {
-        return this.get(8);
+    default float recipeDuration() {
+        return Mth.ceil(this.recipeCost() / (float) MatterGeneratorBlockEntity.ENERGY_USE_RATE) / 20F;
     }
 
-    default boolean matchesRecipe() {
-        return this.get(9) == 1;
-    }
-
-    class Clientside extends SimpleContainerData implements MachineContainerData {
+    class Clientside extends SimpleContainerData implements MatterGeneratorContainerData {
         public Clientside() {
             super(SIZE);
         }
     }
 
-    record Serverside(MachineBlockEntity<?, ?> entity) implements MachineContainerData {
+    record Serverside(MatterGeneratorBlockEntity entity) implements MatterGeneratorContainerData {
         @Override
         public int getCount() {
             return SIZE;
@@ -51,10 +48,10 @@ public interface MachineContainerData extends ContainerData {
                 case 3 -> this.entity.getEnergyCapacity() >>> 16;
                 case 4 -> this.entity.recipeState.progress & 0xFFFF;
                 case 5 -> this.entity.recipeState.progress >>> 16;
-                case 6 -> this.entity.getLastOrDefaultRecipeCost() & 0xFFFF;
-                case 7 -> this.entity.getLastOrDefaultRecipeCost() >>> 16;
-                case 8 -> this.entity.getEnergyUseRate();
-                case 9 -> this.entity.hasRecipe() ? 1 : 0;
+                case 6 ->
+                        this.entity.getRecipeCost(this.entity.recipeState.lastMatch != null ? this.entity.recipeState.lastMatch.value() : null) & 0xFFFF;
+                case 7 ->
+                        this.entity.getRecipeCost(this.entity.recipeState.lastMatch != null ? this.entity.recipeState.lastMatch.value() : null) >>> 16;
                 default -> 0;
             };
         }

@@ -4,7 +4,6 @@ import hayo.Hayo;
 import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
 import hayo.energy.item.EnergyComponents;
-import hayo.processing_machine.MachineContainerData;
 import hayo.processing_machine.classic.MachineUpgradeSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -19,20 +18,20 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 
 public class MatterGeneratorMenu extends HayoContainerMenu {
-    public final MachineContainerData machineData;
+    public final MatterGeneratorContainerData machineData;
 
     public final List<RecipeHolder<MatterGeneratingRecipe>> recipes;
     public final DataSlot selectedRecipe;
 
     public MatterGeneratorMenu(int menuId, Inventory inventory) {
-        this(menuId, new SimpleContainer(MatterGeneratorBlockEntity.SLOTS), new MachineContainerData.Clientside(), inventory);
+        this(menuId, new SimpleContainer(MatterGeneratorBlockEntity.SLOTS), new MatterGeneratorContainerData.Clientside(), inventory);
     }
 
     public MatterGeneratorMenu(int menuId, MatterGeneratorBlockEntity entity, Inventory inventory) {
-        this(menuId, entity, new MachineContainerData.Serverside(entity), inventory);
+        this(menuId, entity, new MatterGeneratorContainerData.Serverside(entity), inventory);
     }
 
-    protected MatterGeneratorMenu(int menuId, Container container, MachineContainerData data, Inventory inventory) {
+    protected MatterGeneratorMenu(int menuId, Container container, MatterGeneratorContainerData data, Inventory inventory) {
         super(Hayo.MenuTypes.MATTER_GENERATOR, menuId, container);
 
         this.machineData = data;

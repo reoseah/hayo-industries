@@ -60,11 +60,11 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
     protected abstract int getBaseEnergyUseRate();
 
     @Override
-    public final int getEnergyCost(@Nullable RecipeHolder<R> holder) {
-        return (int) (this.getBaseEnergyCost(holder) * (1 + this.extraRecipeCost));
+    public final int getRecipeCost(@Nullable R recipe) {
+        return (int) (this.getBaseEnergyCost(recipe) * (1 + this.extraRecipeCost));
     }
 
-    protected abstract int getBaseEnergyCost(@Nullable RecipeHolder<R> holder);
+    protected abstract int getBaseEnergyCost(@Nullable R recipe);
 
     @Override
     public boolean tickRecipe(ServerLevel level, BlockPos pos, BlockState state) {
@@ -138,7 +138,7 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
 
         if (extraRecipeCost != this.extraRecipeCost) {
             this.extraRecipeCost = extraRecipeCost;
-            this.recipeProgress = 0;
+            this.recipeState.progress = 0;
         }
         if (hasInductionUpgrade != this.hasInductionUpgrade) {
             this.hasInductionUpgrade = hasInductionUpgrade;

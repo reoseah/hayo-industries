@@ -107,46 +107,4 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
         return direction != Direction.UP;
     }
-
-    protected int lastOrDefaultRecipeEnergy;
-
-    @Override
-    public int getLastOrDefaultRecipeCost() {
-        return this.level.isClientSide() ? this.lastOrDefaultRecipeEnergy : super.getLastOrDefaultRecipeCost();
-    }
-
-    public record ClassicMachineData(ClassicMachineBlockEntity<?> entity) implements ContainerData {
-        @Override
-        public int getCount() {
-            return 6;
-        }
-
-        @Override
-        public int get(int index) {
-            return switch (index) {
-                case 0 -> this.entity.storedEnergy & 0xFFFF;
-                case 1 -> this.entity.storedEnergy >>> 16;
-                case 2 -> this.entity.recipeProgress & 0xFFFF;
-                case 3 -> this.entity.recipeProgress >>> 16;
-                case 4 -> this.entity.getLastOrDefaultRecipeCost() & 0xFFFF;
-                case 5 -> this.entity.getLastOrDefaultRecipeCost() >>> 16;
-                default -> 0;
-            };
-        }
-
-        @Override
-        public void set(int index, int value) {
-            value &= 0xFFFF;
-            switch (index) {
-                case 0 -> this.entity.storedEnergy = this.entity.storedEnergy & 0xFFFF_0000 | value;
-                case 1 -> this.entity.storedEnergy = this.entity.storedEnergy & 0xFFFF | value << 16;
-                case 2 -> this.entity.recipeProgress = this.entity.recipeProgress & 0xFFFF_0000 | value;
-                case 3 -> this.entity.recipeProgress = this.entity.recipeProgress & 0xFFFF | value << 16;
-                case 4 ->
-                        this.entity.lastOrDefaultRecipeEnergy = this.entity.lastOrDefaultRecipeEnergy & 0xFFFF_0000 | value;
-                case 5 ->
-                        this.entity.lastOrDefaultRecipeEnergy = this.entity.lastOrDefaultRecipeEnergy & 0xFFFF | value << 16;
-            }
-        }
-    }
 }

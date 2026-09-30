@@ -7,7 +7,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,8 +49,8 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
     }
 
     @Override
-    public int getBaseEnergyCost(@Nullable RecipeHolder<CompressingRecipe> holder) {
-        return holder == null ? CompressingRecipe.DEFAULT_ENERGY : holder.value().energyCost;
+    public int getBaseEnergyCost(@Nullable CompressingRecipe recipe) {
+        return recipe != null ? recipe.energyCost : CompressingRecipe.DEFAULT_ENERGY;
     }
 
     @Override

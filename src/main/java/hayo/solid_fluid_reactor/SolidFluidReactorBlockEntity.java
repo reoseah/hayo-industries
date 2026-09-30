@@ -8,6 +8,7 @@ import hayo.fluid_stack.FluidDrainingRecipe;
 import hayo.fluid_stack.FluidFillingRecipe;
 import hayo.fluid_stack.FluidStack;
 import hayo.fluid_stack.ItemFluidRecipeInput;
+import hayo.processing_machine.RecipeState;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

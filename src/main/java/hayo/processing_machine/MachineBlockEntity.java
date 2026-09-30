@@ -18,65 +18,41 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jspecify.annotations.Nullable;
 
-public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeInput> extends EnergyReceiverBlockEntity {
+public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeInput> extends EnergyReceiverBlockEntity implements RecipeState.Context<R, I> {
     @Getter
-    protected @Nullable RecipeHolder<R> lastRecipe;
-
-    @Getter
-    protected int recipeProgress;
+    protected RecipeState<R, I> recipeState = new RecipeState<>();
 
     protected MachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, NonNullList<ItemStack> stacks) {
         super(type, pos, state, stacks);
     }
 
     public boolean tickRecipe(ServerLevel level, BlockPos pos, BlockState state) {
-        boolean wasProcessing = this.recipeProgress > 0;
-        boolean madeProgress = false;
+        boolean wasProcessing = this.recipeState.progress > 0;
 
-        var input = this.createRecipeInput();
-        if (input.isEmpty()) {
-            if (this.recipeProgress > 0) {
-                this.recipeProgress = 0;
-                this.setChanged();
-            }
-        } else {
-            var recipeHolder = this.findMatchingRecipe(level, input);
+        int energyUsed = this.recipeState.tick(
+                this.getRecipeType(),
+                this.createRecipeInput(),
+                (ServerLevel) level,
+                this.hasEnoughEnergyToProgress()
+                        ? new RecipeState.RecipeResourceState.Sufficient(this.getEnergyUseRate())
+                        : new RecipeState.RecipeResourceState.NotSufficient(-2 * this.getEnergyUseRate()),
+                this
+        );
+        this.storedEnergy -= energyUsed;
 
-            if (this.hasEnoughEnergyToProgress() && recipeHolder != null && this.canCraft(recipeHolder, input)) {
-                int recipeCost = this.getEnergyCost(recipeHolder);
-                int progressChange = Math.min(Math.min(recipeCost - this.recipeProgress, this.getEnergyUseRate()), this.storedEnergy);
-
-                this.storedEnergy -= progressChange;
-                this.recipeProgress += this.getAmountToProgressRecipe(progressChange);
-                madeProgress = true;
-
-                if (this.recipeProgress >= recipeCost) {
-                    this.craft(recipeHolder, input);
-                    this.recipeProgress = 0;
-                }
-
-                this.setChanged();
-            } else if (this.recipeProgress > 0) {
-                this.recipeProgress = Math.max(this.recipeProgress - 2 * this.getEnergyUseRate(), 0);
-                this.setChanged();
-            }
-        }
-
-        boolean isProcessing = this.recipeProgress > 0;
+        boolean isProcessing = this.recipeState.progress > 0;
         if (wasProcessing != isProcessing) {
             level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, isProcessing));
         }
 
-        return madeProgress;
+        return energyUsed > 0;
     }
 
     public abstract int getEnergyUseRate();
 
     public int getLastOrDefaultRecipeCost() {
-        return this.getEnergyCost(this.lastRecipe);
+        return this.getRecipeCost(this.recipeState.lastMatch != null ? this.recipeState.lastMatch.value() : null);
     }
-
-    public abstract int getEnergyCost(@Nullable RecipeHolder<R> holder);
 
     protected boolean hasEnoughEnergyToProgress() {
         return this.storedEnergy >= this.getEnergyUseRate();
@@ -92,16 +68,12 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected abstract I createRecipeInput();
 
-    protected abstract boolean canCraft(RecipeHolder<R> recipe, I input);
-
-    protected abstract void craft(RecipeHolder<R> recipe, I input);
-
     @Override
     protected void inventoryChanged(int slot, ItemStack previous, ItemStack stack) {
         super.inventoryChanged(slot, previous, stack);
         if (this.isInputSlot(slot)) {
             if (!stack.isEmpty() && !ItemStack.isSameItemSameComponents(stack, previous)) {
-                this.recipeProgress = 0;
+                this.recipeState.progress = 0;
             }
         }
     }
@@ -110,26 +82,26 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     @MustBeInvokedByOverriders
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("recipe_progress", this.recipeProgress);
+        output.putInt("recipe_progress", this.recipeState.progress);
     }
 
     @Override
     @MustBeInvokedByOverriders
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.recipeProgress = input.getIntOr("recipe_progress", 0);
+        this.recipeState.progress = input.getIntOr("recipe_progress", 0);
     }
 
     public @Nullable RecipeHolder<R> findMatchingRecipe(ServerLevel level, I input) {
         var recipeManager = level.recipeAccess();
-        var match = recipeManager.getRecipeFor(this.getRecipeType(), input, level, this.lastRecipe).orElse(null);
-        if (match != this.lastRecipe && match != null) {
-            this.lastRecipe = match;
+        var match = recipeManager.getRecipeFor(this.getRecipeType(), input, level, this.recipeState.lastMatch).orElse(null);
+        if (match != this.recipeState.lastMatch && match != null) {
+            this.recipeState.lastMatch = match;
         }
         return match;
     }
 
     public boolean hasRecipe() {
-        return this.lastRecipe != null && this.lastRecipe.value().matches(this.createRecipeInput(), this.level);
+        return this.recipeState.lastMatch != null && this.recipeState.lastMatch.value().matches(this.createRecipeInput(), this.level);
     }
 }

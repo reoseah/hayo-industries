@@ -2,7 +2,7 @@
   "type": "hayo:fluid_draining",
   "input": "minecraft:wet_sponge",
   "result_item": {
-    "id": "minecraft:bucket"
+    "id": "minecraft:sponge"
   },
   "result_fluid": {
     "id": "minecraft:water",

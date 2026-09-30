@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -67,13 +66,13 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ClassicMachi
         }
         if (mode != this.mode) {
             this.mode = mode;
-            this.recipeProgress = 0;
+            this.recipeState.progress = 0;
         }
     }
 
     @Override
-    public int getBaseEnergyCost(RecipeHolder<ClassicMachineRecipe> holder) {
-        return holder == null ? ExtractingRecipe.DEFAULT_ENERGY : holder.value().energyCost;
+    public int getBaseEnergyCost(ClassicMachineRecipe recipe) {
+        return recipe != null ? recipe.energyCost : ExtractingRecipe.DEFAULT_ENERGY;
     }
 
     @Override

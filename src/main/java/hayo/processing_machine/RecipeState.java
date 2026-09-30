@@ -1,6 +1,5 @@
-package hayo.solid_fluid_reactor;
+package hayo.processing_machine;
 
-import lombok.Getter;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -9,11 +8,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import org.jspecify.annotations.Nullable;
 
 public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
-    @Getter
-    protected @Nullable RecipeHolder<R> lastMatch;
-
-    @Getter
-    protected int progress;
+    public @Nullable RecipeHolder<R> lastMatch;
+    public int progress;
 
     public int tick(RecipeType<R> recipeType, I input, ServerLevel level, RecipeResourceState resourceState, Context<R, I> ctx) {
         if (input.isEmpty()) {
@@ -24,7 +20,7 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
             return 0;
         }
 
-        var match = level.recipeAccess().getRecipeFor(recipeType, input, level, this.lastMatch).orElse(null);
+        var match = this.getMatchingRecipe(recipeType, input, level);
         if (match == null) {
             if (this.progress != 0) {
                 this.progress = 0;
@@ -41,10 +37,10 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
                 if (this.progress <= 0) {
                     yield 0;
                 }
-                int progressChange = Math.min(progressLossPerTick, this.progress);
+                int progressChange = Math.min(-progressLossPerTick, this.progress);
                 this.progress -= progressChange;
                 ctx.setChanged();
-                yield -progressChange;
+                yield 0;
             }
             case RecipeResourceState.Sufficient(int progressLimit) -> {
                 if (!ctx.canCraft(match, input)) {
@@ -64,6 +60,10 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
                 yield progressChange;
             }
         };
+    }
+
+    protected @Nullable RecipeHolder<R> getMatchingRecipe(RecipeType<R> recipeType, I input, ServerLevel level) {
+        return level.recipeAccess().getRecipeFor(recipeType, input, level, this.lastMatch).orElse(null);
     }
 
     public sealed interface RecipeResourceState permits RecipeResourceState.NotSufficient, RecipeResourceState.Sufficient {

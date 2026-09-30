@@ -116,7 +116,7 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
         if (this.isHovering(80, 25, 24, 16, mouseX, mouseY) && this.menu.machineData.recipeCost() > 0) {
             var tooltip = List.<Component>of(
                     EnergyTexts.amountWithCapacityAndPercentage(this.menu.machineData.recipeProgress(), this.menu.machineData.recipeCost()),
-                    EnergyTexts.durationAtAmountPerTick(this.menu.machineData.recipeDuration(), this.menu.machineData.energyUseRate()).withStyle(ChatFormatting.GRAY)
+                    EnergyTexts.durationAtAmountPerTick(this.menu.machineData.recipeDuration(), MatterGeneratorBlockEntity.ENERGY_USE_RATE).withStyle(ChatFormatting.GRAY)
             );
             graphics.setTooltipForNextFrame(this.font, tooltip, Optional.empty(), mouseX, mouseY);
             return;
