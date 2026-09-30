@@ -6,7 +6,7 @@ import hayo.fluid_stack.FluidDrainingRecipe;
 import hayo.fluid_stack.FluidFillingRecipe;
 import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
-import hayo.solid_fluid_reactor.SolidFluidReactingRecipe;
+import hayo.processing_machine.solid_fluid_reactor.SolidFluidReactingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.drawable.IDrawable;

@@ -4,7 +4,7 @@ import hayo.Hayo;
 import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
 import hayo.energy.item.EnergyComponents;
-import hayo.processing_machine.classic.MachineUpgradeSlot;
+import hayo.processing_machine.MachineUpgradeSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;

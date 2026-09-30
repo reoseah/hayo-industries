@@ -4,8 +4,8 @@ import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
 import hayo.fluid_stack.FluidGuiRendering;
-import hayo.solid_fluid_reactor.SolidFluidReactingRecipe;
-import hayo.solid_fluid_reactor.SolidFluidReactorBlockEntity;
+import hayo.processing_machine.solid_fluid_reactor.SolidFluidReactingRecipe;
+import hayo.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -35,7 +35,7 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
         var recipe = holder.value();
 
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).add(recipe.inputFluid().values().stream().findAny().map(Holder::value).orElse(Fluids.EMPTY), recipe.inputFluid().amount());
-        builder.addSlot(RecipeIngredientRole.INPUT, 28-5, 10).add(recipe.inputItem()).setStandardSlotBackground();
+        builder.addSlot(RecipeIngredientRole.INPUT, 28 - 5, 10).add(recipe.inputItem()).setStandardSlotBackground();
         builder.addSlot(RecipeIngredientRole.OUTPUT, 84, 1).add(getOptional(recipe.resultItems(), 0).map(ItemStackTemplate::create).orElse(ItemStack.EMPTY)).setStandardSlotBackground();
         builder.addSlot(RecipeIngredientRole.OUTPUT, 84, 19).add(getOptional(recipe.resultItems(), 1).map(ItemStackTemplate::create).orElse(ItemStack.EMPTY)).setStandardSlotBackground();
         builder.addSlot(RecipeIngredientRole.OUTPUT, 84, 37).add(getOptional(recipe.resultItems(), 2).map(ItemStackTemplate::create).orElse(ItemStack.EMPTY)).setStandardSlotBackground();

@@ -5,8 +5,6 @@ import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
 import hayo.fluid_stack.FluidDrainingRecipe;
 import hayo.fluid_stack.FluidGuiRendering;
-import hayo.processing_machine.classic.ElectricFurnaceBlockEntity;
-import hayo.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -65,7 +63,7 @@ public class FluidDrainingJeiCategory implements IRecipeCategory<RecipeHolder<Fl
     @Override
     public void draw(RecipeHolder<FluidDrainingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         int energyCost = holder.value().energyCost();
-        float fill = (System.currentTimeMillis() / 50 * ElectricFurnaceBlockEntity.ENERGY_USE_RATE) % energyCost;
+        float fill = (System.currentTimeMillis() / 50) % energyCost;
         HayoGuiSprites.blitDrainingArrow(graphics, 6, 20, (int) fill, energyCost);
 
         var topLeft = graphics.pose().transform(new Vector3f(0, 0, 1));
@@ -74,7 +72,7 @@ public class FluidDrainingJeiCategory implements IRecipeCategory<RecipeHolder<Fl
         FluidGuiRendering.extractFluidTank(
                 graphics,
                 holder.value().resultFluid(),
-                SolidFluidReactorBlockEntity.FLUID_CAPACITY,
+                4000,
                 (int) (topLeft.x + 18 + 9),
                 (int) topLeft.y - 1,
                 (int) (topLeft.x + mouseX),

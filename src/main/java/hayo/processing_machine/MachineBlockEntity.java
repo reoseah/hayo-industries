@@ -7,7 +7,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jspecify.annotations.Nullable;
 
 public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeInput> extends EnergyReceiverBlockEntity implements RecipeState.Context<R, I> {
     @Getter
@@ -90,15 +88,6 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.recipeState.progress = input.getIntOr("recipe_progress", 0);
-    }
-
-    public @Nullable RecipeHolder<R> findMatchingRecipe(ServerLevel level, I input) {
-        var recipeManager = level.recipeAccess();
-        var match = recipeManager.getRecipeFor(this.getRecipeType(), input, level, this.recipeState.lastMatch).orElse(null);
-        if (match != this.recipeState.lastMatch && match != null) {
-            this.recipeState.lastMatch = match;
-        }
-        return match;
     }
 
     public boolean hasRecipe() {

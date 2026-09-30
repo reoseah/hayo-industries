@@ -4,6 +4,7 @@ import hayo.common.menu.HayoContainerMenu;
 import hayo.common.menuslot.ResultSlot;
 import hayo.energy.item.EnergyComponents;
 import hayo.processing_machine.MachineContainerData;
+import hayo.processing_machine.MachineUpgradeSlot;
 import hayo.processing_machine.UpgradableMachineBlockEntity;
 import hayo.processing_machine.UpgradableMachineContainerData;
 import net.minecraft.tags.TagKey;

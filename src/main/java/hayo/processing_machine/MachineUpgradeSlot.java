@@ -1,4 +1,4 @@
-package hayo.processing_machine.classic;
+package hayo.processing_machine;
 
 import hayo.Hayo;
 import net.minecraft.tags.TagKey;
