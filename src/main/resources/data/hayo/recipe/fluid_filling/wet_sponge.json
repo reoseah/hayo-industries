@@ -1,0 +1,12 @@
+{
+  "type": "hayo:fluid_filling",
+  "input_item": "minecraft:sponge",
+  "input_fluid": {
+    "id": "minecraft:water",
+    "amount": 1000
+  },
+  "result_item": {
+    "id": "minecraft:wet_sponge"
+  },
+  "energy_cost": 100
+}

@@ -1,0 +1,12 @@
+{
+  "type": "hayo:fluid_draining",
+  "input": "minecraft:wet_sponge",
+  "result_item": {
+    "id": "minecraft:bucket"
+  },
+  "result_fluid": {
+    "id": "minecraft:water",
+    "amount": 1000
+  },
+  "energy_cost": 100
+}

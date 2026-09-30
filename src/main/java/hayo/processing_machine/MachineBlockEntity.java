@@ -42,7 +42,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
         } else {
             var recipeHolder = this.findMatchingRecipe(level, input);
 
-            if (this.hasEnoughEnergyToProgress() && this.canCraft(recipeHolder, input)) {
+            if (this.hasEnoughEnergyToProgress() && recipeHolder != null && this.canCraft(recipeHolder, input)) {
                 int recipeCost = this.getEnergyCost(recipeHolder);
                 int progressChange = Math.min(Math.min(recipeCost - this.recipeProgress, this.getEnergyUseRate()), this.storedEnergy);
 
@@ -92,7 +92,7 @@ public abstract class MachineBlockEntity<R extends Recipe<I>, I extends RecipeIn
 
     protected abstract I createRecipeInput();
 
-    protected abstract boolean canCraft(@Nullable RecipeHolder<R> recipe, I input);
+    protected abstract boolean canCraft(RecipeHolder<R> recipe, I input);
 
     protected abstract void craft(RecipeHolder<R> recipe, I input);
 

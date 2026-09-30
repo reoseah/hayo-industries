@@ -8,9 +8,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -86,6 +88,15 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
         return new ElectricFurnaceMenu(containerId, this, inventory);
+    }
+
+    @Override
+    public boolean canCraft(RecipeHolder<AbstractCookingRecipe> recipe, SingleRecipeInput input) {
+        if (!super.canCraft(recipe, input)) {
+            return false;
+        }
+
+        return !recipe.value().input().acceptsItem(Items.WET_SPONGE.builtInRegistryHolder());
     }
 
     @Override

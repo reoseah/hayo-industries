@@ -6,8 +6,11 @@ import hayo.processing_machine.UpgradableMachineContainerData;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
@@ -59,5 +62,13 @@ public class ElectricFurnaceMenu extends ClassicMachineMenu {
     @Override
     public RecipeType<? extends Recipe<SingleRecipeInput>> getRecipeType() {
         return this.getModeData().recipeType;
+    }
+
+    @Override
+    protected boolean handleQuickMoveFromInventory(ItemStack stack, Player player, int index) {
+        if (stack.is(Items.WET_SPONGE)) {
+            return false;
+        }
+        return super.handleQuickMoveFromInventory(stack, player, index);
     }
 }

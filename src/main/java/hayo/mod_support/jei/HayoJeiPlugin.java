@@ -23,6 +23,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 
 import java.util.List;
@@ -74,7 +75,10 @@ public class HayoJeiPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         var synchronizedRecipes = Minecraft.getInstance().level.recipeAccess().getSynchronizedRecipes();
 
-        registration.addRecipes(ELECTRIC_SMELTING, List.copyOf(synchronizedRecipes.getAllOfType(RecipeType.SMELTING)));
+        registration.addRecipes(ELECTRIC_SMELTING, synchronizedRecipes.getAllOfType(RecipeType.SMELTING)
+                .stream()
+                .filter(holder -> !holder.value().input().acceptsItem(Items.WET_SPONGE.builtInRegistryHolder()))
+                .toList());
         registration.addRecipes(ELECTRIC_BLASTING, List.copyOf(synchronizedRecipes.getAllOfType(RecipeType.BLASTING)));
         registration.addRecipes(ELECTRIC_SMOKING, List.copyOf(synchronizedRecipes.getAllOfType(RecipeType.SMOKING)));
 
