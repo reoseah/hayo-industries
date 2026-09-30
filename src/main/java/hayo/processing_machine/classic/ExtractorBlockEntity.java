@@ -1,7 +1,6 @@
 package hayo.processing_machine.classic;
 
 import hayo.Hayo;
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -12,13 +11,10 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ClassicMachineRecipe> {
+public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ExtractingRecipe> {
     public static final int TRANSFER_LIMIT = 32;
     public static final int ENERGY_USE_RATE = 2;
     public static final int CAPACITY = 15 * 20 * ENERGY_USE_RATE; // 15s * 20tick/s * 2e/tick = 600e
-
-    @Getter
-    protected ExtractorMode mode = ExtractorMode.DEFAULT;
 
     public ExtractorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.EXTRACTOR, pos, state);
@@ -30,10 +26,9 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ClassicMachi
         entity.resetEnergyPerTick();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected RecipeType<ClassicMachineRecipe> getRecipeType() {
-        return (RecipeType<ClassicMachineRecipe>) this.mode.recipeType;
+    protected RecipeType<ExtractingRecipe> getRecipeType() {
+        return Hayo.RecipeTypes.EXTRACTING;
     }
 
     @Override
@@ -52,26 +47,7 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ClassicMachi
     }
 
     @Override
-    protected void updateUpgradeState() {
-        super.updateUpgradeState();
-
-        var mode = ExtractorMode.DEFAULT;
-        for (int i = UPGRADE_1; i < UPGRADE_1 + UPGRADES; i++) {
-            var stack = this.stacks.get(i);
-            if (stack.is(Hayo.Items.NUTRIENT_DISPENSER_UPGRADE)) {
-                mode = ExtractorMode.NUTRIENT_EXTRACTING;
-                break;
-
-            }
-        }
-        if (mode != this.mode) {
-            this.mode = mode;
-            this.recipeState.progress = 0;
-        }
-    }
-
-    @Override
-    public int getBaseEnergyCost(ClassicMachineRecipe recipe) {
+    public int getBaseEnergyCost(ExtractingRecipe recipe) {
         return recipe != null ? recipe.energyCost : ExtractingRecipe.DEFAULT_ENERGY;
     }
 
