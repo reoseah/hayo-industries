@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hayo.Hayo;
-import lombok.experimental.Accessors;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,7 +15,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-@Accessors(fluent = true)
 public record MatterGeneratingRecipe(ItemStackTemplate result, int energyCost,
                                      Holder<Item> requiredUpgrade) implements Recipe<MatterGeneratorRecipeInput> {
     public static final MapCodec<MatterGeneratingRecipe> CODEC = RecordCodecBuilder.mapCodec(

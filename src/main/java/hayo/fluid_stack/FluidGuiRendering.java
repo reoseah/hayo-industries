@@ -15,13 +15,66 @@ import net.minecraft.world.level.material.Fluids;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class FluidGuiRendering {
+    public static MutableComponent getFluidName(Fluid fluid) {
+        return fluid != Fluids.EMPTY
+                ? Component.translatable(fluid.defaultFluidState().createLegacyBlock().getBlock().getDescriptionId())
+                : Component.translatable("hayo.empty");
+    }
+
+    public static MutableComponent getFluidName(Fluid fluid, int amount) {
+        return amount != 0 ? getFluidName(fluid) : Component.translatable("hayo.empty");
+    }
+
+    public static List<Component> createTooltip(Fluid fluid, int amount) {
+        return List.of(
+                getFluidName(fluid),
+                Component.translatable("hayo.millibuckets", amount).withStyle(ChatFormatting.GRAY)
+        );
+    }
+
+    public static List<Component> createTooltip(Fluid fluid, int amount, int maxAmount) {
+        return List.of(
+                getFluidName(fluid, amount),
+                Component.translatable("hayo.millibuckets_with_capacity_and_percentage",
+                                amount,
+                                maxAmount,
+                                100 * (float) amount / (float) maxAmount
+                        )
+                        .withStyle(ChatFormatting.GRAY)
+        );
+    }
+
+    public static List<Component> createTooltip(FluidStack stack) {
+        return createTooltip(stack.fluid(), stack.amount());
+    }
+
+    public static List<Component> createTooltip(FluidIngredientAmount ingredient) {
+        var fluids = ingredient.values().stream().map(Holder::value).toList();
+        var amount = ingredient.amount();
+        var displayFluid = fluids.isEmpty() ? Fluids.EMPTY : fluids.get((int) Math.abs(System.currentTimeMillis() / 1000 % fluids.size()));
+
+        var tooltip = createTooltip(displayFluid, amount);
+        if (fluids.size() > 1) {
+            tooltip = new ArrayList<>(tooltip);
+
+            // TODO: check if fluidIngredient.values is tag-baked (instanceof HolderSet.Named) and show tag name instead of listing fluids
+            //   (like recipe-viewing mods do for item ingredients)
+            tooltip.add(Component.empty());
+            tooltip.add(Component.translatable("hayo.accepts_fluids").withStyle(ChatFormatting.GRAY));
+            for (var fluid : fluids) {
+                tooltip.add(Component.literal(" ").append(getFluidName(fluid).withStyle(ChatFormatting.GRAY)));
+            }
+
+        }
+        return tooltip;
+    }
+
     @Environment(EnvType.CLIENT)
-    public static void extractFluidTank(GuiGraphicsExtractor graphics, FluidStack fluidStack, int maxAmount, int x, int y, int mouseX, int mouseY) {
-        var fluid = fluidStack.fluid();
-        var amount = fluidStack.amount();
+    public static void extractFluidTank(GuiGraphicsExtractor graphics, FluidStack stack, int maxAmount, int x, int y, int mouseX, int mouseY) {
+        var fluid = stack.fluid();
+        var amount = stack.amount();
 
         HayoGuiSprites.blitFluidTank(graphics, x, y);
         if (fluid != Fluids.EMPTY && amount != 0) {
@@ -29,32 +82,16 @@ public class FluidGuiRendering {
         }
         HayoGuiSprites.blitFluidTankOverlay(graphics, x, y);
 
-        if (mouseX >= x && mouseX < x + 18 && mouseY >= y && mouseY < y + 56) {
-            graphics.setTooltipForNextFrame(Minecraft.getInstance().font, createTankTooltip(fluid, amount, maxAmount), Optional.empty(), mouseX, mouseY);
-        }
+//        if (mouseX >= x && mouseX < x + 18 && mouseY >= y && mouseY < y + 56) {
+//            graphics.setTooltipForNextFrame(Minecraft.getInstance().font, createTooltip(fluid, amount, maxAmount), Optional.empty(), mouseX, mouseY);
+//        }
     }
 
-    public static List<Component> createTankTooltip(Fluid fluid, int amount, int capacity) {
-        return List.of(
-                fluid != Fluids.EMPTY && amount != 0
-                        ? getFluidName(fluid)
-                        : Component.translatable("hayo.empty"),
-                Component.translatable("hayo.millibuckets_with_capacity_and_percentage",
-                        amount,
-                        capacity,
-                        capacity != 0 ? 100 * (float) amount / (float) capacity : Float.NaN
-                ).withStyle(ChatFormatting.GRAY)
-        );
-    }
-
-    public static MutableComponent getFluidName(Fluid fluid) {
-        return Component.translatable(fluid.defaultFluidState().createLegacyBlock().getBlock().getDescriptionId());
-    }
 
     @Environment(EnvType.CLIENT)
-    public static void extractFluidTank(GuiGraphicsExtractor graphics, FluidIngredientAmount fluidIngredient, int maxAmount, int x, int y, int mouseX, int mouseY) {
-        var fluids = fluidIngredient.values().stream().map(Holder::value).toList();
-        var amount = fluidIngredient.amount();
+    public static void extractFluidTank(GuiGraphicsExtractor graphics, FluidIngredientAmount ingredient, int maxAmount, int x, int y, int mouseX, int mouseY) {
+        var fluids = ingredient.values().stream().map(Holder::value).toList();
+        var amount = ingredient.amount();
 
         var displayFluid = fluids.isEmpty() ? Fluids.EMPTY : fluids.get((int) Math.abs(System.currentTimeMillis() / 1000 % fluids.size()));
 
@@ -65,24 +102,10 @@ public class FluidGuiRendering {
         HayoGuiSprites.blitFluidTankOverlay(graphics, x, y);
 
         if (mouseX >= x && mouseX < x + 18 && mouseY >= y && mouseY < y + 56) {
-            var displayFluidTooltip = createTankTooltip(displayFluid, amount, maxAmount);
-            if (fluids.size() <= 1) {
-                graphics.setTooltipForNextFrame(Minecraft.getInstance().font, displayFluidTooltip, Optional.empty(), mouseX, mouseY);
-            } else {
-                var tooltip = new ArrayList<>(displayFluidTooltip);
-                tooltip.add(Component.empty());
-
-                // TODO: check if fluidIngredient.values is tag-baked (instanceof HolderSet.Named) and show tag name instead of listing fluids
-                //   (like recipe-viewing mods do for item ingredients)
-                tooltip.add(Component.translatable("hayo.accepts_fluids").withStyle(ChatFormatting.GRAY));
-                for (var fluid : fluids) {
-                    tooltip.add(Component.literal(" ").append(getFluidName(fluid).withStyle(ChatFormatting.GRAY)));
-                }
-
-                graphics.setTooltipForNextFrame(Minecraft.getInstance().font, tooltip, Optional.empty(), mouseX, mouseY);
-            }
+//            graphics.setTooltipForNextFrame(Minecraft.getInstance().font, createTooltip(ingredient), Optional.empty(), mouseX, mouseY);
         }
     }
+
 
     @Environment(EnvType.CLIENT)
     public static void blitFluidColumn(GuiGraphicsExtractor graphics, Fluid fluid, int amount, int maxAmount, int x, int y, int height) {

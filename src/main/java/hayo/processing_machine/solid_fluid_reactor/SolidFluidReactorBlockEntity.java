@@ -31,7 +31,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<SolidFluidReactingRecipe, ItemFluidRecipeInput> implements WorldlyContainer {
+public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<BaseSolidFluidReactingRecipe, ItemFluidRecipeInput> implements WorldlyContainer {
     public static final int SLOTS = 13;
 
     public static final int INPUT = 0, INPUT_TANK_INPUT = 1, OUTPUT_TANK_INPUT = 2;
@@ -101,7 +101,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<S
     }
 
     @Override
-    protected RecipeType<SolidFluidReactingRecipe> getRecipeType() {
+    protected RecipeType<BaseSolidFluidReactingRecipe> getRecipeType() {
         return Hayo.RecipeTypes.SOLID_FLUID_REACTING;
     }
 
@@ -116,7 +116,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<S
     }
 
     @Override
-    protected int getBaseEnergyCost(@Nullable SolidFluidReactingRecipe recipe) {
+    protected int getBaseEnergyCost(@Nullable BaseSolidFluidReactingRecipe recipe) {
         return recipe != null ? recipe.energyCost : 1000;
     }
 
@@ -179,7 +179,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<S
     }
 
     @Override
-    public boolean canCraft(RecipeHolder<SolidFluidReactingRecipe> recipe, ItemFluidRecipeInput input) {
+    public boolean canCraft(RecipeHolder<BaseSolidFluidReactingRecipe> recipe, ItemFluidRecipeInput input) {
         if (!HayoContainerUtils.canInsertShapelessly(this.stacks, recipe.value().resultItems, OUTPUT_1, OUTPUT_3, this.getMaxStackSize())) {
             return false;
         }
@@ -198,7 +198,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<S
 
 
     @Override
-    public void craft(RecipeHolder<SolidFluidReactingRecipe> recipeHolder, ItemFluidRecipeInput input) {
+    public void craft(RecipeHolder<BaseSolidFluidReactingRecipe> recipeHolder, ItemFluidRecipeInput input) {
         var recipe = recipeHolder.value();
 
         this.stacks.get(INPUT).shrink(1);

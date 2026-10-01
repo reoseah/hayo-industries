@@ -11,6 +11,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.util.Optional;
+
 public class SolidFluidReactorScreen extends AbstractContainerScreen<SolidFluidReactorMenu> {
     public static final Identifier BACKGROUND = Hayo.modId("textures/gui/container/solid_fluid_reactor.png");
 
@@ -48,5 +50,10 @@ public class SolidFluidReactorScreen extends AbstractContainerScreen<SolidFluidR
     @Override
     protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.extractTooltip(graphics, mouseX, mouseY);
+        if (mouseX >= 0 && mouseX <= 18 && mouseY >= -1 && mouseY <= -1 + 56) {
+            graphics.setTooltipForNextFrame(this.font, FluidGuiRendering.createTooltip(this.menu.data.inputFluid()), Optional.empty(), mouseX, mouseY);
+        } else if (mouseX >= 104 && mouseX <= 104 + 18 && mouseY >= -1 && mouseY <= -1 + 56) {
+            graphics.setTooltipForNextFrame(this.font, FluidGuiRendering.createTooltip(this.menu.data.resultFluid()), Optional.empty(), mouseX, mouseY);
+        }
     }
 }

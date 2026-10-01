@@ -4,9 +4,10 @@ import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
 import hayo.fluid_stack.FluidGuiRendering;
-import hayo.processing_machine.solid_fluid_reactor.SolidFluidReactingRecipe;
+import hayo.processing_machine.solid_fluid_reactor.BaseSolidFluidReactingRecipe;
 import hayo.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -25,13 +26,13 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.Optional;
 
-public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHolder<SolidFluidReactingRecipe>> {
+public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHolder<BaseSolidFluidReactingRecipe>> {
     public SolidFluidReactingCategory(IDrawable icon) {
         super(HayoJeiPlugin.SOLID_FLUID_REACTING, Component.translatable("hayo.recipe_type.solid_fluid_reacting"), icon, 122, 54);
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SolidFluidReactingRecipe> holder, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<BaseSolidFluidReactingRecipe> holder, IFocusGroup focuses) {
         var recipe = holder.value();
 
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).add(recipe.inputFluid.values().stream().findAny().map(Holder::value).orElse(Fluids.EMPTY), recipe.inputFluid.amount());
@@ -49,7 +50,7 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
     }
 
     @Override
-    public void draw(RecipeHolder<SolidFluidReactingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<BaseSolidFluidReactingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         var recipe = holder.value();
 
         var topLeft = graphics.pose().transform(new Vector3f(0, 0, 1));
@@ -84,5 +85,14 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
 
         var font = Minecraft.getInstance().font;
         graphics.text(font, EnergyTexts.amount(recipe.energyCost), 40, 33, 0xFF404040, false);
+    }
+
+    @Override
+    public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<BaseSolidFluidReactingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+        if (mouseX >= 0 && mouseX <= 18 && mouseY >= -1 && mouseY <= -1 + 56) {
+            tooltip.addAll(FluidGuiRendering.createTooltip(recipe.value().inputFluid));
+        } else if (mouseX >= 104 && mouseX <= 104 + 18 && mouseY >= -1 && mouseY <= -1 + 56) {
+            tooltip.addAll(FluidGuiRendering.createTooltip(recipe.value().resultFluid));
+        }
     }
 }

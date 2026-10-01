@@ -6,6 +6,7 @@ import hayo.energy.client.EnergyGuiSprites;
 import hayo.fluid_stack.FluidFillingRecipe;
 import hayo.fluid_stack.FluidGuiRendering;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -84,5 +85,12 @@ public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<Flu
         EnergyGuiSprites.blitZap(graphics, 51, 19, 10, 14);
 
         graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 50, 42, 0xFF404040, false);
+    }
+
+    @Override
+    public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<FluidFillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+        if (mouseX >= 0 && mouseX <= 18 && mouseY >= -1 && mouseY <= -1 + 56) {
+            tooltip.addAll(FluidGuiRendering.createTooltip(recipe.value().inputFluid()));
+        }
     }
 }

@@ -836,7 +836,7 @@ public class Hayo {
         public static final RecipeType<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating");
         public static final RecipeType<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining");
         public static final RecipeType<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling");
-        public static final RecipeType<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting");
+        public static final RecipeType<BaseSolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting");
 
         public static void initialize() {
         }

@@ -180,5 +180,6 @@
   "hayo.accepts_fluids": "Accepts fluids:",
   "hayo.recipe_type.solid_fluid_reacting": "Solid/Fluid Reacting",
   "hayo.recipe_type.fluid_filling": "Fluid Filling",
-  "hayo.upgrades.use_ore_washing_recipes": " Use Ore Washing recipes"
+  "hayo.upgrades.use_ore_washing_recipes": " Use Ore Washing recipes",
+  "hayo.millibuckets": "%s mB"
 }

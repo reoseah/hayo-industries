@@ -6,7 +6,7 @@ import hayo.fluid_stack.FluidDrainingRecipe;
 import hayo.fluid_stack.FluidFillingRecipe;
 import hayo.processing_machine.classic.*;
 import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
-import hayo.processing_machine.solid_fluid_reactor.SolidFluidReactingRecipe;
+import hayo.processing_machine.solid_fluid_reactor.BaseSolidFluidReactingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -42,7 +42,7 @@ public class HayoJeiPlugin implements IModPlugin {
     public static final IRecipeType<RecipeHolder<MatterGeneratingRecipe>> MATTER_GENERATING = IRecipeType.create(Hayo.RecipeTypes.MATTER_GENERATING);
     public static final IRecipeType<RecipeHolder<FluidDrainingRecipe>> FLUID_DRAINING = IRecipeType.create(Hayo.RecipeTypes.FLUID_DRAINING);
     public static final IRecipeType<RecipeHolder<FluidFillingRecipe>> FLUID_FILLING = IRecipeType.create(Hayo.RecipeTypes.FLUID_FILLING);
-    public static final IRecipeType<RecipeHolder<SolidFluidReactingRecipe>> SOLID_FLUID_REACTING = IRecipeType.create(Hayo.RecipeTypes.SOLID_FLUID_REACTING);
+    public static final IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> SOLID_FLUID_REACTING = IRecipeType.create(Hayo.RecipeTypes.SOLID_FLUID_REACTING);
 
     @Override
     public Identifier getPluginUid() {
