@@ -8,6 +8,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -20,7 +21,7 @@ public record MatterGeneratingRecipe(ItemStackTemplate result, int energyCost,
     public static final MapCodec<MatterGeneratingRecipe> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
                     ItemStackTemplate.CODEC.fieldOf("result").forGetter(MatterGeneratingRecipe::result),
-                    Codec.INT.fieldOf("energy_cost").forGetter(MatterGeneratingRecipe::energyCost),
+                    ExtraCodecs.POSITIVE_INT.fieldOf("energy_cost").forGetter(MatterGeneratingRecipe::energyCost),
                     Item.CODEC.fieldOf("required_upgrade").orElse(Items.AIR.builtInRegistryHolder()).forGetter(MatterGeneratingRecipe::requiredUpgrade)
             ).apply(instance, MatterGeneratingRecipe::new));
 

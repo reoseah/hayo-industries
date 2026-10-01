@@ -2,13 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    " C ",
-    "B#B"
+    "GBG",
+    "C#C"
   ],
   "key": {
     "#": "hayo:machine_block",
     "C": "hayo:circuit",
-    "B": "minecraft:bucket"
+    "B": "minecraft:bucket",
+    "G": "minecraft:glass"
   },
   "result": {
     "id": "hayo:solid_fluid_reactor",

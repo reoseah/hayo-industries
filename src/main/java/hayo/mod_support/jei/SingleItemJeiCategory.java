@@ -98,10 +98,10 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
                 .setOutputSlotBackground()
                 .add(recipe.result().create());
         if (recipe instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT, x + 85, 1)
-                    .setStandardSlotBackground()
-                    .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.chance.tooltip", machineRecipe.extraResultChance * 100).withStyle(ChatFormatting.YELLOW)))
-                    .add(recipe.result().create().copyWithCount(1));
+//            builder.addSlot(RecipeIngredientRole.OUTPUT, x + 85, 1)
+//                    .setStandardSlotBackground()
+//                    .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.chance.tooltip", machineRecipe.extraResultChance * 100).withStyle(ChatFormatting.YELLOW)))
+//                    .add(recipe.result().create().copyWithCount(1));
         }
     }
 
@@ -121,6 +121,11 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             var extraChance = Component.translatable("hayo.chance", String.format("%.0f", 100 * machineRecipe.extraResultChance));
             graphics.text(font, extraChance, x + 85, 24, 0xFF404040, false);
+
+            // fixme test
+            HayoGuiSprites.blitSlot(graphics, x + 85, 1);
+
+            graphics.text(font, extraChance, x + 85, 1+18-8, 0xFFFFFFFF, true);
         }
     }
 }

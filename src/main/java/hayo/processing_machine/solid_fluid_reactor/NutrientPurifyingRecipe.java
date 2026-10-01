@@ -15,11 +15,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.List;
 
-public class SolidFluidReactingRecipe extends BaseSolidFluidReactingRecipe {
-    public static final MapCodec<SolidFluidReactingRecipe> CODEC = codec(SolidFluidReactingRecipe::new, 800);
-    public static final StreamCodec<RegistryFriendlyByteBuf, SolidFluidReactingRecipe> STREAM_CODEC = streamCodec(SolidFluidReactingRecipe::new);
+public class NutrientPurifyingRecipe extends BaseSolidFluidReactingRecipe {
+    public static final MapCodec<NutrientPurifyingRecipe> CODEC = codec(NutrientPurifyingRecipe::new, 800);
+    public static final StreamCodec<RegistryFriendlyByteBuf, NutrientPurifyingRecipe> STREAM_CODEC = streamCodec(NutrientPurifyingRecipe::new);
 
-    public SolidFluidReactingRecipe(
+    public NutrientPurifyingRecipe(
             Ingredient inputItem,
             FluidIngredientAmount inputFluid,
             List<ItemStackTemplate> resultItems,
@@ -32,11 +32,11 @@ public class SolidFluidReactingRecipe extends BaseSolidFluidReactingRecipe {
 
     @Override
     public RecipeType<? extends Recipe<ItemFluidRecipeInput>> getType() {
-        return Hayo.RecipeTypes.SOLID_FLUID_REACTING;
+        return Hayo.RecipeTypes.NUTRIENT_PURIFYING;
     }
 
     @Override
     public RecipeSerializer<? extends Recipe<ItemFluidRecipeInput>> getSerializer() {
-        return Hayo.RecipeSerializers.SOLID_FLUID_REACTING;
+        return Hayo.RecipeSerializers.NUTRIENT_PURIFYING;
     }
 }

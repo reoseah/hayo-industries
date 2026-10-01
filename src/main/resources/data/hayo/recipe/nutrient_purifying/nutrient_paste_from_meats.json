@@ -1,0 +1,28 @@
+{
+  "type": "hayo:nutrient_purifying",
+  "input_item": [
+    "minecraft:cooked_porkchop",
+    "minecraft:porkchop",
+    "minecraft:cooked_beef",
+    "minecraft:beef",
+    "minecraft:cooked_chicken",
+    "minecraft:chicken",
+    "minecraft:cooked_mutton",
+    "minecraft:mutton"
+  ],
+  "input_count": 1,
+  "input_fluid": {
+    "id": [
+      "minecraft:water"
+    ],
+    "amount": 1000
+  },
+  "result_items": [
+    {
+      "id": "hayo:nutrient_paste",
+      "count": 2
+    }
+  ],
+  "result_fluid": null,
+  "energy_cost": 600
+}

@@ -837,6 +837,7 @@ public class Hayo {
         public static final RecipeType<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining");
         public static final RecipeType<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling");
         public static final RecipeType<BaseSolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting");
+        public static final RecipeType<BaseSolidFluidReactingRecipe> NUTRIENT_PURIFYING = register("nutrient_purifying");
 
         public static void initialize() {
         }
@@ -862,6 +863,7 @@ public class Hayo {
         public static final RecipeSerializer<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining", new RecipeSerializer<>(FluidDrainingRecipe.CODEC, FluidDrainingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling", new RecipeSerializer<>(FluidFillingRecipe.CODEC, FluidFillingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SolidFluidReactingRecipe.CODEC, SolidFluidReactingRecipe.STREAM_CODEC));
+        public static final RecipeSerializer<NutrientPurifyingRecipe> NUTRIENT_PURIFYING = register("nutrient_purifying", new RecipeSerializer<>(NutrientPurifyingRecipe.CODEC, NutrientPurifyingRecipe.STREAM_CODEC));
 
         public static void initialize() {
         }

@@ -1,8 +1,0 @@
-{
-  "type": "hayo:nutrient_paste_extracting",
-  "ingredient": "hayo:compressed_plants",
-  "energy_cost": 600,
-  "result": {
-    "id": "hayo:nutrient_paste"
-  }
-}

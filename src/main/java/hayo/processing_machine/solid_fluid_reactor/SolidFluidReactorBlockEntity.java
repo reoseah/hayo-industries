@@ -92,7 +92,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
 
     @Override
     protected int getBaseEnergyCapacity() {
-        return 1000;
+        return 800;
     }
 
     @Override
@@ -145,9 +145,9 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     @Override
     public int[] getSlotsForFace(Direction direction) {
         return switch (direction) {
-            case UP -> new int[]{INPUT, INPUT_TANK_INPUT, OUTPUT_TANK_INPUT};
+            case UP -> new int[]{INPUT};
             case DOWN -> new int[]{OUTPUT_1, OUTPUT_2, OUTPUT_3, INPUT_TANK_OUTPUT, OUTPUT_TANK_OUTPUT};
-            case NORTH, WEST, SOUTH, EAST -> new int[]{BATTERY};
+            case NORTH, WEST, SOUTH, EAST -> new int[]{BATTERY, INPUT_TANK_INPUT, OUTPUT_TANK_INPUT};
         };
     }
 
@@ -174,11 +174,6 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     }
 
     @Override
-    public RecipeState.EnergyState getEnergyState() {
-        return super.getEnergyState();
-    }
-
-    @Override
     public boolean canCraft(RecipeHolder<BaseSolidFluidReactingRecipe> recipe, ItemFluidRecipeInput input) {
         if (!HayoContainerUtils.canInsertShapelessly(this.stacks, recipe.value().resultItems, OUTPUT_1, OUTPUT_3, this.getMaxStackSize())) {
             return false;
@@ -195,7 +190,6 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
 
         return true;
     }
-
 
     @Override
     public void craft(RecipeHolder<BaseSolidFluidReactingRecipe> recipeHolder, ItemFluidRecipeInput input) {

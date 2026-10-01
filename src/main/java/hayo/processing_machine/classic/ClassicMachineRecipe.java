@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.experimental.Accessors;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 
@@ -61,10 +62,10 @@ public abstract class ClassicMachineRecipe extends SingleItemRecipe {
         var codec = RecordCodecBuilder.<R>mapCodec(
                 instance -> instance.group(
                         Ingredient.CODEC.fieldOf("ingredient").forGetter(SingleItemRecipe::input),
-                        Codec.INT.fieldOf("input_count").orElse(1).forGetter(r -> r.inputCount),
+                        ExtraCodecs.POSITIVE_INT.fieldOf("input_count").orElse(1).forGetter(r -> r.inputCount),
                         ItemStackTemplate.CODEC.fieldOf("result").forGetter(SingleItemRecipe::result),
-                        Codec.FLOAT.fieldOf("extra_result_chance").orElse(0F).forGetter(r -> r.extraResultChance),
-                        Codec.INT.fieldOf("energy_cost").orElse(defaultEnergy).forGetter(r -> r.energyCost)
+                        ExtraCodecs.floatRange(0F, 1F).fieldOf("extra_result_chance").orElse(0F).forGetter(r -> r.extraResultChance),
+                        ExtraCodecs.POSITIVE_INT.fieldOf("energy_cost").orElse(defaultEnergy).forGetter(r -> r.energyCost)
                 ).apply(instance, factory::create));
 
         var streamCodec = StreamCodec.composite(

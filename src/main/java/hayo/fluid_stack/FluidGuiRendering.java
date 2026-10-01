@@ -50,6 +50,10 @@ public class FluidGuiRendering {
         return createTooltip(stack.fluid(), stack.amount());
     }
 
+    public static List<Component> createTooltip(FluidStack stack, int maxAmount) {
+        return createTooltip(stack.fluid(), stack.amount(), maxAmount);
+    }
+
     public static List<Component> createTooltip(FluidIngredientAmount ingredient) {
         var fluids = ingredient.values().stream().map(Holder::value).toList();
         var amount = ingredient.amount();
