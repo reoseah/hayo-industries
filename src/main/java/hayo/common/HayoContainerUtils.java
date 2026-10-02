@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import java.util.List;
 
 public class HayoContainerUtils {
-    public static boolean canInsertShapelessly(NonNullList<ItemStack> inventory, List<ItemStackTemplate> templates, int from, int to, int maxStackSize) {
+    public static boolean canInsertAllShapelessly(NonNullList<ItemStack> inventory, List<ItemStackTemplate> templates, int from, int to, int maxStackSize) {
         if (templates.isEmpty()) {
             return true;
         }
@@ -19,8 +19,33 @@ public class HayoContainerUtils {
         }
 
         for (var template : templates) {
-            var resultStack = template.create();
-            if (!insertShapelessly(simulated, resultStack, from, to, maxStackSize)) {
+            var stack = template.create();
+            if (!insertShapelessly(simulated, stack, from, to, maxStackSize)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean canInsertAllShapelessly(NonNullList<ItemStack> inventory, List<ItemStackTemplate> templates, List<Float> extraChances, int from, int to, int maxStackSize) {
+        if (templates.isEmpty()) {
+            return true;
+        }
+
+        var simulated = NonNullList.withSize(SolidFluidReactorBlockEntity.SLOTS, ItemStack.EMPTY);
+        for (int slot = from; slot <= to; slot++) {
+            simulated.set(slot, inventory.get(slot).copy());
+        }
+
+        for (int i = 0; i < templates.size(); i++) {
+            var stack = templates.get(i).create();
+
+            if (i < extraChances.size() && extraChances.get(i) > 0) {
+                stack.grow(1);
+            }
+
+            if (!insertShapelessly(simulated, stack, from, to, maxStackSize)) {
                 return false;
             }
         }

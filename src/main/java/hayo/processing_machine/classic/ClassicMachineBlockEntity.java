@@ -46,31 +46,31 @@ public abstract class ClassicMachineBlockEntity<R extends Recipe<SingleRecipeInp
     }
 
     @Override
-    public boolean canCraft(@Nullable RecipeHolder<R> recipe, SingleRecipeInput input) {
-        if (recipe == null || input.isEmpty()) {
+    public boolean canCraft(@Nullable RecipeHolder<R> holder, SingleRecipeInput input) {
+        if (holder == null || input.isEmpty()) {
             return false;
         }
-        if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.inputCount > input.item().getCount()) {
+        if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.inputCount > input.item().getCount()) {
             return false;
         }
 
-        var recipeOutput = recipe.value().assemble(input);
-        if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
+        var recipeOutput = holder.value().assemble(input);
+        if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             recipeOutput.setCount(recipeOutput.getCount() + 1);
         }
         return this.canInsertToSlot(recipeOutput, OUTPUT);
     }
 
     @Override
-    public void craft(RecipeHolder<R> recipe, SingleRecipeInput input) {
+    public void craft(RecipeHolder<R> holder, SingleRecipeInput input) {
         var inputStack = this.stacks.get(INPUT);
-        if (recipe.value() instanceof ClassicMachineRecipe machineRecipe) {
+        if (holder.value() instanceof ClassicMachineRecipe machineRecipe) {
             inputStack.shrink(machineRecipe.inputCount);
         } else {
             inputStack.shrink(1);
         }
-        var recipeOutput = recipe.value().assemble(input);
-        if (recipe.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
+        var recipeOutput = holder.value().assemble(input);
+        if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             if (this.level.getRandom().nextFloat() < machineRecipe.extraResultChance) {
                 recipeOutput.setCount(recipeOutput.getCount() + 1);
             }

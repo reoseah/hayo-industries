@@ -36,7 +36,7 @@ public class ElectricFurnaceMenu extends ClassicMachineMenu {
         this.modeData = new DataSlot() {
             @Override
             public int get() {
-                return entity.getMode().ordinal();
+                return entity.mode().ordinal();
             }
 
             @Override

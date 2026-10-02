@@ -59,7 +59,7 @@ public class SolidFluidReactorMenu extends HayoContainerMenu {
             return this.moveItemStackTo(stack, SolidFluidReactorBlockEntity.BATTERY, SolidFluidReactorBlockEntity.BATTERY + 1, false);
         }
 
-        if (player.level().recipeAccess().getSynchronizedRecipes().getFirstMatch(Hayo.RecipeTypes.SOLID_FLUID_REACTING, new ItemFluidRecipeInput(stack, this.reactorData.inputFluid()), player.level()).isPresent()) {
+        if (player.level().recipeAccess().getSynchronizedRecipes().getFirstMatch(this.reactorData.recipeType(), new ItemFluidRecipeInput(stack, this.reactorData.inputFluid()), player.level()).isPresent()) {
             return this.moveItemStackTo(stack, SolidFluidReactorBlockEntity.INPUT, SolidFluidReactorBlockEntity.INPUT + 1, false);
         }
         if (player.level().recipeAccess().getSynchronizedRecipes().getFirstMatch(Hayo.RecipeTypes.FLUID_DRAINING, new SingleRecipeInput(stack), player.level()).isPresent()) {

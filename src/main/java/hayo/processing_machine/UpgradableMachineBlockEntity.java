@@ -59,8 +59,8 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
     protected abstract I createRecipeInput();
 
     @Override
-    public final int getRecipeCost(@Nullable R recipe) {
-        return (int) (this.getBaseEnergyCost(recipe) * (1 + this.extraRecipeCost));
+    public final int getRecipeCost(@Nullable R holder) {
+        return (int) (this.getBaseEnergyCost(holder) * (1 + this.extraRecipeCost));
     }
 
     protected abstract int getBaseEnergyCost(@Nullable R recipe);

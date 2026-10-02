@@ -81,8 +81,8 @@ public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implem
     }
 
     @Override
-    public int getRecipeCost(MatterGeneratingRecipe recipe) {
-        return recipe != null ? recipe.energyCost() : 1_000_000;
+    public int getRecipeCost(MatterGeneratingRecipe holder) {
+        return holder != null ? holder.energyCost() : 1_000_000;
     }
 
     @Override
@@ -113,15 +113,15 @@ public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implem
     }
 
     @Override
-    public boolean canCraft(@Nullable RecipeHolder<MatterGeneratingRecipe> recipe, MatterGeneratorRecipeInput input) {
-        return recipe != null
-                && recipe.value().matches(input, this.level)
-                && this.canInsertToSlot(recipe.value().result().create(), OUTPUT);
+    public boolean canCraft(@Nullable RecipeHolder<MatterGeneratingRecipe> holder, MatterGeneratorRecipeInput input) {
+        return holder != null
+                && holder.value().matches(input, this.level)
+                && this.canInsertToSlot(holder.value().result().create(), OUTPUT);
     }
 
     @Override
-    public void craft(RecipeHolder<MatterGeneratingRecipe> recipe, MatterGeneratorRecipeInput input) {
-        var recipeOutput = recipe.value().assemble(input);
+    public void craft(RecipeHolder<MatterGeneratingRecipe> holder, MatterGeneratorRecipeInput input) {
+        var recipeOutput = holder.value().assemble(input);
         var outputStack = this.stacks.get(OUTPUT);
         if (outputStack.isEmpty()) {
             this.stacks.set(OUTPUT, recipeOutput);

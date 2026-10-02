@@ -79,10 +79,10 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
 
         RecipeState.EnergyState getEnergyState();
 
-        boolean canCraft(RecipeHolder<R> recipe, I input);
+        boolean canCraft(RecipeHolder<R> holder, I input);
 
-        int getRecipeCost(R recipe);
+        int getRecipeCost(R holder);
 
-        void craft(RecipeHolder<R> recipe, I input);
+        void craft(RecipeHolder<R> holder, I input);
     }
 }

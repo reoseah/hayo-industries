@@ -45,6 +45,9 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     public static final int REACTING_ENERGY_RATE = 2;
 
     @Getter
+    protected SolidFluidReactorMode mode = SolidFluidReactorMode.REACTING;
+
+    @Getter
     protected FluidStack inputFluid = FluidStack.EMPTY;
     @Getter
     protected FluidStack resultFluid = FluidStack.EMPTY;
@@ -100,9 +103,10 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
         return REACTING_ENERGY_RATE;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected RecipeType<BaseSolidFluidReactingRecipe> getRecipeType() {
-        return Hayo.RecipeTypes.SOLID_FLUID_REACTING;
+        return (RecipeType<BaseSolidFluidReactingRecipe>) this.mode.recipeType;
     }
 
     @Override
@@ -174,12 +178,13 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     }
 
     @Override
-    public boolean canCraft(RecipeHolder<BaseSolidFluidReactingRecipe> recipe, ItemFluidRecipeInput input) {
-        if (!HayoContainerUtils.canInsertShapelessly(this.stacks, recipe.value().resultItems, OUTPUT_1, OUTPUT_3, this.getMaxStackSize())) {
+    public boolean canCraft(RecipeHolder<BaseSolidFluidReactingRecipe> holder, ItemFluidRecipeInput input) {
+        var recipe = holder.value();
+        if (!HayoContainerUtils.canInsertAllShapelessly(this.stacks, recipe.resultItems, recipe.extraResultChances, OUTPUT_1, OUTPUT_3, this.getMaxStackSize())) {
             return false;
         }
 
-        var resultFluid = recipe.value().resultFluid;
+        var resultFluid = recipe.resultFluid;
         if (!resultFluid.isEmpty()) {
             if (this.resultFluid.fluid() != Fluids.EMPTY
                     && this.resultFluid.holder() != resultFluid.holder()) {
@@ -192,21 +197,48 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     }
 
     @Override
-    public void craft(RecipeHolder<BaseSolidFluidReactingRecipe> recipeHolder, ItemFluidRecipeInput input) {
-        var recipe = recipeHolder.value();
+    public void craft(RecipeHolder<BaseSolidFluidReactingRecipe> holder, ItemFluidRecipeInput input) {
+        var recipe = holder.value();
 
         this.stacks.get(INPUT).shrink(1);
         if (recipe.inputFluid.amount() > 0) {
             this.inputFluid = new FluidStack(this.inputFluid.holder(), this.inputFluid.amount() - recipe.inputFluid.amount());
         }
 
-        for (var result : recipe.resultItems) {
-            HayoContainerUtils.insertShapelessly(this.stacks, result.create(), OUTPUT_1, OUTPUT_3, this.getMaxStackSize());
+        for (int i = 0; i < recipe.resultItems.size(); i++) {
+            var stack = recipe.resultItems.get(i).create();
+
+            if (i < recipe.extraResultChances.size() && recipe.extraResultChances.get(i) > 0 && this.level.getRandom().nextFloat() < recipe.extraResultChances.get(i)) {
+                stack.grow(1);
+            }
+
+            HayoContainerUtils.insertShapelessly(this.stacks, stack, OUTPUT_1, OUTPUT_3, this.getMaxStackSize());
         }
 
         var resultFluid = recipe.resultFluid;
         if (!resultFluid.isEmpty()) {
             this.resultFluid = new FluidStack(resultFluid.holder(), this.resultFluid.amount() + resultFluid.amount());
+        }
+    }
+
+    @Override
+    protected void updateUpgradeState() {
+        super.updateUpgradeState();
+
+        var mode = SolidFluidReactorMode.REACTING;
+        for (int i = UPGRADE_1; i < UPGRADE_1 + UPGRADES; i++) {
+            var stack = this.stacks.get(i);
+            if (stack.is(Hayo.Items.ORE_WASHING_UPGRADE)) {
+                mode = SolidFluidReactorMode.ORE_WASHING;
+                break;
+            } else if (stack.is(Hayo.Items.NUTRIENT_DISPENSER_UPGRADE)) {
+                mode = SolidFluidReactorMode.NUTRIENT_PURIFYING;
+                break;
+            }
+        }
+        if (mode != this.mode) {
+            this.mode = mode;
+            this.recipeState.progress = 0;
         }
     }
 
@@ -225,27 +257,27 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
         }
 
         @Override
-        public boolean canCraft(RecipeHolder<FluidDrainingRecipe> recipe, SingleRecipeInput input) {
-            if (!this.entity.canInsertToSlot(recipe.value().assemble(input), INPUT_TANK_OUTPUT)) {
+        public boolean canCraft(RecipeHolder<FluidDrainingRecipe> holder, SingleRecipeInput input) {
+            if (!this.entity.canInsertToSlot(holder.value().assemble(input), INPUT_TANK_OUTPUT)) {
                 return false;
             }
             if (this.entity.inputFluid.fluid() == Fluids.EMPTY) {
                 return true;
             }
-            if (this.entity.inputFluid.holder() == recipe.value().resultFluid().holder()) {
-                return FLUID_CAPACITY - this.entity.inputFluid.amount() >= recipe.value().resultFluid().amount();
+            if (this.entity.inputFluid.holder() == holder.value().resultFluid().holder()) {
+                return FLUID_CAPACITY - this.entity.inputFluid.amount() >= holder.value().resultFluid().amount();
             }
             return false;
         }
 
         @Override
-        public int getRecipeCost(FluidDrainingRecipe recipe) {
-            return recipe.energyCost();
+        public int getRecipeCost(FluidDrainingRecipe holder) {
+            return holder.energyCost();
         }
 
         @Override
-        public void craft(RecipeHolder<FluidDrainingRecipe> recipeHolder, SingleRecipeInput input) {
-            var recipe = recipeHolder.value();
+        public void craft(RecipeHolder<FluidDrainingRecipe> holder, SingleRecipeInput input) {
+            var recipe = holder.value();
 
             this.entity.stacks.get(INPUT_TANK_INPUT).shrink(1);
             this.entity.inputFluid = new FluidStack(recipe.resultFluid().holder(), this.entity.inputFluid.amount() + recipe.resultFluid().amount());
@@ -275,21 +307,21 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
         }
 
         @Override
-        public boolean canCraft(RecipeHolder<FluidFillingRecipe> recipe, ItemFluidRecipeInput input) {
-            return this.entity.canInsertToSlot(recipe.value().assemble(input), OUTPUT_TANK_OUTPUT);
+        public boolean canCraft(RecipeHolder<FluidFillingRecipe> holder, ItemFluidRecipeInput input) {
+            return this.entity.canInsertToSlot(holder.value().assemble(input), OUTPUT_TANK_OUTPUT);
         }
 
         @Override
-        public int getRecipeCost(FluidFillingRecipe recipe) {
-            return recipe.energyCost();
+        public int getRecipeCost(FluidFillingRecipe holder) {
+            return holder.energyCost();
         }
 
         @Override
-        public void craft(RecipeHolder<FluidFillingRecipe> recipe, ItemFluidRecipeInput input) {
+        public void craft(RecipeHolder<FluidFillingRecipe> holder, ItemFluidRecipeInput input) {
             this.entity.stacks.get(OUTPUT_TANK_INPUT).shrink(1);
-            this.entity.resultFluid = new FluidStack(this.entity.resultFluid.holder(), this.entity.resultFluid.amount() - recipe.value().inputFluid().amount());
+            this.entity.resultFluid = new FluidStack(this.entity.resultFluid.holder(), this.entity.resultFluid.amount() - holder.value().inputFluid().amount());
 
-            var recipeOutput = recipe.value().assemble(input);
+            var recipeOutput = holder.value().assemble(input);
             var existingStack = this.entity.stacks.get(OUTPUT_TANK_OUTPUT);
             if (!existingStack.isEmpty()) {
                 existingStack.grow(recipeOutput.getCount());

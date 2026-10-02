@@ -2,6 +2,7 @@ package hayo.processing_machine.classic;
 
 import hayo.Hayo;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+@Accessors(fluent = true)
 public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<AbstractCookingRecipe> {
     public static final int TRANSFER_LIMIT = 32;
     public static final int ENERGY_USE_RATE = 3;
@@ -91,12 +93,12 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
     }
 
     @Override
-    public boolean canCraft(RecipeHolder<AbstractCookingRecipe> recipe, SingleRecipeInput input) {
-        if (!super.canCraft(recipe, input)) {
+    public boolean canCraft(RecipeHolder<AbstractCookingRecipe> holder, SingleRecipeInput input) {
+        if (!super.canCraft(holder, input)) {
             return false;
         }
 
-        return !recipe.value().input().acceptsItem(Items.WET_SPONGE.builtInRegistryHolder());
+        return !holder.value().input().acceptsItem(Items.WET_SPONGE.builtInRegistryHolder());
     }
 
     @Override
