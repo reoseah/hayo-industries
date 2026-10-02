@@ -1,6 +1,6 @@
 {
-  "type": "hayo:solid_fluid_reacting",
-  "input_item": "minecraft:lava_bucket",
+  "type": "hayo:ore_washing",
+  "input_item": "#minecraft:copper_ores",
   "input_fluid": {
     "id": [
       "minecraft:water"
@@ -9,10 +9,11 @@
   },
   "result_items": [
     {
-      "id": "minecraft:obsidian"
+      "id": "hayo:copper_dust",
+      "count": 3
     },
     {
-      "id": "minecraft:bucket"
+      "id": "hayo:stone_dust"
     }
   ],
   "result_fluid": null,

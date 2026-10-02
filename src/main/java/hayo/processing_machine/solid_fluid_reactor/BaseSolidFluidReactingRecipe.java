@@ -24,18 +24,27 @@ import java.util.List;
 public abstract class BaseSolidFluidReactingRecipe implements Recipe<ItemFluidRecipeInput> {
     @FunctionalInterface
     public interface Factory<T extends BaseSolidFluidReactingRecipe> {
-        T create(Ingredient inputItem, FluidIngredientAmount inputFluid, List<ItemStackTemplate> resultItems, List<Float> extraResultChances, FluidStack resultFluid, int energyCost);
+        T create(
+                Ingredient inputItem,
+                int inputAmount,
+                FluidIngredientAmount inputFluid,
+                List<ItemStackTemplate> resultItems,
+                List<Float> extraResultChances,
+                FluidStack resultFluid,
+                int energyCost
+        );
     }
 
     public static <T extends BaseSolidFluidReactingRecipe> MapCodec<T> codec(Factory<T> factory, int defaultEnergyCost) {
         return RecordCodecBuilder.<T>mapCodec(instance -> instance
                 .group(
                         Ingredient.CODEC.fieldOf("input_item").forGetter(recipe -> recipe.inputItem),
+                        ExtraCodecs.POSITIVE_INT.fieldOf("input_count").orElse(1).forGetter(recipe -> recipe.inputCount),
                         FluidIngredientAmount.NON_EMPTY_CODEC.fieldOf("input_fluid").forGetter(recipe -> recipe.inputFluid),
                         ItemStackTemplate.CODEC.listOf(0, 3).fieldOf("result_items").orElse(List.of()).forGetter(recipe -> recipe.resultItems),
                         ExtraCodecs.floatRange(0, 1).listOf(0, 3).fieldOf("extra_result_chances").orElse(List.of()).forGetter(recipe -> recipe.extraResultChances),
                         FluidStack.MAP_CODEC.fieldOf("result_fluid").orElse(FluidStack.EMPTY).forGetter(recipe -> recipe.resultFluid),
-                        ExtraCodecs.POSITIVE_INT.fieldOf("energy_cost").forGetter(recipe -> recipe.energyCost)
+                        ExtraCodecs.POSITIVE_INT.fieldOf("energy_cost").orElse(defaultEnergyCost).forGetter(recipe -> recipe.energyCost)
                 )
                 .apply(instance, factory::create)
         ).validate(result -> {
@@ -50,6 +59,8 @@ public abstract class BaseSolidFluidReactingRecipe implements Recipe<ItemFluidRe
         return StreamCodec.composite(
                 Ingredient.CONTENTS_STREAM_CODEC,
                 recipe -> recipe.inputItem,
+                ByteBufCodecs.VAR_INT,
+                recipe -> recipe.inputCount,
                 FluidIngredientAmount.STREAM_CODEC,
                 recipe -> recipe.inputFluid,
                 ItemStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()),
@@ -65,6 +76,7 @@ public abstract class BaseSolidFluidReactingRecipe implements Recipe<ItemFluidRe
     }
 
     public final Ingredient inputItem;
+    public final int inputCount;
     public final FluidIngredientAmount inputFluid;
     public final List<ItemStackTemplate> resultItems;
     public final List<Float> extraResultChances;
@@ -73,6 +85,7 @@ public abstract class BaseSolidFluidReactingRecipe implements Recipe<ItemFluidRe
 
     public BaseSolidFluidReactingRecipe(
             Ingredient inputItem,
+            int inputCount,
             FluidIngredientAmount inputFluid,
             List<ItemStackTemplate> resultItems,
             List<Float> extraResultChances,
@@ -80,6 +93,7 @@ public abstract class BaseSolidFluidReactingRecipe implements Recipe<ItemFluidRe
             int energyCost
     ) {
         this.inputItem = inputItem;
+        this.inputCount = inputCount;
         this.inputFluid = inputFluid;
         this.resultItems = resultItems;
         this.extraResultChances = extraResultChances;
@@ -89,7 +103,9 @@ public abstract class BaseSolidFluidReactingRecipe implements Recipe<ItemFluidRe
 
     @Override
     public boolean matches(ItemFluidRecipeInput input, Level level) {
-        return this.inputItem.test(input.item()) && this.inputFluid.test(input.fluid());
+        return this.inputItem.test(input.item())
+                && this.inputCount <= input.item().getCount()
+                && this.inputFluid.test(input.fluid());
     }
 
     @Override

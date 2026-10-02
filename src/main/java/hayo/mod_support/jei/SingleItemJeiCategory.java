@@ -5,6 +5,7 @@ import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
 import hayo.processing_machine.classic.ClassicMachineRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -83,26 +84,18 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
                     .add(this.getCatalyst(holder));
         }
 
-        int x = this.canHaveCatalyst() ? 20 : 0;
+        int left = this.canHaveCatalyst() ? 20 : 0;
+
+        var inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, left + 1, 1).setStandardSlotBackground();
         if (recipe instanceof ClassicMachineRecipe machineRecipe && machineRecipe.inputCount != 1) {
-            builder.addSlot(RecipeIngredientRole.INPUT, x + 1, 1)
-                    .setStandardSlotBackground()
-                    .addItemStacks(recipe.input().items().map(item -> new ItemStack(item, machineRecipe.inputCount)).toList());
+            inputSlot.addItemStacks(recipe.input().items().map(item -> new ItemStack(item, machineRecipe.inputCount)).toList());
         } else {
-            builder.addSlot(RecipeIngredientRole.INPUT, x + 1, 1)
-                    .setStandardSlotBackground()
-                    .add(recipe.input());
+            inputSlot.add(recipe.input());
         }
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, x + 61, 5)
+        builder.addSlot(RecipeIngredientRole.OUTPUT, left + 61, 5)
                 .setOutputSlotBackground()
                 .add(recipe.result().create());
-        if (recipe instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
-//            builder.addSlot(RecipeIngredientRole.OUTPUT, x + 85, 1)
-//                    .setStandardSlotBackground()
-//                    .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.chance.tooltip", machineRecipe.extraResultChance * 100).withStyle(ChatFormatting.YELLOW)))
-//                    .add(recipe.result().create().copyWithCount(1));
-        }
     }
 
     @Override
@@ -118,14 +111,46 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
 
         var font = Minecraft.getInstance().font;
         graphics.text(font, EnergyTexts.amount(energyCost), x + 19, 24, 0xFF404040, false);
+
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
-            var extraChance = Component.translatable("hayo.chance", String.format("%.0f", 100 * machineRecipe.extraResultChance));
-            graphics.text(font, extraChance, x + 85, 24, 0xFF404040, false);
+            drawExtraChanceItemSlot(graphics, machineRecipe.result().create(), machineRecipe.extraResultChance, x + 84, 0);
+        }
+    }
 
-            // fixme test
-            HayoGuiSprites.blitSlot(graphics, x + 85, 1);
+    public static void drawExtraChanceItemSlot(GuiGraphicsExtractor graphics, ItemStack stack, float chance, int x, int y) {
+        var font = Minecraft.getInstance().font;
 
-            graphics.text(font, extraChance, x + 85, 1+18-8, 0xFFFFFFFF, true);
+        HayoGuiSprites.blitSlot(graphics, x, 0);
+        graphics.item(stack, x + 1, 1);
+
+        var subscriptChance = Component.translatable("hayo.subscript_chance", toSubscriptDigits(chance));
+        int chanceWidth = font.width(subscriptChance);
+        graphics.text(font, subscriptChance, x + 18 - chanceWidth, y + 18 - font.lineHeight, 0xFFFFFFFF, true);
+    }
+
+    public static String toSubscriptDigits(float chance) {
+        return String.format("%.0f", 100 * chance)
+                .chars()
+                .map(ch -> {
+                    char[] subscriptDigits = {'₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'};
+                    if (ch >= '0' && ch <= '9') {
+                        return subscriptDigits[ch - '0'];
+                    }
+                    return ch;
+                })
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+    }
+
+    @Override
+    public void getTooltip(ITooltipBuilder tooltip, T holder, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+        IRecipeCategory.super.getTooltip(tooltip, holder, recipeSlotsView, mouseX, mouseY);
+
+        if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
+            if (mouseX >= 84 && mouseX < 84 + 18 && mouseY >= 0 && mouseY < 18) {
+//                tooltip.addAll(holder.value().result().create().getTooltipLines(Item.TooltipContext.EMPTY, null, TooltipFlag.NORMAL));
+                tooltip.add(Component.translatable("hayo.extra_chance_tooltip", String.format("%.0f", 100 * machineRecipe.extraResultChance)).withStyle(ChatFormatting.YELLOW));
+            }
         }
     }
 }

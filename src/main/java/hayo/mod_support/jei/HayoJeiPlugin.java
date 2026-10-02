@@ -38,11 +38,12 @@ public class HayoJeiPlugin implements IModPlugin {
     public static final IRecipeType<RecipeHolder<MaceratingRecipe>> MACERATING = IRecipeType.create(Hayo.RecipeTypes.MACERATING);
     public static final IRecipeType<RecipeHolder<CompressingRecipe>> COMPRESSING = IRecipeType.create(Hayo.RecipeTypes.COMPRESSING);
     public static final IRecipeType<RecipeHolder<ExtractingRecipe>> EXTRACTING = IRecipeType.create(Hayo.RecipeTypes.EXTRACTING);
-    public static final IRecipeType<RecipeHolder<NutrientExtractingRecipe>> NUTRIENT_EXTRACTING = IRecipeType.create(Hayo.RecipeTypes.NUTRIENT_EXTRACTING);
     public static final IRecipeType<RecipeHolder<MatterGeneratingRecipe>> MATTER_GENERATING = IRecipeType.create(Hayo.RecipeTypes.MATTER_GENERATING);
     public static final IRecipeType<RecipeHolder<FluidDrainingRecipe>> FLUID_DRAINING = IRecipeType.create(Hayo.RecipeTypes.FLUID_DRAINING);
     public static final IRecipeType<RecipeHolder<FluidFillingRecipe>> FLUID_FILLING = IRecipeType.create(Hayo.RecipeTypes.FLUID_FILLING);
     public static final IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> SOLID_FLUID_REACTING = IRecipeType.create(Hayo.RecipeTypes.SOLID_FLUID_REACTING);
+    public static final IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> NUTRIENT_PURIFYING = IRecipeType.create(Hayo.RecipeTypes.NUTRIENT_PURIFYING);
+    public static final IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> ORE_WASHING = IRecipeType.create(Hayo.RecipeTypes.ORE_WASHING);
 
     @Override
     public Identifier getPluginUid() {
@@ -62,13 +63,14 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new ClassicMachineJeiCategory(COMPRESSING, 2, HayoGuiSprites.COMPRESSING_ARROW, HayoGuiSprites.COMPRESSING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.compressing"), drawable.apply(Hayo.Items.COMPRESSOR), null));
         var extractor = drawable.apply(Hayo.Items.EXTRACTOR);
         registration.addRecipeCategories(new ClassicMachineJeiCategory(EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.extracting"), extractor, null));
-        registration.addRecipeCategories(new ClassicMachineJeiCategory(NUTRIENT_EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.nutrient_extracting"), extractor, new ItemStack(Hayo.Items.NUTRIENT_DISPENSER_UPGRADE)));
 
         registration.addRecipeCategories(new MatterGeneratingJeiCategory(drawable.apply(Hayo.Items.MATTER_GENERATOR)));
 
         registration.addRecipeCategories(new FluidDrainingJeiCategory(drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR)));
         registration.addRecipeCategories(new FluidFillingJeiCategory(drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR)));
-        registration.addRecipeCategories(new SolidFluidReactingCategory(drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR)));
+        registration.addRecipeCategories(new SolidFluidReactingCategory(SOLID_FLUID_REACTING, Component.translatable("hayo.recipe_type.solid_fluid_reacting"), drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR), ItemStack.EMPTY));
+        registration.addRecipeCategories(new SolidFluidReactingCategory(NUTRIENT_PURIFYING, Component.translatable("hayo.recipe_type.nutrient_purifying"), drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR), new ItemStack(Hayo.Items.NUTRIENT_DISPENSER_UPGRADE)));
+        registration.addRecipeCategories(new SolidFluidReactingCategory(ORE_WASHING, Component.translatable("hayo.recipe_type.ore_washing"), drawable.apply(Hayo.Items.SOLID_FLUID_REACTOR), new ItemStack(Hayo.Items.ORE_WASHING_UPGRADE)));
     }
 
     @Override
@@ -85,11 +87,12 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipes(MACERATING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.MACERATING)));
         registration.addRecipes(COMPRESSING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.COMPRESSING)));
         registration.addRecipes(EXTRACTING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.EXTRACTING)));
-        registration.addRecipes(NUTRIENT_EXTRACTING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.NUTRIENT_EXTRACTING)));
         registration.addRecipes(MATTER_GENERATING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING)));
         registration.addRecipes(FLUID_DRAINING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.FLUID_DRAINING)));
         registration.addRecipes(FLUID_FILLING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.FLUID_FILLING)));
         registration.addRecipes(SOLID_FLUID_REACTING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.SOLID_FLUID_REACTING)));
+        registration.addRecipes(NUTRIENT_PURIFYING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.NUTRIENT_PURIFYING)));
+        registration.addRecipes(ORE_WASHING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.ORE_WASHING)));
     }
 
     @Override
@@ -101,11 +104,12 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addCraftingStation(MACERATING, new ItemStack(Hayo.Items.MACERATOR));
         registration.addCraftingStation(COMPRESSING, new ItemStack(Hayo.Items.COMPRESSOR));
         registration.addCraftingStation(EXTRACTING, new ItemStack(Hayo.Items.EXTRACTOR));
-        registration.addCraftingStation(NUTRIENT_EXTRACTING, new ItemStack(Hayo.Items.EXTRACTOR));
         registration.addCraftingStation(MATTER_GENERATING, new ItemStack(Hayo.Items.MATTER_GENERATOR));
         registration.addCraftingStation(FLUID_DRAINING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
         registration.addCraftingStation(FLUID_FILLING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
         registration.addCraftingStation(SOLID_FLUID_REACTING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
+        registration.addCraftingStation(NUTRIENT_PURIFYING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
+        registration.addCraftingStation(ORE_WASHING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
     }
 
     @Override
@@ -150,41 +154,6 @@ public class HayoJeiPlugin implements IModPlugin {
 
         registration.addRecipeTransferHandler(MaceratorMenu.class, Hayo.MenuTypes.MACERATOR, MACERATING, 0, 1, ClassicMachineBlockEntity.SLOTS, 36);
         registration.addRecipeTransferHandler(CompressorMenu.class, Hayo.MenuTypes.COMPRESSOR, COMPRESSING, 0, 1, ClassicMachineBlockEntity.SLOTS, 36);
-        for (var jeiRecipeType : List.of(
-                EXTRACTING,
-                NUTRIENT_EXTRACTING
-        )) {
-            registration.addRecipeTransferHandler(new IRecipeTransferInfo<ExtractorMenu, RecipeHolder<?>>() {
-                @Override
-                public Class<? extends ExtractorMenu> getContainerClass() {
-                    return ExtractorMenu.class;
-                }
-
-                @Override
-                public Optional<MenuType<ExtractorMenu>> getMenuType() {
-                    return Optional.of(Hayo.MenuTypes.EXTRACTOR);
-                }
-
-                @Override
-                public IRecipeType<RecipeHolder<?>> getRecipeType() {
-                    return (IRecipeType<RecipeHolder<?>>) (IRecipeType) jeiRecipeType;
-                }
-
-                @Override
-                public boolean canHandle(ExtractorMenu container, RecipeHolder<?> holder) {
-                    return container.getRecipeType() == holder.value().getType();
-                }
-
-                @Override
-                public List<Slot> getRecipeSlots(ExtractorMenu container, RecipeHolder<?> recipe) {
-                    return container.slots.subList(0, 1);
-                }
-
-                @Override
-                public List<Slot> getInventorySlots(ExtractorMenu container, RecipeHolder<?> recipe) {
-                    return container.slots.subList(container.playerInventory.start(), container.playerInventory.end());
-                }
-            });
-        }
+        registration.addRecipeTransferHandler(ExtractorMenu.class, Hayo.MenuTypes.EXTRACTOR, EXTRACTING, 0, 1, ClassicMachineBlockEntity.SLOTS, 36);
     }
 }

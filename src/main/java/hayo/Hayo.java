@@ -131,11 +131,12 @@ public class Hayo {
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MACERATING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.COMPRESSING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.EXTRACTING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.NUTRIENT_EXTRACTING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.FLUID_DRAINING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.FLUID_FILLING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.SOLID_FLUID_REACTING);
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.NUTRIENT_PURIFYING);
+        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.ORE_WASHING);
 
         BiomeModifications.create(modId("rubber_tree_patch")).add(
                 ModificationPhase.ADDITIONS,
@@ -832,12 +833,12 @@ public class Hayo {
         public static final RecipeType<MaceratingRecipe> MACERATING = register("macerating");
         public static final RecipeType<CompressingRecipe> COMPRESSING = register("compressing");
         public static final RecipeType<ExtractingRecipe> EXTRACTING = register("extracting");
-        public static final RecipeType<NutrientExtractingRecipe> NUTRIENT_EXTRACTING = register("nutrient_paste_extracting");
         public static final RecipeType<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating");
         public static final RecipeType<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining");
         public static final RecipeType<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling");
         public static final RecipeType<BaseSolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting");
         public static final RecipeType<BaseSolidFluidReactingRecipe> NUTRIENT_PURIFYING = register("nutrient_purifying");
+        public static final RecipeType<BaseSolidFluidReactingRecipe> ORE_WASHING = register("ore_washing");
 
         public static void initialize() {
         }
@@ -855,15 +856,15 @@ public class Hayo {
     }
 
     public static class RecipeSerializers {
-        public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", ClassicMachineRecipe.createCodec(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.createCodec(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", ClassicMachineRecipe.createCodec(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
-        public static final RecipeSerializer<NutrientExtractingRecipe> NUTRIENT_EXTRACTING = register("nutrient_paste_extracting", ClassicMachineRecipe.createCodec(NutrientExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<MaceratingRecipe> MACERATING = register("macerating", ClassicMachineRecipe.serializer(MaceratingRecipe::new, MaceratingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<CompressingRecipe> COMPRESSING = register("compressing", ClassicMachineRecipe.serializer(CompressingRecipe::new, CompressingRecipe.DEFAULT_ENERGY));
+        public static final RecipeSerializer<ExtractingRecipe> EXTRACTING = register("extracting", ClassicMachineRecipe.serializer(ExtractingRecipe::new, ExtractingRecipe.DEFAULT_ENERGY));
         public static final RecipeSerializer<MatterGeneratingRecipe> MATTER_GENERATING = register("matter_generating", new RecipeSerializer<>(MatterGeneratingRecipe.CODEC, MatterGeneratingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining", new RecipeSerializer<>(FluidDrainingRecipe.CODEC, FluidDrainingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling", new RecipeSerializer<>(FluidFillingRecipe.CODEC, FluidFillingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SolidFluidReactingRecipe.CODEC, SolidFluidReactingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<NutrientPurifyingRecipe> NUTRIENT_PURIFYING = register("nutrient_purifying", new RecipeSerializer<>(NutrientPurifyingRecipe.CODEC, NutrientPurifyingRecipe.STREAM_CODEC));
+        public static final RecipeSerializer<OreWashingRecipe> ORE_WASHING = register("ore_washing", new RecipeSerializer<>(OreWashingRecipe.CODEC, OreWashingRecipe.STREAM_CODEC));
 
         public static void initialize() {
         }

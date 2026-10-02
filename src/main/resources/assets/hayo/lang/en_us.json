@@ -165,7 +165,7 @@
   "hayo.upgrades.energy_capacity": "%s Energy capacity",
   "hayo.upgrades.use_blasting_recipes": " Use Blasting recipes",
   "hayo.upgrades.use_smoking_recipes": " Use Smoking recipes",
-  "hayo.upgrades.use_nutrient_paste_recipes": " Use Nutrient Paste recipes",
+  "hayo.upgrades.use_nutrient_paste_recipes": " Use Nutrient Purifying recipes",
   "hayo.upgrades.heat1": " Consumed energy is multiplied by Heat",
   "hayo.upgrades.heat2": " before adding to the recipe progress",
   "hayo.upgrades.heat3": "+0.01% Heat per tick when active",
@@ -181,5 +181,9 @@
   "hayo.recipe_type.solid_fluid_reacting": "Solid/Fluid Reacting",
   "hayo.recipe_type.fluid_filling": "Fluid Filling",
   "hayo.upgrades.use_ore_washing_recipes": " Use Ore Washing recipes",
-  "hayo.millibuckets": "%s mB"
+  "hayo.millibuckets": "%s mB",
+  "hayo.subscript_chance": "%s﹪",
+  "hayo.extra_chance_tooltip": "%s%% chance of extra item",
+  "hayo.recipe_type.nutrient_purifying": "Nutrient Purifying",
+  "hayo.recipe_type.ore_washing": "Ore Washing"
 }

@@ -1,8 +1,6 @@
 package hayo.processing_machine.classic;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import lombok.experimental.Accessors;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
@@ -58,7 +56,7 @@ public abstract class ClassicMachineRecipe extends SingleItemRecipe {
         R create(Ingredient input, int inputCount, ItemStackTemplate result, float extraResultChance, int energyCost);
     }
 
-    public static <R extends ClassicMachineRecipe> RecipeSerializer<R> createCodec(Factory<R> factory, int defaultEnergy) {
+    public static <R extends ClassicMachineRecipe> RecipeSerializer<R> serializer(Factory<R> factory, int defaultEnergy) {
         var codec = RecordCodecBuilder.<R>mapCodec(
                 instance -> instance.group(
                         Ingredient.CODEC.fieldOf("ingredient").forGetter(SingleItemRecipe::input),

@@ -15,11 +15,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.List;
 
-public class SolidFluidReactingRecipe extends BaseSolidFluidReactingRecipe {
-    public static final MapCodec<SolidFluidReactingRecipe> CODEC = codec(SolidFluidReactingRecipe::new, 800);
-    public static final StreamCodec<RegistryFriendlyByteBuf, SolidFluidReactingRecipe> STREAM_CODEC = streamCodec(SolidFluidReactingRecipe::new);
+public class OreWashingRecipe extends BaseSolidFluidReactingRecipe {
+    public static final MapCodec<OreWashingRecipe> CODEC = codec(OreWashingRecipe::new, 800);
+    public static final StreamCodec<RegistryFriendlyByteBuf, OreWashingRecipe> STREAM_CODEC = streamCodec(OreWashingRecipe::new);
 
-    public SolidFluidReactingRecipe(
+    public OreWashingRecipe(
             Ingredient inputItem,
             int inputAmount,
             FluidIngredientAmount inputFluid,
@@ -33,11 +33,11 @@ public class SolidFluidReactingRecipe extends BaseSolidFluidReactingRecipe {
 
     @Override
     public RecipeType<? extends Recipe<ItemFluidRecipeInput>> getType() {
-        return Hayo.RecipeTypes.SOLID_FLUID_REACTING;
+        return Hayo.RecipeTypes.ORE_WASHING;
     }
 
     @Override
     public RecipeSerializer<? extends Recipe<ItemFluidRecipeInput>> getSerializer() {
-        return Hayo.RecipeSerializers.SOLID_FLUID_REACTING;
+        return Hayo.RecipeSerializers.ORE_WASHING;
     }
 }

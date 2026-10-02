@@ -1,0 +1,24 @@
+{
+  "type": "hayo:ore_washing",
+  "input_item": [
+    "minecraft:gold_ore",
+    "minecraft:deepslate_gold_ore"
+  ],
+  "input_fluid": {
+    "id": [
+      "minecraft:water"
+    ],
+    "amount": 1000
+  },
+  "result_items": [
+    {
+      "id": "hayo:gold_dust",
+      "count": 3
+    },
+    {
+      "id": "hayo:stone_dust"
+    }
+  ],
+  "result_fluid": null,
+  "energy_cost": 600
+}

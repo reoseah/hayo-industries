@@ -21,13 +21,14 @@ public class NutrientPurifyingRecipe extends BaseSolidFluidReactingRecipe {
 
     public NutrientPurifyingRecipe(
             Ingredient inputItem,
+            int inputAmount,
             FluidIngredientAmount inputFluid,
             List<ItemStackTemplate> resultItems,
             List<Float> extraResultChances,
             FluidStack resultFluid,
             int energyCost
     ) {
-        super(inputItem, inputFluid, resultItems, extraResultChances, resultFluid, energyCost);
+        super(inputItem, inputAmount, inputFluid, resultItems, extraResultChances, resultFluid, energyCost);
     }
 
     @Override
