@@ -1,0 +1,123 @@
+package hayo.features.processing_machine.matter_generator;
+
+import hayo.Hayo;
+import hayo.common.menu.HayoContainerMenu;
+import hayo.common.menu.ResultSlot;
+import hayo.energy.item.EnergyComponents;
+import hayo.features.processing_machine.UpgradeSlot;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jspecify.annotations.NonNull;
+
+import java.util.List;
+
+public class MatterGeneratorMenu extends HayoContainerMenu {
+    public final MatterGeneratorContainerData machineData;
+
+    public final List<RecipeHolder<MatterGeneratingRecipe>> recipes;
+    public final DataSlot selectedRecipe;
+
+    public MatterGeneratorMenu(int menuId, Inventory inventory) {
+        this(menuId, new SimpleContainer(MatterGeneratorBlockEntity.SLOTS), new MatterGeneratorContainerData.Clientside(), inventory);
+    }
+
+    public MatterGeneratorMenu(int menuId, MatterGeneratorBlockEntity entity, Inventory inventory) {
+        this(menuId, entity, new MatterGeneratorContainerData.Serverside(entity), inventory);
+    }
+
+    protected MatterGeneratorMenu(int menuId, Container container, MatterGeneratorContainerData data, Inventory inventory) {
+        super(Hayo.MenuTypes.MATTER_GENERATOR, menuId, container);
+
+        this.machineData = data;
+        this.addDataSlots(this.machineData);
+
+        this.addSlot(new Slot(container, 0, 56, 34));
+        this.addSlot(new ResultSlot(container, 1, 116, 26));
+        this.addSlot(new UpgradeSlot(container, 2, 8, 16, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 2));
+        this.addSlot(new UpgradeSlot(container, 3, 8, 34, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES, 2, 2));
+
+        this.addStandardInventorySlots(inventory, 8, 110);
+
+        var level = inventory.player.level();
+        this.recipes = level.recipeAccess().getSynchronizedRecipes().getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING).stream().sorted((holder1, holder2) -> compare(holder1.value(), holder2.value())).toList();
+
+        this.selectedRecipe = (container instanceof MatterGeneratorBlockEntity entity) ? createSelectedIdx(entity, this.recipes) : DataSlot.standalone();
+        this.addDataSlot(this.selectedRecipe);
+    }
+
+    public int getSelectedRecipe() {
+        return this.selectedRecipe.get();
+    }
+
+    public static int compare(MatterGeneratingRecipe recipe1, MatterGeneratingRecipe recipe2) {
+        int compareEnergyCost = Integer.compare(recipe1.energyCost(), recipe2.energyCost());
+        if (compareEnergyCost != 0) {
+            return compareEnergyCost;
+        }
+
+        var resultId1 = recipe1.result().item().unwrapKey().orElseThrow().identifier();
+        var resultId2 = recipe2.result().item().unwrapKey().orElseThrow().identifier();
+        var resultNamespace1 = resultId1.getNamespace();
+        var resultNamespace2 = resultId2.getNamespace();
+
+        int compareResultIsVanilla = Boolean.compare(resultNamespace1.equals("minecraft"), resultNamespace2.equals("minecraft"));
+        if (compareResultIsVanilla != 0) {
+            return compareEnergyCost;
+        }
+
+        int compareResultNamespace = resultNamespace1.compareTo(resultNamespace2);
+        if (compareResultNamespace != 0) {
+            return compareResultNamespace;
+        }
+
+        return resultId1.getPath().compareTo(resultId2.getPath());
+    }
+
+    private static DataSlot createSelectedIdx(MatterGeneratorBlockEntity entity, List<RecipeHolder<MatterGeneratingRecipe>> recipes) {
+        var ids = recipes.stream().map(holder -> holder.id().identifier()).toList();
+
+        return new DataSlot() {
+            @Override
+            public int get() {
+                return ids.indexOf(entity.selectedRecipeId);
+            }
+
+            @Override
+            public void set(int value) {
+                entity.selectRecipe(value >= 0 && value < ids.size() ? ids.get(value) : null);
+            }
+        };
+    }
+
+    @Override
+    protected boolean handleQuickMoveFromInventory(ItemStack stack, Player player, int index) {
+        if (EnergyComponents.chargesBlocks(stack)) {
+            return this.moveItemStackTo(stack, 0, 1, false);
+        } else if (stack.is(Hayo.ItemTags.MATTER_GENERATOR_UPGRADES)) {
+            return this.moveItemStackTo(stack, 2, 4, false);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean clickMenuButton(Player player, int buttonId) {
+        if (buttonId >= 0 && buttonId < this.recipes.size() && this.recipes.get(buttonId).value().matches(this.createInput(), player.level())) {
+            this.selectedRecipe.set(buttonId);
+
+            return true;
+        }
+
+        return super.clickMenuButton(player, buttonId);
+    }
+
+    @NonNull
+    public MatterGeneratorRecipeInput createInput() {
+        return new MatterGeneratorRecipeInput(List.of(this.container.getItem(2), this.container.getItem(3)));
+    }
+}

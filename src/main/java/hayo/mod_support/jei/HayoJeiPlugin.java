@@ -2,11 +2,11 @@ package hayo.mod_support.jei;
 
 import hayo.Hayo;
 import hayo.common.HayoGuiSprites;
-import hayo.fluid_stack.FluidDrainingRecipe;
-import hayo.fluid_stack.FluidFillingRecipe;
-import hayo.processing_machine.classic.*;
-import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
-import hayo.processing_machine.solid_fluid_reactor.BaseSolidFluidReactingRecipe;
+import hayo.features.fluid_stack.FluidDrainingRecipe;
+import hayo.features.fluid_stack.FluidFillingRecipe;
+import hayo.features.processing_machine.classic.*;
+import hayo.features.processing_machine.matter_generator.MatterGeneratingRecipe;
+import hayo.features.processing_machine.solid_fluid_reactor.BaseSolidFluidReactingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -147,7 +147,7 @@ public class HayoJeiPlugin implements IModPlugin {
 
                 @Override
                 public List<Slot> getInventorySlots(ElectricFurnaceMenu container, RecipeHolder<?> recipe) {
-                    return container.slots.subList(container.playerInventory.start(), container.playerInventory.end());
+                    return container.slots.subList(ClassicMachineBlockEntity.SLOTS, 36);
                 }
             });
         }

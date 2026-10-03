@@ -2,9 +2,9 @@ package hayo.mod_support.jei;
 
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
-import hayo.fluid_stack.FluidGuiRendering;
-import hayo.processing_machine.solid_fluid_reactor.BaseSolidFluidReactingRecipe;
-import hayo.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
+import hayo.features.fluid_stack.FluidGuiRendering;
+import hayo.features.processing_machine.solid_fluid_reactor.BaseSolidFluidReactingRecipe;
+import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

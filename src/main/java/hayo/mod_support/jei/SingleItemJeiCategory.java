@@ -2,7 +2,7 @@ package hayo.mod_support.jei;
 
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
-import hayo.processing_machine.classic.ClassicMachineRecipe;
+import hayo.features.processing_machine.classic.ClassicMachineRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

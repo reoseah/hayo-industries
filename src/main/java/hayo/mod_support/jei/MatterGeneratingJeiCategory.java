@@ -2,9 +2,9 @@ package hayo.mod_support.jei;
 
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
-import hayo.processing_machine.classic.ElectricFurnaceBlockEntity;
-import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
-import hayo.processing_machine.matter_generator.MatterGeneratorBlockEntity;
+import hayo.features.processing_machine.classic.ElectricFurnaceBlockEntity;
+import hayo.features.processing_machine.matter_generator.MatterGeneratingRecipe;
+import hayo.features.processing_machine.matter_generator.MatterGeneratorBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;

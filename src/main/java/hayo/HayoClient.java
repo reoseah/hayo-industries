@@ -1,6 +1,6 @@
 package hayo;
 
-import hayo.energy_armor.EnergyArmorOverlayRenderer;
+import hayo.features.energy_armor.EnergyArmorOverlayRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry;
@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.FlowingFluid;
 
 public class HayoClient {

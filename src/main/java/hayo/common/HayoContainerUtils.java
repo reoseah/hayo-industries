@@ -1,6 +1,6 @@
 package hayo.common;
 
-import hayo.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
+import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;

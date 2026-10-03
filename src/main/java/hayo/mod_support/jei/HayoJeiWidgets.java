@@ -2,9 +2,9 @@ package hayo.mod_support.jei;
 
 import hayo.common.HayoGuiSprites;
 import hayo.energy.client.EnergyGuiSprites;
-import hayo.fluid_stack.FluidGuiRendering;
-import hayo.fluid_stack.FluidIngredientAmount;
-import hayo.fluid_stack.FluidStack;
+import hayo.features.fluid_stack.FluidGuiRendering;
+import hayo.features.fluid_stack.FluidIngredientAmount;
+import hayo.features.fluid_stack.FluidStack;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;

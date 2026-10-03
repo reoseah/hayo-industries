@@ -1,7 +1,7 @@
 package hayo.mod_support.jei;
 
 import hayo.common.HayoGuiSprites;
-import hayo.processing_machine.classic.ElectricFurnaceBlockEntity;
+import hayo.features.processing_machine.classic.ElectricFurnaceBlockEntity;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.network.chat.Component;
