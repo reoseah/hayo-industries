@@ -2,22 +2,25 @@ package hayo.mod_support.jei;
 
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
-import hayo.energy.client.EnergyGuiSprites;
 import hayo.fluid_stack.FluidDrainingRecipe;
 import hayo.fluid_stack.FluidGuiRendering;
+import hayo.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
-import net.minecraft.client.Minecraft;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 public class FluidDrainingJeiCategory implements IRecipeCategory<RecipeHolder<FluidDrainingRecipe>> {
     private final IDrawable icon;
@@ -61,21 +64,29 @@ public class FluidDrainingJeiCategory implements IRecipeCategory<RecipeHolder<Fl
     }
 
     @Override
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<FluidDrainingRecipe> holder, IFocusGroup focuses) {
+        var recipe = holder.value();
+
+        int energyCost = recipe.energyCost();
+        int useRate = 1;
+        float duration = Mth.positiveCeilDiv(energyCost, useRate) / 20F;
+
+        builder.addDrawableWidget(HayoJeiWidgets.zapWidget(recipe.energyCost(), 1)).setPosition(51, 19).setTooltip(List.of(
+                EnergyTexts.amount(energyCost),
+                Component.translatable("hayo.machine.recipe_duration", duration, useRate).withStyle(ChatFormatting.GRAY)
+        ));
+        builder.addText(EnergyTexts.amount(recipe.energyCost()), Integer.MAX_VALUE, Integer.MAX_VALUE).setColor(0xFF404040).setPosition(50, 42);
+
+        builder.addDrawableWidget(HayoJeiWidgets.fluidTank(recipe.resultFluid(), SolidFluidReactorBlockEntity.FLUID_CAPACITY))
+                .setPosition(27, -1)
+                .setTooltip(tooltip -> tooltip.addAll(FluidGuiRendering.createTooltip(recipe.resultFluid())));
+    }
+
+    @Override
     public void draw(RecipeHolder<FluidDrainingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         int energyCost = holder.value().energyCost();
         float fill = (System.currentTimeMillis() / 50) % energyCost;
         HayoGuiSprites.blitDrainingArrow(graphics, 6, 20, (int) fill, energyCost);
-
-        FluidGuiRendering.extractFluidTank(graphics, holder.value().resultFluid(), 4000, 27, -1);
-
-        EnergyGuiSprites.blitZap(graphics, 51, 19, 10, 14);
-        graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 50, 42, 0xFF404040, false);
     }
 
-    @Override
-    public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<FluidDrainingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-        if (FluidGuiRendering.isHoveringTank(27, -1, mouseX, mouseY)) {
-            tooltip.addAll(FluidGuiRendering.createTooltip(recipe.value().resultFluid()));
-        }
-    }
 }

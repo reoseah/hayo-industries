@@ -42,7 +42,7 @@ public class MachineTexts {
         float duration = Mth.positiveCeilDiv(data.recipeCost(), data.getRecipeProgressPerTick()) / 20F;
         float defaultDuration = Mth.positiveCeilDiv(defaultRecipeCost, baseEnergyUse) / 20F;
         float relativeDuration = duration / defaultDuration * 100;
-        components.add(Component.translatable("hayo.machine.recipe_duration",
+        components.add(Component.translatable("hayo.machine.recipe_duration_with_upgrades",
                 String.format("%.0f", duration),
                 data.getRecipeProgressPerTick(),
                 String.format("%.0f", defaultDuration),

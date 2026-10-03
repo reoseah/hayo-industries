@@ -2,20 +2,18 @@ package hayo.mod_support.jei;
 
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
-import hayo.energy.client.EnergyGuiSprites;
 import hayo.processing_machine.classic.ElectricFurnaceBlockEntity;
 import hayo.processing_machine.matter_generator.MatterGeneratingRecipe;
 import hayo.processing_machine.matter_generator.MatterGeneratorBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -25,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-import static hayo.mod_support.jei.SingleItemJeiCategory.UPGRADE_SLOT_DRAWABLE;
+import static hayo.mod_support.jei.HayoJeiWidgets.UPGRADE_SLOT_DRAWABLE;
 
 public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder<MatterGeneratingRecipe>> {
     private final IDrawable icon;
@@ -74,26 +72,27 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
     }
 
     @Override
-    public void draw(RecipeHolder<MatterGeneratingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        EnergyGuiSprites.blitZap(graphics, 23, 5, 10, 14);
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<MatterGeneratingRecipe> holder, IFocusGroup focuses) {
+        var recipe = holder.value();
 
-        int energyCost = holder.value().energyCost();
-        float fill = (System.currentTimeMillis() / 50 * ElectricFurnaceBlockEntity.ENERGY_USE_RATE) % energyCost;
-        HayoGuiSprites.blitRecipeArrow(graphics, 44, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, (int) fill, energyCost);
+        int energyCost = recipe.energyCost();
+        int useRate = MatterGeneratorBlockEntity.ENERGY_USE_RATE;
+        float duration = Mth.positiveCeilDiv(energyCost, useRate) / 20F;
 
-        graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(energyCost), 1, 28, 0xFF404040, false);
+        builder.addDrawableWidget(HayoJeiWidgets.zapWidget(energyCost, useRate))
+                .setPosition(23, 5)
+                .setTooltip(List.of(
+                        EnergyTexts.amount(energyCost),
+                        Component.translatable("hayo.machine.recipe_duration", duration, useRate).withStyle(ChatFormatting.GRAY)
+                ));
+
+        builder.addText(EnergyTexts.amount(energyCost), Integer.MAX_VALUE, Integer.MAX_VALUE).setColor(0xFF404040).setPosition(1, 28);
     }
 
     @Override
-    public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<MatterGeneratingRecipe> holder, IRecipeSlotsView slots, double mouseX, double mouseY) {
-        if (mouseX >= 23 && mouseX <= 23 + 14 && mouseY >= 5 && mouseY <= 5 + 14 //
-                || mouseX > 42 && mouseX <= 42 + 24 && mouseY > 4 && mouseY <= 4 + 16) {
-            var recipe = holder.value();
-            float duration = Mth.positiveCeilDiv(recipe.energyCost(), MatterGeneratorBlockEntity.ENERGY_USE_RATE) / 20F;
-
-            tooltip.addAll(List.of( //
-                    Component.translatable("hayo.duration.seconds", duration), //
-                    EnergyTexts.amountAndAmountPerTick(recipe.energyCost(), MatterGeneratorBlockEntity.ENERGY_USE_RATE).withStyle(ChatFormatting.GRAY)));
-        }
+    public void draw(RecipeHolder<MatterGeneratingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+        int energyCost = holder.value().energyCost();
+        float fill = (System.currentTimeMillis() / 50 * ElectricFurnaceBlockEntity.ENERGY_USE_RATE) % energyCost;
+        HayoGuiSprites.blitRecipeArrow(graphics, 44, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, (int) fill, energyCost);
     }
 }

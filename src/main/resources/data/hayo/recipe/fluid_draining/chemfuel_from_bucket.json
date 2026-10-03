@@ -1,12 +1,12 @@
 {
   "type": "hayo:fluid_draining",
-  "input": "hayo:chemfuel_canister",
+  "input": "hayo:chemfuel_bucket",
   "result_item": {
-    "id": "hayo:canister"
+    "id": "minecraft:bucket"
   },
   "result_fluid": {
     "id": "hayo:chemfuel",
-    "amount": 4000
+    "amount": 1000
   },
-  "energy_cost": 400
+  "energy_cost": 100
 }

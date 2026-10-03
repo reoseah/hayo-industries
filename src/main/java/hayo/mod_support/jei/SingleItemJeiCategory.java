@@ -2,30 +2,29 @@ package hayo.mod_support.jei;
 
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
-import hayo.energy.client.EnergyGuiSprites;
 import hayo.processing_machine.classic.ClassicMachineRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.common.gui.elements.DrawableSprite;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleItemRecipe;
 import org.jspecify.annotations.Nullable;
 
-public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends SingleItemRecipe>> implements IRecipeCategory<T> {
-    public static final IDrawable UPGRADE_SLOT_DRAWABLE = new DrawableSprite(Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.GUI), HayoGuiSprites.UPGRADE_SLOT, 18, 18);
+import java.util.List;
 
+public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends SingleItemRecipe>> implements IRecipeCategory<T> {
     private final IDrawable icon;
     public final @Nullable ItemStack requiredUpgrade;
 
@@ -79,7 +78,7 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
         var recipe = holder.value();
         if (this.canHaveCatalyst() && !this.getCatalyst(holder).isEmpty()) {
             builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
-                    .setBackground(UPGRADE_SLOT_DRAWABLE, -1, -1)
+                    .setBackground(HayoJeiWidgets.UPGRADE_SLOT_DRAWABLE, -1, -1)
                     .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.required_upgrade").withStyle(ChatFormatting.YELLOW)))
                     .add(this.getCatalyst(holder));
         }
@@ -99,21 +98,33 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
     }
 
     @Override
-    public void draw(T holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        int x = this.canHaveCatalyst() ? 20 : 0;
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, T recipe, IFocusGroup focuses) {
+        int left = this.canHaveCatalyst() ? 20 : 0;
 
-        EnergyGuiSprites.blitZap(graphics, x + 1, 20, 10, 14);
+        int energyCost = this.getEnergyCost(recipe);
+        int useRate = this.getEnergyUseRate(recipe);
+        float duration = Mth.positiveCeilDiv(energyCost, useRate) / 20F;
+
+        builder.addDrawableWidget(HayoJeiWidgets.zapWidget(energyCost, useRate))
+                .setPosition(left + 1, 20)
+                .setTooltip(List.of(
+                        EnergyTexts.amount(energyCost),
+                        Component.translatable("hayo.machine.recipe_duration", duration, useRate).withStyle(ChatFormatting.GRAY)
+                ));
+        builder.addText(EnergyTexts.amount(energyCost), Integer.MAX_VALUE, Integer.MAX_VALUE).setColor(0xFF404040).setPosition(left + 19, 24);
+    }
+
+    @Override
+    public void draw(T holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+        int left = this.canHaveCatalyst() ? 20 : 0;
 
         int energyCost = this.getEnergyCost(holder);
         int energyUseRate = this.getEnergyUseRate(holder);
         int fill = (int) Math.abs((System.currentTimeMillis() / 50 * energyUseRate) % energyCost);
-        HayoGuiSprites.blitRecipeArrow(graphics, x + 24, 4, this.getArrowSprite(), this.getArrowOverlaySprite(), fill, energyCost);
-
-        var font = Minecraft.getInstance().font;
-        graphics.text(font, EnergyTexts.amount(energyCost), x + 19, 24, 0xFF404040, false);
+        HayoGuiSprites.blitRecipeArrow(graphics, left + 24, 4, this.getArrowSprite(), this.getArrowOverlaySprite(), fill, energyCost);
 
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
-            drawExtraChanceItemSlot(graphics, machineRecipe.result().create(), machineRecipe.extraResultChance, x + 84, 0);
+            drawExtraChanceItemSlot(graphics, machineRecipe.result().create(), machineRecipe.extraResultChance, left + 84, 0);
         }
     }
 
@@ -148,7 +159,6 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
 
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             if (mouseX >= 84 && mouseX < 84 + 18 && mouseY >= 0 && mouseY < 18) {
-//                tooltip.addAll(holder.value().result().create().getTooltipLines(Item.TooltipContext.EMPTY, null, TooltipFlag.NORMAL));
                 tooltip.add(Component.translatable("hayo.extra_chance_tooltip", String.format("%.0f", 100 * machineRecipe.extraResultChance)).withStyle(ChatFormatting.YELLOW));
             }
         }
