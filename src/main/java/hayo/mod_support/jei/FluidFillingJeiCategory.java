@@ -19,7 +19,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluids;
-import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
 public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<FluidFillingRecipe>> {
@@ -69,18 +68,7 @@ public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<Flu
         float fill = (System.currentTimeMillis() / 50) % energyCost;
         HayoGuiSprites.blitFillingArrow(graphics, 22, 20, (int) fill, energyCost);
 
-        var topLeft = graphics.pose().transform(new Vector3f(0, 0, 1));
-        graphics.pose().pushMatrix();
-        graphics.pose().translate(-topLeft.x, -topLeft.y);
-        FluidGuiRendering.extractFluidTank(
-                graphics,
-                holder.value().inputFluid(),
-                4000,
-                (int) (topLeft.x),
-                (int) topLeft.y - 1,
-                (int) (topLeft.x + mouseX),
-                (int) (topLeft.y + mouseY));
-        graphics.pose().popMatrix();
+        FluidGuiRendering.extractFluidTank(graphics, holder.value().inputFluid(), 4000, 0, -1);
 
         EnergyGuiSprites.blitZap(graphics, 51, 19, 10, 14);
 
@@ -89,7 +77,7 @@ public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<Flu
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<FluidFillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-        if (mouseX >= 0 && mouseX <= 18 && mouseY >= -1 && mouseY <= -1 + 56) {
+        if (FluidGuiRendering.isHoveringTank(0, -1, mouseX, mouseY)) {
             tooltip.addAll(FluidGuiRendering.createTooltip(recipe.value().inputFluid()));
         }
     }

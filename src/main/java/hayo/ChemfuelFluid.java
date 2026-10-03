@@ -1,6 +1,5 @@
-package hayo.processing_machine.solid_fluid_reactor;
+package hayo;
 
-import hayo.Hayo;
 import hayo.common.fluid.HayoFluid;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;

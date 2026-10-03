@@ -38,10 +38,10 @@ public class SolidFluidReactorScreen extends AbstractContainerScreen<SolidFluidR
 
         EnergyGuiSprites.blitZap(graphics, this.leftPos + 63, this.topPos + 36, this.menu.data.energy(), this.menu.data.capacity());
 
-        FluidGuiRendering.extractFluidTank(graphics, this.menu.reactorData.inputFluid(), SolidFluidReactorBlockEntity.FLUID_CAPACITY, this.leftPos + 34, this.topPos + 15, mouseX, mouseY);
+        FluidGuiRendering.extractFluidTank(graphics, this.menu.reactorData.inputFluid(), SolidFluidReactorBlockEntity.FLUID_CAPACITY, this.leftPos + 34, this.topPos + 15);
         HayoGuiSprites.blitDrainingArrow(graphics, this.leftPos + 13, this.topPos + 36, this.menu.reactorData.inputDrainingProgress(), this.menu.reactorData.inputDrainingMaxProgress());
 
-        FluidGuiRendering.extractFluidTank(graphics, this.menu.reactorData.resultFluid(), SolidFluidReactorBlockEntity.FLUID_CAPACITY, this.leftPos + 142, this.topPos + 15, mouseX, mouseY);
+        FluidGuiRendering.extractFluidTank(graphics, this.menu.reactorData.resultFluid(), SolidFluidReactorBlockEntity.FLUID_CAPACITY, this.leftPos + 142, this.topPos + 15);
         HayoGuiSprites.blitFillingArrow(graphics, this.leftPos + 164, this.topPos + 36, this.menu.reactorData.resultFillingProgress(), this.menu.reactorData.resultFillingMaxProgress());
 
         HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 85, this.topPos + 34, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY, this.menu.data.recipeProgress(), this.menu.data.recipeCost());

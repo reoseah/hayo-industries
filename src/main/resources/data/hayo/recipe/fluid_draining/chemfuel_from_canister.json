@@ -1,0 +1,12 @@
+{
+  "type": "hayo:fluid_draining",
+  "input": "hayo:chemfuel_canister",
+  "result_item": {
+    "id": "hayo:canister"
+  },
+  "result_fluid": {
+    "id": "hayo:chemfuel",
+    "amount": 1000
+  },
+  "energy_cost": 100
+}

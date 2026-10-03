@@ -33,7 +33,7 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
     public final ItemStack requiredUpgrade;
 
     public SolidFluidReactingCategory(IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> type, Component name, IDrawable icon, ItemStack requiredUpgrade) {
-        super(type, name, icon, 122 + 18 + (requiredUpgrade.isEmpty() ? 0 : 20), 54);
+        super(type, name, icon, 140 + (requiredUpgrade.isEmpty() ? 0 : 20), 54);
         this.requiredUpgrade = requiredUpgrade;
     }
 
@@ -50,8 +50,12 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
 
         int left = !this.requiredUpgrade.isEmpty() ? 20 : 0;
 
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).add(recipe.inputFluid.values().stream().findAny().map(Holder::value).orElse(Fluids.EMPTY), recipe.inputFluid.amount());
-        var inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, left + 28 - 5, 10).setStandardSlotBackground();
+        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).add(
+                recipe.inputFluid.values().stream().findAny().map(Holder::value).orElse(Fluids.EMPTY),
+                recipe.inputFluid.amount()
+        );
+
+        var inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, left + 23, 10).setStandardSlotBackground();
         if (recipe.inputCount != 1) {
             inputSlot.addItemStacks(recipe.inputItem.items().map(item -> new ItemStack(item, recipe.inputCount)).toList());
         } else {
@@ -96,9 +100,7 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
                 recipe.inputFluid,
                 SolidFluidReactorBlockEntity.FLUID_CAPACITY,
                 left,
-                -1,
-                (int) (mouseX),
-                (int) (mouseY)
+                -1
         );
 
         boolean hasExtraChances = !recipe.extraResultChances.isEmpty();
@@ -109,20 +111,15 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
                 recipe.resultFluid,
                 SolidFluidReactorBlockEntity.FLUID_CAPACITY,
                 resultsLeft + 20 + (hasExtraChances ? 18 : 0),
-                -1,
-                (int) (mouseX),
-                (int) (mouseY)
+                -1
         );
 
         EnergyGuiSprites.blitZap(graphics, left + 24, 29, 10, 14);
+        graphics.text(Minecraft.getInstance().font, EnergyTexts.amount(recipe.energyCost), left + 40, 33, 0xFF404040, false);
 
-        int energyCost = recipe.energyCost;
         int energyUseRate = SolidFluidReactorBlockEntity.REACTING_ENERGY_RATE;
-        int fill = (int) Math.abs((System.currentTimeMillis() / 50 * energyUseRate) % energyCost);
-        HayoGuiSprites.blitRecipeArrow(graphics, left + 49 + (hasExtraChances ? 0 : 5), 12, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY, fill, energyCost);
-
-        var font = Minecraft.getInstance().font;
-        graphics.text(font, EnergyTexts.amount(recipe.energyCost), left + 40, 33, 0xFF404040, false);
+        int fill = (int) Math.abs((System.currentTimeMillis() / 50 * energyUseRate) % recipe.energyCost);
+        HayoGuiSprites.blitRecipeArrow(graphics, left + 49 + (hasExtraChances ? 0 : 5), 12, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY, fill, recipe.energyCost);
 
         if (hasExtraChances) {
             int i = 0;
@@ -141,14 +138,14 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
 
         int left = !this.requiredUpgrade.isEmpty() ? 20 : 0;
 
-        if (mouseX >= left && mouseX <= left + 18 && mouseY >= -1 && mouseY <= -1 + 56) {
+        if (FluidGuiRendering.isHoveringTank(left, -1, mouseX, mouseY)) {
             tooltip.addAll(FluidGuiRendering.createTooltip(recipe.inputFluid));
         }
 
         boolean hasExtraChances = !recipe.extraResultChances.isEmpty();
         int resultsLeft = left + 84 + (hasExtraChances ? 0 : 9);
 
-        if (mouseX >= resultsLeft + 20 + (hasExtraChances ? 18 : 0) && mouseX <= resultsLeft + 20 + (hasExtraChances ? 18 : 0) + 18 && mouseY >= -1 && mouseY <= -1 + 56) {
+        if (FluidGuiRendering.isHoveringTank(resultsLeft + 20 + (hasExtraChances ? 18 : 0), -1, mouseX, mouseY)) {
             tooltip.addAll(FluidGuiRendering.createTooltip(recipe.resultFluid));
         }
 

@@ -493,6 +493,8 @@ public class Hayo {
         public static final Item RAW_IRIDIUM = registerItem("raw_iridium", new Item.Properties().rarity(Rarity.RARE));
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
+        public static final Item CANISTER = registerItem("canister");
+        public static final Item CHEMFUEL_CANISTER = registerItem("chemfuel_canister");
         public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food(new FoodProperties(4, 8F, false)));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade",
@@ -646,7 +648,7 @@ public class Hayo {
                 entries.accept(REINFORCED_DOOR);
                 entries.accept(REINFORCED_TRAPDOOR);
 
-                entries.accept(CHEMFUEL_BUCKET);
+                entries.accept(CHEMFUEL_BUCKET, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
 
                 entries.accept(WRENCH);
                 entries.accept(SILICON_BRONZE_SWORD);
@@ -722,6 +724,8 @@ public class Hayo {
                 entries.accept(RAW_IRIDIUM);
                 entries.accept(QUANTUM_PLATE);
                 entries.accept(COMPRESSED_PLANTS);
+                entries.accept(CANISTER);
+                entries.accept(CHEMFUEL_CANISTER);
                 entries.accept(NUTRIENT_PASTE);
 
                 entries.accept(OVERCLOCK_UPGRADE);
