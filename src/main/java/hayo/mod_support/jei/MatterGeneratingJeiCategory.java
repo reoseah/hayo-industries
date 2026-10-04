@@ -2,19 +2,16 @@ package hayo.mod_support.jei;
 
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
-import hayo.features.processing_machine.classic.ElectricFurnaceBlockEntity;
 import hayo.features.processing_machine.matter_generator.MatterGeneratingRecipe;
 import hayo.features.processing_machine.matter_generator.MatterGeneratorBlockEntity;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
@@ -60,7 +57,7 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<MatterGeneratingRecipe> holder, IFocusGroup focuses) {
         if (holder.value().requiredUpgrade().value() != Items.AIR) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 1, 5)
+            builder.addSlot(RecipeIngredientRole.CRAFTING_STATION, 1, 5)
                     .setBackground(UPGRADE_SLOT_DRAWABLE, -1, -1)
                     .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.required_upgrade").withStyle(ChatFormatting.YELLOW)))
                     .add(holder.value().requiredUpgrade().value());
@@ -86,13 +83,11 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
                         Component.translatable("hayo.machine.recipe_duration", duration, useRate).withStyle(ChatFormatting.GRAY)
                 ));
 
-        builder.addText(EnergyTexts.amount(energyCost), Integer.MAX_VALUE, Integer.MAX_VALUE).setColor(0xFF404040).setPosition(1, 28);
-    }
+        builder.addText(EnergyTexts.amount(energyCost), Integer.MAX_VALUE, Integer.MAX_VALUE)
+                .setPosition(1, 28)
+                .setColor(0xFF404040);
 
-    @Override
-    public void draw(RecipeHolder<MatterGeneratingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        int energyCost = holder.value().energyCost();
-        float fill = (System.currentTimeMillis() / 50 * ElectricFurnaceBlockEntity.ENERGY_USE_RATE) % energyCost;
-        HayoGuiSprites.blitRecipeArrow(graphics, 44, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, (int) fill, energyCost);
+        builder.addDrawableWidget(HayoJeiWidgets.recipeArrow(energyCost, useRate, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY))
+                .setPosition(44, 4);
     }
 }

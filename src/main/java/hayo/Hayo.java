@@ -1,6 +1,11 @@
 package hayo;
 
 import com.mojang.serialization.MapCodec;
+import hayo.common.item.BlockItemWithTooltip;
+import hayo.common.item.ItemWithTooltip;
+import hayo.common.item.SimpleElectricItem;
+import hayo.energy.EnergyTexts;
+import hayo.energy.item.*;
 import hayo.features.ChemfuelFluid;
 import hayo.features.WrenchItem;
 import hayo.features.battery_box.BatteryBoxBlock;
@@ -8,11 +13,6 @@ import hayo.features.battery_box.BatteryBoxBlockEntity;
 import hayo.features.battery_box.BatteryBoxMenu;
 import hayo.features.battery_box.BatteryBoxScreen;
 import hayo.features.cable.CableBlock;
-import hayo.common.item.BlockItemWithTooltip;
-import hayo.common.item.ItemWithTooltip;
-import hayo.common.item.SimpleElectricItem;
-import hayo.energy.EnergyTexts;
-import hayo.energy.item.*;
 import hayo.features.energy_storage.*;
 import hayo.features.fluid_stack.FluidDrainingRecipe;
 import hayo.features.fluid_stack.FluidFillingRecipe;
@@ -494,7 +494,7 @@ public class Hayo {
         public static final Item RAW_IRIDIUM = registerItem("raw_iridium", new Item.Properties().rarity(Rarity.RARE));
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
-        public static final Item CANISTER = registerItem("canister");
+        public static final Item CANISTER = registerItem("canister", new Item.Properties().stacksTo(16));
         public static final Item CHEMFUEL_CANISTER = registerItem("chemfuel_canister", new Item.Properties().stacksTo(1));
         public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food(new FoodProperties(4, 8F, false)));
 
@@ -550,22 +550,32 @@ public class Hayo {
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
-        public static final Item NUTRIENT_DISPENSER_UPGRADE = registerItem("nutrient_dispenser_upgrade",
-                props -> new ItemWithTooltip(
-                        props,
-                        Component.empty(),
-                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.solid_fluid_reactor")).withStyle(ChatFormatting.GRAY),
-                        Component.translatable("hayo.upgrades.use_nutrient_paste_recipes").withStyle(ChatFormatting.DARK_AQUA)
-                ),
-                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
-        );
-
         public static final Item ORE_WASHING_UPGRADE = registerItem("ore_washing_upgrade",
                 props -> new ItemWithTooltip(
                         props,
                         Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.solid_fluid_reactor")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.use_ore_washing_recipes").withStyle(ChatFormatting.DARK_AQUA)
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
+        );
+
+        public static final Item CHEMFUEL_PROCESSING_UPGRADE = registerItem("chemfuel_processing_upgrade",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.solid_fluid_reactor")).withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.use_chemfuel_processing_recipes").withStyle(ChatFormatting.DARK_AQUA)
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
+        );
+
+        public static final Item NUTRIENT_DISPENSER_UPGRADE = registerItem("nutrient_dispenser_upgrade",
+                props -> new ItemWithTooltip(
+                        props,
+                        Component.empty(),
+                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.solid_fluid_reactor")).withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.use_nutrient_paste_recipes").withStyle(ChatFormatting.DARK_AQUA)
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
@@ -651,7 +661,7 @@ public class Hayo {
                 entries.accept(REINFORCED_DOOR);
                 entries.accept(REINFORCED_TRAPDOOR);
 
-                entries.accept(CHEMFUEL_BUCKET, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                entries.accept(CHEMFUEL_BUCKET);
 
                 entries.accept(WRENCH);
                 entries.accept(SILICON_BRONZE_SWORD);
@@ -736,8 +746,9 @@ public class Hayo {
                 entries.accept(STREAMLINE_OVERHAUL_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
-                entries.accept(NUTRIENT_DISPENSER_UPGRADE);
                 entries.accept(ORE_WASHING_UPGRADE);
+                entries.accept(CHEMFUEL_PROCESSING_UPGRADE);
+                entries.accept(NUTRIENT_DISPENSER_UPGRADE);
                 entries.accept(SUNNARIUM_CONCENTRATOR_UPGRADE);
                 entries.accept(OVERWORLD_LIFE_CRYSTAL_MEMORY);
             });

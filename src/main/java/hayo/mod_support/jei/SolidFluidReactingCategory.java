@@ -116,6 +116,9 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
         builder.addDrawableWidget(HayoJeiWidgets.fluidTank(recipe.resultFluid, SolidFluidReactorBlockEntity.FLUID_CAPACITY))
                 .setPosition(resultsLeft + 20 + (hasExtraChances ? 18 : 0), -1)
                 .setTooltip(tooltip -> tooltip.addAll(FluidGuiRendering.createTooltip(recipe.resultFluid)));
+
+        builder.addDrawableWidget(HayoJeiWidgets.recipeArrow(energyCost, useRate, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY))
+                .setPosition(left + 49 + (hasExtraChances ? 0 : 5), 12);
     }
 
     @Override
@@ -125,10 +128,6 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
         int left = !this.requiredUpgrade.isEmpty() ? 20 : 0;
         boolean hasExtraChances = !recipe.extraResultChances.isEmpty();
         int resultsLeft = left + 84 + (hasExtraChances ? 0 : 9);
-
-        int energyUseRate = SolidFluidReactorBlockEntity.REACTING_ENERGY_RATE;
-        int fill = (int) Math.abs((System.currentTimeMillis() / 50 * energyUseRate) % recipe.energyCost);
-        HayoGuiSprites.blitRecipeArrow(graphics, left + 49 + (hasExtraChances ? 0 : 5), 12, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY, fill, recipe.energyCost);
 
         if (hasExtraChances) {
             int i = 0;

@@ -103,7 +103,8 @@
   "item.hayo.blasting_upgrade": "Blast Smelting Upgrade",
   "item.hayo.smoking_upgrade": "Artificial Smoking Upgrade",
   "item.hayo.ore_washing_upgrade": "Ore Washing Upgrade",
-  "item.hayo.nutrient_dispenser_upgrade": "Nutrient Dispenser Upgrade",
+  "item.hayo.chemfuel_processing_upgrade": "Chemfuel Processing Upgrade",
+  "item.hayo.nutrient_dispenser_upgrade": "Nutrient Processing Upgrade",
   "item.hayo.sunnarium_concentrator_upgrade": "Sunnarium Handler Upgrade",
   "item.hayo.overworld_life_crystal_memory": "Overworld Lifescan Memory",
   "tag.item.c.wrenches": "Wrenches",
@@ -187,5 +188,6 @@
   "hayo.empty": "Empty",
   "hayo.accepts_fluids": "Accepts fluids:",
   "hayo.subscript_chance": "%s﹪",
-  "hayo.extra_chance_tooltip": "%s%% chance of extra item"
+  "hayo.extra_chance_tooltip": "%s%% chance of extra item",
+  "hayo.upgrades.use_chemfuel_processing_recipes": " Use Chemfuel Processing recipes"
 }

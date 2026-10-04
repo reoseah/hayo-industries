@@ -111,17 +111,17 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
                         EnergyTexts.amount(energyCost),
                         Component.translatable("hayo.machine.recipe_duration", duration, useRate).withStyle(ChatFormatting.GRAY)
                 ));
-        builder.addText(EnergyTexts.amount(energyCost), Integer.MAX_VALUE, Integer.MAX_VALUE).setColor(0xFF404040).setPosition(left + 19, 24);
+        builder.addText(EnergyTexts.amount(energyCost), Integer.MAX_VALUE, Integer.MAX_VALUE)
+                .setColor(0xFF404040)
+                .setPosition(left + 19, 24);
+
+        builder.addDrawableWidget(HayoJeiWidgets.recipeArrow(energyCost, useRate, this.getArrowSprite(), this.getArrowOverlaySprite()))
+                .setPosition(left + 24, 4);
     }
 
     @Override
     public void draw(T holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         int left = this.canHaveCatalyst() ? 20 : 0;
-
-        int energyCost = this.getEnergyCost(holder);
-        int energyUseRate = this.getEnergyUseRate(holder);
-        int fill = (int) Math.abs((System.currentTimeMillis() / 50 * energyUseRate) % energyCost);
-        HayoGuiSprites.blitRecipeArrow(graphics, left + 24, 4, this.getArrowSprite(), this.getArrowOverlaySprite(), fill, energyCost);
 
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             drawExtraChanceItemSlot(graphics, machineRecipe.result().create(), machineRecipe.extraResultChance, left + 84, 0);
@@ -155,8 +155,6 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, T holder, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-        IRecipeCategory.super.getTooltip(tooltip, holder, recipeSlotsView, mouseX, mouseY);
-
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
             if (mouseX >= 84 && mouseX < 84 + 18 && mouseY >= 0 && mouseY < 18) {
                 tooltip.add(Component.translatable("hayo.extra_chance_tooltip", String.format("%.0f", 100 * machineRecipe.extraResultChance)).withStyle(ChatFormatting.YELLOW));
