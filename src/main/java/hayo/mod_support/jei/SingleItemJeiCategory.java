@@ -1,19 +1,14 @@
 package hayo.mod_support.jei;
 
-import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.features.processing_machine.classic.ClassicMachineRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -98,11 +93,11 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
     }
 
     @Override
-    public void createRecipeExtras(IRecipeExtrasBuilder builder, T recipe, IFocusGroup focuses) {
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, T holder, IFocusGroup focuses) {
         int left = this.canHaveCatalyst() ? 20 : 0;
 
-        int energyCost = this.getEnergyCost(recipe);
-        int useRate = this.getEnergyUseRate(recipe);
+        int energyCost = this.getEnergyCost(holder);
+        int useRate = this.getEnergyUseRate(holder);
         float duration = Mth.positiveCeilDiv(energyCost, useRate) / 20F;
 
         builder.addDrawableWidget(HayoJeiWidgets.zapWidget(energyCost, useRate))
@@ -117,48 +112,11 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
 
         builder.addDrawableWidget(HayoJeiWidgets.recipeArrow(energyCost, useRate, this.getArrowSprite(), this.getArrowOverlaySprite()))
                 .setPosition(left + 24, 4);
-    }
-
-    @Override
-    public void draw(T holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        int left = this.canHaveCatalyst() ? 20 : 0;
 
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
-            drawExtraChanceItemSlot(graphics, machineRecipe.result().create(), machineRecipe.extraResultChance, left + 84, 0);
-        }
-    }
-
-    public static void drawExtraChanceItemSlot(GuiGraphicsExtractor graphics, ItemStack stack, float chance, int x, int y) {
-        var font = Minecraft.getInstance().font;
-
-        HayoGuiSprites.blitSlot(graphics, x, 0);
-        graphics.item(stack, x + 1, 1);
-
-        var subscriptChance = Component.translatable("hayo.subscript_chance", toSubscriptDigits(chance));
-        int chanceWidth = font.width(subscriptChance);
-        graphics.text(font, subscriptChance, x + 18 - chanceWidth, y + 18 - font.lineHeight, 0xFFFFFFFF, true);
-    }
-
-    public static String toSubscriptDigits(float chance) {
-        return String.format("%.0f", 100 * chance)
-                .chars()
-                .map(ch -> {
-                    char[] subscriptDigits = {'₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'};
-                    if (ch >= '0' && ch <= '9') {
-                        return subscriptDigits[ch - '0'];
-                    }
-                    return ch;
-                })
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
-    }
-
-    @Override
-    public void getTooltip(ITooltipBuilder tooltip, T holder, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-        if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {
-            if (mouseX >= 84 && mouseX < 84 + 18 && mouseY >= 0 && mouseY < 18) {
-                tooltip.add(Component.translatable("hayo.extra_chance_tooltip", String.format("%.0f", 100 * machineRecipe.extraResultChance)).withStyle(ChatFormatting.YELLOW));
-            }
+            builder.addDrawableWidget(HayoJeiWidgets.itemWithChance(machineRecipe.result().create(), machineRecipe.extraResultChance))
+                    .setPosition(left + 84, 0)
+                    .setTooltip(Component.translatable("hayo.extra_chance_tooltip", String.format("%.0f", 100 * machineRecipe.extraResultChance)).withStyle(ChatFormatting.YELLOW));
         }
     }
 }

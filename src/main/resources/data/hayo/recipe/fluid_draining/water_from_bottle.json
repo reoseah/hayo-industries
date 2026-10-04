@@ -1,6 +1,6 @@
 {
   "type": "hayo:fluid_draining",
-  "input": {
+  "ingredient": {
     "fabric:type": "fabric:components",
     "base": "minecraft:potion",
     "components": {
@@ -9,10 +9,10 @@
       }
     }
   },
-  "result_item": {
+  "item_result": {
     "id": "minecraft:glass_bottle"
   },
-  "result_fluid": {
+  "fluid_result": {
     "id": "minecraft:water",
     "amount": 250
   },

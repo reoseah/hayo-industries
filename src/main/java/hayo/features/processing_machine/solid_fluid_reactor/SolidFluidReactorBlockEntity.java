@@ -132,16 +132,16 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.store("input_fluid", FluidStack.CODEC, this.inputFluid);
-        output.store("result_fluid", FluidStack.CODEC, this.resultFluid);
+        output.store("fluid_ingredient", FluidStack.CODEC, this.inputFluid);
+        output.store("fluid_result", FluidStack.CODEC, this.resultFluid);
         output.putInt("input_filling_progress", this.inputDraining.progress);
         output.putInt("result_draining_progress", this.resultFilling.progress);
     }
 
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.inputFluid = input.read("input_fluid", FluidStack.CODEC).orElse(FluidStack.EMPTY);
-        this.resultFluid = input.read("result_fluid", FluidStack.CODEC).orElse(FluidStack.EMPTY);
+        this.inputFluid = input.read("fluid_ingredient", FluidStack.CODEC).orElse(FluidStack.EMPTY);
+        this.resultFluid = input.read("fluid_result", FluidStack.CODEC).orElse(FluidStack.EMPTY);
         this.inputDraining.progress = input.getIntOr("input_filling_progress", 0);
         this.resultFilling.progress = input.getIntOr("result_draining_progress", 0);
     }
@@ -180,14 +180,13 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     @Override
     public boolean canCraft(RecipeHolder<BaseSolidFluidReactingRecipe> holder, ItemFluidRecipeInput input) {
         var recipe = holder.value();
-        if (!HayoContainerUtils.canInsertAllShapelessly(this.stacks, recipe.resultItems, recipe.extraResultChances, OUTPUT_1, OUTPUT_3, this.getMaxStackSize())) {
+        if (!HayoContainerUtils.canAlwaysInsertAllShapelessly(this.stacks, recipe.resultItems, OUTPUT_1, OUTPUT_3, this.getMaxStackSize())) {
             return false;
         }
 
         var resultFluid = recipe.resultFluid;
         if (!resultFluid.isEmpty()) {
-            if (this.resultFluid.fluid() != Fluids.EMPTY
-                    && this.resultFluid.holder() != resultFluid.holder()) {
+            if (this.resultFluid.fluid() != Fluids.EMPTY && this.resultFluid.fluid() != resultFluid.fluid()) {
                 return false;
             }
             return FLUID_CAPACITY - this.resultFluid.amount() >= resultFluid.amount();
@@ -206,12 +205,12 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
         }
 
         for (int i = 0; i < recipe.resultItems.size(); i++) {
-            var stack = recipe.resultItems.get(i).create();
-
-            if (i < recipe.extraResultChances.size() && recipe.extraResultChances.get(i) > 0 && this.level.getRandom().nextFloat() < recipe.extraResultChances.get(i)) {
-                stack.grow(1);
+            float chance = recipe.resultItems.get(i).chance();
+            if (chance < 1 && this.level.getRandom().nextFloat() > chance) {
+                continue;
             }
 
+            var stack = recipe.resultItems.get(i).template().create();
             HayoContainerUtils.insertShapelessly(this.stacks, stack, OUTPUT_1, OUTPUT_3, this.getMaxStackSize());
         }
 

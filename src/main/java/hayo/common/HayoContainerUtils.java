@@ -1,15 +1,35 @@
 package hayo.common;
 
+import hayo.features.processing_machine.solid_fluid_reactor.ItemTemplateWithChance;
 import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.List;
 
 public class HayoContainerUtils {
-    public static boolean canInsertAllShapelessly(NonNullList<ItemStack> inventory, List<ItemStackTemplate> templates, int from, int to, int maxStackSize) {
-        if (templates.isEmpty()) {
+//    public static boolean canInsertAllShapelessly(NonNullList<ItemStack> inventory, List<ItemStackTemplate> templates, int from, int to, int maxStackSize) {
+//        if (templates.isEmpty()) {
+//            return true;
+//        }
+//
+//        var simulated = NonNullList.withSize(SolidFluidReactorBlockEntity.SLOTS, ItemStack.EMPTY);
+//        for (int slot = from; slot <= to; slot++) {
+//            simulated.set(slot, inventory.get(slot).copy());
+//        }
+//
+//        for (var template : templates) {
+//            var stack = template.create();
+//            if (!insertShapelessly(simulated, stack, from, to, maxStackSize)) {
+//                return false;
+//            }
+//        }
+//
+//        return true;
+//    }
+
+    public static boolean canAlwaysInsertAllShapelessly(NonNullList<ItemStack> inventory, List<ItemTemplateWithChance> entries, int from, int to, int maxStackSize) {
+        if (entries.isEmpty()) {
             return true;
         }
 
@@ -18,32 +38,8 @@ public class HayoContainerUtils {
             simulated.set(slot, inventory.get(slot).copy());
         }
 
-        for (var template : templates) {
-            var stack = template.create();
-            if (!insertShapelessly(simulated, stack, from, to, maxStackSize)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static boolean canInsertAllShapelessly(NonNullList<ItemStack> inventory, List<ItemStackTemplate> templates, List<Float> extraChances, int from, int to, int maxStackSize) {
-        if (templates.isEmpty()) {
-            return true;
-        }
-
-        var simulated = NonNullList.withSize(SolidFluidReactorBlockEntity.SLOTS, ItemStack.EMPTY);
-        for (int slot = from; slot <= to; slot++) {
-            simulated.set(slot, inventory.get(slot).copy());
-        }
-
-        for (int i = 0; i < templates.size(); i++) {
-            var stack = templates.get(i).create();
-
-            if (i < extraChances.size() && extraChances.get(i) > 0) {
-                stack.grow(1);
-            }
+        for (var entry : entries) {
+            var stack = entry.template().create();
 
             if (!insertShapelessly(simulated, stack, from, to, maxStackSize)) {
                 return false;

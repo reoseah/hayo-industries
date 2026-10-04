@@ -1,6 +1,6 @@
 {
   "type": "hayo:nutrient_purifying",
-  "input_item": [
+  "item_ingredient": [
     "minecraft:cooked_cod",
     "minecraft:cod",
     "minecraft:cooked_salmon",
@@ -9,20 +9,21 @@
     "minecraft:pufferfish"
   ],
   "input_count": 1,
-  "input_fluid": {
+  "fluid_ingredient": {
     "id": [
       "minecraft:water"
     ],
     "amount": 1000
   },
-  "result_items": [
+  "item_results": [
     {
       "id": "hayo:nutrient_paste"
+    },
+    {
+      "id": "hayo:nutrient_paste",
+      "chance": 0.5
     }
   ],
-  "extra_result_chances": [
-    0.5
-  ],
-  "result_fluid": null,
+  "fluid_result": null,
   "energy_cost": 600
 }

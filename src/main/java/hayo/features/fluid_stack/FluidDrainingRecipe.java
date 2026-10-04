@@ -20,9 +20,9 @@ public record FluidDrainingRecipe(
 ) implements Recipe<SingleRecipeInput> {
     public static final MapCodec<FluidDrainingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(
-                    Ingredient.CODEC.fieldOf("input").forGetter(FluidDrainingRecipe::input),
-                    ItemStackTemplate.CODEC.fieldOf("result_item").forGetter(FluidDrainingRecipe::resultItem),
-                    FluidStack.MAP_CODEC.codec().fieldOf("result_fluid").forGetter(FluidDrainingRecipe::resultFluid),
+                    Ingredient.CODEC.fieldOf("ingredient").forGetter(FluidDrainingRecipe::input),
+                    ItemStackTemplate.CODEC.fieldOf("item_result").forGetter(FluidDrainingRecipe::resultItem),
+                    FluidStack.MAP_CODEC.codec().fieldOf("fluid_result").forGetter(FluidDrainingRecipe::resultFluid),
                     Codec.INT.fieldOf("energy_cost").forGetter(FluidDrainingRecipe::energyCost)
             )
             .apply(instance, FluidDrainingRecipe::new)

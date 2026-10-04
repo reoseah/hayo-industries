@@ -1,13 +1,13 @@
 {
   "type": "hayo:ore_washing",
-  "input_item": "#c:ores/iridium",
-  "input_fluid": {
+  "item_ingredient": "#c:ores/iridium",
+  "fluid_ingredient": {
     "id": [
       "minecraft:water"
     ],
     "amount": 1000
   },
-  "result_items": [
+  "item_results": [
     {
       "id": "hayo:raw_iridium",
       "count": 1
@@ -16,6 +16,6 @@
       "id": "hayo:stone_dust"
     }
   ],
-  "result_fluid": null,
+  "fluid_result": null,
   "energy_cost": 600
 }

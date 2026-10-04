@@ -1,7 +1,6 @@
 {
-  "type": "hayo:nutrient_purifying",
-  "item_ingredient": "minecraft:rotten_flesh",
-  "input_count": 2,
+  "type": "hayo:ore_washing",
+  "item_ingredient": "#minecraft:emerald_ores",
   "fluid_ingredient": {
     "id": [
       "minecraft:water"
@@ -10,7 +9,11 @@
   },
   "item_results": [
     {
-      "id": "hayo:nutrient_paste"
+      "id": "minecraft:emerald",
+      "count": 2
+    },
+    {
+      "id": "hayo:stone_dust"
     }
   ],
   "fluid_result": null,

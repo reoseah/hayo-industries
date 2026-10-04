@@ -1,13 +1,13 @@
 {
   "type": "hayo:solid_fluid_reacting",
-  "input_item": "minecraft:water_bucket",
-  "input_fluid": {
+  "item_ingredient": "minecraft:water_bucket",
+  "fluid_ingredient": {
     "id": [
       "minecraft:lava"
     ],
     "amount": 1000
   },
-  "result_items": [
+  "item_results": [
     {
       "id": "minecraft:obsidian"
     },
@@ -15,6 +15,6 @@
       "id": "minecraft:bucket"
     }
   ],
-  "result_fluid": null,
+  "fluid_result": null,
   "energy_cost": 600
 }

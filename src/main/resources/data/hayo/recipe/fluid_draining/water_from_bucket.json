@@ -1,10 +1,10 @@
 {
   "type": "hayo:fluid_draining",
-  "input": "minecraft:water_bucket",
-  "result_item": {
+  "ingredient": "minecraft:water_bucket",
+  "item_result": {
     "id": "minecraft:bucket"
   },
-  "result_fluid": {
+  "fluid_result": {
     "id": "minecraft:water",
     "amount": 1000
   },

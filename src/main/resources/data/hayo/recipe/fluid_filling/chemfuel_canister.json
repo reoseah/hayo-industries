@@ -1,11 +1,11 @@
 {
   "type": "hayo:fluid_filling",
-  "input_item": "hayo:canister",
-  "input_fluid": {
+  "item_ingredient": "hayo:canister",
+  "fluid_ingredient": {
     "id": "hayo:chemfuel",
     "amount": 4000
   },
-  "result_item": {
+  "result": {
     "id": "hayo:chemfuel_canister"
   },
   "energy_cost": 400

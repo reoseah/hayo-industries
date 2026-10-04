@@ -1,10 +1,10 @@
 {
   "type": "hayo:fluid_draining",
-  "input": "hayo:chemfuel_canister",
-  "result_item": {
+  "ingredient": "hayo:chemfuel_canister",
+  "item_result": {
     "id": "hayo:canister"
   },
-  "result_fluid": {
+  "fluid_result": {
     "id": "hayo:chemfuel",
     "amount": 4000
   },

@@ -1,18 +1,18 @@
 {
   "type": "hayo:nutrient_purifying",
-  "input_item": "minecraft:bread",
+  "item_ingredient": "minecraft:bread",
   "input_count": 2,
-  "input_fluid": {
+  "fluid_ingredient": {
     "id": [
       "minecraft:water"
     ],
     "amount": 1000
   },
-  "result_items": [
+  "item_results": [
     {
       "id": "hayo:nutrient_paste"
     }
   ],
-  "result_fluid": null,
+  "fluid_result": null,
   "energy_cost": 600
 }

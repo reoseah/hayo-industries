@@ -7,7 +7,6 @@ import hayo.features.fluid_stack.FluidStack;
 import hayo.features.fluid_stack.ItemFluidRecipeInput;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -23,12 +22,11 @@ public class OreWashingRecipe extends BaseSolidFluidReactingRecipe {
             Ingredient inputItem,
             int inputAmount,
             FluidIngredientAmount inputFluid,
-            List<ItemStackTemplate> resultItems,
-            List<Float> extraResultChances,
+            List<ItemTemplateWithChance> resultItems,
             FluidStack resultFluid,
             int energyCost
     ) {
-        super(inputItem, inputAmount, inputFluid, resultItems, extraResultChances, resultFluid, energyCost);
+        super(inputItem, inputAmount, inputFluid, resultItems, resultFluid, energyCost);
     }
 
     @Override

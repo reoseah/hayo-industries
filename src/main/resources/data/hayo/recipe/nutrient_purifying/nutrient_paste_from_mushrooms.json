@@ -1,18 +1,18 @@
 {
   "type": "hayo:nutrient_purifying",
-  "input_item": "#c:mushrooms",
+  "item_ingredient": "#c:mushrooms",
   "input_count": 8,
-  "input_fluid": {
+  "fluid_ingredient": {
     "id": [
       "minecraft:water"
     ],
     "amount": 1000
   },
-  "result_items": [
+  "item_results": [
     {
       "id": "hayo:nutrient_paste"
     }
   ],
-  "result_fluid": null,
+  "fluid_result": null,
   "energy_cost": 600
 }

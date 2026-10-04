@@ -1,10 +1,10 @@
 {
   "type": "hayo:fluid_draining",
-  "input": "minecraft:lava_bucket",
-  "result_item": {
+  "ingredient": "minecraft:lava_bucket",
+  "item_result": {
     "id": "minecraft:bucket"
   },
-  "result_fluid": {
+  "fluid_result": {
     "id": "minecraft:lava",
     "amount": 1000
   },

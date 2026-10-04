@@ -1,18 +1,18 @@
 {
   "type": "hayo:ore_washing",
-  "input_item": "minecraft:nether_gold_ore",
-  "input_fluid": {
+  "item_ingredient": "minecraft:nether_gold_ore",
+  "fluid_ingredient": {
     "id": [
       "minecraft:water"
     ],
     "amount": 1000
   },
-  "result_items": [
+  "item_results": [
     {
       "id": "hayo:gold_dust",
       "count": 2
     }
   ],
-  "result_fluid": null,
+  "fluid_result": null,
   "energy_cost": 600
 }

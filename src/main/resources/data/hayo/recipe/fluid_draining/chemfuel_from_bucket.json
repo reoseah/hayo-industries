@@ -1,10 +1,10 @@
 {
   "type": "hayo:fluid_draining",
-  "input": "hayo:chemfuel_bucket",
-  "result_item": {
+  "ingredient": "hayo:chemfuel_bucket",
+  "item_result": {
     "id": "minecraft:bucket"
   },
-  "result_fluid": {
+  "fluid_result": {
     "id": "hayo:chemfuel",
     "amount": 1000
   },
