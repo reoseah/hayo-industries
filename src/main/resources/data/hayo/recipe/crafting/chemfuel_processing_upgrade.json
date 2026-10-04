@@ -8,11 +8,11 @@
   "key": {
     "#": "hayo:circuit",
     "X": "hayo:power_cable",
-    "I": "minecraft:gold_ingot",
-    "D": "minecraft:light_gray_dye"
+    "I": "hayo:silicon_bronze_ingot",
+    "D": "minecraft:red_dye"
   },
   "result": {
-    "id": "hayo:nutrient_dispenser_upgrade",
+    "id": "hayo:chemfuel_processing_upgrade",
     "count": 1
   }
 }

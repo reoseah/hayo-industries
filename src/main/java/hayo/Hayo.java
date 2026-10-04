@@ -496,7 +496,7 @@ public class Hayo {
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
         public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
         public static final Item CANISTER = registerItem("canister", new Item.Properties().stacksTo(16));
-        public static final Item CHEMFUEL_CANISTER = registerItem("chemfuel_canister", new Item.Properties().stacksTo(1));
+        public static final Item CHEMFUEL_CANISTER = registerItem("chemfuel_canister", new Item.Properties().stacksTo(1).craftRemainder(CANISTER));
         public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food(new FoodProperties(4, 8F, false)));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade",

@@ -2,16 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "#B#",
-    "XCX"
+    "IDI",
+    "X#X"
   ],
   "key": {
-    "C": "hayo:circuit",
+    "#": "hayo:circuit",
     "X": "hayo:power_cable",
-    "B": "minecraft:bucket",
-    "#": "hayo:refined_iron_ingot"
+    "I": "hayo:refined_iron_ingot",
+    "D": "minecraft:white_dye"
   },
   "result": {
-    "id": "hayo:ore_washing_upgrade"
+    "id": "hayo:ore_washing_upgrade",
+    "count": 1
   }
 }
