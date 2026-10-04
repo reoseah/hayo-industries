@@ -189,5 +189,6 @@
   "hayo.accepts_fluids": "Accepts fluids:",
   "hayo.subscript_chance": "%s﹪",
   "hayo.extra_chance_tooltip": "%s%% chance of extra item",
-  "hayo.upgrades.use_chemfuel_processing_recipes": " Use Chemfuel Processing recipes"
+  "hayo.upgrades.use_chemfuel_processing_recipes": " Use Chemfuel Processing recipes",
+  "hayo.recipe_type.chemfuel_processing": "Chemfuel Processing"
 }

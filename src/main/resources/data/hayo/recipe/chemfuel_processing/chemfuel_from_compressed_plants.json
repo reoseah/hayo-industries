@@ -1,0 +1,16 @@
+{
+  "type": "hayo:chemfuel_processing",
+  "item_ingredient": "hayo:compressed_plants",
+  "fluid_ingredient": {
+    "id": [
+      "minecraft:water"
+    ],
+    "amount": 250
+  },
+  "item_results": [],
+  "fluid_result": {
+    "id": "hayo:chemfuel",
+    "amount": 250
+  },
+  "energy_cost": 600
+}
