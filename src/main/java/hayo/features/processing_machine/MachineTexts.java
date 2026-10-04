@@ -1,10 +1,15 @@
 package hayo.features.processing_machine;
 
 import com.google.common.collect.Lists;
+import hayo.Hayo;
 import hayo.energy.EnergyTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
@@ -50,5 +55,40 @@ public class MachineTexts {
         ).withStyle(ChatFormatting.GRAY));
 
         return components;
+    }
+
+    public static void addUpgradeTooltip(ItemStack stack, List<Component> tooltip, AbstractContainerMenu menu, TagKey<Item> upgradeTag, int firstUpgrade, int lastUpgrade) {
+        if (!stack.is(upgradeTag)) {
+            tooltip.add(Component.empty());
+            tooltip.add(Component.translatable("hayo.machine.not_compatible_uprade").withStyle(ChatFormatting.RED));
+        } else if (stack.is(Hayo.ItemTags.NON_REPEATABLE_UPGRADES) || stack.is(Hayo.ItemTags.MUTUALLY_EXCLUSIVE_UPGRADES)) {
+            boolean hoveringItself = false;
+            boolean repeats = false;
+            boolean conflicts = false;
+
+            for (var slot = firstUpgrade; slot < lastUpgrade; slot++) {
+                var installedUpgrade = menu.getSlot(slot).getItem();
+                if (stack == installedUpgrade) {
+                    hoveringItself = true;
+                    break;
+                }
+
+                if (installedUpgrade.is(Hayo.ItemTags.NON_REPEATABLE_UPGRADES) && ItemStack.isSameItem(stack, installedUpgrade)) {
+                    repeats = true;
+                } else if (installedUpgrade.is(Hayo.ItemTags.MUTUALLY_EXCLUSIVE_UPGRADES)) {
+                    conflicts = true;
+                }
+            }
+
+            if (!hoveringItself) {
+                if (repeats) {
+                    tooltip.add(Component.empty());
+                    tooltip.add(Component.translatable("hayo.machine.already_installed_upgrade").withStyle(ChatFormatting.RED));
+                } else if (conflicts) {
+                    tooltip.add(Component.empty());
+                    tooltip.add(Component.translatable("hayo.machine.conflicts_with_installed_upgrade").withStyle(ChatFormatting.RED));
+                }
+            }
+        }
     }
 }

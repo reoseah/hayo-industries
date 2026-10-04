@@ -5,7 +5,7 @@
     "minecraft:large_fern",
     "minecraft:tall_dry_grass"
   ],
-  "input_count": 16,
+  "item_ingredient_count": 16,
   "result": {
     "id": "hayo:compressed_plants"
   }

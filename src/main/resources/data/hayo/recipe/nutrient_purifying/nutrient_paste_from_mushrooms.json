@@ -1,7 +1,7 @@
 {
   "type": "hayo:nutrient_purifying",
   "item_ingredient": "#c:mushrooms",
-  "input_count": 8,
+  "item_ingredient_count": 8,
   "fluid_ingredient": {
     "id": [
       "minecraft:water"

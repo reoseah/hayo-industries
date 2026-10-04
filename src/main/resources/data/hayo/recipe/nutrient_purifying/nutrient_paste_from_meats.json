@@ -10,7 +10,7 @@
     "minecraft:cooked_mutton",
     "minecraft:mutton"
   ],
-  "input_count": 1,
+  "item_ingredient_count": 1,
   "fluid_ingredient": {
     "id": [
       "minecraft:water"

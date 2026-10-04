@@ -5,6 +5,7 @@ import hayo.Hayo;
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
+import hayo.features.processing_machine.MachineTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -14,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import java.util.List;
@@ -205,5 +207,22 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
         }
 
         return true;
+    }
+
+    @Override
+    protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
+        var tooltip = super.getTooltipFromContainerItem(stack);
+
+        if (stack.is(Hayo.ItemTags.UPGRADES)) {
+            MachineTexts.addUpgradeTooltip(
+                    stack,
+                    tooltip,
+                    this.menu, Hayo.ItemTags.MATTER_GENERATOR_UPGRADES,
+                    MatterGeneratorBlockEntity.UPGRADE_1,
+                    MatterGeneratorBlockEntity.UPGRADE_1 + MatterGeneratorBlockEntity.UPGRADES
+            );
+        }
+
+        return tooltip;
     }
 }

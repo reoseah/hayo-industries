@@ -1,7 +1,7 @@
 {
   "type": "hayo:compressing",
   "ingredient": "minecraft:vine",
-  "input_count": 16,
+  "item_ingredient_count": 16,
   "result": {
     "id": "hayo:compressed_plants"
   }

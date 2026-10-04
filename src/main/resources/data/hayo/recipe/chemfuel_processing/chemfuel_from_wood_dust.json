@@ -1,7 +1,7 @@
 {
   "type": "hayo:chemfuel_processing",
   "item_ingredient": "#c:dusts/wood",
-  "input_count": 2,
+  "item_ingredient_count": 2,
   "fluid_ingredient": {
     "id": [
       "minecraft:water"

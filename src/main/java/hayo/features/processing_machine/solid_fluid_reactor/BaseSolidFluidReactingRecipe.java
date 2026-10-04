@@ -54,7 +54,7 @@ public abstract class BaseSolidFluidReactingRecipe implements Recipe<ItemFluidRe
         return RecordCodecBuilder.mapCodec(instance -> instance
                 .group(
                         Ingredient.CODEC.fieldOf("item_ingredient").forGetter(recipe -> recipe.inputItem),
-                        ExtraCodecs.POSITIVE_INT.fieldOf("input_count").orElse(1).forGetter(recipe -> recipe.inputCount),
+                        ExtraCodecs.POSITIVE_INT.fieldOf("item_ingredient_count").orElse(1).forGetter(recipe -> recipe.inputCount),
                         FluidIngredientAmount.NON_EMPTY_CODEC.fieldOf("fluid_ingredient").forGetter(recipe -> recipe.inputFluid),
                         ItemTemplateWithChance.MAP_CODEC.codec().listOf(0, 6).fieldOf("item_results").orElse(List.of()).forGetter(recipe -> recipe.resultItems),
                         FluidStack.MAP_CODEC.fieldOf("fluid_result").orElse(FluidStack.EMPTY).forGetter(recipe -> recipe.resultFluid),

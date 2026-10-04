@@ -60,7 +60,7 @@ public abstract class ClassicMachineRecipe extends SingleItemRecipe {
         var codec = RecordCodecBuilder.<R>mapCodec(
                 instance -> instance.group(
                         Ingredient.CODEC.fieldOf("ingredient").forGetter(SingleItemRecipe::input),
-                        ExtraCodecs.POSITIVE_INT.fieldOf("input_count").orElse(1).forGetter(r -> r.inputCount),
+                        ExtraCodecs.POSITIVE_INT.fieldOf("item_ingredient_count").orElse(1).forGetter(r -> r.inputCount),
                         ItemStackTemplate.CODEC.fieldOf("result").forGetter(SingleItemRecipe::result),
                         ExtraCodecs.floatRange(0F, 1F).fieldOf("extra_result_chance").orElse(0F).forGetter(r -> r.extraResultChance),
                         ExtraCodecs.POSITIVE_INT.fieldOf("energy_cost").orElse(defaultEnergy).forGetter(r -> r.energyCost)
