@@ -211,5 +211,7 @@
   "advancements.hayo.energy_crystal.title": "Mysterious Advanced Science",
   "advancements.hayo.energy_crystal.description": "Create a new energy storage paradigm",
   "advancements.hayo.circuit.title": "Heart of the Machine",
-  "advancements.hayo.circuit.description": "Re-enter electric age"
+  "advancements.hayo.circuit.description": "Re-enter electric age",
+  "advancements.hayo.advanced_circuit.title": "So Much Compute",
+  "advancements.hayo.advanced_circuit.description": "Follow progressively vaguer instructions"
 }

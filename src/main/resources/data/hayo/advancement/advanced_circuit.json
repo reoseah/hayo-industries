@@ -1,0 +1,31 @@
+{
+  "parent": "hayo:circuit",
+  "criteria": {
+    "advanced_circuit": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hayo:advanced_circuit"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.hayo.advanced_circuit.description"
+    },
+    "icon": {
+      "id": "hayo:advanced_circuit"
+    },
+    "title": {
+      "translate": "advancements.hayo.advanced_circuit.title"
+    }
+  },
+  "requirements": [
+    [
+      "advanced_circuit"
+    ]
+  ]
+}
