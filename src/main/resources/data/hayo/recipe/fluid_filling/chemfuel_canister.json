@@ -8,5 +8,5 @@
   "result": {
     "id": "hayo:chemfuel_canister"
   },
-  "energy_cost": 400
+  "ticks": 400
 }

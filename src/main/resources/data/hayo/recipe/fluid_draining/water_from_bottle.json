@@ -16,5 +16,5 @@
     "id": "minecraft:water",
     "amount": 250
   },
-  "energy_cost": 25
+  "ticks": 25
 }

@@ -24,7 +24,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer, MenuProvider {
+public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer {
     public static final int FUEL_CONSUMPTION_RATE = 2;
     public static final int ENERGY_PER_FUEL_TICK = 5;
     public static final int GENERATION_RATE = FUEL_CONSUMPTION_RATE * ENERGY_PER_FUEL_TICK;

@@ -8,5 +8,5 @@
   "result": {
     "id": "hayo:chemfuel_bucket"
   },
-  "energy_cost": 100
+  "ticks": 100
 }

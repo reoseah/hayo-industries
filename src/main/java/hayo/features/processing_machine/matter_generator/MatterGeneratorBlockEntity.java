@@ -23,7 +23,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implements RecipeState.Context<MatterGeneratingRecipe, MatterGeneratorRecipeInput> {
+public class MatterGeneratorBlockEntity extends EnergyReceiverBlockEntity implements RecipeState.Owner<MatterGeneratingRecipe, MatterGeneratorRecipeInput> {
     public static final int CAPACITY = 10000, TRANSFER_LIMIT = 128, ENERGY_USE_RATE = 100;
     public static final int SLOTS = 4, BATTERY = 0, OUTPUT = 1, UPGRADE_1 = 2, UPGRADES = 2;
 

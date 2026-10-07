@@ -8,5 +8,5 @@
   "result": {
     "id": "minecraft:wet_sponge"
   },
-  "energy_cost": 100
+  "ticks": 100
 }

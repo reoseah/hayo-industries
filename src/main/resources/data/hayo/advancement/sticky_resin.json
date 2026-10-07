@@ -1,0 +1,31 @@
+{
+  "parent": "hayo:root",
+  "criteria": {
+    "sticky_resin": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hayo:sticky_resin"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.hayo.sticky_resin.description"
+    },
+    "icon": {
+      "id": "hayo:sticky_resin"
+    },
+    "title": {
+      "translate": "advancements.hayo.sticky_resin.title"
+    }
+  },
+  "requirements": [
+    [
+      "sticky_resin"
+    ]
+  ]
+}

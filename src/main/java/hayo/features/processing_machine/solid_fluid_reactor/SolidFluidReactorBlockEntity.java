@@ -63,14 +63,14 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
         entity.chargeFromSlot(BATTERY);
         entity.resetEnergyPerTick();
 
-        entity.tickRecipe((ServerLevel) level, pos, state);
-        entity.storedEnergy -= entity.inputDraining.tick(
+        entity.inputDraining.tick(
                 Hayo.RecipeTypes.FLUID_DRAINING,
                 new SingleRecipeInput(entity.getItem(INPUT_TANK_INPUT)),
                 (ServerLevel) level,
                 new InputDrainingHelper(entity)
         );
-        entity.storedEnergy -= entity.resultFilling.tick(
+        entity.tickRecipe((ServerLevel) level, pos, state);
+        entity.resultFilling.tick(
                 Hayo.RecipeTypes.FLUID_FILLING,
                 new ItemFluidRecipeInput(entity.getItem(OUTPUT_TANK_INPUT), entity.resultFluid),
                 (ServerLevel) level,
@@ -245,7 +245,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     }
 
     protected record InputDrainingHelper(
-            SolidFluidReactorBlockEntity entity) implements RecipeState.Context<FluidDrainingRecipe, SingleRecipeInput> {
+            SolidFluidReactorBlockEntity entity) implements RecipeState.Owner<FluidDrainingRecipe, SingleRecipeInput> {
         @Override
         public void setChanged() {
             this.entity.setChanged();
@@ -253,9 +253,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
 
         @Override
         public RecipeState.EnergyState getEnergyState() {
-            return this.entity.storedEnergy >= 1
-                    ? new RecipeState.EnergyState.Sufficient(1)
-                    : new RecipeState.EnergyState.NotSufficient(-2);
+            return new RecipeState.EnergyState.Sufficient(1);
         }
 
         @Override
@@ -274,7 +272,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
 
         @Override
         public int getRecipeCost(FluidDrainingRecipe holder) {
-            return holder.energyCost();
+            return holder.ticks();
         }
 
         @Override
@@ -295,7 +293,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     }
 
     protected record ResultFillingHelper(
-            SolidFluidReactorBlockEntity entity) implements RecipeState.Context<FluidFillingRecipe, ItemFluidRecipeInput> {
+            SolidFluidReactorBlockEntity entity) implements RecipeState.Owner<FluidFillingRecipe, ItemFluidRecipeInput> {
         @Override
         public void setChanged() {
             this.entity.setChanged();
@@ -303,9 +301,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
 
         @Override
         public RecipeState.EnergyState getEnergyState() {
-            return this.entity.storedEnergy >= 1
-                    ? new RecipeState.EnergyState.Sufficient(1)
-                    : new RecipeState.EnergyState.NotSufficient(-2);
+            return new RecipeState.EnergyState.Sufficient(1);
         }
 
         @Override
@@ -315,7 +311,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
 
         @Override
         public int getRecipeCost(FluidFillingRecipe holder) {
-            return holder.energyCost();
+            return holder.ticks();
         }
 
         @Override

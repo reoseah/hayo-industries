@@ -11,11 +11,11 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
     public @Nullable RecipeHolder<R> lastMatch;
     public int progress;
 
-    public int tick(RecipeType<R> recipeType, I input, ServerLevel level, Context<R, I> ctx) {
+    public int tick(RecipeType<R> recipeType, I input, ServerLevel level, Owner<R, I> owner) {
         if (input.isEmpty()) {
             if (this.progress > 0) {
                 this.progress = 0;
-                ctx.setChanged();
+                owner.setChanged();
             }
             return 0;
         }
@@ -24,7 +24,7 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
         if (match == null) {
             if (this.progress != 0) {
                 this.progress = 0;
-                ctx.setChanged();
+                owner.setChanged();
             }
             return 0;
         }
@@ -32,28 +32,28 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
             this.lastMatch = match;
         }
 
-        return switch (ctx.getEnergyState()) {
+        return switch (owner.getEnergyState()) {
             case EnergyState.NotSufficient(int decayPerTick) -> {
                 if (this.progress <= 0) {
                     yield 0;
                 }
                 int progressChange = Math.min(-decayPerTick, this.progress);
                 this.progress -= progressChange;
-                ctx.setChanged();
+                owner.setChanged();
                 yield 0;
             }
             case EnergyState.Sufficient(int progressLimit) -> {
-                if (!ctx.canCraft(match, input)) {
+                if (!owner.canCraft(match, input)) {
                     yield 0;
                 }
 
-                int recipeCost = ctx.getRecipeCost(match.value());
+                int recipeCost = owner.getRecipeCost(match.value());
                 int progressChange = Math.min(progressLimit, recipeCost - this.progress);
                 this.progress += progressChange;
-                ctx.setChanged();
+                owner.setChanged();
 
                 if (this.progress >= recipeCost) {
-                    ctx.craft(match, input);
+                    owner.craft(match, input);
                     this.progress = 0;
                 }
 
@@ -74,7 +74,7 @@ public class RecipeState<R extends Recipe<I>, I extends RecipeInput> {
         }
     }
 
-    public interface Context<R extends Recipe<I>, I extends RecipeInput> {
+    public interface Owner<R extends Recipe<I>, I extends RecipeInput> {
         void setChanged();
 
         RecipeState.EnergyState getEnergyState();

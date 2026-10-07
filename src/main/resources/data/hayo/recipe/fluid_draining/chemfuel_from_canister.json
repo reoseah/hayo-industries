@@ -8,5 +8,5 @@
     "id": "hayo:chemfuel",
     "amount": 4000
   },
-  "energy_cost": 400
+  "ticks": 400
 }

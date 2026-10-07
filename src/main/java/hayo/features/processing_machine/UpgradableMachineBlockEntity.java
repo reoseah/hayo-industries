@@ -19,7 +19,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jspecify.annotations.Nullable;
 
-public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extends RecipeInput> extends EnergyReceiverBlockEntity implements RecipeState.Context<R, I> {
+public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extends RecipeInput> extends EnergyReceiverBlockEntity implements RecipeState.Owner<R, I> {
     public static final int MAX_INDUCTION_HEAT = 10_000;
 
     public RecipeState<R, I> recipeState = new RecipeState<>();

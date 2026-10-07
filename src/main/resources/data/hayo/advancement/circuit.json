@@ -1,0 +1,31 @@
+{
+  "parent": "hayo:cable",
+  "criteria": {
+    "circuit": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hayo:circuit"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.hayo.circuit.description"
+    },
+    "icon": {
+      "id": "hayo:circuit"
+    },
+    "title": {
+      "translate": "advancements.hayo.circuit.title"
+    }
+  },
+  "requirements": [
+    [
+      "circuit"
+    ]
+  ]
+}

@@ -43,7 +43,7 @@ public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<Flu
 
     @Override
     public int getWidth() {
-        return 90;
+        return 100;
     }
 
     @Override
@@ -69,15 +69,7 @@ public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<Flu
     public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<FluidFillingRecipe> holder, IFocusGroup focuses) {
         var recipe = holder.value();
 
-        int energyCost = recipe.energyCost();
-        int useRate = 1;
-        float duration = Mth.positiveCeilDiv(energyCost, useRate) / 20F;
-
-        builder.addDrawableWidget(HayoJeiWidgets.zapWidget(recipe.energyCost(), 1)).setPosition(51, 19).setTooltip(List.of(
-                EnergyTexts.amount(energyCost),
-                Component.translatable("hayo.machine.recipe_duration", duration, useRate).withStyle(ChatFormatting.GRAY)
-        ));
-        builder.addText(EnergyTexts.amount(recipe.energyCost()), Integer.MAX_VALUE, Integer.MAX_VALUE).setColor(0xFF404040).setPosition(50, 42);
+        builder.addText(Component.translatable("hayo.ticks", recipe.ticks()), Integer.MAX_VALUE, Integer.MAX_VALUE).setColor(0xFF404040).setPosition(50, 42);
 
         builder.addDrawableWidget(HayoJeiWidgets.fluidTank(recipe.inputFluid(), SolidFluidReactorBlockEntity.FLUID_CAPACITY))
                 .setPosition(0, -1)
@@ -86,7 +78,7 @@ public class FluidFillingJeiCategory implements IRecipeCategory<RecipeHolder<Flu
 
     @Override
     public void draw(RecipeHolder<FluidFillingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-        int energyCost = holder.value().energyCost();
+        int energyCost = holder.value().ticks();
         float fill = (System.currentTimeMillis() / 50) % energyCost;
         HayoGuiSprites.blitFillingArrow(graphics, 22, 20, (int) fill, energyCost);
     }

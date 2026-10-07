@@ -1,6 +1,7 @@
 {
   "itemGroup.hayo": "HAYO Industries",
   "block.hayo.generator": "Generator",
+  "block.hayo.geothermal_generator": "Geothermal Generator",
   "block.hayo.solar_panel": "Solar Panel",
   "block.hayo.electric_furnace": "Electric Furnace",
   "block.hayo.macerator": "Macerator",
@@ -190,5 +191,25 @@
   "hayo.subscript_chance": "%s﹪",
   "hayo.extra_chance_tooltip": "%s%% chance of extra item",
   "hayo.upgrades.use_chemfuel_processing_recipes": " Use Chemfuel Processing recipes",
-  "hayo.recipe_type.chemfuel_processing": "Chemfuel Processing"
+  "hayo.recipe_type.chemfuel_processing": "Chemfuel Processing",
+  "hayo.ticks": "%s ticks",
+
+  "advancements.hayo.root.title": "HAYO!",
+  "advancements.hayo.root.description": "Experience a profound sense of déjà vu",
+  "advancements.hayo.refined_iron.title": "Iron 2.0: HAYO Edition",
+  "advancements.hayo.refined_iron.description": "Smelt iron ingot. Again.",
+  "advancements.hayo.sticky_resin.title": "Sticky Situation",
+  "advancements.hayo.sticky_resin.description": "Find a rubber tree and collect its sap",
+  "advancements.hayo.cable.title": "Copper, Meet Rubber",
+  "advancements.hayo.cable.description": "Craft a Power Cable",
+  "advancements.hayo.quadruple_cable.title": "Joint Effort",
+  "advancements.hayo.quadruple_cable.description": "Combine multiple cables into a better, stronger one",
+  "advancements.hayo.energy_bus.title": "Advanced Energy Transfer",
+  "advancements.hayo.energy_bus.description": "Discover our premium enterprise-grade energy solutions supporting sexdecuple throughput and improved blast resistance",
+  "advancements.hayo.battery.title": "Shockingly Useful",
+  "advancements.hayo.battery.description": "Craft a Rechargeable Battery",
+  "advancements.hayo.energy_crystal.title": "Mysterious Advanced Science",
+  "advancements.hayo.energy_crystal.description": "Create a new energy storage paradigm",
+  "advancements.hayo.circuit.title": "Heart of the Machine",
+  "advancements.hayo.circuit.description": "Re-enter electric age"
 }

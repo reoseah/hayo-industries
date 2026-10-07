@@ -72,8 +72,7 @@ public class CableBlock extends Block implements EnergyCable {
         var neighborState = level.getBlockState(pos.relative(side));
         var block = neighborState.getBlock();
         if (block instanceof BaseEnergyBlock electricBlock) {
-            BlockPos pos1 = pos.relative(side);
-            return electricBlock.connectsToCables(neighborState, level, pos1, side.getOpposite());
+            return electricBlock.connectsToCables(neighborState, level, pos.relative(side), side.getOpposite());
         }
         return false;
     }

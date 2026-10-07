@@ -20,6 +20,10 @@ import hayo.features.generator.GeneratorBlock;
 import hayo.features.generator.GeneratorBlockEntity;
 import hayo.features.generator.GeneratorMenu;
 import hayo.features.generator.GeneratorScreen;
+import hayo.features.geothermal_generator.GeothermalGeneratorBlock;
+import hayo.features.geothermal_generator.GeothermalGeneratorBlockEntity;
+import hayo.features.geothermal_generator.GeothermalGeneratorMenu;
+import hayo.features.geothermal_generator.GeothermalGeneratorScreen;
 import hayo.features.nether_station.NetherStationPiece;
 import hayo.features.nether_station.NetherStationStructure;
 import hayo.features.processing_machine.classic.*;
@@ -29,6 +33,8 @@ import hayo.features.rubber_tree.ResinProducingLogBlock;
 import hayo.features.rubber_tree.RubberFoliagePlacer;
 import hayo.features.solar_panel.SolarPanelBlock;
 import hayo.features.solar_panel.SolarPanelBlockEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
@@ -188,6 +194,7 @@ public class Hayo {
         public static final Block SOLID_FLUID_REACTOR = register("solid_fluid_reactor", SolidFluidReactorBlock::new, LIT_MACHINE_PROPS);
 
         public static final Block GENERATOR = register("generator", GeneratorBlock::new, LIT_MACHINE_PROPS);
+        public static final Block GEOTHERMAL_GENERATOR = register("geothermal_generator", GeothermalGeneratorBlock::new, LIT_MACHINE_PROPS);
         public static final Block SOLAR_PANEL = register("solar_panel", SolarPanelBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.COLOR_BLUE));
 
         public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
@@ -291,6 +298,7 @@ public class Hayo {
         public static final Item SOLID_FLUID_REACTOR = registerBlock(Blocks.SOLID_FLUID_REACTOR);
 
         public static final Item GENERATOR = registerBlock(Blocks.GENERATOR);
+        public static final Item GEOTHERMAL_GENERATOR = registerBlock(Blocks.GEOTHERMAL_GENERATOR);
         public static final Item SOLAR_PANEL = registerBlock(Blocks.SOLAR_PANEL, (block, properties) -> new BlockItemWithTooltip(block, properties,
                 EnergyTexts.maxOutput(1).withStyle(ChatFormatting.GRAY),
                 EnergyTexts.maxTransfer(8).withStyle(ChatFormatting.GRAY)
@@ -620,6 +628,7 @@ public class Hayo {
                 entries.accept(SOLID_FLUID_REACTOR);
 
                 entries.accept(GENERATOR);
+                entries.accept(GEOTHERMAL_GENERATOR);
                 entries.accept(SOLAR_PANEL);
 
                 entries.accept(BATTERY_BOX);
@@ -812,6 +821,7 @@ public class Hayo {
 
     public static class BlockEntityTypes {
         public static final BlockEntityType<GeneratorBlockEntity> GENERATOR = register("generator", GeneratorBlockEntity::new, Blocks.GENERATOR);
+        public static final BlockEntityType<GeothermalGeneratorBlockEntity> GEOTHERMAL_GENERATOR = register("geothermal_generator", GeothermalGeneratorBlockEntity::new, Blocks.GEOTHERMAL_GENERATOR);
         public static final BlockEntityType<SolarPanelBlockEntity> SOLAR_PANEL = register("solar_panel", SolarPanelBlockEntity::new, Blocks.SOLAR_PANEL);
         public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceBlockEntity::new, Blocks.ELECTRIC_FURNACE);
         public static final BlockEntityType<MaceratorBlockEntity> MACERATOR = register("macerator", MaceratorBlockEntity::new, Blocks.MACERATOR);
@@ -846,6 +856,7 @@ public class Hayo {
 
     public static class MenuTypes {
         public static final MenuType<GeneratorMenu> GENERATOR = register("generator", GeneratorMenu::new);
+        public static final MenuType<GeothermalGeneratorMenu> GEOTHERMAL_GENERATOR = register("geothermal_generator", GeothermalGeneratorMenu::new);
         public static final MenuType<ElectricFurnaceMenu> ELECTRIC_FURNACE = register("electric_furnace", ElectricFurnaceMenu::new);
         public static final MenuType<MaceratorMenu> MACERATOR = register("macerator", MaceratorMenu::new);
         public static final MenuType<CompressorMenu> COMPRESSOR = register("compressor", CompressorMenu::new);
@@ -862,8 +873,10 @@ public class Hayo {
             return Registry.register(BuiltInRegistries.MENU, modId(name), new MenuType<>(constructor, FeatureFlags.VANILLA_SET));
         }
 
+        @Environment(EnvType.CLIENT)
         public static void initializeClient() {
             MenuScreens.register(GENERATOR, GeneratorScreen::new);
+            MenuScreens.register(GEOTHERMAL_GENERATOR, GeothermalGeneratorScreen::new);
             MenuScreens.register(ELECTRIC_FURNACE, ClassicMachineScreen::createElectricFurnace);
             MenuScreens.register(MACERATOR, ClassicMachineScreen::createMacerator);
             MenuScreens.register(COMPRESSOR, ClassicMachineScreen::createCompressor);

@@ -84,7 +84,7 @@ public interface SolidFluidReactorContainerData extends ContainerData {
                     var match = ((ServerLevel) this.entity.getLevel())
                             .recipeAccess()
                             .getRecipeFor(Hayo.RecipeTypes.FLUID_DRAINING, input, this.entity.getLevel(), this.entity.inputDraining.lastMatch);
-                    int maxProgress = match.isPresent() ? match.get().value().energyCost() : 0;
+                    int maxProgress = match.isPresent() ? match.get().value().ticks() : 0;
                     yield dataId == 8 ? maxProgress & 0xFFFF : maxProgress >>> 16;
                 }
 
@@ -98,9 +98,10 @@ public interface SolidFluidReactorContainerData extends ContainerData {
                     var match = ((ServerLevel) this.entity.getLevel())
                             .recipeAccess()
                             .getRecipeFor(Hayo.RecipeTypes.FLUID_FILLING, input, this.entity.getLevel(), this.entity.resultFilling.lastMatch);
-                    int maxProgress = match.isPresent() ? match.get().value().energyCost() : 0;
+                    int maxProgress = match.isPresent() ? match.get().value().ticks() : 0;
                     yield dataId == 12 ? maxProgress & 0xFFFF : maxProgress >>> 16;
                 }
+
                 case 14 -> this.entity.mode.ordinal();
 
                 default -> 0;

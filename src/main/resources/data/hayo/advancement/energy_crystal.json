@@ -1,0 +1,31 @@
+{
+  "parent": "hayo:battery",
+  "criteria": {
+    "energy_crystal": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hayo:energy_crystal"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.hayo.energy_crystal.description"
+    },
+    "icon": {
+      "id": "hayo:energy_crystal"
+    },
+    "title": {
+      "translate": "advancements.hayo.energy_crystal.title"
+    }
+  },
+  "requirements": [
+    [
+      "energy_crystal"
+    ]
+  ]
+}

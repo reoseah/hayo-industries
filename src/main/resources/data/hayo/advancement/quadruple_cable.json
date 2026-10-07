@@ -1,0 +1,31 @@
+{
+  "parent": "hayo:cable",
+  "criteria": {
+    "quadruple_cable": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hayo:quadruple_power_cable"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.hayo.quadruple_cable.description"
+    },
+    "icon": {
+      "id": "hayo:quadruple_power_cable"
+    },
+    "title": {
+      "translate": "advancements.hayo.quadruple_cable.title"
+    }
+  },
+  "requirements": [
+    [
+      "quadruple_cable"
+    ]
+  ]
+}

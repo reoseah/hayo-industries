@@ -8,5 +8,5 @@
   "result": {
     "id": "minecraft:lava_bucket"
   },
-  "energy_cost": 100
+  "ticks": 100
 }
