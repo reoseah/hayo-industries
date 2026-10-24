@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GBG",
+    "P#P"
+  ],
+  "key": {
+    "#": "hayo:generator",
+    "P": "hayo:composite_plate",
+    "G": "minecraft:glass",
+    "B": "minecraft:bucket"
+  },
+  "result": {
+    "id": "hayo:geothermal_generator",
+    "count": 1
+  }
+}

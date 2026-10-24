@@ -49,10 +49,12 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
         if (this.isHovering(88, 16, 18, 56, mouseX, mouseY)) {
             int energy = this.menu.generatorData.energy();
             int capacity = GeneratorBlockEntity.CAPACITY;
+            float averageOutput = this.menu.generatorData.averageOutput();
 
             graphics.setTooltipForNextFrame(this.font, List.of(
                     EnergyTexts.amountAndPercentage(energy, capacity),
-                    EnergyTexts.maxAmount(capacity).withStyle(ChatFormatting.GRAY)
+                    EnergyTexts.maxAmount(capacity).withStyle(ChatFormatting.GRAY),
+                    EnergyTexts.averageOutput(averageOutput).withStyle(ChatFormatting.GRAY)
             ), Optional.empty(), mouseX, mouseY);
         }
     }

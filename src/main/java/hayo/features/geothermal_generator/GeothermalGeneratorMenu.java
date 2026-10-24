@@ -8,12 +8,14 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.level.material.Fluids;
 
 public class GeothermalGeneratorMenu extends HayoContainerMenu {
     public final GeothermalGeneratorData generatorData;
 
     public GeothermalGeneratorMenu(int containerId, Inventory inventory) {
-        this(containerId, new SimpleContainer(GeothermalGeneratorBlockEntity.SLOTS), new GeothermalGeneratorData.Clientside(), inventory);
+        this(containerId, new SimpleContainer(2), new GeothermalGeneratorData.Clientside(), inventory);
     }
 
     public GeothermalGeneratorMenu(int containerId, GeothermalGeneratorBlockEntity entity, Inventory inventory) {
@@ -23,8 +25,8 @@ public class GeothermalGeneratorMenu extends HayoContainerMenu {
     protected GeothermalGeneratorMenu(int containerId, Container container, GeothermalGeneratorData generatorData, Inventory inventory) {
         super(Hayo.MenuTypes.GEOTHERMAL_GENERATOR, containerId, container);
 
-        this.addSlot(new Slot(container, GeothermalGeneratorBlockEntity.INPUT, 27, 17));
-        this.addSlot(new Slot(container, GeothermalGeneratorBlockEntity.OUTPUT, 27, 53));
+        this.addSlot(new Slot(container, 0, 45, 17));
+        this.addSlot(new Slot(container, 1, 45, 53));
         this.addStandardInventorySlots(inventory, 8, 84);
 
         this.generatorData = generatorData;
@@ -33,9 +35,14 @@ public class GeothermalGeneratorMenu extends HayoContainerMenu {
 
     @Override
     protected boolean handleQuickMoveFromInventory(ItemStack stack, Player player, int index) {
-//        if (player.level().fuelValues().isFuel(stack) && !stack.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS)) {
-//            return this.moveItemStackTo(stack, 0, 1, false);
-//        }
+        var recipeHolder = player.level()
+                .recipeAccess()
+                .getSynchronizedRecipes()
+                .getFirstMatch(Hayo.RecipeTypes.FLUID_DRAINING, new SingleRecipeInput(stack), player.level())
+                .orElse(null);
+        if (recipeHolder != null && recipeHolder.value().resultFluid().fluid() == Fluids.LAVA) {
+            return this.moveItemStackTo(stack, 0, 1, false);
+        }
         return false;
     }
 }

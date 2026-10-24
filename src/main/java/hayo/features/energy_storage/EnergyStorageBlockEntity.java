@@ -5,7 +5,6 @@ import hayo.common.blockentity.EnergyReceiverBlockEntity;
 import hayo.energy.block.EnergyGrid;
 import hayo.energy.item.EnergyComponents;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -26,13 +25,10 @@ public abstract class EnergyStorageBlockEntity extends EnergyReceiverBlockEntity
     public static final int DISCHARGE_SLOT = 0, CHARGE_SLOT = 1, SLOTS = 2;
 
     @Getter
-    @Setter
-    protected float averageInput;
-
-    @Getter
     protected int outputPerTick;
     @Getter
-    @Setter
+    protected float averageInput;
+    @Getter
     protected float averageOutput;
 
     public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -42,36 +38,32 @@ public abstract class EnergyStorageBlockEntity extends EnergyReceiverBlockEntity
     public static void tickServer(Level level, BlockPos pos, BlockState state, EnergyStorageBlockEntity entity) {
         entity.chargeFromSlot(0);
 
+        int transferred = 0;
+
         var chargeItem = entity.getItem(CHARGE_SLOT);
         if (!chargeItem.isEmpty()) {
-            int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - entity.outputPerTick);
+            int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - transferred);
             int transfer = EnergyComponents.charge(limit, chargeItem);
             if (transfer > 0) {
                 entity.storedEnergy -= transfer;
-                entity.outputPerTick += transfer;
+                transferred += transfer;
                 entity.setChanged();
             }
         }
 
         if (entity.storedEnergy > 0) {
-            int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - entity.outputPerTick);
+            int limit = Math.min(entity.storedEnergy, entity.getEnergyTransferLimit() - transferred);
             int transfer = EnergyGrid.trySend(limit, (ServerLevel) level, pos, state.getValue(DirectionalElectricalBlock.FACING));
             if (transfer > 0) {
                 entity.storedEnergy -= transfer;
-                entity.outputPerTick += transfer;
+                transferred += transfer;
                 entity.setChanged();
             }
         }
 
+        entity.averageInput = Mth.lerp(0.05F, entity.averageInput, entity.inputPerTick);
+        entity.averageOutput = Mth.lerp(0.05F, entity.averageOutput, transferred);
         entity.resetEnergyPerTick();
-    }
-
-    @Override
-    protected void resetEnergyPerTick() {
-        this.averageInput = Mth.lerp(0.05F, this.averageInput, this.inputPerTick);
-        super.resetEnergyPerTick();
-        this.averageOutput = Mth.lerp(0.05F, this.averageOutput, this.outputPerTick);
-        this.outputPerTick = 0;
     }
 
     @Override

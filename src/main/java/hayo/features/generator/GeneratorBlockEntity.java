@@ -10,7 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.util.Mth;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -37,6 +37,8 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
     protected int fuelEnergyLeft;
     @Getter
     protected int fuelEnergyTotal;
+    @Getter
+    protected float averageOutput;
 
     public GeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.GENERATOR, pos, state, NonNullList.withSize(1, ItemStack.EMPTY));
@@ -59,14 +61,16 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
             entity.setChanged();
         }
 
+        int transferred = 0;
         if (entity.storedEnergy > 0) {
             int sendable = Math.min(entity.storedEnergy, TRANSFER_LIMIT);
-            int sent = EnergyGrid.trySendToAllSides(sendable, (ServerLevel) level, pos);
-            if (sent > 0) {
-                entity.storedEnergy -= sent;
+            transferred = EnergyGrid.trySendToAllSides(sendable, (ServerLevel) level, pos);
+            if (transferred > 0) {
+                entity.storedEnergy -= transferred;
                 entity.setChanged();
             }
         }
+        entity.averageOutput = Mth.lerp(0.05F, entity.averageOutput, transferred);
 
         boolean isBurning = entity.fuelEnergyLeft > 0;
         if (isBurning != wasBurning) {

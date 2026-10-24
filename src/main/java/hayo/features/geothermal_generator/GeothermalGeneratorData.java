@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.material.Fluids;
 
 public interface GeothermalGeneratorData extends ContainerData {
-    int SIZE = 7;
+    int SIZE = 10;
 
     default FluidStack fluid() {
         int id = (this.get(1) << 16) | (this.get(0) & 0xFFFF);
@@ -24,6 +24,14 @@ public interface GeothermalGeneratorData extends ContainerData {
 
     default int drainingMaxProgress() {
         return (this.get(6) << 16) | this.get(5) & 0xFFFF;
+    }
+
+    default int energy() {
+        return (this.get(8) << 16) | (this.get(7) & 0xFFFF);
+    }
+
+    default float averageOutput() {
+        return this.get(9) / 10F;
     }
 
     class Clientside extends SimpleContainerData implements GeothermalGeneratorData {
@@ -59,6 +67,11 @@ public interface GeothermalGeneratorData extends ContainerData {
                     int maxProgress = match.isPresent() ? match.get().value().ticks() : 0;
                     yield dataId == 5 ? maxProgress & 0xFFFF : maxProgress >>> 16;
                 }
+                case 7, 8 -> {
+                    int energy = this.entity.storedEnergy;
+                    yield dataId == 7 ? energy & 0xFFFF : energy >>> 16;
+                }
+                case 9 -> Math.round(this.entity.averageOutput * 10);
 
                 default -> 0;
             };

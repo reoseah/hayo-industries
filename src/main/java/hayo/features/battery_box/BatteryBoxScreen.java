@@ -28,7 +28,7 @@ public class BatteryBoxScreen extends AbstractContainerScreen<BatteryBoxMenu> {
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
         HayoGuiSprites.blitBackground(graphics, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
-        HayoGuiSprites.blitSmallArrowRight(graphics, this.leftPos + 108, this.topPos + 36);
+        HayoGuiSprites.blitSmallArrowRight(graphics, this.leftPos + 108, this.topPos + 34);
 
         HayoGuiSprites.blitSlots(graphics, this.leftPos + 25, this.topPos + 26, 3, 2);
         HayoGuiSprites.blitOutputSlot(graphics, this.leftPos + 120, this.topPos + 32);

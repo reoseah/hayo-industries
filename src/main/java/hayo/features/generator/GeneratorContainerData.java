@@ -4,7 +4,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 
 public interface GeneratorContainerData extends ContainerData {
-    int SIZE = 6;
+    int SIZE = 7;
 
     default int energy() {
         return (this.get(1) << 16) | (this.get(0) & 0xFFFF);
@@ -18,6 +18,10 @@ public interface GeneratorContainerData extends ContainerData {
         return (this.get(5) << 16) | (this.get(4) & 0xFFFF);
     }
 
+    default float averageOutput() {
+        return this.get(6) / 10F;
+    }
+
     class Clientside extends SimpleContainerData implements GeneratorContainerData {
         public Clientside() {
             super(SIZE);
@@ -27,7 +31,7 @@ public interface GeneratorContainerData extends ContainerData {
     record Serverside(GeneratorBlockEntity entity) implements GeneratorContainerData {
         @Override
         public int getCount() {
-            return 6;
+            return SIZE;
         }
 
         @Override
@@ -39,6 +43,7 @@ public interface GeneratorContainerData extends ContainerData {
                 case 3 -> this.entity.fuelEnergyLeft >>> 16;
                 case 4 -> this.entity.fuelEnergyTotal & 0xFFFF;
                 case 5 -> this.entity.fuelEnergyTotal >>> 16;
+                case 6 -> Math.round(this.entity.averageOutput * 10);
                 default -> 0;
             };
         }

@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -33,6 +34,8 @@ public class GeothermalGeneratorBlockEntity extends SimpleContainerBlockEntity i
     protected final RecipeState<FluidDrainingRecipe, SingleRecipeInput> drainingState = new RecipeState<>();
     @Getter
     protected int storedEnergy;
+    @Getter
+    protected float averageOutput;
 
     public GeothermalGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.GEOTHERMAL_GENERATOR, pos, state, NonNullList.withSize(SLOTS, ItemStack.EMPTY));
@@ -70,14 +73,16 @@ public class GeothermalGeneratorBlockEntity extends SimpleContainerBlockEntity i
             level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, isLit));
         }
 
+        int transferred = 0;
         if (entity.storedEnergy > 0) {
             int sendable = Math.min(entity.storedEnergy, TRANSFER_LIMIT);
-            int sent = EnergyGrid.trySendToAllSides(sendable, (ServerLevel) level, pos);
-            if (sent > 0) {
-                entity.storedEnergy -= sent;
+            transferred = EnergyGrid.trySendToAllSides(sendable, (ServerLevel) level, pos);
+            if (transferred > 0) {
+                entity.storedEnergy -= transferred;
                 entity.setChanged();
             }
         }
+        entity.averageOutput = Mth.lerp(0.05F, entity.averageOutput, transferred);
     }
 
     @Override

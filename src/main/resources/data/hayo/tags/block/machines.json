@@ -3,6 +3,8 @@
     "hayo:machine_block",
     "hayo:advanced_machine_block",
     "hayo:generator",
+    "hayo:geothermal_generator",
+    "hayo:solar_panel",
     "hayo:electric_furnace",
     "hayo:macerator",
     "hayo:extractor",
