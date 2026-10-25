@@ -54,6 +54,20 @@ public class FluidGuiRendering {
         return createTooltip(stack.fluid(), stack.amount(), maxAmount);
     }
 
+    public static List<Component> createTooltip(FluidStack stack, int maxAmount, Fluid fallbackFluid) {
+        var fluid = stack.fluid();
+        int amount = stack.amount();
+        return List.of(
+                getFluidName(fluid == Fluids.EMPTY || amount == 0 ? fallbackFluid : fluid),
+                Component.translatable("hayo.millibuckets_with_capacity_and_percentage",
+                                amount,
+                                maxAmount,
+                                100 * (float) amount / (float) maxAmount
+                        )
+                        .withStyle(ChatFormatting.GRAY)
+        );
+    }
+
     public static List<Component> createTooltip(FluidIngredientAmount ingredient) {
         var fluids = ingredient.values().stream().map(Holder::value).toList();
         var amount = ingredient.amount();

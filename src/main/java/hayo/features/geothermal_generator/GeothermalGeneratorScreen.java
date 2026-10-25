@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.material.Fluids;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class GeothermalGeneratorScreen extends AbstractContainerScreen<Geotherma
     @Override
     protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.isHovering(70, 15, 18, 56, mouseX, mouseY)) {
-            graphics.setTooltipForNextFrame(this.font, FluidGuiRendering.createTooltip(this.menu.generatorData.fluid(), GeothermalGeneratorBlockEntity.FLUID_CAPACITY), Optional.empty(), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(this.font, FluidGuiRendering.createTooltip(this.menu.generatorData.fluid(), GeothermalGeneratorBlockEntity.FLUID_CAPACITY, Fluids.LAVA), Optional.empty(), mouseX, mouseY);
         } else if (this.isHovering(106, 16, 18, 56, mouseX, mouseY)) {
             int energy = this.menu.generatorData.energy();
             int capacity = GeothermalGeneratorBlockEntity.CAPACITY;
