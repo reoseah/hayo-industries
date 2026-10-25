@@ -44,7 +44,6 @@ public class HayoJeiPlugin implements IModPlugin {
     public static final IRecipeType<RecipeHolder<FluidFillingRecipe>> FLUID_FILLING = IRecipeType.create(Hayo.RecipeTypes.FLUID_FILLING);
     public static final IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> SOLID_FLUID_REACTING = IRecipeType.create(Hayo.RecipeTypes.SOLID_FLUID_REACTING);
     public static final IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> ORE_WASHING = IRecipeType.create(Hayo.RecipeTypes.ORE_WASHING);
-    public static final IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> CHEMFUEL_PROCESSING = IRecipeType.create(Hayo.RecipeTypes.CHEMFUEL_PROCESSING);
 
     @Override
     public Identifier getPluginUid() {
@@ -91,12 +90,6 @@ public class HayoJeiPlugin implements IModPlugin {
                 HayoJeiWidgets.machineWithUpgrade(guiHelper, Hayo.Items.SOLID_FLUID_REACTOR, Hayo.Items.ORE_WASHING_UPGRADE),
                 new ItemStack(Hayo.Items.ORE_WASHING_UPGRADE)
         ));
-        registration.addRecipeCategories(new SolidFluidReactingCategory(
-                CHEMFUEL_PROCESSING,
-                Component.translatable("hayo.recipe_type.chemfuel_processing"),
-                HayoJeiWidgets.machineWithUpgrade(guiHelper, Hayo.Items.SOLID_FLUID_REACTOR, Hayo.Items.CHEMFUEL_PROCESSING_UPGRADE),
-                new ItemStack(Hayo.Items.CHEMFUEL_PROCESSING_UPGRADE)
-        ));
     }
 
     @Override
@@ -118,7 +111,6 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipes(FLUID_FILLING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.FLUID_FILLING)));
         registration.addRecipes(SOLID_FLUID_REACTING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.SOLID_FLUID_REACTING)));
         registration.addRecipes(ORE_WASHING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.ORE_WASHING)));
-        registration.addRecipes(CHEMFUEL_PROCESSING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.CHEMFUEL_PROCESSING)));
     }
 
     @Override
@@ -135,7 +127,6 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addCraftingStation(FLUID_FILLING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
         registration.addCraftingStation(SOLID_FLUID_REACTING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
         registration.addCraftingStation(ORE_WASHING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
-        registration.addCraftingStation(CHEMFUEL_PROCESSING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
     }
 
     @Override

@@ -5,8 +5,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 
 public enum SolidFluidReactorMode {
     DEFAULT(Hayo.RecipeTypes.SOLID_FLUID_REACTING),
-    ORE_WASHING(Hayo.RecipeTypes.ORE_WASHING),
-    CHEMFUEL_PROCESSING(Hayo.RecipeTypes.CHEMFUEL_PROCESSING);
+    ORE_WASHING(Hayo.RecipeTypes.ORE_WASHING);
 
     public final RecipeType<? extends BaseSolidFluidReactingRecipe> recipeType;
 

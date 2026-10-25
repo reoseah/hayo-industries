@@ -140,16 +140,6 @@ public class Hayo {
         StructurePieceTypes.initialize();
         SoundEvents.initialize();
 
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MACERATING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.COMPRESSING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.EXTRACTING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.MATTER_GENERATING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.FLUID_DRAINING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.FLUID_FILLING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.SOLID_FLUID_REACTING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.ORE_WASHING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.CHEMFUEL_PROCESSING);
-
         BiomeModifications.create(modId("rubber_tree_patch")).add(
                 ModificationPhase.ADDITIONS,
                 BiomeSelectors.tag(BiomeTags.IS_FOREST)
@@ -568,16 +558,6 @@ public class Hayo {
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
 
-        public static final Item CHEMFUEL_PROCESSING_UPGRADE = registerItem("chemfuel_processing_upgrade",
-                props -> new ItemWithTooltip(
-                        props,
-                        Component.empty(),
-                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.solid_fluid_reactor")).withStyle(ChatFormatting.GRAY),
-                        Component.translatable("hayo.upgrades.use_chemfuel_processing_recipes").withStyle(ChatFormatting.DARK_AQUA)
-                ),
-                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
-        );
-
         public static final Item SUNNARIUM_CONCENTRATOR_UPGRADE = registerItem("sunnarium_concentrator_upgrade",
                 props -> new ItemWithTooltip(
                         props,
@@ -746,7 +726,6 @@ public class Hayo {
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
                 entries.accept(ORE_WASHING_UPGRADE);
-                entries.accept(CHEMFUEL_PROCESSING_UPGRADE);
                 entries.accept(SUNNARIUM_CONCENTRATOR_UPGRADE);
                 entries.accept(OVERWORLD_LIFE_CRYSTAL_MEMORY);
             });
@@ -898,7 +877,6 @@ public class Hayo {
         public static final RecipeType<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling");
         public static final RecipeType<BaseSolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting");
         public static final RecipeType<BaseSolidFluidReactingRecipe> ORE_WASHING = register("ore_washing");
-        public static final RecipeType<BaseSolidFluidReactingRecipe> CHEMFUEL_PROCESSING = register("chemfuel_processing");
 
         public static void initialize() {
         }
@@ -924,9 +902,16 @@ public class Hayo {
         public static final RecipeSerializer<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling", new RecipeSerializer<>(FluidFillingRecipe.CODEC, FluidFillingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SolidFluidReactingRecipe.CODEC, SolidFluidReactingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<OreWashingRecipe> ORE_WASHING = register("ore_washing", new RecipeSerializer<>(OreWashingRecipe.CODEC, OreWashingRecipe.STREAM_CODEC));
-        public static final RecipeSerializer<ChemfuelProcessingRecipe> CHEMFUEL_PROCESSING = register("chemfuel_processing", new RecipeSerializer<>(ChemfuelProcessingRecipe.CODEC, ChemfuelProcessingRecipe.STREAM_CODEC));
 
         public static void initialize() {
+            RecipeSynchronization.synchronizeRecipeSerializer(MACERATING);
+            RecipeSynchronization.synchronizeRecipeSerializer(COMPRESSING);
+            RecipeSynchronization.synchronizeRecipeSerializer(EXTRACTING);
+            RecipeSynchronization.synchronizeRecipeSerializer(MATTER_GENERATING);
+            RecipeSynchronization.synchronizeRecipeSerializer(FLUID_DRAINING);
+            RecipeSynchronization.synchronizeRecipeSerializer(FLUID_FILLING);
+            RecipeSynchronization.synchronizeRecipeSerializer(SOLID_FLUID_REACTING);
+            RecipeSynchronization.synchronizeRecipeSerializer(ORE_WASHING);
         }
 
         private static <T extends Recipe<?>> RecipeSerializer<T> register(String name, RecipeSerializer<T> serializer) {

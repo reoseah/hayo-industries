@@ -230,9 +230,6 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
             if (stack.is(Hayo.Items.ORE_WASHING_UPGRADE)) {
                 mode = SolidFluidReactorMode.ORE_WASHING;
                 break;
-            } else if (stack.is(Hayo.Items.CHEMFUEL_PROCESSING_UPGRADE)) {
-                mode = SolidFluidReactorMode.CHEMFUEL_PROCESSING;
-                break;
             }
         }
         if (mode != this.mode) {
