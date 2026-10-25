@@ -45,7 +45,7 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     public static final int REACTING_ENERGY_RATE = 2;
 
     @Getter
-    protected SolidFluidReactorMode mode = SolidFluidReactorMode.REACTING;
+    protected SolidFluidReactorMode mode = SolidFluidReactorMode.DEFAULT;
 
     @Getter
     protected FluidStack inputFluid = FluidStack.EMPTY;
@@ -224,14 +224,11 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     protected void updateUpgradeState() {
         super.updateUpgradeState();
 
-        var mode = SolidFluidReactorMode.REACTING;
+        var mode = SolidFluidReactorMode.DEFAULT;
         for (int i = UPGRADE_1; i < UPGRADE_1 + UPGRADES; i++) {
             var stack = this.stacks.get(i);
             if (stack.is(Hayo.Items.ORE_WASHING_UPGRADE)) {
                 mode = SolidFluidReactorMode.ORE_WASHING;
-                break;
-            } else if (stack.is(Hayo.Items.NUTRIENT_DISPENSER_UPGRADE)) {
-                mode = SolidFluidReactorMode.NUTRIENT_PURIFYING;
                 break;
             } else if (stack.is(Hayo.Items.CHEMFUEL_PROCESSING_UPGRADE)) {
                 mode = SolidFluidReactorMode.CHEMFUEL_PROCESSING;

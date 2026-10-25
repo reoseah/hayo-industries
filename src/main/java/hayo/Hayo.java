@@ -149,7 +149,6 @@ public class Hayo {
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.SOLID_FLUID_REACTING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.ORE_WASHING);
         RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.CHEMFUEL_PROCESSING);
-        RecipeSynchronization.synchronizeRecipeSerializer(RecipeSerializers.NUTRIENT_PURIFYING);
 
         BiomeModifications.create(modId("rubber_tree_patch")).add(
                 ModificationPhase.ADDITIONS,
@@ -579,16 +578,6 @@ public class Hayo {
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
 
-        public static final Item NUTRIENT_DISPENSER_UPGRADE = registerItem("nutrient_dispenser_upgrade",
-                props -> new ItemWithTooltip(
-                        props,
-                        Component.empty(),
-                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.solid_fluid_reactor")).withStyle(ChatFormatting.GRAY),
-                        Component.translatable("hayo.upgrades.use_nutrient_paste_recipes").withStyle(ChatFormatting.DARK_AQUA)
-                ),
-                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
-        );
-
         public static final Item SUNNARIUM_CONCENTRATOR_UPGRADE = registerItem("sunnarium_concentrator_upgrade",
                 props -> new ItemWithTooltip(
                         props,
@@ -758,7 +747,6 @@ public class Hayo {
                 entries.accept(SMOKING_UPGRADE);
                 entries.accept(ORE_WASHING_UPGRADE);
                 entries.accept(CHEMFUEL_PROCESSING_UPGRADE);
-                entries.accept(NUTRIENT_DISPENSER_UPGRADE);
                 entries.accept(SUNNARIUM_CONCENTRATOR_UPGRADE);
                 entries.accept(OVERWORLD_LIFE_CRYSTAL_MEMORY);
             });
@@ -911,7 +899,6 @@ public class Hayo {
         public static final RecipeType<BaseSolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting");
         public static final RecipeType<BaseSolidFluidReactingRecipe> ORE_WASHING = register("ore_washing");
         public static final RecipeType<BaseSolidFluidReactingRecipe> CHEMFUEL_PROCESSING = register("chemfuel_processing");
-        public static final RecipeType<BaseSolidFluidReactingRecipe> NUTRIENT_PURIFYING = register("nutrient_purifying");
 
         public static void initialize() {
         }
@@ -938,7 +925,6 @@ public class Hayo {
         public static final RecipeSerializer<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SolidFluidReactingRecipe.CODEC, SolidFluidReactingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<OreWashingRecipe> ORE_WASHING = register("ore_washing", new RecipeSerializer<>(OreWashingRecipe.CODEC, OreWashingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<ChemfuelProcessingRecipe> CHEMFUEL_PROCESSING = register("chemfuel_processing", new RecipeSerializer<>(ChemfuelProcessingRecipe.CODEC, ChemfuelProcessingRecipe.STREAM_CODEC));
-        public static final RecipeSerializer<NutrientPurifyingRecipe> NUTRIENT_PURIFYING = register("nutrient_purifying", new RecipeSerializer<>(NutrientPurifyingRecipe.CODEC, NutrientPurifyingRecipe.STREAM_CODEC));
 
         public static void initialize() {
         }

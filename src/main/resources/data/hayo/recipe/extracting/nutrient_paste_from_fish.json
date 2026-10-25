@@ -1,0 +1,17 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": [
+    "minecraft:cooked_cod",
+    "minecraft:cod",
+    "minecraft:cooked_salmon",
+    "minecraft:salmon",
+    "minecraft:tropical_fish",
+    "minecraft:pufferfish"
+  ],
+  "ingredient_count": 1,
+  "result": {
+    "id": "hayo:nutrient_paste"
+  },
+  "extra_result_chance": 0.5,
+  "energy_cost": 600
+}

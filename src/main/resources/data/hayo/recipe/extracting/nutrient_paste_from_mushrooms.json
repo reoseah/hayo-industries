@@ -1,0 +1,9 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": "#c:mushrooms",
+  "ingredient_count": 8,
+  "result": {
+    "id": "hayo:nutrient_paste"
+  },
+  "energy_cost": 600
+}

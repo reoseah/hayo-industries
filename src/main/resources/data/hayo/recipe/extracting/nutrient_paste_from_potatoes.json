@@ -1,0 +1,13 @@
+{
+  "type": "hayo:extracting",
+  "ingredient": [
+    "minecraft:potato",
+    "minecraft:baked_potato",
+    "minecraft:poisonous_potato"
+  ],
+  "ingredient_count": 2,
+  "result": {
+    "id": "hayo:nutrient_paste"
+  },
+  "energy_cost": 600
+}

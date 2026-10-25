@@ -7,7 +7,7 @@
     "minecraft:short_dry_grass",
     "minecraft:bush"
   ],
-  "item_ingredient_count": 32,
+  "ingredient_count": 32,
   "result": {
     "id": "hayo:compressed_plants"
   }
