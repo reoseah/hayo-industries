@@ -139,7 +139,7 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addCraftingStation(COMPRESSING, new ItemStack(Hayo.Items.COMPRESSOR));
         registration.addCraftingStation(EXTRACTING, new ItemStack(Hayo.Items.EXTRACTOR));
         registration.addCraftingStation(MATTER_GENERATING, new ItemStack(Hayo.Items.MATTER_GENERATOR));
-        registration.addCraftingStation(FLUID_DRAINING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
+        registration.addCraftingStation(FLUID_DRAINING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR), new ItemStack(Hayo.Items.GEOTHERMAL_GENERATOR));
         registration.addCraftingStation(FLUID_FILLING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
         registration.addCraftingStation(SOLID_FLUID_REACTING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
         registration.addCraftingStation(ORE_WASHING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
