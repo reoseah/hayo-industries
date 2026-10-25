@@ -82,7 +82,8 @@ public interface UpgradableMachineData extends ContainerData {
                 case 6 -> this.entity.getLastOrDefaultRecipeCost() & 0xFFFF;
                 case 7 -> this.entity.getLastOrDefaultRecipeCost() >>> 16;
                 case 8 -> this.entity.getEnergyUseRate();
-                case 9 -> this.entity.hasRecipe() ? 1 : 0; case 10 -> (int) (this.entity.extraCraftingSpeed * 100);
+                case 9 -> this.entity.hasRecipe() ? 1 : 0;
+                case 10 -> (int) (this.entity.extraCraftingSpeed * 100);
                 case 11 -> (int) (this.entity.extraRecipeCost * 100);
                 case 12 -> this.entity.extraCapacity;
                 case 13 -> this.entity.hasInductionUpgrade ? 1 : 0;

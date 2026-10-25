@@ -27,7 +27,6 @@ public class HayoClient {
     public static final Identifier ENERGY_ARMOR_OVERLAY_TEXTURE = Hayo.modId("textures/entity/equipment/humanoid/energy_armor_overlay.png");
     public static final Identifier ENERGY_ARMOR_OVERLAY_LEGGINGS_TEXTURE = Hayo.modId("textures/entity/equipment/humanoid_leggings/energy_armor_overlay.png");
 
-
     @Environment(EnvType.CLIENT)
     public static void initialize() {
         BlockColorRegistry.register((_, level, pos, tintValues) -> tintValues.add(BiomeColors.getAverageFoliageColor(level, pos)), Hayo.Blocks.RUBBER_LEAVES);
