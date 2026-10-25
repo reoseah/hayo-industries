@@ -1,7 +1,7 @@
 package hayo;
 
-import hayo.features.battery_pack.BatteryPackRenderer;
-import hayo.features.energy_armor.EnergyArmorOverlayRenderer;
+import hayo.features.BatteryPackRenderer;
+import hayo.features.EnergyArmorRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry;
@@ -46,9 +46,9 @@ public class HayoClient {
         ArmorRenderer.register(ctx -> new BatteryPackRenderer(ctx, BATTERY_PACK_TEXTURE), Hayo.Items.BATTERY_PACK);
         ArmorRenderer.register(ctx -> new BatteryPackRenderer(ctx, ADVANCED_BATTERY_PACK_TEXTURE), Hayo.Items.ADVANCED_BATTERY_PACK);
 
-        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, NANO_TEXTURE, ENERGY_ARMOR_OVERLAY_TEXTURE), Hayo.Items.NANO_HELMET, Hayo.Items.NANO_CHESTPLATE, Hayo.Items.NANO_BOOTS);
-        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, NANO_LEGGINGS_TEXTURE, ENERGY_ARMOR_OVERLAY_LEGGINGS_TEXTURE), Hayo.Items.NANO_LEGGINGS);
-        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, QUANTUM_TEXTURE, ENERGY_ARMOR_OVERLAY_TEXTURE), Hayo.Items.QUANTUM_HELMET, Hayo.Items.QUANTUM_CHESTPLATE, Hayo.Items.QUANTUM_BOOTS);
-        ArmorRenderer.register(ctx -> new EnergyArmorOverlayRenderer(ctx, QUANTUM_LEGGINGS_TEXTURE, ENERGY_ARMOR_OVERLAY_LEGGINGS_TEXTURE), Hayo.Items.QUANTUM_LEGGINGS);
+        ArmorRenderer.register(ctx -> new EnergyArmorRenderer(ctx, NANO_TEXTURE, ENERGY_ARMOR_OVERLAY_TEXTURE), Hayo.Items.NANO_HELMET, Hayo.Items.NANO_CHESTPLATE, Hayo.Items.NANO_BOOTS);
+        ArmorRenderer.register(ctx -> new EnergyArmorRenderer(ctx, NANO_LEGGINGS_TEXTURE, ENERGY_ARMOR_OVERLAY_LEGGINGS_TEXTURE), Hayo.Items.NANO_LEGGINGS);
+        ArmorRenderer.register(ctx -> new EnergyArmorRenderer(ctx, QUANTUM_TEXTURE, ENERGY_ARMOR_OVERLAY_TEXTURE), Hayo.Items.QUANTUM_HELMET, Hayo.Items.QUANTUM_CHESTPLATE, Hayo.Items.QUANTUM_BOOTS);
+        ArmorRenderer.register(ctx -> new EnergyArmorRenderer(ctx, QUANTUM_LEGGINGS_TEXTURE, ENERGY_ARMOR_OVERLAY_LEGGINGS_TEXTURE), Hayo.Items.QUANTUM_LEGGINGS);
     }
 }

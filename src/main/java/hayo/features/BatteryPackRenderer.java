@@ -1,4 +1,4 @@
-package hayo.features.battery_pack;
+package hayo.features;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import hayo.HayoClient;

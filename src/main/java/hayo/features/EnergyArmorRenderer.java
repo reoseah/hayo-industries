@@ -1,4 +1,4 @@
-package hayo.features.energy_armor;
+package hayo.features;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import hayo.energy.item.EnergyComponents;
@@ -18,12 +18,12 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
-public class EnergyArmorOverlayRenderer implements ArmorRenderer {
+public class EnergyArmorRenderer implements ArmorRenderer {
     private final ArmorModelSet<HumanoidModel<HumanoidRenderState>> playerArmorModels;
     private final Identifier texture;
     private final Identifier overlayTexture;
 
-    public EnergyArmorOverlayRenderer(EntityRendererProvider.Context context, Identifier texture, Identifier overlayTexture) {
+    public EnergyArmorRenderer(EntityRendererProvider.Context context, Identifier texture, Identifier overlayTexture) {
         this.playerArmorModels = ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), HumanoidModel::new);
         this.texture = texture;
         this.overlayTexture = overlayTexture;
