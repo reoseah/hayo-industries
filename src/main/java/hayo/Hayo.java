@@ -548,16 +548,6 @@ public class Hayo {
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
-        public static final Item ORE_WASHING_UPGRADE = registerItem("ore_washing_upgrade",
-                props -> new ItemWithTooltip(
-                        props,
-                        Component.empty(),
-                        Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.solid_fluid_reactor")).withStyle(ChatFormatting.GRAY),
-                        Component.translatable("hayo.upgrades.use_ore_washing_recipes").withStyle(ChatFormatting.DARK_AQUA)
-                ),
-                new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
-        );
-
         public static final Item SUNNARIUM_CONCENTRATOR_UPGRADE = registerItem("sunnarium_concentrator_upgrade",
                 props -> new ItemWithTooltip(
                         props,
@@ -725,7 +715,6 @@ public class Hayo {
                 entries.accept(STREAMLINE_OVERHAUL_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
-                entries.accept(ORE_WASHING_UPGRADE);
                 entries.accept(SUNNARIUM_CONCENTRATOR_UPGRADE);
                 entries.accept(OVERWORLD_LIFE_CRYSTAL_MEMORY);
             });
@@ -776,12 +765,12 @@ public class Hayo {
         public static final TagKey<Item> UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades"));
         public static final TagKey<Item> NON_REPEATABLE_UPGRADES = TagKey.create(Registries.ITEM, modId("non_repeatable_upgrades"));
         public static final TagKey<Item> MUTUALLY_EXCLUSIVE_UPGRADES = TagKey.create(Registries.ITEM, modId("mutually_exclusive_upgrades"));
-        public static final TagKey<Item> ELECTRIC_FURNACE_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/electric_furnace"));
-        public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/macerator"));
-        public static final TagKey<Item> COMPRESSOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/compressor"));
-        public static final TagKey<Item> EXTRACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/extractor"));
-        public static final TagKey<Item> SOLID_FLUID_REACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/solid_fluid_reactor"));
-        public static final TagKey<Item> MATTER_GENERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrades/matter_generator"));
+        public static final TagKey<Item> ELECTRIC_FURNACE_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrade/electric_furnace"));
+        public static final TagKey<Item> MACERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrade/macerator"));
+        public static final TagKey<Item> COMPRESSOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrade/compressor"));
+        public static final TagKey<Item> EXTRACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrade/extractor"));
+        public static final TagKey<Item> SOLID_FLUID_REACTOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrade/solid_fluid_reactor"));
+        public static final TagKey<Item> MATTER_GENERATOR_UPGRADES = TagKey.create(Registries.ITEM, modId("upgrade/matter_generator"));
 
         public static final TagKey<Item> BATTERY_BOX_BATTERIES = TagKey.create(Registries.ITEM, modId("battery_box_batteries"));
     }
@@ -876,7 +865,6 @@ public class Hayo {
         public static final RecipeType<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining");
         public static final RecipeType<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling");
         public static final RecipeType<BaseSolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting");
-        public static final RecipeType<BaseSolidFluidReactingRecipe> ORE_WASHING = register("ore_washing");
 
         public static void initialize() {
         }
@@ -901,7 +889,6 @@ public class Hayo {
         public static final RecipeSerializer<FluidDrainingRecipe> FLUID_DRAINING = register("fluid_draining", new RecipeSerializer<>(FluidDrainingRecipe.CODEC, FluidDrainingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<FluidFillingRecipe> FLUID_FILLING = register("fluid_filling", new RecipeSerializer<>(FluidFillingRecipe.CODEC, FluidFillingRecipe.STREAM_CODEC));
         public static final RecipeSerializer<SolidFluidReactingRecipe> SOLID_FLUID_REACTING = register("solid_fluid_reacting", new RecipeSerializer<>(SolidFluidReactingRecipe.CODEC, SolidFluidReactingRecipe.STREAM_CODEC));
-        public static final RecipeSerializer<OreWashingRecipe> ORE_WASHING = register("ore_washing", new RecipeSerializer<>(OreWashingRecipe.CODEC, OreWashingRecipe.STREAM_CODEC));
 
         public static void initialize() {
             RecipeSynchronization.synchronizeRecipeSerializer(MACERATING);
@@ -911,7 +898,6 @@ public class Hayo {
             RecipeSynchronization.synchronizeRecipeSerializer(FLUID_DRAINING);
             RecipeSynchronization.synchronizeRecipeSerializer(FLUID_FILLING);
             RecipeSynchronization.synchronizeRecipeSerializer(SOLID_FLUID_REACTING);
-            RecipeSynchronization.synchronizeRecipeSerializer(ORE_WASHING);
         }
 
         private static <T extends Recipe<?>> RecipeSerializer<T> register(String name, RecipeSerializer<T> serializer) {

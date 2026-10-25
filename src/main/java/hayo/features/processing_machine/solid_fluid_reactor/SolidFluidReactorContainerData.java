@@ -7,12 +7,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.material.Fluids;
 
 public interface SolidFluidReactorContainerData extends ContainerData {
-    int SIZE = 15;
+    int SIZE = 14;
 
     default FluidStack inputFluid() {
         int id = (this.get(1) << 16) | (this.get(0) & 0xFFFF);
@@ -42,13 +41,6 @@ public interface SolidFluidReactorContainerData extends ContainerData {
         return (this.get(13) << 16) | this.get(12) & 0xFFFF;
     }
 
-    default SolidFluidReactorMode mode() {
-        return SolidFluidReactorMode.values()[Math.clamp(this.get(14), 0, SolidFluidReactorMode.values().length - 1)];
-    }
-
-    default RecipeType<? extends BaseSolidFluidReactingRecipe> recipeType() {
-        return this.mode().recipeType;
-    }
 
     class Clientside extends SimpleContainerData implements SolidFluidReactorContainerData {
         public Clientside() {
@@ -102,7 +94,6 @@ public interface SolidFluidReactorContainerData extends ContainerData {
                     yield dataId == 12 ? maxProgress & 0xFFFF : maxProgress >>> 16;
                 }
 
-                case 14 -> this.entity.mode.ordinal();
 
                 default -> 0;
             };

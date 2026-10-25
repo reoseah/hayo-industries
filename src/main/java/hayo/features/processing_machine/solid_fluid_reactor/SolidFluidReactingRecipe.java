@@ -2,6 +2,7 @@ package hayo.features.processing_machine.solid_fluid_reactor;
 
 import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
+import hayo.common.ItemTemplateWithChance;
 import hayo.features.fluid_stack.FluidIngredientAmount;
 import hayo.features.fluid_stack.FluidStack;
 import hayo.features.fluid_stack.ItemFluidRecipeInput;

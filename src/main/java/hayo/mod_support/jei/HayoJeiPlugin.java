@@ -43,7 +43,6 @@ public class HayoJeiPlugin implements IModPlugin {
     public static final IRecipeType<RecipeHolder<FluidDrainingRecipe>> FLUID_DRAINING = IRecipeType.create(Hayo.RecipeTypes.FLUID_DRAINING);
     public static final IRecipeType<RecipeHolder<FluidFillingRecipe>> FLUID_FILLING = IRecipeType.create(Hayo.RecipeTypes.FLUID_FILLING);
     public static final IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> SOLID_FLUID_REACTING = IRecipeType.create(Hayo.RecipeTypes.SOLID_FLUID_REACTING);
-    public static final IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> ORE_WASHING = IRecipeType.create(Hayo.RecipeTypes.ORE_WASHING);
 
     @Override
     public Identifier getPluginUid() {
@@ -84,12 +83,6 @@ public class HayoJeiPlugin implements IModPlugin {
                 itemDrawable.apply(Hayo.Items.SOLID_FLUID_REACTOR),
                 ItemStack.EMPTY
         ));
-        registration.addRecipeCategories(new SolidFluidReactingCategory(
-                ORE_WASHING,
-                Component.translatable("hayo.recipe_type.ore_washing"),
-                HayoJeiWidgets.machineWithUpgrade(guiHelper, Hayo.Items.SOLID_FLUID_REACTOR, Hayo.Items.ORE_WASHING_UPGRADE),
-                new ItemStack(Hayo.Items.ORE_WASHING_UPGRADE)
-        ));
     }
 
     @Override
@@ -110,7 +103,6 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addRecipes(FLUID_DRAINING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.FLUID_DRAINING)));
         registration.addRecipes(FLUID_FILLING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.FLUID_FILLING)));
         registration.addRecipes(SOLID_FLUID_REACTING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.SOLID_FLUID_REACTING)));
-        registration.addRecipes(ORE_WASHING, List.copyOf(synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.ORE_WASHING)));
     }
 
     @Override
@@ -126,7 +118,6 @@ public class HayoJeiPlugin implements IModPlugin {
         registration.addCraftingStation(FLUID_DRAINING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR), new ItemStack(Hayo.Items.GEOTHERMAL_GENERATOR));
         registration.addCraftingStation(FLUID_FILLING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
         registration.addCraftingStation(SOLID_FLUID_REACTING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
-        registration.addCraftingStation(ORE_WASHING, new ItemStack(Hayo.Items.SOLID_FLUID_REACTOR));
     }
 
     @Override

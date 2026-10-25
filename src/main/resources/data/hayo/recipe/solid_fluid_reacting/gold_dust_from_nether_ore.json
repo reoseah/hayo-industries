@@ -1,6 +1,6 @@
 {
-  "type": "hayo:ore_washing",
-  "item_ingredient": "#minecraft:emerald_ores",
+  "type": "hayo:solid_fluid_reacting",
+  "item_ingredient": "minecraft:nether_gold_ore",
   "fluid_ingredient": {
     "id": [
       "minecraft:water"
@@ -9,11 +9,8 @@
   },
   "item_results": [
     {
-      "id": "minecraft:emerald",
+      "id": "hayo:gold_dust",
       "count": 2
-    },
-    {
-      "id": "hayo:stone_dust"
     }
   ],
   "fluid_result": null,

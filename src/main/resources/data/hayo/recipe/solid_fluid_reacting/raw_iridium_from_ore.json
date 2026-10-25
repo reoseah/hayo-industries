@@ -1,9 +1,6 @@
 {
-  "type": "hayo:ore_washing",
-  "item_ingredient": [
-    "minecraft:gold_ore",
-    "minecraft:deepslate_gold_ore"
-  ],
+  "type": "hayo:solid_fluid_reacting",
+  "item_ingredient": "#c:ores/iridium",
   "fluid_ingredient": {
     "id": [
       "minecraft:water"
@@ -12,8 +9,8 @@
   },
   "item_results": [
     {
-      "id": "hayo:gold_dust",
-      "count": 3
+      "id": "hayo:raw_iridium",
+      "count": 1
     },
     {
       "id": "hayo:stone_dust"

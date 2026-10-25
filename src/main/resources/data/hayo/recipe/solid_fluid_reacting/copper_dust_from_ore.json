@@ -1,6 +1,6 @@
 {
-  "type": "hayo:ore_washing",
-  "item_ingredient": "#minecraft:diamond_ores",
+  "type": "hayo:solid_fluid_reacting",
+  "item_ingredient": "#minecraft:copper_ores",
   "fluid_ingredient": {
     "id": [
       "minecraft:water"
@@ -9,8 +9,8 @@
   },
   "item_results": [
     {
-      "id": "minecraft:diamond",
-      "count": 2
+      "id": "hayo:copper_dust",
+      "count": 3
     },
     {
       "id": "hayo:stone_dust"

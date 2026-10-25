@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hayo.common.ItemTemplateWithChance;
 import hayo.features.fluid_stack.FluidIngredientAmount;
 import hayo.features.fluid_stack.FluidStack;
 import hayo.features.fluid_stack.ItemFluidRecipeInput;
@@ -56,7 +57,7 @@ public abstract class BaseSolidFluidReactingRecipe implements Recipe<ItemFluidRe
                         Ingredient.CODEC.fieldOf("item_ingredient").forGetter(recipe -> recipe.inputItem),
                         ExtraCodecs.POSITIVE_INT.fieldOf("item_ingredient_count").orElse(1).forGetter(recipe -> recipe.inputCount),
                         FluidIngredientAmount.NON_EMPTY_CODEC.fieldOf("fluid_ingredient").forGetter(recipe -> recipe.inputFluid),
-                        ItemTemplateWithChance.MAP_CODEC.codec().listOf(0, 6).fieldOf("item_results").orElse(List.of()).forGetter(recipe -> recipe.resultItems),
+                        OUTPUTS_CODEC.fieldOf("item_results").orElse(List.of()).forGetter(recipe -> recipe.resultItems),
                         FluidStack.MAP_CODEC.fieldOf("fluid_result").orElse(FluidStack.EMPTY).forGetter(recipe -> recipe.resultFluid),
                         ExtraCodecs.POSITIVE_INT.fieldOf("energy_cost").orElse(defaultEnergyCost).forGetter(recipe -> recipe.energyCost)
                 )

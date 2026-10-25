@@ -1,4 +1,4 @@
-package hayo.features.processing_machine.solid_fluid_reactor;
+package hayo.common;
 
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
@@ -22,7 +22,7 @@ public record ItemTemplateWithChance(ItemStackTemplate template, float chance) {
                     .apply(i, (item, count, components, chance) -> new ItemTemplateWithChance(new ItemStackTemplate(item, count, components), chance)))
             .validate(o -> {
                 if (o.chance < 1F && o.template().count() > 1)
-                    return DataResult.error(() -> "Recipe outputs can have either chance or count, not both", o);
+                    return DataResult.error(() -> "Recipe outputs support either item count or chance, not both", o);
                 return DataResult.success(o);
             });
 

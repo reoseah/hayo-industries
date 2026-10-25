@@ -45,9 +45,6 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
     public static final int REACTING_ENERGY_RATE = 2;
 
     @Getter
-    protected SolidFluidReactorMode mode = SolidFluidReactorMode.DEFAULT;
-
-    @Getter
     protected FluidStack inputFluid = FluidStack.EMPTY;
     @Getter
     protected FluidStack resultFluid = FluidStack.EMPTY;
@@ -103,10 +100,9 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
         return REACTING_ENERGY_RATE;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected RecipeType<BaseSolidFluidReactingRecipe> getRecipeType() {
-        return (RecipeType<BaseSolidFluidReactingRecipe>) this.mode.recipeType;
+        return Hayo.RecipeTypes.SOLID_FLUID_REACTING;
     }
 
     @Override
@@ -217,24 +213,6 @@ public class SolidFluidReactorBlockEntity extends UpgradableMachineBlockEntity<B
         var resultFluid = recipe.resultFluid;
         if (!resultFluid.isEmpty()) {
             this.resultFluid = new FluidStack(resultFluid.holder(), this.resultFluid.amount() + resultFluid.amount());
-        }
-    }
-
-    @Override
-    protected void updateUpgradeState() {
-        super.updateUpgradeState();
-
-        var mode = SolidFluidReactorMode.DEFAULT;
-        for (int i = UPGRADE_1; i < UPGRADE_1 + UPGRADES; i++) {
-            var stack = this.stacks.get(i);
-            if (stack.is(Hayo.Items.ORE_WASHING_UPGRADE)) {
-                mode = SolidFluidReactorMode.ORE_WASHING;
-                break;
-            }
-        }
-        if (mode != this.mode) {
-            this.mode = mode;
-            this.recipeState.progress = 0;
         }
     }
 
