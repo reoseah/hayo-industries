@@ -1,7 +1,7 @@
 {
   "type": "hayo:extracting",
   "ingredient": "hayo:compressed_plants",
-  "ingredient_count": 2,
+  "ingredient_count": 4,
   "result": {
     "id": "hayo:nutrient_paste"
   },

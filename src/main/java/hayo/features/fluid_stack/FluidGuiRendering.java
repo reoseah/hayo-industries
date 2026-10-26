@@ -89,10 +89,6 @@ public class FluidGuiRendering {
         return tooltip;
     }
 
-    public static boolean isHoveringTank(int tankX, int tankY, double mouseX, double mouseY) {
-        return mouseX >= tankX && mouseX < tankX + 18 && mouseY >= tankY && mouseY < tankY + 56;
-    }
-
     @Environment(EnvType.CLIENT)
     public static void extractFluidTank(GuiGraphicsExtractor graphics, FluidStack stack, int maxAmount, int x, int y) {
         HayoGuiSprites.blitFluidTank(graphics, x, y);

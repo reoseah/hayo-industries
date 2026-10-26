@@ -2,10 +2,10 @@
   "providers": [
     {
       "type": "bitmap",
-      "file": "hayo:font/small_percent_sign.png",
-      "ascent": 7,
+      "file": "hayo:font/symbols.png",
+      "ascent": 6,
       "chars": [
-        "﹪\u0000"
+        "﹪ϐ"
       ]
     }
   ]
