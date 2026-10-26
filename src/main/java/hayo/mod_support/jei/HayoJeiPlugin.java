@@ -75,8 +75,8 @@ public class HayoJeiPlugin implements IModPlugin {
 
         registration.addRecipeCategories(new MatterGeneratingJeiCategory(itemDrawable.apply(Hayo.Items.MATTER_GENERATOR)));
 
-        registration.addRecipeCategories(new FluidDrainingJeiCategory(itemDrawable.apply(Hayo.Items.SOLID_FLUID_REACTOR)));
-        registration.addRecipeCategories(new FluidFillingJeiCategory(itemDrawable.apply(Hayo.Items.SOLID_FLUID_REACTOR)));
+        registration.addRecipeCategories(new FluidDrainingJeiCategory(itemDrawable.apply(Items.BUCKET)));
+        registration.addRecipeCategories(new FluidFillingJeiCategory(itemDrawable.apply(Items.WATER_BUCKET)));
 
         registration.addRecipeCategories(new SolidFluidReactingCategory(SOLID_FLUID_REACTING,
                 Component.translatable("hayo.recipe_type.solid_fluid_reacting"),
