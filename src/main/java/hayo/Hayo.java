@@ -520,9 +520,9 @@ public class Hayo {
                         props,
                         Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY),
-                        Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.heat1").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.heat2").withStyle(ChatFormatting.DARK_AQUA),
+                        Component.translatable("hayo.upgrades.crafting_speed", "+300%").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.heat3").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.heat4").withStyle(ChatFormatting.DARK_AQUA)
                 ),
