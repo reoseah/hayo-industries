@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class BatteryBoxSlot extends Slot {
-    public static final Identifier BATTERY_SLOT_ICON = Hayo.modId("slot_icons/battery");
+    public static final Identifier BATTERY_SLOT_ICON = Hayo.modId("slot_icon/battery");
 
     public BatteryBoxSlot(Container container, int slot, int x, int y) {
         super(container, slot, x, y);

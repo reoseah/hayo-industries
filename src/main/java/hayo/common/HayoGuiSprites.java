@@ -25,7 +25,7 @@ public class HayoGuiSprites {
         }
     }
 
-    public static final Identifier SLOT = Hayo.modId("slots/default");
+    public static final Identifier SLOT = Hayo.modId("slot/default");
 
     public static void blitSlot(GuiGraphicsExtractor graphics, int x, int y) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT, x, y, 18, 18);
@@ -40,13 +40,13 @@ public class HayoGuiSprites {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT, left, top + 18 * 3 + 4, 18 * 9, 18);
     }
 
-    public static final Identifier OUTPUT_SLOT = Hayo.modId("slots/output");
+    public static final Identifier OUTPUT_SLOT = Hayo.modId("slot/output");
 
     public static void blitOutputSlot(GuiGraphicsExtractor graphics, int x, int y) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, OUTPUT_SLOT, x, y, 24, 24);
     }
 
-    public static final Identifier UPGRADE_SLOT = Hayo.modId("slots/upgrade");
+    public static final Identifier UPGRADE_SLOT = Hayo.modId("slot/upgrade");
 
     public static void blitUpgradeSlots(GuiGraphicsExtractor graphics, int left, int top, int count) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, UPGRADE_SLOT, left, top, 18, 18 * count);
@@ -58,16 +58,16 @@ public class HayoGuiSprites {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_CONNECTION_9_WIDE, x, y, 11, 2);
     }
 
-    public static final Identifier DEFAULT_ARROW = Hayo.modId("recipe_arrows/default");
-    public static final Identifier DEFAULT_ARROW_OVERLAY = Hayo.modId("recipe_arrows/default_overlay");
-    public static final Identifier MACERATING_ARROW = Hayo.modId("recipe_arrows/macerating");
-    public static final Identifier MACERATING_ARROW_OVERLAY = Hayo.modId("recipe_arrows/macerating_overlay");
-    public static final Identifier COMPRESSING_ARROW = Hayo.modId("recipe_arrows/compressing");
-    public static final Identifier COMPRESSING_ARROW_OVERLAY = Hayo.modId("recipe_arrows/compressing_overlay");
-    public static final Identifier EXTRACTING_ARROW = Hayo.modId("recipe_arrows/extracting");
-    public static final Identifier EXTRACTING_ARROW_OVERLAY = Hayo.modId("recipe_arrows/extracting_overlay");
-    public static final Identifier REACTING_ARROW = Hayo.modId("recipe_arrows/reacting");
-    public static final Identifier REACTING_ARROW_OVERLAY = Hayo.modId("recipe_arrows/reacting_overlay");
+    public static final Identifier DEFAULT_ARROW = Hayo.modId("recipe_arrow/default");
+    public static final Identifier DEFAULT_ARROW_OVERLAY = Hayo.modId("recipe_arrow/default_overlay");
+    public static final Identifier MACERATING_ARROW = Hayo.modId("recipe_arrow/macerating");
+    public static final Identifier MACERATING_ARROW_OVERLAY = Hayo.modId("recipe_arrow/macerating_overlay");
+    public static final Identifier COMPRESSING_ARROW = Hayo.modId("recipe_arrow/compressing");
+    public static final Identifier COMPRESSING_ARROW_OVERLAY = Hayo.modId("recipe_arrow/compressing_overlay");
+    public static final Identifier EXTRACTING_ARROW = Hayo.modId("recipe_arrow/extracting");
+    public static final Identifier EXTRACTING_ARROW_OVERLAY = Hayo.modId("recipe_arrow/extracting_overlay");
+    public static final Identifier REACTING_ARROW = Hayo.modId("recipe_arrow/reacting");
+    public static final Identifier REACTING_ARROW_OVERLAY = Hayo.modId("recipe_arrow/reacting_overlay");
 
     public static void blitRecipeArrow(GuiGraphicsExtractor graphics, int x, int y, Identifier arrow, Identifier arrowOverlay, int progress, int maxProgress) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, arrow, x, y, 24, 16);
