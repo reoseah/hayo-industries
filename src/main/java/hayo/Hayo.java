@@ -40,6 +40,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.item.v1.BlockTransformerHelper;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
@@ -68,6 +69,8 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.Compostable;
+import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -93,6 +96,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -239,9 +245,8 @@ public class Hayo {
         );
 
         public static void initialize() {
-            // FIXME readd
-//            StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
-//            StrippableBlockRegistry.register(RUBBER_WOOD, STRIPPED_RUBBER_WOOD);
+            BlockTransformerHelper.registerStripping(RUBBER_LOG, STRIPPED_RUBBER_LOG);
+            BlockTransformerHelper.registerStripping(RUBBER_WOOD, STRIPPED_RUBBER_WOOD);
 
             FlammableBlockRegistry.getDefaultInstance().add(Blocks.CHEMFUEL, 60, 5);
         }
@@ -331,7 +336,12 @@ public class Hayo {
 
         public static final Item CHEMFUEL_BUCKET = registerItem("chemfuel_bucket",
                 properties -> new BucketItem(Fluids.CHEMFUEL, properties),
-                new Item.Properties().craftRemainder(BUCKET).stacksTo(1)
+                new Item.Properties()
+                        .craftRemainder(BUCKET)
+                        .stacksTo(1)
+                        .component(
+                                DataComponents.COOKING_FUEL, new CookingFuel(new ResolvableInt.Constant(2000), ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER))
+                        )
         );
 
         private static final TagKey<Item> COPPER_INGOTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots/copper"));
@@ -457,7 +467,15 @@ public class Hayo {
         public static final Item QUANTUM_LEGGINGS = registerItem("quantum_leggings", SimpleElectricItem::new, quantumArmorProperties(ArmorType.LEGGINGS, 6, 40));
         public static final Item QUANTUM_BOOTS = registerItem("quantum_boots", SimpleElectricItem::new, quantumArmorProperties(ArmorType.BOOTS, 3, 15));
 
-        public static final Item WOOD_DUST = registerItem("wood_dust");
+        public static final Item WOOD_DUST = registerItem("wood_dust", new Item.Properties()
+                .component(DataComponents.COOKING_FUEL, new CookingFuel(
+                        new ResolvableInt.Constant(100),
+                        ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER)
+                ))
+                .component(DataComponents.COMPOSTABLE, new Compostable(
+                        new ResolvableInt.Constant(15)
+                ))
+        );
         public static final Item STONE_DUST = registerItem("stone_dust");
         public static final Item COAL_DUST = registerItem("coal_dust");
         public static final Item COPPER_DUST = registerItem("copper_dust");
@@ -474,7 +492,12 @@ public class Hayo {
         public static final Item SILICON_BRONZE_NUGGET = registerItem("silicon_bronze_nugget");
 
         public static final Item STICKY_RESIN = registerItem("sticky_resin");
-        public static final Item RUBBER = registerItem("rubber");
+        public static final Item RUBBER = registerItem("rubber", new Item.Properties()
+                .component(
+                        DataComponents.COOKING_FUEL,
+                        new CookingFuel(new ResolvableInt.Constant(1), ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER))
+                )
+        );
         public static final Item COPPER_WIRE = registerItem("copper_wire");
         public static final Item CIRCUIT = registerItem("circuit");
         public static final Item ADVANCED_CIRCUIT = registerItem("advanced_circuit", new Item.Properties().rarity(Rarity.RARE));
@@ -486,9 +509,18 @@ public class Hayo {
         public static final Item RAW_IRIDIUM_NUGGET = registerItem("raw_iridium_nugget", new Item.Properties().rarity(Rarity.RARE));
         public static final Item RAW_IRIDIUM = registerItem("raw_iridium", new Item.Properties().rarity(Rarity.RARE));
         public static final Item QUANTUM_PLATE = registerItem("quantum_plate", new Item.Properties().rarity(Rarity.UNCOMMON));
-        public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants");
+        public static final Item COMPRESSED_PLANTS = registerItem("compressed_plants", new Item.Properties()
+                .component(DataComponents.COMPOSTABLE, new Compostable(new ResolvableInt.Constant(100)))
+        );
+
         public static final Item CANISTER = registerItem("canister", new Item.Properties().stacksTo(16));
-        public static final Item CHEMFUEL_CANISTER = registerItem("chemfuel_canister", new Item.Properties().stacksTo(1).craftRemainder(CANISTER));
+        public static final Item CHEMFUEL_CANISTER = registerItem("chemfuel_canister", new Item.Properties()
+                .stacksTo(1)
+                .craftRemainder(CANISTER)
+                .component(
+                        DataComponents.COOKING_FUEL, new CookingFuel(new ResolvableInt.Constant(8000), ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER))
+                )
+        );
         public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food(new FoodProperties(4, 8F, false)));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade",
@@ -563,17 +595,6 @@ public class Hayo {
         );
 
         public static void initialize() {
-            // FIXME readd
-//            CompostableRegistry.INSTANCE.add(WOOD_DUST, 0.15F);
-//            CompostableRegistry.INSTANCE.add(COMPRESSED_PLANTS, 1F);
-//
-//            FuelValueEvents.BUILD.register((builder, _) -> {
-//                builder.add(TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "dusts/wood")), 100);
-//                builder.add(RUBBER, 200);
-//                builder.add(CHEMFUEL_BUCKET, 2000);
-//                builder.add(CHEMFUEL_CANISTER, 8000);
-//            });
-
             CreativeModeTabEvents.modifyOutputEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
                 entries.accept(ELECTRIC_FURNACE);
                 entries.accept(MACERATOR);
