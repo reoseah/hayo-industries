@@ -1,11 +1,11 @@
 package hayo.mod_support.jei;
 
 import hayo.common.HayoGuiSprites;
+import hayo.common.ItemTemplateWithChance;
 import hayo.energy.client.EnergyGuiSprites;
 import hayo.features.fluid_stack.FluidGuiRendering;
 import hayo.features.fluid_stack.FluidIngredientAmount;
 import hayo.features.fluid_stack.FluidStack;
-import hayo.common.ItemTemplateWithChance;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;

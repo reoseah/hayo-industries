@@ -1,6 +1,5 @@
 package hayo.features.energy_storage;
 
-import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
 import hayo.common.block.DirectionalElectricalBlock;
 import hayo.energy.block.EnergyReceiver;
@@ -9,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -17,15 +15,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 public class EnergyStorageUnitBlock extends DirectionalElectricalBlock implements EnergyReceiver, EnergySender {
-    public static final MapCodec<EnergyStorageUnitBlock> CODEC = simpleCodec(EnergyStorageUnitBlock::new);
-
     public EnergyStorageUnitBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Override

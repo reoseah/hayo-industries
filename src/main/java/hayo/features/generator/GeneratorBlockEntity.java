@@ -8,20 +8,21 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
 import org.jspecify.annotations.Nullable;
 
 public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer {
@@ -105,20 +106,19 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
     }
 
     protected boolean canConsumeFuel() {
-        return this.level != null //
-                && !this.getItem(0).is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS) //
-                && FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).isFuel(this.getItem(0));
+        var fuel = this.getItem(0);
+        return !fuel.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS) && fuel.has(DataComponents.COOKING_FUEL);
     }
 
     protected void tryConsumeFuel() {
-        if (this.level == null) {
+        if (!(this.level instanceof ServerLevel serverLevel)) {
             return;
         }
         var fuel = this.getItem(0);
         if (fuel.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS)) {
             return;
         }
-        int fuelValue = FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).burnDuration(fuel);
+        int fuelValue = ResolvableInt.getFromItem(fuel, DataComponents.COOKING_FUEL, CookingFuel::burnTime, this.getLootContext(serverLevel), 0);
         if (fuelValue <= 0) {
             return;
         }
@@ -140,12 +140,12 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
-        return FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).isFuel(stack);
+        return stack.has(DataComponents.COOKING_FUEL) && !stack.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS);
     }
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
-        return !FuelValues.vanillaBurnTimes(this.level.registryAccess(), FeatureFlags.DEFAULT_FLAGS).isFuel(stack);
+        return !stack.has(DataComponents.COOKING_FUEL) || stack.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS);
     }
 
 }

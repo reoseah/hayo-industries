@@ -2,6 +2,7 @@ package hayo.features.generator;
 
 import hayo.Hayo;
 import hayo.common.menu.HayoContainerMenu;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,7 +23,7 @@ public class GeneratorMenu extends HayoContainerMenu {
     protected GeneratorMenu(int containerId, Container container, GeneratorContainerData generatorData, Inventory inventory) {
         super(Hayo.MenuTypes.GENERATOR, containerId, container);
 
-        this.addSlot(new GeneratorFuelSlot(container, 0, 62, 54, inventory.player.level().fuelValues()));
+        this.addSlot(new GeneratorFuelSlot(container, 0, 62, 54));
         this.addStandardInventorySlots(inventory, 8, 84);
 
         this.generatorData = generatorData;
@@ -31,7 +32,7 @@ public class GeneratorMenu extends HayoContainerMenu {
 
     @Override
     protected boolean handleQuickMoveFromInventory(ItemStack stack, Player player, int index) {
-        if (player.level().fuelValues().isFuel(stack) && !stack.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS)) {
+        if (stack.has(DataComponents.COOKING_FUEL) && !stack.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS)) {
             return this.moveItemStackTo(stack, 0, 1, false);
         }
         return false;

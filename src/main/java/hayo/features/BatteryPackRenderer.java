@@ -26,7 +26,7 @@ public record BatteryPackRenderer(HumanoidModel<HumanoidRenderState> model,
     @Override
     public void render(PoseStack poseStack, SubmitNodeCollector nodeCollector, ItemStack stack, HumanoidRenderState state, EquipmentSlot slot, int light, HumanoidModel<HumanoidRenderState> contextModel) {
         var renderType = contextModel.renderType(this.texture);
-        nodeCollector.submitModel(this.model, state, poseStack, renderType, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF, null, 0, null);
+        nodeCollector.submitModel(this.model, state, poseStack, renderType, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF, null, 0);
     }
 
     public static LayerDefinition createLayerDefinition() {

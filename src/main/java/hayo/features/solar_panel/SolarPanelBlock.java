@@ -1,6 +1,5 @@
 package hayo.features.solar_panel;
 
-import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
 import hayo.energy.block.EnergyCable;
 import hayo.energy.block.EnergyGrid;
@@ -8,7 +7,7 @@ import hayo.energy.block.EnergySender;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -25,16 +24,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
 public class SolarPanelBlock extends BaseEntityBlock implements EnergySender, EnergyCable {
-    public static final MapCodec<SolarPanelBlock> CODEC = simpleCodec(SolarPanelBlock::new);
     public static final VoxelShape SHAPE = Block.column(16.0, 0.0, 6.0);
 
     public SolarPanelBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Override
@@ -77,8 +70,8 @@ public class SolarPanelBlock extends BaseEntityBlock implements EnergySender, En
     }
 
     @Override
-    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
-        super.playerDestroy(level, player, pos, state, blockEntity, tool);
+    public void playerDestroy(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack destroyedWith) {
+        super.playerDestroy(level, player, pos, state, blockEntity, destroyedWith);
         if (level instanceof ServerLevel serverLevel) {
             EnergyGrid.remove(serverLevel, pos);
         }

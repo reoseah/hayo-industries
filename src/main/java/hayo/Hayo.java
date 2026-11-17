@@ -42,10 +42,7 @@ import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
-import net.fabricmc.fabric.api.registry.CompostableRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.registry.FuelValueEvents;
-import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.HolderGetter;
@@ -64,6 +61,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.food.FoodProperties;
@@ -99,7 +97,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -115,13 +112,10 @@ public class Hayo {
 
     public static final TreeGrower RUBBER_TREE = new TreeGrower(
             "hayo:rubber_tree",
-            0F,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.of(modKey(Registries.CONFIGURED_FEATURE, "rubber_tree")),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty());
+            WeightedList.of(modKey(Registries.FEATURE, "rubber_tree")),
+            WeightedList.of(),
+            WeightedList.of(),
+            modKey(Registries.FEATURE, "rubber_tree"));
 
     public static final ResourceKey<LootTable> NETHER_STATION_CHEST = modKey(Registries.LOOT_TABLE, "chests/nether_station");
 
@@ -190,9 +184,9 @@ public class Hayo {
         public static final Block ENERGY_STORAGE_UNIT = register("energy_storage_unit", EnergyStorageUnitBlock::new, MACHINE_PROPS);
         public static final Block ADVANCED_ENERGY_STORAGE_UNIT = register("advanced_energy_storage_unit", AdvancedEnergyStorageUnitBlock::new, MACHINE_PROPS);
 
-        public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final CableBlock QUADRUPLE_POWER_CABLE = register("quadruple_power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-        public static final CableBlock ENERGY_BUS = register("energy_bus", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
+        public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.POPPED));
+        public static final CableBlock QUADRUPLE_POWER_CABLE = register("quadruple_power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.POPPED));
+        public static final CableBlock ENERGY_BUS = register("energy_bus", properties -> new CableBlock(512, 5, properties), BlockBehaviour.Properties.of().strength(1F, 15).sound(SoundType.METAL).pushReaction(PushReaction.POPPED));
 
         public static final Block RUBBER_LOG = register("rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.PODZOL, SoundType.WOOD));
         public static final Block RESIN_PRODUCING_RUBBER_LOG = register("resin_producing_rubber_log", ResinProducingLogBlock::new, BlockBehaviour.Properties.of().randomTicks().instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
@@ -200,13 +194,13 @@ public class Hayo {
         public static final Block STRIPPED_RUBBER_LOG = register("stripped_rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block STRIPPED_RUBBER_WOOD = register("stripped_rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block RUBBER_LEAVES = register("rubber_leaves", properties -> new TintedParticleLeavesBlock(0.01F, properties), leavesProperties(SoundType.GRASS));
-        public static final Block RUBBER_SAPLING = register("rubber_sapling", properties -> new SaplingBlock(RUBBER_TREE, properties), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
+        public static final Block RUBBER_SAPLING = register("rubber_sapling", properties -> new SaplingBlock(RUBBER_TREE, properties), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.POPPED));
 
         public static final BlockBehaviour.Properties RUBBER_PROPERTIES = BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava();
         public static final Block RUBBER_PLANKS = register("rubber_planks", Block::new, RUBBER_PROPERTIES);
         public static final Block RUBBER_STAIRS = register("rubber_stairs", props -> new StairBlock(RUBBER_PLANKS.defaultBlockState(), props), RUBBER_PROPERTIES);
         public static final Block RUBBER_SLAB = register("rubber_slab", SlabBlock::new, RUBBER_PROPERTIES);
-        public static final Block RUBBER_DOOR = register("rubber_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
+        public static final Block RUBBER_DOOR = register("rubber_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.POPPED));
 
         public static final Block IRIDIUM_ORE = register("iridium_ore", Block::new, BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.DIAMOND_ORE));
         public static final Block DEEPSLATE_IRIDIUM_ORE = register("deepslate_iridium_ore", Block::new, BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.DEEPSLATE_DIAMOND_ORE));
@@ -219,7 +213,7 @@ public class Hayo {
         public static final Block RAW_IRIDIUM_BLOCK = register("raw_iridium_block", Block::new, BlockBehaviour.Properties.of().strength(3F).mapColor(MapColor.SNOW));
 
         public static final Block CHIPBOARD = register("chipboard", Block::new, BlockBehaviour.Properties.of().strength(3F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
-        public static final Block CHIPBOARD_DOOR = register("chipboard_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
+        public static final Block CHIPBOARD_DOOR = register("chipboard_door", props -> new DoorBlock(BlockSetType.OAK, props), BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().ignitedByLava().pushReaction(PushReaction.POPPED));
 
         private static final BlockBehaviour.Properties REINFORCED_BLOCKS = BlockBehaviour.Properties.of().strength(3F, 30F).sound(SoundType.STONE).mapColor(MapColor.DEEPSLATE);
         public static final Block REINFORCED_STONE = register("reinforced_stone", Block::new, REINFORCED_BLOCKS);
@@ -238,15 +232,16 @@ public class Hayo {
                         .replaceable()
                         .noCollision()
                         .strength(100.0F)
-                        .pushReaction(PushReaction.DESTROY)
+                        .pushReaction(PushReaction.POPPED)
                         .noLootTable()
                         .liquid()
                         .sound(SoundType.EMPTY)
         );
 
         public static void initialize() {
-            StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
-            StrippableBlockRegistry.register(RUBBER_WOOD, STRIPPED_RUBBER_WOOD);
+            // FIXME readd
+//            StrippableBlockRegistry.register(RUBBER_LOG, STRIPPED_RUBBER_LOG);
+//            StrippableBlockRegistry.register(RUBBER_WOOD, STRIPPED_RUBBER_WOOD);
 
             FlammableBlockRegistry.getDefaultInstance().add(Blocks.CHEMFUEL, 60, 5);
         }
@@ -355,10 +350,10 @@ public class Hayo {
 
         private static final ToolMaterial SILICON_BRONZE = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, ToolMaterial.DIAMOND.durability(), 7, 2.0F, 10, ItemTags.SILICON_BRONZE_INGOTS);
         public static final Item SILICON_BRONZE_SWORD = registerItem("silicon_bronze_sword", new Item.Properties().sword(SILICON_BRONZE, 3.0F, -2.4F));
-        public static final Item SILICON_BRONZE_SHOVEL = registerItem("silicon_bronze_shovel", properties -> new ShovelItem(SILICON_BRONZE, 1.5F, -3.0F, properties));
+        public static final Item SILICON_BRONZE_SHOVEL = registerItem("silicon_bronze_shovel", new Item.Properties().shovel(SILICON_BRONZE, 1.5F, -3.0F));
         public static final Item SILICON_BRONZE_PICKAXE = registerItem("silicon_bronze_pickaxe", new Item.Properties().pickaxe(SILICON_BRONZE, 1.0F, -2.8F));
-        public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe", properties -> new AxeItem(SILICON_BRONZE, 6.0F, -3.1F, properties));
-        public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", properties -> new HoeItem(SILICON_BRONZE, -2.0F, -1.0F, properties));
+        public static final Item SILICON_BRONZE_AXE = registerItem("silicon_bronze_axe", new Item.Properties().axe(SILICON_BRONZE, 6.0F, -3.1F));
+        public static final Item SILICON_BRONZE_HOE = registerItem("silicon_bronze_hoe", new Item.Properties().hoe(SILICON_BRONZE, -2.0F, -1.0F));
 
         private static final ArmorMaterial FLAK_ARMOR = new ArmorMaterial(
                 50, ArmorMaterials.makeDefense(3, 6, 8, 3, 11), 10, net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 0.0F, ItemTags.FLAK_MATERIALS, modKey(EquipmentAssets.ROOT_ID, "flak")
@@ -568,15 +563,16 @@ public class Hayo {
         );
 
         public static void initialize() {
-            CompostableRegistry.INSTANCE.add(WOOD_DUST, 0.15F);
-            CompostableRegistry.INSTANCE.add(COMPRESSED_PLANTS, 1F);
-
-            FuelValueEvents.BUILD.register((builder, _) -> {
-                builder.add(TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "dusts/wood")), 100);
-                builder.add(RUBBER, 200);
-                builder.add(CHEMFUEL_BUCKET, 2000);
-                builder.add(CHEMFUEL_CANISTER, 8000);
-            });
+            // FIXME readd
+//            CompostableRegistry.INSTANCE.add(WOOD_DUST, 0.15F);
+//            CompostableRegistry.INSTANCE.add(COMPRESSED_PLANTS, 1F);
+//
+//            FuelValueEvents.BUILD.register((builder, _) -> {
+//                builder.add(TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "dusts/wood")), 100);
+//                builder.add(RUBBER, 200);
+//                builder.add(CHEMFUEL_BUCKET, 2000);
+//                builder.add(CHEMFUEL_CANISTER, 8000);
+//            });
 
             CreativeModeTabEvents.modifyOutputEvent(modKey(Registries.CREATIVE_MODE_TAB, "main")).register((entries) -> {
                 entries.accept(ELECTRIC_FURNACE);

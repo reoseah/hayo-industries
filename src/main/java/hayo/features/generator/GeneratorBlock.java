@@ -1,6 +1,5 @@
 package hayo.features.generator;
 
-import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
 import hayo.energy.block.EnergySender;
@@ -11,7 +10,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,15 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 public class GeneratorBlock extends HorizontalDirectionalElectricalBlock implements EnergySender {
-    public static final MapCodec<GeneratorBlock> CODEC = simpleCodec(GeneratorBlock::new);
-
     public GeneratorBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Override

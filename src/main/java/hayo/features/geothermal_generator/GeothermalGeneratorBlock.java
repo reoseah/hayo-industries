@@ -1,11 +1,9 @@
 package hayo.features.geothermal_generator;
 
-import com.mojang.serialization.MapCodec;
 import hayo.Hayo;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -13,15 +11,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 public class GeothermalGeneratorBlock extends HorizontalDirectionalElectricalBlock {
-    public static final MapCodec<GeothermalGeneratorBlock> CODEC = simpleCodec(GeothermalGeneratorBlock::new);
-
     public GeothermalGeneratorBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
@@ -18,8 +19,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Optional;
 
 public abstract class SimpleContainerBlockEntity extends BlockEntity implements Container, Nameable, MenuProvider {
     protected final NonNullList<ItemStack> stacks;
@@ -127,6 +135,17 @@ public abstract class SimpleContainerBlockEntity extends BlockEntity implements 
     @Override
     public Component getName() {
         return this.customName != null ? this.customName : this.getDefaultName();
+    }
+
+    protected LootContext getLootContext(ServerLevel level) {
+        return new LootContext.Builder(
+                new LootParams.Builder(level)
+                        .withParameter(LootContextParams.BLOCK_STATE, this.getBlockState())
+                        .withParameter(LootContextParams.BLOCK_ENTITY, this)
+                        .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(this.getBlockPos()))
+                        .withParameter(LootContextParams.CONTAINER, this)
+                        .create(LootContextParamSets.CONTAINER_PROCESS))
+                .create(Optional.empty());
     }
 
     protected boolean canInsertToSlot(ItemStack stack, int slot) {
