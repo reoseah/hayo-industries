@@ -20,17 +20,23 @@
       "count": 16
     },
     {
-      "type": "minecraft:random_offset",
-      "xz_spread": {
+      "type": "minecraft:offset",
+      "x": {
         "type": "minecraft:trapezoid",
-        "max": 7,
-        "min": -7,
+        "max": 6,
+        "min": -6,
         "plateau": 0
       },
-      "y_spread": {
+      "y": {
         "type": "minecraft:trapezoid",
-        "max": 3,
-        "min": -3,
+        "max": 2,
+        "min": -2,
+        "plateau": 0
+      },
+      "z": {
+        "type": "minecraft:trapezoid",
+        "max": 6,
+        "min": -6,
         "plateau": 0
       }
     },
@@ -43,8 +49,8 @@
       "predicate": {
         "type": "minecraft:would_survive",
         "state": {
-          "Name": "hayo:rubber_sapling",
-          "Properties": {
+          "id": "hayo:rubber_sapling",
+          "properties": {
             "stage": "0"
           }
         }

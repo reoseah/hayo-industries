@@ -1,30 +1,11 @@
 {
   "type": "minecraft:tree",
-  "below_trunk_provider": {
-    "type": "minecraft:rule_based_state_provider",
-    "rules": [
-      {
-        "if_true": {
-          "type": "minecraft:not",
-          "predicate": {
-            "type": "minecraft:matching_block_tag",
-            "tag": "minecraft:cannot_replace_below_tree_trunk"
-          }
-        },
-        "then": {
-          "type": "minecraft:simple_state_provider",
-          "state": {
-            "Name": "minecraft:dirt"
-          }
-        }
-      }
-    ]
-  },
+  "below_trunk_provider": "minecraft:soil_beneath_tree",
   "decorators": [],
   "dirt_provider": {
     "type": "minecraft:simple_state_provider",
     "state": {
-      "Name": "minecraft:dirt"
+      "id": "minecraft:dirt"
     }
   },
   "foliage_placer": {
@@ -41,14 +22,11 @@
     }
   },
   "foliage_provider": {
-    "type": "minecraft:simple_state_provider",
-    "state": {
-      "Name": "hayo:rubber_leaves",
-      "Properties": {
-        "distance": "7",
-        "persistent": "false",
-        "waterlogged": "false"
-      }
+    "id": "hayo:rubber_leaves",
+    "properties": {
+      "distance": "7",
+      "persistent": "false",
+      "waterlogged": "false"
     }
   },
   "ignore_vines": true,
@@ -65,12 +43,12 @@
     "height_rand_b": 1
   },
   "trunk_provider": {
-    "type": "minecraft:weighted_state_provider",
+    "type": "minecraft:weighted",
     "entries": [
       {
         "data": {
-          "Name": "hayo:rubber_log",
-          "Properties": {
+          "id": "hayo:rubber_log",
+          "properties": {
             "axis": "y"
           }
         },
@@ -78,8 +56,8 @@
       },
       {
         "data": {
-          "Name": "hayo:resin_producing_rubber_log",
-          "Properties": {
+          "id": "hayo:resin_producing_rubber_log",
+          "properties": {
             "facing": "north",
             "has_resin": "false"
           }
@@ -88,8 +66,8 @@
       },
       {
         "data": {
-          "Name": "hayo:resin_producing_rubber_log",
-          "Properties": {
+          "id": "hayo:resin_producing_rubber_log",
+          "properties": {
             "facing": "south",
             "has_resin": "false"
           }
@@ -98,8 +76,8 @@
       },
       {
         "data": {
-          "Name": "hayo:resin_producing_rubber_log",
-          "Properties": {
+          "id": "hayo:resin_producing_rubber_log",
+          "properties": {
             "facing": "east",
             "has_resin": "false"
           }
@@ -108,8 +86,8 @@
       },
       {
         "data": {
-          "Name": "hayo:resin_producing_rubber_log",
-          "Properties": {
+          "id": "hayo:resin_producing_rubber_log",
+          "properties": {
             "facing": "west",
             "has_resin": "false"
           }
@@ -118,8 +96,8 @@
       },
       {
         "data": {
-          "Name": "hayo:resin_producing_rubber_log",
-          "Properties": {
+          "id": "hayo:resin_producing_rubber_log",
+          "properties": {
             "facing": "north",
             "has_resin": "true"
           }
@@ -128,8 +106,8 @@
       },
       {
         "data": {
-          "Name": "hayo:resin_producing_rubber_log",
-          "Properties": {
+          "id": "hayo:resin_producing_rubber_log",
+          "properties": {
             "facing": "south",
             "has_resin": "true"
           }
@@ -138,8 +116,8 @@
       },
       {
         "data": {
-          "Name": "hayo:resin_producing_rubber_log",
-          "Properties": {
+          "id": "hayo:resin_producing_rubber_log",
+          "properties": {
             "facing": "east",
             "has_resin": "true"
           }
@@ -148,8 +126,8 @@
       },
       {
         "data": {
-          "Name": "hayo:resin_producing_rubber_log",
-          "Properties": {
+          "id": "hayo:resin_producing_rubber_log",
+          "properties": {
             "facing": "west",
             "has_resin": "true"
           }
