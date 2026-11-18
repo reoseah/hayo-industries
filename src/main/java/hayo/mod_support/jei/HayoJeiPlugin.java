@@ -7,6 +7,7 @@ import hayo.features.fluid_stack.FluidFillingRecipe;
 import hayo.features.processing_machine.classic.*;
 import hayo.features.processing_machine.matter_generator.MatterGeneratingRecipe;
 import hayo.features.processing_machine.solid_fluid_reactor.BaseSolidFluidReactingRecipe;
+import hayo.mod_support.jei.widgets.HayoJeiWidgets;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -55,14 +56,14 @@ public class HayoJeiPlugin implements IModPlugin {
         Function<Item, IDrawable> itemDrawable = guiHelper::createDrawableItemLike;
 
         var electricFurnace = itemDrawable.apply(Hayo.Items.ELECTRIC_FURNACE);
-        registration.addRecipeCategories(new ElectricCookingCategory(ELECTRIC_SMELTING, Component.translatable("hayo.recipe_type.electric_smelting"), electricFurnace, null));
-        registration.addRecipeCategories(new ElectricCookingCategory(
+        registration.addRecipeCategories(new ElectricFurnaceJeiCategory(ELECTRIC_SMELTING, Component.translatable("hayo.recipe_type.electric_smelting"), electricFurnace, null));
+        registration.addRecipeCategories(new ElectricFurnaceJeiCategory(
                 ELECTRIC_BLASTING,
                 Component.translatable("hayo.recipe_type.electric_blasting"),
                 HayoJeiWidgets.machineWithUpgrade(guiHelper, Hayo.Items.ELECTRIC_FURNACE, Hayo.Items.BLASTING_UPGRADE),
                 new ItemStack(Hayo.Items.BLASTING_UPGRADE)
         ));
-        registration.addRecipeCategories(new ElectricCookingCategory(
+        registration.addRecipeCategories(new ElectricFurnaceJeiCategory(
                 ELECTRIC_SMOKING,
                 Component.translatable("hayo.recipe_type.electric_smoking"),
                 HayoJeiWidgets.machineWithUpgrade(guiHelper, Hayo.Items.ELECTRIC_FURNACE, Hayo.Items.SMOKING_UPGRADE),

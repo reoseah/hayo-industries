@@ -4,6 +4,8 @@ import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.features.processing_machine.matter_generator.MatterGeneratingRecipe;
 import hayo.features.processing_machine.matter_generator.MatterGeneratorBlockEntity;
+import hayo.mod_support.jei.widgets.AnimatedSpriteJeiDrawable;
+import hayo.mod_support.jei.widgets.SpriteJeiDrawable;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
@@ -19,8 +21,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-
-import static hayo.mod_support.jei.HayoJeiWidgets.UPGRADE_SLOT_DRAWABLE;
 
 public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder<MatterGeneratingRecipe>> {
     private final IDrawable icon;
@@ -58,7 +58,7 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<MatterGeneratingRecipe> holder, IFocusGroup focuses) {
         if (holder.value().requiredUpgrade().value() != Items.AIR) {
             builder.addSlot(RecipeIngredientRole.CRAFTING_STATION, 1, 5)
-                    .setBackground(UPGRADE_SLOT_DRAWABLE, -1, -1)
+                    .setBackground(SpriteJeiDrawable.UPGRADE_SLOT, -1, -1)
                     .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.required_upgrade").withStyle(ChatFormatting.YELLOW)))
                     .add(holder.value().requiredUpgrade().value());
         }
@@ -76,7 +76,7 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
         int useRate = MatterGeneratorBlockEntity.ENERGY_USE_RATE;
         float duration = Mth.positiveCeilDiv(energyCost, useRate) / 20F;
 
-        builder.addDrawableWidget(HayoJeiWidgets.zapWidget(energyCost, useRate))
+        builder.addDrawableWidget(AnimatedSpriteJeiDrawable.zapWidget(energyCost, useRate))
                 .setPosition(23, 5)
                 .setTooltip(List.of(
                         EnergyTexts.amount(energyCost),
@@ -87,7 +87,7 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
                 .setPosition(1, 28)
                 .setColor(0xFF404040);
 
-        builder.addDrawableWidget(HayoJeiWidgets.recipeArrow(energyCost, useRate, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY))
+        builder.addDrawableWidget(AnimatedSpriteJeiDrawable.recipeArrow(energyCost, useRate, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY))
                 .setPosition(44, 4);
     }
 }

@@ -2,6 +2,9 @@ package hayo.mod_support.jei;
 
 import hayo.energy.EnergyTexts;
 import hayo.features.processing_machine.classic.ClassicMachineRecipe;
+import hayo.mod_support.jei.widgets.AnimatedSpriteJeiDrawable;
+import hayo.mod_support.jei.widgets.HayoJeiWidgets;
+import hayo.mod_support.jei.widgets.SpriteJeiDrawable;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
@@ -73,7 +76,7 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
         var recipe = holder.value();
         if (this.canHaveCatalyst() && !this.getCatalyst(holder).isEmpty()) {
             builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
-                    .setBackground(HayoJeiWidgets.UPGRADE_SLOT_DRAWABLE, -1, -1)
+                    .setBackground(SpriteJeiDrawable.UPGRADE_SLOT, -1, -1)
                     .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.required_upgrade").withStyle(ChatFormatting.YELLOW)))
                     .add(this.getCatalyst(holder));
         }
@@ -100,7 +103,7 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
         int useRate = this.getEnergyUseRate(holder);
         float duration = Mth.positiveCeilDiv(energyCost, useRate) / 20F;
 
-        builder.addDrawableWidget(HayoJeiWidgets.zapWidget(energyCost, useRate))
+        builder.addDrawableWidget(AnimatedSpriteJeiDrawable.zapWidget(energyCost, useRate))
                 .setPosition(left + 1, 20)
                 .setTooltip(List.of(
                         EnergyTexts.amount(energyCost),
@@ -110,7 +113,7 @@ public abstract class SingleItemJeiCategory<T extends RecipeHolder<? extends Sin
                 .setColor(0xFF404040)
                 .setPosition(left + 19, 24);
 
-        builder.addDrawableWidget(HayoJeiWidgets.recipeArrow(energyCost, useRate, this.getArrowSprite(), this.getArrowOverlaySprite()))
+        builder.addDrawableWidget(AnimatedSpriteJeiDrawable.recipeArrow(energyCost, useRate, this.getArrowSprite(), this.getArrowOverlaySprite()))
                 .setPosition(left + 24, 4);
 
         if (holder.value() instanceof ClassicMachineRecipe machineRecipe && machineRecipe.extraResultChance > 0) {

@@ -11,11 +11,11 @@ import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jspecify.annotations.Nullable;
 
-public class ElectricCookingCategory extends SingleItemJeiCategory<RecipeHolder<? extends AbstractCookingRecipe>> {
+public class ElectricFurnaceJeiCategory extends SingleItemJeiCategory<RecipeHolder<? extends AbstractCookingRecipe>> {
     private final IRecipeType<? extends RecipeHolder<? extends AbstractCookingRecipe>> type;
     private final Component title;
 
-    public ElectricCookingCategory(IRecipeType<? extends RecipeHolder<? extends AbstractCookingRecipe>> type, Component title, IDrawable icon, @Nullable ItemStack requiredUpgrade) {
+    public ElectricFurnaceJeiCategory(IRecipeType<? extends RecipeHolder<? extends AbstractCookingRecipe>> type, Component title, IDrawable icon, @Nullable ItemStack requiredUpgrade) {
         super(icon, requiredUpgrade);
         this.type = (IRecipeType<RecipeHolder<? extends AbstractCookingRecipe>>) type;
         this.title = title;

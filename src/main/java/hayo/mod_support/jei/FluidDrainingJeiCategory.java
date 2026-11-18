@@ -4,6 +4,7 @@ import hayo.common.HayoGuiSprites;
 import hayo.features.fluid_stack.FluidDrainingRecipe;
 import hayo.features.fluid_stack.FluidGuiRendering;
 import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
+import hayo.mod_support.jei.widgets.FluidTankJeiDrawable;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -64,7 +65,7 @@ public class FluidDrainingJeiCategory implements IRecipeCategory<RecipeHolder<Fl
 
         builder.addText(Component.translatable("hayo.ticks", recipe.ticks()), Integer.MAX_VALUE, Integer.MAX_VALUE).setColor(0xFF404040).setPosition(50, 42);
 
-        builder.addDrawableWidget(HayoJeiWidgets.fluidTank(recipe.resultFluid(), SolidFluidReactorBlockEntity.FLUID_CAPACITY))
+        builder.addDrawableWidget(FluidTankJeiDrawable.ofStack(recipe.resultFluid(), SolidFluidReactorBlockEntity.FLUID_CAPACITY))
                 .setPosition(27, -1)
                 .setTooltip(tooltip -> tooltip.addAll(FluidGuiRendering.createTooltip(recipe.resultFluid())));
     }

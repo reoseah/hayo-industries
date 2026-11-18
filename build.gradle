@@ -15,6 +15,17 @@ repositories {
             artifact()
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Cassian's Maven"
+                url = uri("https://maven.cassian.cc")
+            }
+        }
+        filter {
+            includeGroupAndSubgroups("cc.cassian")
+        }
+    }
 }
 
 allprojects {
@@ -57,9 +68,20 @@ allprojects {
     }
 }
 
+sourceSets {
+    main {
+        java {
+            exclude 'hayo/mod_support/jei/**'
+//            exclude 'hayo/mod_support/rrv/**'
+        }
+    }
+}
+
 dependencies {
     api("mezz.jei:jei-${project.minecraft_version}-fabric-api:+")
-    implementation("mezz.jei:jei-${project.minecraft_version}-fabric:+")
+//    implementation("mezz.jei:jei-${project.minecraft_version}-fabric:+")
+
+    implementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${rrv_version}+${minecraft_version}")
 
     implementation project(':hayo-energy')
     include project(':hayo-energy')

@@ -23,6 +23,9 @@
     ],
     "jei_mod_plugin": [
       "hayo.mod_support.jei.HayoJeiPlugin"
+    ],
+    "rrv_client": [
+      "hayo.mod_support.rrv.HayoRrvPlugin"
     ]
   },
   "mixins": [
