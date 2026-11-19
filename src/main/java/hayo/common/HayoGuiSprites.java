@@ -8,9 +8,14 @@ import net.minecraft.util.Mth;
 
 public class HayoGuiSprites {
     public static final Identifier BACKGROUND = Hayo.modId("background");
+    public static final Identifier RECIPE_VIEW_BACKGROUND = Hayo.modId("recipe_view_background");
 
     public static void blitBackground(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, x, y, width, height);
+    }
+
+    public static void blitRecipeViewBackground(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RECIPE_VIEW_BACKGROUND, x, y, width, height);
     }
 
     public static final Identifier FUEL = Hayo.modId("fuel");
@@ -76,6 +81,13 @@ public class HayoGuiSprites {
             int length = Mth.clamp(1 + 24 * progress / maxProgress, 0, 24);
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, arrowOverlay, 24, 16, 0, 0, x, y, length, 16);
         }
+    }
+
+    public static void blitAnimatedRecipeArrow(GuiGraphicsExtractor graphics, int x, int y, Identifier arrow, Identifier arrowOverlay, long durationMillis) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, arrow, x, y, 24, 16);
+
+        int length = (int) Math.floorDiv(System.currentTimeMillis() % durationMillis * (24 + 1), durationMillis);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, arrowOverlay, 24, 16, 0, 0, x, y, length, 16);
     }
 
     public static final Identifier SMALL_ARROW_RIGHT = Hayo.modId("small_arrow_right");

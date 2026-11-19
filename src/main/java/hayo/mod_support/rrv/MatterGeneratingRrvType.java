@@ -8,6 +8,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 public class MatterGeneratingRrvType implements ReliableClientRecipeType {
     protected static final MatterGeneratingRrvType INSTANCE = new MatterGeneratingRrvType();
 
@@ -18,12 +20,12 @@ public class MatterGeneratingRrvType implements ReliableClientRecipeType {
 
     @Override
     public int getDisplayWidth() {
-        return 100;
+        return 100 + 7;
     }
 
     @Override
     public int getDisplayHeight() {
-        return 36;
+        return 36 + 7;
     }
 
     @Override
@@ -33,8 +35,8 @@ public class MatterGeneratingRrvType implements ReliableClientRecipeType {
 
     @Override
     public void placeSlots(RecipeViewMenu.SlotDefinition slotDefinition) {
-        slotDefinition.addItemSlot(0, 1, 5);
-        slotDefinition.addItemSlot(1, 79, 5);
+        slotDefinition.addItemSlot(0, 1 + 3, 5 + 3);
+        slotDefinition.addItemSlot(1, 79 + 3, 5 + 3);
     }
 
     @Override
@@ -45,5 +47,10 @@ public class MatterGeneratingRrvType implements ReliableClientRecipeType {
     @Override
     public ItemStack getIcon() {
         return new ItemStack(Hayo.Items.MATTER_GENERATOR);
+    }
+
+    @Override
+    public List<ItemStack> getCraftReferences() {
+        return List.of(new ItemStack(Hayo.Items.MATTER_GENERATOR));
     }
 }

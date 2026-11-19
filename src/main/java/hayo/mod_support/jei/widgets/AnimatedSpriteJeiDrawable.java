@@ -84,26 +84,26 @@ public class AnimatedSpriteJeiDrawable implements IDrawable {
             length = maxLength - length;
         }
 
-        int maskLeft = 0, maskRight = 0, maskUp = 0, maskDown = 0;
+        int offsetLeft = 0, offsetRight = 0, offsetUp = 0, offsetDown = 0;
         switch (this.direction) {
-            case UP -> maskDown = length;
-            case DOWN -> maskUp = length;
-            case LEFT -> maskRight = length;
-            case RIGHT -> maskLeft = length;
+            case UP -> offsetDown = length;
+            case DOWN -> offsetUp = length;
+            case LEFT -> offsetRight = length;
+            case RIGHT -> offsetLeft = length;
         }
 
-        int uWidth = this.width - (maskRight + maskLeft);
-        int vHeight = this.height - (maskDown + maskUp);
+        int uWidth = this.width - (offsetRight + offsetLeft);
+        int vHeight = this.height - (offsetDown + offsetUp);
 
         guiGraphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 this.overlaySpriteId,
                 this.width,
                 this.height,
-                maskLeft,
-                maskUp,
-                xOffset + maskLeft,
-                yOffset + maskUp,
+                offsetLeft,
+                offsetUp,
+                xOffset + offsetLeft,
+                yOffset + offsetUp,
                 uWidth,
                 vHeight
         );

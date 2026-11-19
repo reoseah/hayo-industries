@@ -26,6 +26,14 @@ public class EnergyGuiSprites {
     }
 
     @Environment(EnvType.CLIENT)
+    public static void blitAnimatedZap(GuiGraphicsExtractor graphics, int x, int y, long durationMillis) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ZAP, x, y, 14, 14);
+
+        int level = 13 - (int) Math.floorDiv(System.currentTimeMillis() % durationMillis * 14, durationMillis);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ZAP_OVERLAY, 14, 14, 0, 14 - level, x, y + 14 - level, 14, level);
+    }
+
+    @Environment(EnvType.CLIENT)
     public static void extractVerticalBar(GuiGraphicsExtractor graphics, int x, int y, int energy, int capacity) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, VERTICAL_BAR, x, y, 18, 56);
 
