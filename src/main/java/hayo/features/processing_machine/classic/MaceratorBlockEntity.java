@@ -27,6 +27,11 @@ public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRe
     }
 
     @Override
+    protected int getEnergyTransferLimit() {
+        return TRANSFER_LIMIT;
+    }
+
+    @Override
     protected RecipeType<MaceratingRecipe> getRecipeType() {
         return Hayo.RecipeTypes.MACERATING;
     }
@@ -39,11 +44,6 @@ public class MaceratorBlockEntity extends ClassicMachineBlockEntity<MaceratingRe
     @Override
     public int getBaseEnergyCapacity() {
         return CAPACITY;
-    }
-
-    @Override
-    protected int getEnergyTransferLimit() {
-        return TRANSFER_LIMIT;
     }
 
     @Override

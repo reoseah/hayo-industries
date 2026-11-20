@@ -29,6 +29,11 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
     }
 
     @Override
+    protected int getEnergyTransferLimit() {
+        return TRANSFER_LIMIT;
+    }
+
+    @Override
     protected RecipeType<CompressingRecipe> getRecipeType() {
         return Hayo.RecipeTypes.COMPRESSING;
     }
@@ -41,11 +46,6 @@ public class CompressorBlockEntity extends ClassicMachineBlockEntity<Compressing
     @Override
     public int getBaseEnergyCapacity() {
         return CAPACITY;
-    }
-
-    @Override
-    protected int getEnergyTransferLimit() {
-        return TRANSFER_LIMIT;
     }
 
     @Override

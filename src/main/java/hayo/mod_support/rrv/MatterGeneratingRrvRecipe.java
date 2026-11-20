@@ -3,66 +3,108 @@ package hayo.mod_support.rrv;
 import cc.cassian.rrv.api.client.RecipeScreenContext;
 import cc.cassian.rrv.api.recipe.ReliableClientRecipe;
 import cc.cassian.rrv.api.recipe.ReliableClientRecipeType;
+import cc.cassian.rrv.common.recipe.inventory.RecipeSlot;
 import cc.cassian.rrv.common.recipe.inventory.RecipeViewMenu;
+import cc.cassian.rrv.common.recipe.inventory.RecipeViewScreen;
 import cc.cassian.rrv.common.recipe.inventory.SlotContent;
+import hayo.Hayo;
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.energy.client.EnergyGuiSprites;
 import hayo.features.processing_machine.matter_generator.MatterGeneratingRecipe;
 import hayo.features.processing_machine.matter_generator.MatterGeneratorBlockEntity;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
+import static hayo.common.HayoGuiSprites.DEFAULT_ARROW;
+import static hayo.common.HayoGuiSprites.DEFAULT_ARROW_OVERLAY;
+
 public class MatterGeneratingRrvRecipe implements ReliableClientRecipe {
-    private final Identifier id;
-    private final SlotContent upgradeItem, resultItem;
-    private final int energyCost;
+    public static final ReliableClientRecipeType TYPE = new ReliableClientRecipeType() {
+        @Override
+        public Component getDisplayName() {
+            return Component.translatable("hayo.recipe_type.matter_generating");
+        }
+
+        @Override
+        public int getDisplayWidth() {
+            return 100 + 6;
+        }
+
+        @Override
+        public int getDisplayHeight() {
+            return 36 + 6;
+        }
+
+        @Override
+        public @Nullable Identifier getGuiTexture() {
+            return null;
+        }
+
+        @Override
+        public void placeSlots(RecipeViewMenu.SlotDefinition slotDefinition) {
+            slotDefinition.setHighlightWithoutContents(false);
+            slotDefinition.addItemSlot(0, 5, 8);
+            slotDefinition.setHighlightWithoutContents(true);
+            slotDefinition.addItemSlot(1, 82, 8);
+        }
+
+        @Override
+        public Identifier getId() {
+            return Hayo.modId("matter_generating");
+        }
+
+        @Override
+        public ItemStack getIcon() {
+            return new ItemStack(Hayo.Items.MATTER_GENERATOR);
+        }
+
+        @Override
+        public List<ItemStack> getCraftReferences() {
+            return List.of(new ItemStack(Hayo.Items.MATTER_GENERATOR));
+        }
+    };
+
+    private final RecipeHolder<MatterGeneratingRecipe> holder;
 
     public MatterGeneratingRrvRecipe(RecipeHolder<MatterGeneratingRecipe> holder) {
-        this(
-                holder.id().identifier(),
-                holder.value().requiredUpgrade().value() != Items.AIR ? SlotContent.of(holder.value().requiredUpgrade().value()) : SlotContent.of(),
-                SlotContent.of(holder.value().result()),
-                holder.value().energyCost()
-        );
-    }
-
-    public MatterGeneratingRrvRecipe(Identifier id, SlotContent upgradeItem, SlotContent resultItem, int energyCost) {
-        this.id = id;
-        this.upgradeItem = upgradeItem;
-        this.resultItem = resultItem;
-        this.energyCost = energyCost;
+        this.holder = holder;
     }
 
     @Override
     public ReliableClientRecipeType getType() {
-        return MatterGeneratingRrvType.INSTANCE;
+        return TYPE;
     }
 
     @Override
-    public void bindSlots(RecipeViewMenu.SlotFillContext slotFillContext) {
-        if (!this.upgradeItem.isEmpty()) {
-            slotFillContext.bindSlot(0, this.upgradeItem);
+    public void bindSlots(RecipeViewMenu.SlotFillContext ctx) {
+        var upgrade = this.holder.value().requiredUpgrade().value();
+        if (upgrade != Items.AIR) {
+            ctx.bindSlot(0, SlotContent.of(upgrade));
         }
-        slotFillContext.bindSlot(1, this.resultItem);
+        ctx.bindSlot(1, SlotContent.of(this.holder.value().result()));
     }
 
     @Override
     public List<SlotContent> getIngredients() {
-        return List.of(this.upgradeItem);
+        var upgrade = this.holder.value().requiredUpgrade().value();
+        return upgrade != Items.AIR ? List.of(SlotContent.of(upgrade)) : List.of();
     }
 
     @Override
     public List<SlotContent> getResults() {
-        return List.of(this.resultItem);
+        return List.of(SlotContent.of(this.holder.value().result()));
     }
 
     @Override
     public Identifier getId() {
-        return this.id;
+        return this.holder.id().identifier();
     }
 
     @Override
@@ -70,21 +112,32 @@ public class MatterGeneratingRrvRecipe implements ReliableClientRecipe {
         var graphics = context.guiGraphics();
         var position = context.recipePosition();
 
-        HayoGuiSprites.blitRecipeViewBackground(graphics, -1, 0, position.width(), position.height());
-
-        graphics.pose().pushMatrix();
-        graphics.pose().translate(3, 3);
-        {
-            HayoGuiSprites.blitUpgradeSlots(graphics, 1 - 1, 5 - 1, 1);
-            HayoGuiSprites.blitOutputSlot(graphics, 79 - 4, 5 - 4);
-            EnergyGuiSprites.blitAnimatedZap(graphics, 23, 5, 5000);
-            HayoGuiSprites.blitAnimatedRecipeArrow(graphics, 44, 4, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY,
-                    50L * this.energyCost / MatterGeneratorBlockEntity.ENERGY_USE_RATE
-            );
-
-            graphics.text(context.font(), EnergyTexts.amount(this.energyCost), 1, 28, 0xFF404040, false);
+        boolean hasUpgrade = this.holder.value().requiredUpgrade().value() != Items.AIR;
+        if (!hasUpgrade) {
+            var screen = (RecipeViewScreen) context.screen();
+            var slots = screen.getMenu().slots;
+            for (int i = 0; i < slots.size(); i++) {
+                if (slots.get(i) instanceof RecipeSlot slot
+                        && slot.x == position.left() - screen.getLeftPos() + 82
+                        && slot.y == position.top() - screen.getTopPos() + 8) {
+                    slots.set(i, new RecipeSlot(slot.container, slot.index, slot.x - 10, slot.y, true));
+                }
+            }
         }
-        graphics.pose().popMatrix();
+
+        HayoGuiSprites.blitRecipeViewBackground(graphics, hasUpgrade ? 0 : 10, 0, hasUpgrade ? position.width() : position.width() - 20, position.height());
+        if (hasUpgrade) {
+            HayoGuiSprites.blitUpgradeSlots(graphics, 4, 7, 1);
+        }
+        HayoGuiSprites.blitOutputSlot(graphics, hasUpgrade ? 78 : 68, 4);
+
+        EnergyGuiSprites.blitAnimatedZap(graphics, hasUpgrade ? 26 : 16, 8, 5000);
+
+        int energyCost = this.holder.value().energyCost();
+        long duration = 50L * energyCost / MatterGeneratorBlockEntity.ENERGY_USE_RATE;
+        HayoGuiSprites.blitAnimatedRecipeArrow(graphics, hasUpgrade ? 47 : 37, 7, DEFAULT_ARROW, DEFAULT_ARROW_OVERLAY, duration);
+
+        graphics.text(context.font(), EnergyTexts.amount(energyCost), hasUpgrade ? 4 : 14, 31, 0xFF404040, false);
 
         ReliableClientRecipe.super.renderRecipe(context);
     }

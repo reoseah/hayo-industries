@@ -27,6 +27,11 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ExtractingRe
     }
 
     @Override
+    protected int getEnergyTransferLimit() {
+        return TRANSFER_LIMIT;
+    }
+
+    @Override
     protected RecipeType<ExtractingRecipe> getRecipeType() {
         return Hayo.RecipeTypes.EXTRACTING;
     }
@@ -40,12 +45,7 @@ public class ExtractorBlockEntity extends ClassicMachineBlockEntity<ExtractingRe
     public int getBaseEnergyCapacity() {
         return CAPACITY;
     }
-
-    @Override
-    protected int getEnergyTransferLimit() {
-        return TRANSFER_LIMIT;
-    }
-
+    
     @Override
     public int getBaseEnergyCost(ExtractingRecipe recipe) {
         return recipe != null ? recipe.energyCost : ExtractingRecipe.DEFAULT_ENERGY;

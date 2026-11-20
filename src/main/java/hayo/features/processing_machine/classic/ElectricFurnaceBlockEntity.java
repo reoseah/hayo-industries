@@ -50,6 +50,11 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
         entity.resetEnergyPerTick();
     }
 
+    @Override
+    protected int getEnergyTransferLimit() {
+        return TRANSFER_LIMIT;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     protected RecipeType<AbstractCookingRecipe> getRecipeType() {
@@ -64,11 +69,6 @@ public class ElectricFurnaceBlockEntity extends ClassicMachineBlockEntity<Abstra
     @Override
     public int getBaseEnergyCapacity() {
         return CAPACITY;
-    }
-
-    @Override
-    protected int getEnergyTransferLimit() {
-        return TRANSFER_LIMIT;
     }
 
     @Override
