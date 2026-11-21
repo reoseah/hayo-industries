@@ -3,7 +3,7 @@ package hayo.mod_support.jei;
 import hayo.common.HayoGuiSprites;
 import hayo.energy.EnergyTexts;
 import hayo.features.fluid_stack.FluidGuiRendering;
-import hayo.features.processing_machine.solid_fluid_reactor.BaseSolidFluidReactingRecipe;
+import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactingRecipe;
 import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import hayo.mod_support.jei.widgets.AnimatedSpriteJeiDrawable;
 import hayo.mod_support.jei.widgets.FluidTankJeiDrawable;
@@ -26,33 +26,21 @@ import net.minecraft.world.level.material.Fluids;
 
 import java.util.List;
 
-public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHolder<BaseSolidFluidReactingRecipe>> {
-    public final ItemStack requiredUpgrade;
-
-    public SolidFluidReactingCategory(IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> type, Component name, IDrawable icon, ItemStack requiredUpgrade) {
-        super(type, name, icon, 140 + (requiredUpgrade.isEmpty() ? 0 : 20), 54);
-        this.requiredUpgrade = requiredUpgrade;
+public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHolder<SolidFluidReactingRecipe>> {
+    public SolidFluidReactingCategory(IRecipeType<RecipeHolder<SolidFluidReactingRecipe>> type, Component name, IDrawable icon, ItemStack requiredUpgrade) {
+        super(type, name, icon, 140, 54);
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<BaseSolidFluidReactingRecipe> holder, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SolidFluidReactingRecipe> holder, IFocusGroup focuses) {
         var recipe = holder.value();
-
-        if (!this.requiredUpgrade.isEmpty()) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 1, 18)
-                    .setBackground(SpriteJeiDrawable.UPGRADE_SLOT, -1, -1)
-                    .addRichTooltipCallback((_, tooltip) -> tooltip.add(Component.translatable("hayo.required_upgrade").withStyle(ChatFormatting.YELLOW)))
-                    .add(this.requiredUpgrade);
-        }
-
-        int left = !this.requiredUpgrade.isEmpty() ? 20 : 0;
 
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).add(
                 recipe.inputFluid.values().stream().findAny().map(Holder::value).orElse(Fluids.EMPTY),
-                recipe.inputFluid.amount()
+                recipe.inputFluid.amount() * 81L
         );
 
-        var inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, left + 23, 10).setStandardSlotBackground();
+        var inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, 23, 10).setStandardSlotBackground();
         if (recipe.inputCount != 1) {
             inputSlot.addItemStacks(recipe.inputItem.items().map(item -> new ItemStack(item, recipe.inputCount)).toList());
         } else {
@@ -60,7 +48,7 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
         }
 
         boolean hasExtraColumn = recipe.resultItems.size() > 3;
-        int resultsLeft = left + 84 + (hasExtraColumn ? 0 : 9);
+        int resultsLeft = 84 + (hasExtraColumn ? 0 : 9);
 
         for (int i = 0; i < recipe.resultItems.size(); i++) {
             var result = recipe.resultItems.get(i);
@@ -73,38 +61,38 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
     }
 
     @Override
-    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<BaseSolidFluidReactingRecipe> holder, IFocusGroup focuses) {
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<SolidFluidReactingRecipe> holder, IFocusGroup focuses) {
         var recipe = holder.value();
 
         int energyCost = recipe.energyCost;
         int useRate = SolidFluidReactorBlockEntity.REACTING_ENERGY_RATE;
         float duration = Mth.positiveCeilDiv(energyCost, useRate) / 20F;
 
-        int left = !this.requiredUpgrade.isEmpty() ? 20 : 0;
-        boolean hasExtraColumn = recipe.resultItems.size() > 3;
-        int resultsLeft = left + 84 + (hasExtraColumn ? 0 : 9);
+        boolean hasSecondColumn = recipe.resultItems.size() > 3;
 
         builder.addDrawableWidget(AnimatedSpriteJeiDrawable.zapWidget(energyCost, useRate))
-                .setPosition(left + 24, 29)
+                .setPosition(24, 29)
                 .setTooltip(List.of(
                         EnergyTexts.amount(energyCost),
                         Component.translatable("hayo.machine.recipe_duration", duration, useRate).withStyle(ChatFormatting.GRAY)
                 ));
-        builder.addText(EnergyTexts.amount(energyCost), Integer.MAX_VALUE, Integer.MAX_VALUE).setColor(0xFF404040).setPosition(left + 40, 33);
+        builder.addText(EnergyTexts.amount(energyCost), Integer.MAX_VALUE, Integer.MAX_VALUE)
+                .setColor(0xFF404040)
+                .setPosition(40, 33);
 
         builder.addDrawableWidget(FluidTankJeiDrawable.ofIngredient(recipe.inputFluid, SolidFluidReactorBlockEntity.FLUID_CAPACITY))
-                .setPosition(left, -1)
+                .setPosition(0, -1)
                 .setTooltip(tooltip -> tooltip.addAll(FluidGuiRendering.createTooltip(recipe.inputFluid)));
 
         builder.addDrawableWidget(FluidTankJeiDrawable.ofStack(recipe.resultFluid, SolidFluidReactorBlockEntity.FLUID_CAPACITY))
-                .setPosition(resultsLeft + 20 + (hasExtraColumn ? 18 : 0), -1)
+                .setPosition(113 + (hasSecondColumn ? 9 : 0), -1)
                 .setTooltip(tooltip -> tooltip.addAll(FluidGuiRendering.createTooltip(recipe.resultFluid)));
 
         builder.addDrawableWidget(AnimatedSpriteJeiDrawable.recipeArrow(energyCost, useRate, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY))
-                .setPosition(left + 49 + (hasExtraColumn ? 0 : 5), 12);
+                .setPosition(49 + (hasSecondColumn ? 0 : 5), 12);
 
-        for (int i = 0; i < (hasExtraColumn ? 6 : 3); i++) {
-            int x = resultsLeft + (i / 3) * 18;
+        for (int i = 0; i < (hasSecondColumn ? 6 : 3); i++) {
+            int x = 84 + (hasSecondColumn ? 0 : 9) + (i / 3) * 18;
             int y = (i % 3) * 18;
 
             if (i < recipe.resultItems.size()) {

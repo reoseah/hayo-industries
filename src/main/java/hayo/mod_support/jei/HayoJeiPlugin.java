@@ -6,7 +6,7 @@ import hayo.features.fluid_stack.FluidDrainingRecipe;
 import hayo.features.fluid_stack.FluidFillingRecipe;
 import hayo.features.processing_machine.classic.*;
 import hayo.features.processing_machine.matter_generator.MatterGeneratingRecipe;
-import hayo.features.processing_machine.solid_fluid_reactor.BaseSolidFluidReactingRecipe;
+import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactingRecipe;
 import hayo.mod_support.jei.widgets.HayoJeiWidgets;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -43,7 +43,7 @@ public class HayoJeiPlugin implements IModPlugin {
     public static final IRecipeType<RecipeHolder<MatterGeneratingRecipe>> MATTER_GENERATING = IRecipeType.create(Hayo.RecipeTypes.MATTER_GENERATING);
     public static final IRecipeType<RecipeHolder<FluidDrainingRecipe>> FLUID_DRAINING = IRecipeType.create(Hayo.RecipeTypes.FLUID_DRAINING);
     public static final IRecipeType<RecipeHolder<FluidFillingRecipe>> FLUID_FILLING = IRecipeType.create(Hayo.RecipeTypes.FLUID_FILLING);
-    public static final IRecipeType<RecipeHolder<BaseSolidFluidReactingRecipe>> SOLID_FLUID_REACTING = IRecipeType.create(Hayo.RecipeTypes.SOLID_FLUID_REACTING);
+    public static final IRecipeType<RecipeHolder<SolidFluidReactingRecipe>> SOLID_FLUID_REACTING = IRecipeType.create(Hayo.RecipeTypes.SOLID_FLUID_REACTING);
 
     @Override
     public Identifier getPluginUid() {

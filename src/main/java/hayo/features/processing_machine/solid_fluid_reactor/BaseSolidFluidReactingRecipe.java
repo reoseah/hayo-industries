@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// TODO: refactor this away since specialization upgrades are removed, and so the need to reuse code for similar recipes
 public abstract class BaseSolidFluidReactingRecipe implements Recipe<ItemFluidRecipeInput> {
     @FunctionalInterface
     public interface Factory<T extends BaseSolidFluidReactingRecipe> {

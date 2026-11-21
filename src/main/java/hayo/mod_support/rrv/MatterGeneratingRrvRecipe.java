@@ -83,12 +83,12 @@ public class MatterGeneratingRrvRecipe implements ReliableClientRecipe {
     }
 
     @Override
-    public void bindSlots(RecipeViewMenu.SlotFillContext ctx) {
+    public void bindSlots(RecipeViewMenu.SlotFillContext context) {
         var upgrade = this.holder.value().requiredUpgrade().value();
         if (upgrade != Items.AIR) {
-            ctx.bindSlot(0, SlotContent.of(upgrade));
+            context.bindSlot(0, SlotContent.of(upgrade));
         }
-        ctx.bindSlot(1, SlotContent.of(this.holder.value().result()));
+        context.bindSlot(1, SlotContent.of(this.holder.value().result()));
     }
 
     @Override
@@ -113,9 +113,15 @@ public class MatterGeneratingRrvRecipe implements ReliableClientRecipe {
         var position = context.recipePosition();
 
         boolean hasUpgrade = this.holder.value().requiredUpgrade().value() != Items.AIR;
+        if (!(context.screen() instanceof RecipeViewScreen)) {
+            // can't edit slots, so always render with an upgrade slot
+            hasUpgrade = true;
+        }
+
         if (!hasUpgrade) {
             var screen = (RecipeViewScreen) context.screen();
             var slots = screen.getMenu().slots;
+
             for (int i = 0; i < slots.size(); i++) {
                 if (slots.get(i) instanceof RecipeSlot slot
                         && slot.x == position.left() - screen.getLeftPos() + 82
@@ -138,7 +144,5 @@ public class MatterGeneratingRrvRecipe implements ReliableClientRecipe {
         HayoGuiSprites.blitAnimatedRecipeArrow(graphics, hasUpgrade ? 47 : 37, 7, DEFAULT_ARROW, DEFAULT_ARROW_OVERLAY, duration);
 
         graphics.text(context.font(), EnergyTexts.amount(energyCost), hasUpgrade ? 4 : 14, 31, 0xFF404040, false);
-
-        ReliableClientRecipe.super.renderRecipe(context);
     }
 }

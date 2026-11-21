@@ -14,6 +14,9 @@ public class HayoRrvPlugin implements ReliableRecipeViewerClientPlugin {
             for (var holder : synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING)) {
                 recipeList.add(new MatterGeneratingRrvRecipe(holder));
             }
+            for (var holder : synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.SOLID_FLUID_REACTING)) {
+                recipeList.add(new SolidFluidReactingRrvRecipe(holder));
+            }
         });
     }
 }
