@@ -3,11 +3,13 @@
   "category": "misc",
   "pattern": [
     " # ",
-    "XCX"
+    "PCP",
+    " X "
   ],
   "key": {
     "C": "hayo:advanced_circuit",
     "X": "hayo:power_cable",
+    "P": "minecraft:paper",
     "#": "hayo:advanced_machine_block"
   },
   "result": {
