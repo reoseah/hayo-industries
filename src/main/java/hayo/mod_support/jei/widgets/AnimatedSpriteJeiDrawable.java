@@ -21,7 +21,7 @@ public class AnimatedSpriteJeiDrawable implements IDrawable {
                 HayoEnergySprites.ZAP_OVERLAY,
                 14,
                 14,
-                ScreenDirection.UP,
+                ScreenDirection.DOWN,
                 ticksPerCycle,
                 true
         );

@@ -93,12 +93,12 @@ public class ClassicMachineRrvRecipe implements ReliableClientRecipe {
     private static abstract class Type implements ReliableClientRecipeType {
         @Override
         public int getDisplayWidth() {
-            return 82 + 6 + 1 + 20;
+            return 109;
         }
 
         @Override
         public int getDisplayHeight() {
-            return 35 + 6 + 1;
+            return 42;
         }
 
         @Override
