@@ -22,6 +22,16 @@ public class HayoRrvPlugin implements ReliableRecipeViewerClientPlugin {
                 recipeList.add(new ElectricSmeltingRrvRecipe(holder));
             }
 
+            for (var holder : synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.MACERATING)) {
+                recipeList.add(new ClassicMachineRrvRecipe(holder));
+            }
+            for (var holder : synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.COMPRESSING)) {
+                recipeList.add(new ClassicMachineRrvRecipe(holder));
+            }
+            for (var holder : synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.EXTRACTING)) {
+                recipeList.add(new ClassicMachineRrvRecipe(holder));
+            }
+
             for (var holder : synchronizedRecipes.getAllOfType(Hayo.RecipeTypes.MATTER_GENERATING)) {
                 recipeList.add(new MatterGeneratingRrvRecipe(holder));
             }
