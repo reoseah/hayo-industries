@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-public class HayoGuiSprites {
+public class HayoSprites {
     public static final Identifier BACKGROUND = Hayo.modId("background");
     public static final Identifier RECIPE_VIEW_BACKGROUND = Hayo.modId("recipe_view_background");
 

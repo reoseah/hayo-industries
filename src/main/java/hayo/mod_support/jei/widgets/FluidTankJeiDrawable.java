@@ -1,6 +1,6 @@
 package hayo.mod_support.jei.widgets;
 
-import hayo.features.fluid_stack.FluidGuiRendering;
+import hayo.features.fluid_stack.HayoFluidRendering;
 import hayo.features.fluid_stack.FluidIngredientAmount;
 import hayo.features.fluid_stack.FluidStack;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -11,7 +11,7 @@ public abstract class FluidTankJeiDrawable implements IDrawable {
         return new FluidTankJeiDrawable() {
             @Override
             public void draw(GuiGraphicsExtractor graphics, int xOffset, int yOffset) {
-                FluidGuiRendering.extractFluidTank(graphics, fluidStack, maxAmount, xOffset, yOffset);
+                HayoFluidRendering.extractFluidTank(graphics, fluidStack, maxAmount, xOffset, yOffset);
             }
         };
     }
@@ -20,7 +20,7 @@ public abstract class FluidTankJeiDrawable implements IDrawable {
         return new FluidTankJeiDrawable() {
             @Override
             public void draw(GuiGraphicsExtractor graphics, int xOffset, int yOffset) {
-                FluidGuiRendering.extractFluidTank(graphics, ingredient, maxAmount, xOffset, yOffset);
+                HayoFluidRendering.extractFluidTank(graphics, ingredient, maxAmount, xOffset, yOffset);
             }
         };
     }

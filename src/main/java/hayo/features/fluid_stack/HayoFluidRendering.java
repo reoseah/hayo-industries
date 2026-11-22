@@ -1,6 +1,6 @@
 package hayo.features.fluid_stack;
 
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.material.Fluids;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluidGuiRendering {
+public class HayoFluidRendering {
     public static MutableComponent getFluidName(Fluid fluid) {
         return fluid != Fluids.EMPTY
                 ? Component.translatable(fluid.defaultFluidState().createLegacyBlock().getBlock().getDescriptionId())
@@ -91,7 +91,7 @@ public class FluidGuiRendering {
 
     @Environment(EnvType.CLIENT)
     public static void extractFluidTank(GuiGraphicsExtractor graphics, FluidStack stack, int maxAmount, int x, int y) {
-        HayoGuiSprites.blitFluidTank(graphics, x, y);
+        HayoSprites.blitFluidTank(graphics, x, y);
 
         var fluid = stack.fluid();
         var amount = stack.amount();
@@ -99,13 +99,13 @@ public class FluidGuiRendering {
             blitFluidColumn(graphics, fluid, amount, maxAmount, x + 1, y + 4, 48);
         }
 
-        HayoGuiSprites.blitFluidTankOverlay(graphics, x, y);
+        HayoSprites.blitFluidTankOverlay(graphics, x, y);
     }
 
 
     @Environment(EnvType.CLIENT)
     public static void extractFluidTank(GuiGraphicsExtractor graphics, FluidIngredientAmount ingredient, int maxAmount, int x, int y) {
-        HayoGuiSprites.blitFluidTank(graphics, x, y);
+        HayoSprites.blitFluidTank(graphics, x, y);
 
         var fluids = ingredient.values().stream().map(Holder::value).toList();
         var amount = ingredient.amount();
@@ -115,7 +115,7 @@ public class FluidGuiRendering {
             blitFluidColumn(graphics, displayFluid, amount, maxAmount, x + 1, y + 4, 48);
         }
 
-        HayoGuiSprites.blitFluidTankOverlay(graphics, x, y);
+        HayoSprites.blitFluidTankOverlay(graphics, x, y);
     }
 
 

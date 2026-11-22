@@ -1,6 +1,6 @@
 package hayo.mod_support.jei.widgets;
 
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import hayo.common.ItemTemplateWithChance;
 import hayo.common.StringUtils;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -61,7 +61,7 @@ public class HayoJeiWidgets {
 
             @Override
             public void draw(GuiGraphicsExtractor graphics, int xOffset, int yOffset) {
-                HayoGuiSprites.blitSlot(graphics, xOffset, yOffset);
+                HayoSprites.blitSlot(graphics, xOffset, yOffset);
 
                 graphics.fakeItem(stack, xOffset + 1, yOffset + 1);
 

@@ -8,9 +8,9 @@ import cc.cassian.rrv.common.recipe.inventory.RecipeViewMenu;
 import cc.cassian.rrv.common.recipe.inventory.RecipeViewScreen;
 import cc.cassian.rrv.common.recipe.inventory.SlotContent;
 import hayo.Hayo;
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import hayo.energy.EnergyTexts;
-import hayo.energy.client.EnergyGuiSprites;
+import hayo.energy.client.HayoEnergySprites;
 import hayo.features.processing_machine.matter_generator.MatterGeneratingRecipe;
 import hayo.features.processing_machine.matter_generator.MatterGeneratorBlockEntity;
 import net.minecraft.network.chat.Component;
@@ -22,8 +22,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-import static hayo.common.HayoGuiSprites.DEFAULT_ARROW;
-import static hayo.common.HayoGuiSprites.DEFAULT_ARROW_OVERLAY;
+import static hayo.common.HayoSprites.DEFAULT_ARROW;
+import static hayo.common.HayoSprites.DEFAULT_ARROW_OVERLAY;
 
 public class MatterGeneratingRrvRecipe implements ReliableClientRecipe {
     public static final ReliableClientRecipeType TYPE = new ReliableClientRecipeType() {
@@ -111,6 +111,10 @@ public class MatterGeneratingRrvRecipe implements ReliableClientRecipe {
     public void renderRecipe(RecipeScreenContext context) {
         var graphics = context.guiGraphics();
         var position = context.recipePosition();
+        var font = context.font();
+
+        int energyCost = this.holder.value().energyCost();
+        long duration = 50L * energyCost / MatterGeneratorBlockEntity.ENERGY_USE_RATE;
 
         boolean hasUpgrade = this.holder.value().requiredUpgrade().value() != Items.AIR;
         if (!(context.screen() instanceof RecipeViewScreen)) {
@@ -131,18 +135,14 @@ public class MatterGeneratingRrvRecipe implements ReliableClientRecipe {
             }
         }
 
-        HayoGuiSprites.blitRecipeViewBackground(graphics, hasUpgrade ? 0 : 10, 0, hasUpgrade ? position.width() : position.width() - 20, position.height());
+        HayoSprites.blitRecipeViewBackground(graphics, hasUpgrade ? 0 : 10, 0, hasUpgrade ? position.width() : position.width() - 20, position.height());
         if (hasUpgrade) {
-            HayoGuiSprites.blitUpgradeSlots(graphics, 4, 7, 1);
+            HayoSprites.blitUpgradeSlots(graphics, 4, 7, 1);
         }
-        HayoGuiSprites.blitOutputSlot(graphics, hasUpgrade ? 78 : 68, 4);
+        HayoSprites.blitOutputSlot(graphics, hasUpgrade ? 78 : 68, 4);
+        HayoEnergySprites.blitAnimatedZap(graphics, hasUpgrade ? 26 : 16, 8, 5000);
+        HayoSprites.blitAnimatedRecipeArrow(graphics, hasUpgrade ? 47 : 37, 7, DEFAULT_ARROW, DEFAULT_ARROW_OVERLAY, duration);
 
-        EnergyGuiSprites.blitAnimatedZap(graphics, hasUpgrade ? 26 : 16, 8, 5000);
-
-        int energyCost = this.holder.value().energyCost();
-        long duration = 50L * energyCost / MatterGeneratorBlockEntity.ENERGY_USE_RATE;
-        HayoGuiSprites.blitAnimatedRecipeArrow(graphics, hasUpgrade ? 47 : 37, 7, DEFAULT_ARROW, DEFAULT_ARROW_OVERLAY, duration);
-
-        graphics.text(context.font(), EnergyTexts.amount(energyCost), hasUpgrade ? 4 : 14, 31, 0xFF404040, false);
+        graphics.text(font, EnergyTexts.amount(energyCost), hasUpgrade ? 4 : 14, 31, 0xFF404040, false);
     }
 }

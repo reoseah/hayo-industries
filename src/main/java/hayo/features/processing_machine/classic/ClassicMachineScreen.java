@@ -1,8 +1,8 @@
 package hayo.features.processing_machine.classic;
 
 import hayo.Hayo;
-import hayo.common.HayoGuiSprites;
-import hayo.energy.client.EnergyGuiSprites;
+import hayo.common.HayoSprites;
+import hayo.energy.client.HayoEnergySprites;
 import hayo.features.processing_machine.MachineTexts;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -33,32 +33,32 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
         return new ClassicMachineScreen(menu, inventory, title,
                 ElectricFurnaceBlockEntity.ENERGY_USE_RATE,
                 ElectricFurnaceBlockEntity.energyCostFromCookingTime(AbstractFurnaceBlockEntity.BURN_TIME_STANDARD),
-                HayoGuiSprites.DEFAULT_ARROW,
-                HayoGuiSprites.DEFAULT_ARROW_OVERLAY);
+                HayoSprites.DEFAULT_ARROW,
+                HayoSprites.DEFAULT_ARROW_OVERLAY);
     }
 
     public static ClassicMachineScreen createMacerator(ClassicMachineMenu menu, Inventory inventory, Component title) {
         return new ClassicMachineScreen(menu, inventory, title,
                 MaceratorBlockEntity.ENERGY_USE_RATE,
                 MaceratingRecipe.DEFAULT_ENERGY,
-                HayoGuiSprites.MACERATING_ARROW,
-                HayoGuiSprites.MACERATING_ARROW_OVERLAY);
+                HayoSprites.MACERATING_ARROW,
+                HayoSprites.MACERATING_ARROW_OVERLAY);
     }
 
     public static ClassicMachineScreen createCompressor(ClassicMachineMenu menu, Inventory inventory, Component title) {
         return new ClassicMachineScreen(menu, inventory, title,
                 CompressorBlockEntity.ENERGY_USE_RATE,
                 CompressingRecipe.DEFAULT_ENERGY,
-                HayoGuiSprites.COMPRESSING_ARROW,
-                HayoGuiSprites.COMPRESSING_ARROW_OVERLAY);
+                HayoSprites.COMPRESSING_ARROW,
+                HayoSprites.COMPRESSING_ARROW_OVERLAY);
     }
 
     public static ClassicMachineScreen createExtractor(ClassicMachineMenu menu, Inventory inventory, Component title) {
         return new ClassicMachineScreen(menu, inventory, title,
                 ExtractorBlockEntity.ENERGY_USE_RATE,
                 ExtractingRecipe.DEFAULT_ENERGY,
-                HayoGuiSprites.EXTRACTING_ARROW,
-                HayoGuiSprites.EXTRACTING_ARROW_OVERLAY);
+                HayoSprites.EXTRACTING_ARROW,
+                HayoSprites.EXTRACTING_ARROW_OVERLAY);
     }
 
     @Override
@@ -71,17 +71,17 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
-        HayoGuiSprites.blitBackground(graphics, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
+        HayoSprites.blitBackground(graphics, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
 
-        HayoGuiSprites.blitSlot(graphics, this.leftPos + 46, this.topPos + 17);
-        HayoGuiSprites.blitSlot(graphics, this.leftPos + 46, this.topPos + 53);
-        HayoGuiSprites.blitOutputSlot(graphics, this.leftPos + 103, this.topPos + 32);
-        HayoGuiSprites.blitUpgradeSlots(graphics, this.leftPos + 151, this.topPos + 7, 4);
-        HayoGuiSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 83);
+        HayoSprites.blitSlot(graphics, this.leftPos + 46, this.topPos + 17);
+        HayoSprites.blitSlot(graphics, this.leftPos + 46, this.topPos + 53);
+        HayoSprites.blitOutputSlot(graphics, this.leftPos + 103, this.topPos + 32);
+        HayoSprites.blitUpgradeSlots(graphics, this.leftPos + 151, this.topPos + 7, 4);
+        HayoSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 83);
 
         var data = this.menu.data;
-        EnergyGuiSprites.blitZap(graphics, this.leftPos + 48, this.topPos + 37, data.energy(), data.capacity());
-        HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 70, this.topPos + 36, this.arrow, this.arrowOverlay, data.recipeProgress(), data.recipeCost());
+        HayoEnergySprites.blitZap(graphics, this.leftPos + 48, this.topPos + 37, data.energy(), data.capacity());
+        HayoSprites.blitRecipeArrow(graphics, this.leftPos + 70, this.topPos + 36, this.arrow, this.arrowOverlay, data.recipeProgress(), data.recipeCost());
     }
 
     @Override

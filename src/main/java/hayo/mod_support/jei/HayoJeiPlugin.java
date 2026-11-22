@@ -1,7 +1,7 @@
 package hayo.mod_support.jei;
 
 import hayo.Hayo;
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import hayo.features.fluid_stack.FluidDrainingRecipe;
 import hayo.features.fluid_stack.FluidFillingRecipe;
 import hayo.features.processing_machine.classic.*;
@@ -70,9 +70,9 @@ public class HayoJeiPlugin implements IModPlugin {
                 new ItemStack(Hayo.Items.SMOKING_UPGRADE)
         ));
 
-        registration.addRecipeCategories(new ClassicMachineJeiCategory(MACERATING, 2, HayoGuiSprites.MACERATING_ARROW, HayoGuiSprites.MACERATING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.macerating"), itemDrawable.apply(Hayo.Items.MACERATOR), null));
-        registration.addRecipeCategories(new ClassicMachineJeiCategory(COMPRESSING, 2, HayoGuiSprites.COMPRESSING_ARROW, HayoGuiSprites.COMPRESSING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.compressing"), itemDrawable.apply(Hayo.Items.COMPRESSOR), null));
-        registration.addRecipeCategories(new ClassicMachineJeiCategory(EXTRACTING, 2, HayoGuiSprites.EXTRACTING_ARROW, HayoGuiSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.extracting"), itemDrawable.apply(Hayo.Items.EXTRACTOR), null));
+        registration.addRecipeCategories(new ClassicMachineJeiCategory(MACERATING, 2, HayoSprites.MACERATING_ARROW, HayoSprites.MACERATING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.macerating"), itemDrawable.apply(Hayo.Items.MACERATOR), null));
+        registration.addRecipeCategories(new ClassicMachineJeiCategory(COMPRESSING, 2, HayoSprites.COMPRESSING_ARROW, HayoSprites.COMPRESSING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.compressing"), itemDrawable.apply(Hayo.Items.COMPRESSOR), null));
+        registration.addRecipeCategories(new ClassicMachineJeiCategory(EXTRACTING, 2, HayoSprites.EXTRACTING_ARROW, HayoSprites.EXTRACTING_ARROW_OVERLAY, Component.translatable("hayo.recipe_type.extracting"), itemDrawable.apply(Hayo.Items.EXTRACTOR), null));
 
         registration.addRecipeCategories(new MatterGeneratingJeiCategory(itemDrawable.apply(Hayo.Items.MATTER_GENERATOR)));
 

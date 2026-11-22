@@ -1,6 +1,6 @@
 package hayo.mod_support.jei.widgets;
 
-import hayo.energy.client.EnergyGuiSprites;
+import hayo.energy.client.HayoEnergySprites;
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenAxis;
@@ -17,8 +17,8 @@ public class AnimatedSpriteJeiDrawable implements IDrawable {
 
     public static IDrawable zapWidget(int ticksPerCycle) {
         return new AnimatedSpriteJeiDrawable(
-                EnergyGuiSprites.ZAP,
-                EnergyGuiSprites.ZAP_OVERLAY,
+                HayoEnergySprites.ZAP,
+                HayoEnergySprites.ZAP_OVERLAY,
                 14,
                 14,
                 ScreenDirection.UP,

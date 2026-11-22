@@ -2,9 +2,9 @@ package hayo.features.processing_machine.matter_generator;
 
 import com.google.common.collect.Lists;
 import hayo.Hayo;
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import hayo.energy.EnergyTexts;
-import hayo.energy.client.EnergyGuiSprites;
+import hayo.energy.client.HayoEnergySprites;
 import hayo.features.processing_machine.MachineTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -60,15 +60,15 @@ public class MatterGeneratorScreen extends AbstractContainerScreen<MatterGenerat
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
-        HayoGuiSprites.blitBackground(graphics, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
+        HayoSprites.blitBackground(graphics, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
 
-        HayoGuiSprites.blitSlot(graphics, this.leftPos + 55, this.topPos + 33);
-        HayoGuiSprites.blitOutputSlot(graphics, this.leftPos + 112, this.topPos + 22);
-        HayoGuiSprites.blitUpgradeSlots(graphics, this.leftPos + 7, this.topPos + 15, 2);
-        HayoGuiSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 109);
+        HayoSprites.blitSlot(graphics, this.leftPos + 55, this.topPos + 33);
+        HayoSprites.blitOutputSlot(graphics, this.leftPos + 112, this.topPos + 22);
+        HayoSprites.blitUpgradeSlots(graphics, this.leftPos + 7, this.topPos + 15, 2);
+        HayoSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 109);
 
-        EnergyGuiSprites.blitZap(graphics, this.leftPos + 57, this.topPos + 17, this.menu.machineData.energy(), this.menu.machineData.capacity());
-        HayoGuiSprites.blitRecipeArrow(graphics, this.leftPos + 80, this.topPos + 25, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY, this.menu.machineData.recipeProgress(), this.menu.machineData.recipeCost());
+        HayoEnergySprites.blitZap(graphics, this.leftPos + 57, this.topPos + 17, this.menu.machineData.energy(), this.menu.machineData.capacity());
+        HayoSprites.blitRecipeArrow(graphics, this.leftPos + 80, this.topPos + 25, HayoSprites.DEFAULT_ARROW, HayoSprites.DEFAULT_ARROW_OVERLAY, this.menu.machineData.recipeProgress(), this.menu.machineData.recipeCost());
 
         this.extractRecipeButtons(graphics, mouseX, mouseY);
         this.extractScrollbar(graphics, mouseX, mouseY);

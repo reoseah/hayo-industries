@@ -1,8 +1,8 @@
 package hayo.mod_support.jei;
 
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import hayo.features.fluid_stack.FluidDrainingRecipe;
-import hayo.features.fluid_stack.FluidGuiRendering;
+import hayo.features.fluid_stack.HayoFluidRendering;
 import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import hayo.mod_support.jei.widgets.FluidTankJeiDrawable;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -67,13 +67,13 @@ public class FluidDrainingJeiCategory implements IRecipeCategory<RecipeHolder<Fl
 
         builder.addDrawableWidget(FluidTankJeiDrawable.ofStack(recipe.resultFluid(), SolidFluidReactorBlockEntity.FLUID_CAPACITY))
                 .setPosition(27, -1)
-                .setTooltip(tooltip -> tooltip.addAll(FluidGuiRendering.createTooltip(recipe.resultFluid())));
+                .setTooltip(tooltip -> tooltip.addAll(HayoFluidRendering.createTooltip(recipe.resultFluid())));
     }
 
     @Override
     public void draw(RecipeHolder<FluidDrainingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         int energyCost = holder.value().ticks();
         float fill = (System.currentTimeMillis() / 50) % energyCost;
-        HayoGuiSprites.blitDrainingArrow(graphics, 6, 20, (int) fill, energyCost);
+        HayoSprites.blitDrainingArrow(graphics, 6, 20, (int) fill, energyCost);
     }
 }

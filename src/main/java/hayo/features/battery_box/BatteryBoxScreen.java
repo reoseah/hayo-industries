@@ -1,8 +1,8 @@
 package hayo.features.battery_box;
 
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import hayo.energy.EnergyTexts;
-import hayo.energy.client.EnergyGuiSprites;
+import hayo.energy.client.HayoEnergySprites;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -27,16 +27,16 @@ public class BatteryBoxScreen extends AbstractContainerScreen<BatteryBoxMenu> {
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
-        HayoGuiSprites.blitBackground(graphics, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
-        HayoGuiSprites.blitSmallArrowRight(graphics, this.leftPos + 108, this.topPos + 34);
+        HayoSprites.blitBackground(graphics, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
+        HayoSprites.blitSmallArrowRight(graphics, this.leftPos + 108, this.topPos + 34);
 
-        HayoGuiSprites.blitSlots(graphics, this.leftPos + 25, this.topPos + 26, 3, 2);
-        HayoGuiSprites.blitOutputSlot(graphics, this.leftPos + 120, this.topPos + 32);
-        HayoGuiSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 83);
-        HayoGuiSprites.blitSlotConnection9Wide(graphics, this.leftPos + 78, this.topPos + 34);
-        HayoGuiSprites.blitSlotConnection9Wide(graphics, this.leftPos + 78, this.topPos + 52);
+        HayoSprites.blitSlots(graphics, this.leftPos + 25, this.topPos + 26, 3, 2);
+        HayoSprites.blitOutputSlot(graphics, this.leftPos + 120, this.topPos + 32);
+        HayoSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 83);
+        HayoSprites.blitSlotConnection9Wide(graphics, this.leftPos + 78, this.topPos + 34);
+        HayoSprites.blitSlotConnection9Wide(graphics, this.leftPos + 78, this.topPos + 52);
 
-        EnergyGuiSprites.extractVerticalBar(graphics, this.leftPos + 88, this.topPos + 16, this.menu.batteryBoxData.energy(), this.menu.batteryBoxData.capacity());
+        HayoEnergySprites.extractVerticalBar(graphics, this.leftPos + 88, this.topPos + 16, this.menu.batteryBoxData.energy(), this.menu.batteryBoxData.capacity());
     }
 
     @Override

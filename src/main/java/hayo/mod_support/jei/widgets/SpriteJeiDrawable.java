@@ -1,14 +1,14 @@
 package hayo.mod_support.jei.widgets;
 
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 
 public class SpriteJeiDrawable implements IDrawable {
-    public static final IDrawable SLOT = new SpriteJeiDrawable(HayoGuiSprites.SLOT, 18, 18);
-    public static final IDrawable UPGRADE_SLOT = new SpriteJeiDrawable(HayoGuiSprites.UPGRADE_SLOT, 18, 18);
+    public static final IDrawable SLOT = new SpriteJeiDrawable(HayoSprites.SLOT, 18, 18);
+    public static final IDrawable UPGRADE_SLOT = new SpriteJeiDrawable(HayoSprites.UPGRADE_SLOT, 18, 18);
 
     private final Identifier spriteId;
     private final int width;

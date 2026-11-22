@@ -1,6 +1,6 @@
 package hayo.mod_support.jei;
 
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import hayo.features.processing_machine.classic.ElectricFurnaceBlockEntity;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.recipe.types.IRecipeType;
@@ -48,11 +48,11 @@ public class ElectricFurnaceJeiCategory extends SingleItemJeiCategory<RecipeHold
 
     @Override
     protected Identifier getArrowSprite() {
-        return HayoGuiSprites.DEFAULT_ARROW;
+        return HayoSprites.DEFAULT_ARROW;
     }
 
     @Override
     protected Identifier getArrowOverlaySprite() {
-        return HayoGuiSprites.DEFAULT_ARROW_OVERLAY;
+        return HayoSprites.DEFAULT_ARROW_OVERLAY;
     }
 }

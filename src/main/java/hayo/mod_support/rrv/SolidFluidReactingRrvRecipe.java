@@ -6,10 +6,11 @@ import cc.cassian.rrv.api.recipe.ReliableClientRecipeType;
 import cc.cassian.rrv.common.recipe.inventory.RecipeViewMenu;
 import cc.cassian.rrv.common.recipe.inventory.SlotContent;
 import hayo.Hayo;
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
+import hayo.common.StringUtils;
 import hayo.energy.EnergyTexts;
-import hayo.energy.client.EnergyGuiSprites;
-import hayo.features.fluid_stack.FluidGuiRendering;
+import hayo.energy.client.HayoEnergySprites;
+import hayo.features.fluid_stack.HayoFluidRendering;
 import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactingRecipe;
 import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import net.minecraft.network.chat.Component;
@@ -21,8 +22,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-import static hayo.common.HayoGuiSprites.REACTING_ARROW;
-import static hayo.common.HayoGuiSprites.REACTING_ARROW_OVERLAY;
+import static hayo.common.HayoSprites.REACTING_ARROW;
+import static hayo.common.HayoSprites.REACTING_ARROW_OVERLAY;
 
 public class SolidFluidReactingRrvRecipe implements ReliableClientRecipe {
     public static final ReliableClientRecipeType TYPE = new ReliableClientRecipeType() {
@@ -114,39 +115,48 @@ public class SolidFluidReactingRrvRecipe implements ReliableClientRecipe {
     public void renderRecipe(RecipeScreenContext context) {
         var graphics = context.guiGraphics();
         var position = context.recipePosition();
+        var font = context.font();
         int mouseX = context.mouseX();
         int mouseY = context.mouseY();
 
         var recipe = this.holder.value();
+
         int energyCost = recipe.energyCost;
         int useRate = SolidFluidReactorBlockEntity.REACTING_ENERGY_RATE;
-        long duration = Mth.positiveCeilDiv(energyCost, useRate) * 50L;
+        long durationMillis = Mth.positiveCeilDiv(energyCost, useRate) * 50L;
 
-        HayoGuiSprites.blitRecipeViewBackground(graphics, 0, 0, position.width(), position.height());
-        HayoGuiSprites.blitSlot(graphics, 24, 14);
-        HayoGuiSprites.blitSlots(graphics, 87, 4, 2, 3);
+        HayoSprites.blitRecipeViewBackground(graphics, 0, 0, position.width(), position.height());
+        HayoSprites.blitSlot(graphics, 24, 14);
+        HayoSprites.blitSlots(graphics, 87, 4, 2, 3);
+
+        HayoEnergySprites.blitAnimatedZap(graphics, 26, 33, 5000);
+        HayoSprites.blitAnimatedRecipeArrow(graphics, 51, 16, REACTING_ARROW, REACTING_ARROW_OVERLAY, durationMillis);
+
+        HayoFluidRendering.extractFluidTank(graphics, recipe.inputFluid, SolidFluidReactorBlockEntity.FLUID_CAPACITY, 3, 3);
+        if (3 <= mouseX && mouseX < 3 + 18 && 3 <= mouseY && mouseY < 3 + 56) {
+            graphics.setComponentTooltipForNextFrame(context.font(), HayoFluidRendering.createTooltip(recipe.inputFluid), position.left() + mouseX, position.top() + mouseY);
+        }
+
+        HayoFluidRendering.extractFluidTank(graphics, recipe.resultFluid, SolidFluidReactorBlockEntity.FLUID_CAPACITY, 125, 3);
+        if (125 <= mouseX && mouseX < 125 + 18 && 3 <= mouseY && mouseY < 3 + 56) {
+            graphics.setComponentTooltipForNextFrame(context.font(), HayoFluidRendering.createTooltip(recipe.resultFluid), position.left() + mouseX, position.top() + mouseY);
+        }
+
+        graphics.text(context.font(), EnergyTexts.amount(energyCost), 42, 37, 0xFF404040, false);
 
         for (int i = 0; i < recipe.resultItems.size(); i++) {
             var result = recipe.resultItems.get(i);
+            float chance = result.chance();
 
-            if (result.chance() != 1F) {
-                graphics.fakeItem(result.template().create(), 88 + (i / 3) * 18, 5 + (i % 3) * 18);
-                // TODO: draw chance, show tooltip
+            if (chance != 1F) {
+                int x = 88 + (i / 3) * 18;
+                int y = 5 + (i % 3) * 18;
+                graphics.fakeItem(result.template().create(), x, y);
+
+                var subscriptChance = Component.translatable("hayo.subscript_chance", StringUtils.toSubscriptDigits(chance));
+                int chanceWidth = font.width(subscriptChance);
+                graphics.text(font, subscriptChance, x + 18 - chanceWidth, y + 18 - font.lineHeight, 0xFFFFFFFF, true);
             }
-        }
-
-        EnergyGuiSprites.blitAnimatedZap(graphics, 26, 33, 5000);
-        HayoGuiSprites.blitAnimatedRecipeArrow(graphics, 51, 16, REACTING_ARROW, REACTING_ARROW_OVERLAY, duration);
-        graphics.text(context.font(), EnergyTexts.amount(energyCost), 42, 37, 0xFF404040, false);
-
-        FluidGuiRendering.extractFluidTank(graphics, recipe.inputFluid, SolidFluidReactorBlockEntity.FLUID_CAPACITY, 3, 3);
-        if (3 <= mouseX && mouseX < 3 + 18 && 3 <= mouseY && mouseY < 3 + 56) {
-            graphics.setComponentTooltipForNextFrame(context.font(), FluidGuiRendering.createTooltip(recipe.inputFluid), position.left() + mouseX, position.top() + mouseY);
-        }
-
-        FluidGuiRendering.extractFluidTank(graphics, recipe.resultFluid, SolidFluidReactorBlockEntity.FLUID_CAPACITY, 125, 3);
-        if (125 <= mouseX && mouseX < 125 + 18 && 3 <= mouseY && mouseY < 3 + 56) {
-            graphics.setComponentTooltipForNextFrame(context.font(), FluidGuiRendering.createTooltip(recipe.resultFluid), position.left() + mouseX, position.top() + mouseY);
         }
     }
 }

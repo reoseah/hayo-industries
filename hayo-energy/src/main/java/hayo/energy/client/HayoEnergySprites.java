@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-public class EnergyGuiSprites {
+public class HayoEnergySprites {
     public static final Identifier ZAP = HayoEnergy.modId("energy/zap");
     public static final Identifier ZAP_OVERLAY = HayoEnergy.modId("energy/zap_overlay");
 

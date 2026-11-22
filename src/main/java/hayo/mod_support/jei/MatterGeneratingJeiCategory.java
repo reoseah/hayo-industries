@@ -1,6 +1,6 @@
 package hayo.mod_support.jei;
 
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import hayo.energy.EnergyTexts;
 import hayo.features.processing_machine.matter_generator.MatterGeneratingRecipe;
 import hayo.features.processing_machine.matter_generator.MatterGeneratorBlockEntity;
@@ -87,7 +87,7 @@ public class MatterGeneratingJeiCategory implements IRecipeCategory<RecipeHolder
                 .setPosition(1, 28)
                 .setColor(0xFF404040);
 
-        builder.addDrawableWidget(AnimatedSpriteJeiDrawable.recipeArrow(energyCost, useRate, HayoGuiSprites.DEFAULT_ARROW, HayoGuiSprites.DEFAULT_ARROW_OVERLAY))
+        builder.addDrawableWidget(AnimatedSpriteJeiDrawable.recipeArrow(energyCost, useRate, HayoSprites.DEFAULT_ARROW, HayoSprites.DEFAULT_ARROW_OVERLAY))
                 .setPosition(44, 4);
     }
 }

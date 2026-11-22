@@ -1,9 +1,9 @@
 package hayo.features.generator;
 
 import hayo.Hayo;
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import hayo.energy.EnergyTexts;
-import hayo.energy.client.EnergyGuiSprites;
+import hayo.energy.client.HayoEnergySprites;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -30,14 +30,14 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
-        HayoGuiSprites.blitBackground(graphics, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
-        HayoGuiSprites.blitSmallArrowRight(graphics, this.leftPos + 79, this.topPos + 44);
+        HayoSprites.blitBackground(graphics, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
+        HayoSprites.blitSmallArrowRight(graphics, this.leftPos + 79, this.topPos + 44);
 
-        HayoGuiSprites.blitSlot(graphics, this.leftPos + 61, this.topPos + 53);
-        HayoGuiSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 83);
+        HayoSprites.blitSlot(graphics, this.leftPos + 61, this.topPos + 53);
+        HayoSprites.blitStandardPlayerSlots(graphics, this.leftPos + 7, this.topPos + 83);
 
-        HayoGuiSprites.blitFuel(graphics, this.leftPos + 62, this.topPos + 37, this.menu.generatorData.fuelLeft(), this.menu.generatorData.fuelTotal());
-        EnergyGuiSprites.extractVerticalBar(graphics, this.leftPos + 88, this.topPos + 16, this.menu.generatorData.energy(), GeneratorBlockEntity.CAPACITY);
+        HayoSprites.blitFuel(graphics, this.leftPos + 62, this.topPos + 37, this.menu.generatorData.fuelLeft(), this.menu.generatorData.fuelTotal());
+        HayoEnergySprites.extractVerticalBar(graphics, this.leftPos + 88, this.topPos + 16, this.menu.generatorData.energy(), GeneratorBlockEntity.CAPACITY);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package hayo.mod_support.jei;
 
-import hayo.common.HayoGuiSprites;
+import hayo.common.HayoSprites;
 import hayo.energy.EnergyTexts;
-import hayo.features.fluid_stack.FluidGuiRendering;
+import hayo.features.fluid_stack.HayoFluidRendering;
 import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactingRecipe;
 import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactorBlockEntity;
 import hayo.mod_support.jei.widgets.AnimatedSpriteJeiDrawable;
@@ -82,13 +82,13 @@ public class SolidFluidReactingCategory extends AbstractRecipeCategory<RecipeHol
 
         builder.addDrawableWidget(FluidTankJeiDrawable.ofIngredient(recipe.inputFluid, SolidFluidReactorBlockEntity.FLUID_CAPACITY))
                 .setPosition(0, -1)
-                .setTooltip(tooltip -> tooltip.addAll(FluidGuiRendering.createTooltip(recipe.inputFluid)));
+                .setTooltip(tooltip -> tooltip.addAll(HayoFluidRendering.createTooltip(recipe.inputFluid)));
 
         builder.addDrawableWidget(FluidTankJeiDrawable.ofStack(recipe.resultFluid, SolidFluidReactorBlockEntity.FLUID_CAPACITY))
                 .setPosition(113 + (hasSecondColumn ? 9 : 0), -1)
-                .setTooltip(tooltip -> tooltip.addAll(FluidGuiRendering.createTooltip(recipe.resultFluid)));
+                .setTooltip(tooltip -> tooltip.addAll(HayoFluidRendering.createTooltip(recipe.resultFluid)));
 
-        builder.addDrawableWidget(AnimatedSpriteJeiDrawable.recipeArrow(energyCost, useRate, HayoGuiSprites.REACTING_ARROW, HayoGuiSprites.REACTING_ARROW_OVERLAY))
+        builder.addDrawableWidget(AnimatedSpriteJeiDrawable.recipeArrow(energyCost, useRate, HayoSprites.REACTING_ARROW, HayoSprites.REACTING_ARROW_OVERLAY))
                 .setPosition(49 + (hasSecondColumn ? 0 : 5), 12);
 
         for (int i = 0; i < (hasSecondColumn ? 6 : 3); i++) {
