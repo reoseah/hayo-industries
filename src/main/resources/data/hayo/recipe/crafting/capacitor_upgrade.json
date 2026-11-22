@@ -3,11 +3,13 @@
   "category": "misc",
   "pattern": [
     " B ",
-    "X#X"
+    "P#P",
+    " X "
   ],
   "key": {
     "#": "hayo:circuit",
     "X": "hayo:power_cable",
+    "P": "minecraft:paper",
     "B": "hayo:battery"
   },
   "result": {

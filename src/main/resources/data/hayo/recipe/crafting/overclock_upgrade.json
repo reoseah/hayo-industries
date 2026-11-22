@@ -2,13 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "LRL",
-    "X#X"
+    " R ",
+    "P#P",
+    " X "
   ],
   "key": {
     "#": "hayo:circuit",
     "X": "hayo:power_cable",
-    "L": "minecraft:lapis_lazuli",
+    "P": "minecraft:paper",
     "R": "minecraft:redstone"
   },
   "result": {
