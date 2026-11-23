@@ -1,8 +1,30 @@
 {
-  "parent": "block/cube_bottom_top",
+  "parent": "block/block",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "elements": [
+    {
+      "from": [ 0, 0, 0 ],
+      "to": [ 16, 16, 16 ],
+      "faces": {
+        "down":  { "texture": "#side", "cullface": "down" },
+        "up":    { "texture": "#top", "cullface": "up" },
+        "north": { "texture": "#alt_side", "cullface": "north" },
+        "south": { "texture": "#alt_side", "cullface": "south" },
+        "west":  { "texture": "#side", "cullface": "west", "uv": [16, 0, 0, 16], "rotation": 270 },
+        "east":  { "texture": "#side", "cullface": "east", "uv": [16, 0, 0, 16], "rotation": 270 }
+      }
+    }
+  ],
   "textures": {
-    "bottom": "hayo:block/advanced_machine",
-    "side": "hayo:block/advanced_machine",
-    "top": "hayo:block/energy_storage_unit_output"
+    "particle": "hayo:block/energy_storage_unit_output",
+    "top": "hayo:block/energy_storage_unit_output",
+    "side": "hayo:block/energy_storage_unit_side",
+    "alt_side": "hayo:block/machine"
   }
 }

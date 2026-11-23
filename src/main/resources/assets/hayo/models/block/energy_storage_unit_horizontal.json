@@ -9,11 +9,11 @@
   },
   "textures": {
     "particle": "hayo:block/energy_storage_unit_output",
-    "down": "hayo:block/advanced_machine",
-    "up": "hayo:block/advanced_machine",
+    "down": "hayo:block/refined_iron_block",
+    "up": "hayo:block/machine",
     "north": "hayo:block/energy_storage_unit_output",
-    "east": "hayo:block/advanced_machine",
-    "south": "hayo:block/advanced_machine",
-    "west": "hayo:block/advanced_machine"
+    "east": "hayo:block/energy_storage_unit_side",
+    "south": "hayo:block/energy_storage_unit_side",
+    "west": "hayo:block/energy_storage_unit_side"
   }
 }
