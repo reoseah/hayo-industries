@@ -2,7 +2,7 @@
   "parent": "block/block",
   "textures": {
     "particle": "#texture",
-    "texture": "hayo:block/advanced_energy_storage_unit_output"
+    "texture": "hayo:block/energy_bus_end"
   },
   "elements": [
     {

@@ -7,7 +7,7 @@
     "LBL"
   ],
   "key": {
-    "#": "hayo:energy_storage_unit",
+    "#": "hayo:advanced_machine_block",
     "L": "hayo:lapotron_crystal",
     "A": "hayo:advanced_circuit",
     "B": "hayo:energy_bus"

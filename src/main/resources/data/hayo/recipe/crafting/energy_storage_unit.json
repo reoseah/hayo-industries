@@ -7,7 +7,7 @@
     "ECE"
   ],
   "key": {
-    "#": "hayo:advanced_machine_block",
+    "#": "hayo:machine_block",
     "E": "hayo:energy_crystal",
     "C": "hayo:quadruple_power_cable",
     "G": "minecraft:gold_ingot"
