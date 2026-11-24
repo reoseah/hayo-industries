@@ -187,8 +187,8 @@ public class Hayo {
         public static final Block SOLAR_PANEL = register("solar_panel", SolarPanelBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.COLOR_BLUE));
 
         public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
-        public static final Block ENERGY_STORAGE_UNIT = register("energy_storage_unit", EnergyStorageUnitBlock::new, MACHINE_PROPS);
-        public static final Block ADVANCED_ENERGY_STORAGE_UNIT = register("advanced_energy_storage_unit", AdvancedEnergyStorageUnitBlock::new, MACHINE_PROPS);
+        public static final Block MFE = register("mfe", MfeBlock::new, MACHINE_PROPS);
+        public static final Block MFSU = register("mfsu", MfsuBlock::new, MACHINE_PROPS);
 
         public static final CableBlock POWER_CABLE = register("power_cable", properties -> new CableBlock(32, 2, properties), BlockBehaviour.Properties.of().strength(.5F, 3).sound(SoundType.WOOL).pushReaction(PushReaction.POPPED));
         public static final CableBlock QUADRUPLE_POWER_CABLE = register("quadruple_power_cable", properties -> new CableBlock(128, 3, properties), BlockBehaviour.Properties.of().strength(.75F, 6).sound(SoundType.WOOL).pushReaction(PushReaction.POPPED));
@@ -262,6 +262,7 @@ public class Hayo {
         public static final TagKey<Block> WRENCH_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/wrench"));
         public static final TagKey<Block> CHAINSAW_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/chainsaw"));
         public static final TagKey<Block> DRILL_MINEABLE = TagKey.create(Registries.BLOCK, modId("mineable/drill"));
+
         public static final TagKey<Block> ROTATABLE_WITH_WRENCH = TagKey.create(Registries.BLOCK, modId("rotatable_with_wrench"));
     }
 
@@ -294,8 +295,8 @@ public class Hayo {
         ));
 
         public static final Item BATTERY_BOX = registerBlock(Blocks.BATTERY_BOX);
-        public static final Item ENERGY_STORAGE_UNIT = registerBlock(Blocks.ENERGY_STORAGE_UNIT, new Item.Properties().rarity(Rarity.RARE));
-        public static final Item ADVANCED_ENERGY_STORAGE_UNIT = registerBlock(Blocks.ADVANCED_ENERGY_STORAGE_UNIT, new Item.Properties().rarity(Rarity.RARE));
+        public static final Item MFE = registerBlock(Blocks.MFE, new Item.Properties().rarity(Rarity.RARE));
+        public static final Item MFSU = registerBlock(Blocks.MFSU, new Item.Properties().rarity(Rarity.RARE));
 
         public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, properties, EnergyTexts.maxRate(block.transferLimit).withStyle(ChatFormatting.GRAY)));
         public static final Item QUANDRUPLE_POWER_CABLE = registerBlock(Blocks.QUADRUPLE_POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, properties, EnergyTexts.maxRate(block.transferLimit).withStyle(ChatFormatting.GRAY)));
@@ -542,7 +543,7 @@ public class Hayo {
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
-        public static final Item STREAMLINE_OVERHAUL_UPGRADE = registerItem("streamline_overhaul_upgrade",
+        public static final Item STREAMLINE_UPGRADE = registerItem("streamline_upgrade",
                 props -> new ItemWithTooltip(
                         props,
                         Component.empty(),
@@ -575,7 +576,7 @@ public class Hayo {
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
-        public static final Item SUNNARIUM_CONCENTRATOR_UPGRADE = registerItem("sunnarium_concentrator_upgrade",
+        public static final Item EXOTIC_MATTER_UPGRADE = registerItem("exotic_matter_upgrade",
                 props -> new ItemWithTooltip(
                         props,
                         Component.empty(),
@@ -584,12 +585,12 @@ public class Hayo {
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
-        public static final Item OVERWORLD_LIFE_CRYSTAL_MEMORY = registerItem("overworld_life_crystal_memory",
+        public static final Item OVERWORLD_LIFE_UPGRADE = registerItem("overworld_life_upgrade",
                 props -> new ItemWithTooltip(
                         props,
                         Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.matter_generator")).withStyle(ChatFormatting.GRAY),
-                        Component.translatable("hayo.upgrades.allows_creating_overworld_plants").withStyle(ChatFormatting.DARK_AQUA)
+                        Component.translatable("hayo.upgrades.allows_creating_overworld_life").withStyle(ChatFormatting.DARK_AQUA)
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
@@ -608,8 +609,8 @@ public class Hayo {
                 entries.accept(SOLAR_PANEL);
 
                 entries.accept(BATTERY_BOX);
-                entries.accept(ENERGY_STORAGE_UNIT);
-                entries.accept(ADVANCED_ENERGY_STORAGE_UNIT);
+                entries.accept(MFE);
+                entries.accept(MFSU);
 
                 entries.accept(POWER_CABLE);
                 entries.accept(QUANDRUPLE_POWER_CABLE);
@@ -729,11 +730,11 @@ public class Hayo {
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
-                entries.accept(STREAMLINE_OVERHAUL_UPGRADE);
+                entries.accept(STREAMLINE_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
-                entries.accept(SUNNARIUM_CONCENTRATOR_UPGRADE);
-                entries.accept(OVERWORLD_LIFE_CRYSTAL_MEMORY);
+                entries.accept(EXOTIC_MATTER_UPGRADE);
+                entries.accept(OVERWORLD_LIFE_UPGRADE);
             });
         }
 
@@ -803,8 +804,8 @@ public class Hayo {
         public static final BlockEntityType<SolidFluidReactorBlockEntity> SOLID_FLUID_REACTOR = register("solid_fluid_reactor", SolidFluidReactorBlockEntity::new, Blocks.SOLID_FLUID_REACTOR);
         public static final BlockEntityType<MatterGeneratorBlockEntity> MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlockEntity::new, Blocks.MATTER_GENERATOR);
         public static final BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX = register("battery_box", BatteryBoxBlockEntity::new, Blocks.BATTERY_BOX);
-        public static final BlockEntityType<EnergyStorageUnitBlockEntity> ENERGY_STORAGE_UNIT = register("energy_storage_unit", EnergyStorageUnitBlockEntity::new, Blocks.ENERGY_STORAGE_UNIT);
-        public static final BlockEntityType<AdvancedEnergyStorageUnitBlockEntity> ADVANCED_ENERGY_STORAGE_UNIT = register("advanced_energy_storage_unit", AdvancedEnergyStorageUnitBlockEntity::new, Blocks.ADVANCED_ENERGY_STORAGE_UNIT);
+        public static final BlockEntityType<MfeBlockEntity> MFE = register("mfe", MfeBlockEntity::new, Blocks.MFE);
+        public static final BlockEntityType<MfsuBlockEntity> MFSU = register("mfsu", MfsuBlockEntity::new, Blocks.MFSU);
 
         public static void initialize() {
         }

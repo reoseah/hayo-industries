@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "hayo:block/mfe_vertical",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "hayo:block/mfe_vertical"
+    },
+    "facing=north": {
+      "model": "hayo:block/mfe"
+    },
+    "facing=east": {
+      "model": "hayo:block/mfe",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hayo:block/mfe",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hayo:block/mfe",
+      "y": 270
+    }
+  }
+}

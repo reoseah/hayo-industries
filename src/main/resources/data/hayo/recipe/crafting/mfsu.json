@@ -7,12 +7,12 @@
     "LBL"
   ],
   "key": {
-    "#": "hayo:advanced_machine_block",
+    "#": "hayo:mfe",
     "L": "hayo:lapotron_crystal",
     "A": "hayo:advanced_circuit",
     "B": "hayo:energy_bus"
   },
   "result": {
-    "id": "hayo:advanced_energy_storage_unit"
+    "id": "hayo:mfsu"
   }
 }

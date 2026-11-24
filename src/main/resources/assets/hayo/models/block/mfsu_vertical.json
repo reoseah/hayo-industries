@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "bottom": "hayo:block/mfsu_output",
+    "side": "hayo:block/mfsu",
+    "top": "hayo:block/mfsu_output"
+  }
+}

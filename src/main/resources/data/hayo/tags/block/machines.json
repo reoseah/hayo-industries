@@ -12,7 +12,7 @@
     "hayo:solid_fluid_reactor",
     "hayo:matter_generator",
     "hayo:battery_box",
-    "hayo:energy_storage_unit",
-    "hayo:advanced_energy_storage_unit"
+    "hayo:mfe",
+    "hayo:mfsu"
   ]
 }

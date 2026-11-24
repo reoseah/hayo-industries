@@ -6,7 +6,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "hayo:overworld_life_crystal_memory"
+          "name": "hayo:overworld_life_upgrade"
         }
       ]
     }

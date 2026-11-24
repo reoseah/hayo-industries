@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:energy_storage_unit"
+          "name": "hayo:mfsu"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/energy_storage_unit"
+  "random_sequence": "hayo:blocks/mfsu"
 }

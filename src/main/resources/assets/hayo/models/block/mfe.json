@@ -8,12 +8,12 @@
     }
   },
   "textures": {
-    "particle": "hayo:block/energy_storage_unit_output",
+    "particle": "hayo:block/mfe_output",
     "down": "hayo:block/refined_iron_block",
     "up": "hayo:block/machine",
-    "north": "hayo:block/energy_storage_unit_output",
-    "east": "hayo:block/energy_storage_unit_side",
-    "south": "hayo:block/energy_storage_unit_side",
-    "west": "hayo:block/energy_storage_unit_side"
+    "north": "hayo:block/mfe_output",
+    "east": "hayo:block/mfe",
+    "south": "hayo:block/mfe",
+    "west": "hayo:block/mfe"
   }
 }

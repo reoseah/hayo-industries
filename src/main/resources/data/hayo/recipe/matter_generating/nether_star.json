@@ -1,7 +1,7 @@
 {
   "type": "hayo:matter_generating",
   "energy_cost": 10000000,
-  "required_upgrade": "hayo:sunnarium_concentrator_upgrade",
+  "required_upgrade": "hayo:exotic_matter_upgrade",
   "result": {
     "id": "minecraft:nether_star"
   }

@@ -1,7 +1,7 @@
 {
   "type": "hayo:matter_generating",
   "energy_cost": 500000,
-  "required_upgrade": "hayo:overworld_life_crystal_memory",
+  "required_upgrade": "hayo:overworld_life_upgrade",
   "result": {
     "id": "minecraft:grass_block"
   }

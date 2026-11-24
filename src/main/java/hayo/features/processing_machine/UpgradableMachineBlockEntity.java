@@ -162,7 +162,7 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
                 extraCraftingSpeed += 1;
                 extraRecipeCost += 0.25F;
             }
-            if (stack.is(Hayo.Items.STREAMLINE_OVERHAUL_UPGRADE) && !hasInductionUpgrade) {
+            if (stack.is(Hayo.Items.STREAMLINE_UPGRADE) && !hasInductionUpgrade) {
                 hasInductionUpgrade = true;
                 extraCraftingSpeed += 3;
             }

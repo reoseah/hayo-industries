@@ -14,20 +14,20 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class AdvancedEnergyStorageUnitBlock extends DirectionalElectricalBlock implements EnergyReceiver, EnergySender {
-    public AdvancedEnergyStorageUnitBlock(Properties properties) {
+public class MfsuBlock extends DirectionalElectricalBlock implements EnergyReceiver, EnergySender {
+    public MfsuBlock(Properties properties) {
         super(properties);
     }
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new AdvancedEnergyStorageUnitBlockEntity(pos, state);
+        return new MfsuBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, Hayo.BlockEntityTypes.ADVANCED_ENERGY_STORAGE_UNIT, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
+        return createTickerHelper(type, Hayo.BlockEntityTypes.MFSU, world.isClientSide() ? null : EnergyStorageBlockEntity::tickServer);
     }
 
     @Override

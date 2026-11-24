@@ -1,0 +1,9 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "particle": "hayo:block/mfsu_output",
+    "top": "hayo:block/mfsu",
+    "front": "hayo:block/mfsu_output",
+    "side": "hayo:block/mfsu"
+  }
+}

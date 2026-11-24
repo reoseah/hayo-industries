@@ -22,9 +22,9 @@
     }
   ],
   "textures": {
-    "particle": "hayo:block/energy_storage_unit_output",
-    "top": "hayo:block/energy_storage_unit_output",
-    "side": "hayo:block/energy_storage_unit_side",
+    "particle": "hayo:block/mfe_output",
+    "top": "hayo:block/mfe_output",
+    "side": "hayo:block/mfe",
     "alt_side": "hayo:block/machine"
   }
 }
