@@ -1,8 +1,8 @@
 package hayo.mod_support.jei.widgets;
 
-import hayo.features.fluid_stack.HayoFluidRendering;
 import hayo.features.fluid_stack.FluidIngredientAmount;
 import hayo.features.fluid_stack.FluidStack;
+import hayo.features.fluid_stack.HayoFluidRendering;
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 

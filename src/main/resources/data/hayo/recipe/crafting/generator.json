@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "C",
     "F",
+    "C",
     "#"
   ],
   "key": {
-    "C": "hayo:circuit",
+    "C": "minecraft:copper_ingot",
     "#": "hayo:machine_block",
     "F": "minecraft:furnace"
   },

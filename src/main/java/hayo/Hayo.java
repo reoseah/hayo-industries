@@ -110,6 +110,7 @@ import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.level.block.Blocks.leavesProperties;
 import static net.minecraft.world.level.block.Blocks.logProperties;
 
+// TODO: fix Rubber Leaves leaf particles being gray (=not having tint applied)
 public class Hayo {
     public static final String MOD_ID = "hayo";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);

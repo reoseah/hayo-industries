@@ -8,7 +8,7 @@
   ],
   "key": {
     "#": "hayo:machine_block",
-    "C": "hayo:circuit",
+    "C": "hayo:copper_wire",
     "S": "#c:dusts/silicon",
     "G": "minecraft:glass"
   },
