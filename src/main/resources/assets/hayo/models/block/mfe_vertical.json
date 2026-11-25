@@ -14,8 +14,8 @@
       "faces": {
         "down":  { "texture": "#side", "cullface": "down" },
         "up":    { "texture": "#top", "cullface": "up" },
-        "north": { "texture": "#alt_side", "cullface": "north" },
-        "south": { "texture": "#alt_side", "cullface": "south" },
+        "north": { "texture": "#north", "cullface": "north" },
+        "south": { "texture": "#south", "cullface": "south" },
         "west":  { "texture": "#side", "cullface": "west", "uv": [16, 0, 0, 16], "rotation": 270 },
         "east":  { "texture": "#side", "cullface": "east", "uv": [16, 0, 0, 16], "rotation": 270 }
       }
@@ -25,6 +25,7 @@
     "particle": "hayo:block/mfe_output",
     "top": "hayo:block/mfe_output",
     "side": "hayo:block/mfe",
-    "alt_side": "hayo:block/machine"
+    "south": "hayo:block/refined_iron_block",
+    "north": "hayo:block/machine"
   }
 }

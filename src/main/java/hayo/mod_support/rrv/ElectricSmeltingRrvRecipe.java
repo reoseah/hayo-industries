@@ -140,7 +140,8 @@ public class ElectricSmeltingRrvRecipe implements ReliableClientRecipe {
         var recipe = this.holder.value();
 
         int energyCost = ElectricFurnaceBlockEntity.energyCostFromCookingTime(recipe);
-        long durationMillis = Mth.positiveCeilDiv(energyCost, ENERGY_USE_RATE) * 50L;
+        int energyUseRate = needsUpgrade(recipe.getType()) ? ENERGY_USE_RATE * 2 : ENERGY_USE_RATE;
+        long durationMillis = Mth.positiveCeilDiv(energyCost, energyUseRate) * 50L;
 
         boolean needsUpgrade = needsUpgrade(recipe.getType());
         if (!(context.screen() instanceof RecipeViewScreen)) {

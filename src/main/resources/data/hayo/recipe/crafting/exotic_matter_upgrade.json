@@ -3,11 +3,13 @@
   "category": "misc",
   "pattern": [
     " N ",
-    "X#X"
+    "P#P",
+    " X "
   ],
   "key": {
     "#": "hayo:advanced_circuit",
     "X": "hayo:power_cable",
+    "P": "minecraft:paper",
     "N": "minecraft:nether_star"
   },
   "result": {

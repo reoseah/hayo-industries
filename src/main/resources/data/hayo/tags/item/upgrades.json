@@ -4,6 +4,8 @@
     "hayo:capacitor_upgrade",
     "hayo:streamline_upgrade",
     "hayo:blasting_upgrade",
-    "hayo:smoking_upgrade"
+    "hayo:smoking_upgrade",
+    "hayo:exotic_matter_upgrade",
+    "hayo:overworld_life_upgrade"
   ]
 }

@@ -2,15 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "III",
-    "ISI",
-    "X#X"
+    " B ",
+    "P#P",
+    " X "
   ],
   "key": {
     "#": "hayo:circuit",
     "X": "hayo:power_cable",
-    "I": "#c:ingots/iron",
-    "S": "minecraft:smooth_stone"
+    "P": "minecraft:paper",
+    "B": "minecraft:blast_furnace"
   },
   "result": {
     "id": "hayo:blasting_upgrade",

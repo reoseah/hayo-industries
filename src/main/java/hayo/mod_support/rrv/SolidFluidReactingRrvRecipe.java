@@ -16,6 +16,7 @@ import hayo.features.processing_machine.solid_fluid_reactor.SolidFluidReactorBlo
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jspecify.annotations.Nullable;
@@ -88,7 +89,7 @@ public class SolidFluidReactingRrvRecipe implements ReliableClientRecipe {
         var recipe = this.holder.value();
 
         if (recipe.inputCount > 1) {
-            context.bindSlot(0, SlotContent.of(recipe.inputItem.items().map(item -> new ItemStack(item, recipe.inputCount)).toList()));
+            context.bindSlot(0, SlotContent.of(recipe.inputItem.display().resolveForStacks(ContextMap.EMPTY).stream().peek(stack -> stack.setCount(recipe.inputCount)).toList()));
         } else {
             context.bindSlot(0, SlotContent.of(recipe.inputItem));
         }

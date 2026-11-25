@@ -16,6 +16,7 @@ import hayo.features.processing_machine.classic.ClassicMachineRecipe;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jspecify.annotations.Nullable;
@@ -137,7 +138,7 @@ public class ClassicMachineRrvRecipe implements ReliableClientRecipe {
     @Override
     public void bindSlots(RecipeViewMenu.SlotFillContext context) {
         var recipe = this.holder.value();
-        context.bindSlot(0, SlotContent.of(recipe.input()));
+        context.bindSlot(0, SlotContent.of(recipe.input().display().resolveForStacks(ContextMap.EMPTY).stream().peek(stack -> stack.setCount(recipe.inputCount)).toList()));
         context.bindSlot(1, SlotContent.of(recipe.result()));
     }
 
