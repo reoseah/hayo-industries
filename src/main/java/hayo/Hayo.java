@@ -31,6 +31,7 @@ import hayo.features.processing_machine.matter_generator.*;
 import hayo.features.processing_machine.solid_fluid_reactor.*;
 import hayo.features.rubber_tree.ResinProducingLogBlock;
 import hayo.features.rubber_tree.RubberFoliagePlacer;
+import hayo.features.rubber_tree.RubberLeavesBlock;
 import hayo.features.solar_panel.SolarPanelBlock;
 import hayo.features.solar_panel.SolarPanelBlockEntity;
 import net.fabricmc.api.EnvType;
@@ -110,7 +111,6 @@ import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.level.block.Blocks.leavesProperties;
 import static net.minecraft.world.level.block.Blocks.logProperties;
 
-// TODO: fix Rubber Leaves leaf particles being gray (=not having tint applied)
 public class Hayo {
     public static final String MOD_ID = "hayo";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -200,7 +200,7 @@ public class Hayo {
         public static final Block RUBBER_WOOD = register("rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block STRIPPED_RUBBER_LOG = register("stripped_rubber_log", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
         public static final Block STRIPPED_RUBBER_WOOD = register("stripped_rubber_wood", RotatedPillarBlock::new, logProperties(MapColor.WOOD, MapColor.WOOD, SoundType.WOOD));
-        public static final Block RUBBER_LEAVES = register("rubber_leaves", properties -> new TintedParticleLeavesBlock(0.01F, properties), leavesProperties(SoundType.GRASS));
+        public static final Block RUBBER_LEAVES = register("rubber_leaves", properties -> new RubberLeavesBlock(0.01F, properties), leavesProperties(SoundType.GRASS));
         public static final Block RUBBER_SAPLING = register("rubber_sapling", properties -> new SaplingBlock(RUBBER_TREE, properties), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.POPPED));
 
         public static final BlockBehaviour.Properties RUBBER_PROPERTIES = BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava();
