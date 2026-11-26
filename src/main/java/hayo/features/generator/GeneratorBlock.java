@@ -1,14 +1,23 @@
 package hayo.features.generator;
 
 import hayo.Hayo;
+import hayo.HayoConfig;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
+import hayo.common.item.HayoBlockItem;
+import hayo.energy.EnergyTexts;
 import hayo.energy.block.EnergySender;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -16,7 +25,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class GeneratorBlock extends HorizontalDirectionalElectricalBlock implements EnergySender {
+import java.util.function.Consumer;
+
+public class GeneratorBlock extends HorizontalDirectionalElectricalBlock implements EnergySender, HayoBlockItem.TooltipProvider {
     public GeneratorBlock(Properties properties) {
         super(properties);
     }
@@ -50,5 +61,10 @@ public class GeneratorBlock extends HorizontalDirectionalElectricalBlock impleme
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, Hayo.BlockEntityTypes.GENERATOR, world.isClientSide() ? null : GeneratorBlockEntity::tickServer);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
+        builder.accept(EnergyTexts.maxOutput(HayoConfig.instance().generation().generatorOutput()).withStyle(ChatFormatting.GRAY));
     }
 }

@@ -1,6 +1,7 @@
 package hayo.features.generator;
 
 import hayo.Hayo;
+import hayo.HayoConfig;
 import hayo.common.block.HorizontalDirectionalElectricalBlock;
 import hayo.common.blockentity.SimpleContainerBlockEntity;
 import hayo.energy.block.EnergyGrid;
@@ -26,9 +27,6 @@ import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableIn
 import org.jspecify.annotations.Nullable;
 
 public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer {
-    public static final int FUEL_CONSUMPTION_RATE = 2;
-    public static final int ENERGY_PER_FUEL_TICK = 5;
-    public static final int GENERATION_RATE = FUEL_CONSUMPTION_RATE * ENERGY_PER_FUEL_TICK;
     public static final int CAPACITY = 10000;
     public static final int TRANSFER_LIMIT = 32;
 
@@ -53,7 +51,7 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
         }
 
         if (entity.fuelEnergyLeft > 0) {
-            var generation = Math.max(1, Math.min(Math.min(entity.fuelEnergyLeft, GENERATION_RATE), CAPACITY - entity.storedEnergy));
+            var generation = Math.max(1, Math.min(Math.min(entity.fuelEnergyLeft, HayoConfig.instance().generation().generatorOutput()), CAPACITY - entity.storedEnergy));
             entity.fuelEnergyLeft -= generation;
             entity.storedEnergy += generation;
             if (entity.storedEnergy > CAPACITY) {
@@ -118,18 +116,19 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
         if (fuel.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS)) {
             return;
         }
-        int fuelValue = ResolvableInt.getFromItem(fuel, DataComponents.COOKING_FUEL, CookingFuel::burnTime, this.getLootContext(serverLevel), 0);
-        if (fuelValue <= 0) {
+        int burnTime = ResolvableInt.getFromItem(fuel, DataComponents.COOKING_FUEL, CookingFuel::burnTime, this.getLootContext(serverLevel), 0);
+        if (burnTime <= 0) {
             return;
         }
 
         var fuelRemainder = fuel.getCraftingRemainder();
         fuel.shrink(1);
+        // TODO: if fuel with a remainder happens to be stackable, drop it into the world or something?
         if (fuel.isEmpty() && fuelRemainder != null) {
             this.setItem(0, fuelRemainder.create());
         }
 
-        this.fuelEnergyTotal = this.fuelEnergyLeft = fuelValue * ENERGY_PER_FUEL_TICK;
+        this.fuelEnergyTotal = this.fuelEnergyLeft = burnTime * HayoConfig.instance().generation().generatorFuelRate();
         this.setChanged();
     }
 
@@ -147,5 +146,4 @@ public class GeneratorBlockEntity extends SimpleContainerBlockEntity implements 
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
         return !stack.has(DataComponents.COOKING_FUEL) || stack.is(Hayo.ItemTags.DISABLED_GENERATOR_FUELS);
     }
-
 }

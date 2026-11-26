@@ -1,14 +1,21 @@
 package hayo.features.cable;
 
+import hayo.common.item.HayoBlockItem;
+import hayo.energy.EnergyTexts;
 import hayo.energy.block.BaseEnergyBlock;
 import hayo.energy.block.EnergyCable;
 import hayo.energy.block.EnergyGrid;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
@@ -19,8 +26,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 // TODO: extend vanilla PipeBlock class?
-public class CableBlock extends Block implements EnergyCable {
+public class CableBlock extends Block implements EnergyCable, HayoBlockItem.TooltipProvider {
     public final int transferLimit;
     protected final VoxelShape[] shapes;
 
@@ -104,5 +113,10 @@ public class CableBlock extends Block implements EnergyCable {
     @Override
     public int getTransferLimit(BlockState state) {
         return this.transferLimit;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
+        builder.accept(EnergyTexts.maxRate(this.transferLimit).withStyle(ChatFormatting.GRAY));
     }
 }

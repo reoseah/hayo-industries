@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemWithTooltip extends Item {
+public class UpgradeItem extends Item {
     public final List<Component> tooltip;
 
-    public ItemWithTooltip(Properties properties, Component... tooltip) {
+    public UpgradeItem(Properties properties, Component... tooltip) {
         super(properties);
         this.tooltip = Arrays.asList(tooltip);
     }
@@ -23,6 +23,7 @@ public class ItemWithTooltip extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, display, builder, tooltipFlag);
 
+        builder.accept(Component.empty());
         for (var component : this.tooltip) {
             builder.accept(component);
         }

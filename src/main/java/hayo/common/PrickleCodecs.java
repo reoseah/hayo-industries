@@ -5,7 +5,7 @@ import com.mojang.serialization.*;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class ConfigCodecs {
+public class PrickleCodecs {
     private static final String VALUE_KEY = "value";
 
     public record Meta<A>(

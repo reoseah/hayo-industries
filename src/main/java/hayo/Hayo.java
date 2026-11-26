@@ -1,10 +1,9 @@
 package hayo;
 
 import com.mojang.serialization.MapCodec;
-import hayo.common.item.BlockItemWithTooltip;
-import hayo.common.item.ItemWithTooltip;
+import hayo.common.item.HayoBlockItem;
+import hayo.common.item.UpgradeItem;
 import hayo.common.item.SimpleElectricItem;
-import hayo.energy.EnergyTexts;
 import hayo.energy.item.*;
 import hayo.features.ChemfuelFluid;
 import hayo.features.WrenchItem;
@@ -286,20 +285,17 @@ public class Hayo {
         public static final Item MATTER_GENERATOR = registerBlock(Blocks.MATTER_GENERATOR, new Item.Properties().rarity(Rarity.EPIC));
         public static final Item SOLID_FLUID_REACTOR = registerBlock(Blocks.SOLID_FLUID_REACTOR);
 
-        public static final Item GENERATOR = registerBlock(Blocks.GENERATOR);
+        public static final Item GENERATOR = registerBlock(Blocks.GENERATOR, HayoBlockItem::new);
         public static final Item GEOTHERMAL_GENERATOR = registerBlock(Blocks.GEOTHERMAL_GENERATOR);
-        public static final Item SOLAR_PANEL = registerBlock(Blocks.SOLAR_PANEL, (block, properties) -> new BlockItemWithTooltip(block, properties,
-                EnergyTexts.maxOutput(1).withStyle(ChatFormatting.GRAY),
-                EnergyTexts.maxTransfer(8).withStyle(ChatFormatting.GRAY)
-        ));
+        public static final Item SOLAR_PANEL = registerBlock(Blocks.SOLAR_PANEL, HayoBlockItem::new);
 
         public static final Item BATBOX = registerBlock(Blocks.BATBOX);
         public static final Item MFE = registerBlock(Blocks.MFE, new Item.Properties().rarity(Rarity.RARE));
         public static final Item MFSU = registerBlock(Blocks.MFSU, new Item.Properties().rarity(Rarity.RARE));
 
-        public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, properties, EnergyTexts.maxRate(block.transferLimit).withStyle(ChatFormatting.GRAY)));
-        public static final Item QUANDRUPLE_POWER_CABLE = registerBlock(Blocks.QUADRUPLE_POWER_CABLE, (block, properties) -> new BlockItemWithTooltip(block, properties, EnergyTexts.maxRate(block.transferLimit).withStyle(ChatFormatting.GRAY)));
-        public static final Item ENERGY_BUS = registerBlock(Blocks.ENERGY_BUS, (block, properties) -> new BlockItemWithTooltip(block, properties, EnergyTexts.maxRate(block.transferLimit).withStyle(ChatFormatting.GRAY)));
+        public static final Item POWER_CABLE = registerBlock(Blocks.POWER_CABLE, HayoBlockItem::new);
+        public static final Item QUANDRUPLE_POWER_CABLE = registerBlock(Blocks.QUADRUPLE_POWER_CABLE, HayoBlockItem::new);
+        public static final Item ENERGY_BUS = registerBlock(Blocks.ENERGY_BUS, HayoBlockItem::new);
 
         public static final Item RUBBER_LOG = registerBlock(Blocks.RUBBER_LOG);
         public static final Item RESIN_PRODUCING_RUBBER_LOG = registerBlock(Blocks.RESIN_PRODUCING_RUBBER_LOG);
@@ -524,9 +520,8 @@ public class Hayo {
         public static final Item NUTRIENT_PASTE = registerItem("nutrient_paste", new Item.Properties().food(new FoodProperties(4, 8F, false)));
 
         public static final Item OVERCLOCK_UPGRADE = registerItem("overclock_upgrade",
-                props -> new ItemWithTooltip(
+                props -> new UpgradeItem(
                         props,
-                        Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.recipe_cost", "+25%").withStyle(ChatFormatting.DARK_AQUA)
@@ -534,18 +529,16 @@ public class Hayo {
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item CAPACITOR_UPGRADE = registerItem("capacitor_upgrade",
-                props -> new ItemWithTooltip(
+                props -> new UpgradeItem(
                         props,
-                        Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.energy_capacity", "+10000").withStyle(ChatFormatting.DARK_AQUA)
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item STREAMLINE_UPGRADE = registerItem("streamline_upgrade",
-                props -> new ItemWithTooltip(
+                props -> new UpgradeItem(
                         props,
-                        Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.heat1").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.heat2").withStyle(ChatFormatting.DARK_AQUA),
@@ -556,9 +549,8 @@ public class Hayo {
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade",
-                props -> new ItemWithTooltip(
+                props -> new UpgradeItem(
                         props,
-                        Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.electric_furnace")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.use_blasting_recipes").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA)
@@ -566,9 +558,8 @@ public class Hayo {
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
         public static final Item SMOKING_UPGRADE = registerItem("smoking_upgrade",
-                props -> new ItemWithTooltip(
+                props -> new UpgradeItem(
                         props,
-                        Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.electric_furnace")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.use_smoking_recipes").withStyle(ChatFormatting.DARK_AQUA),
                         Component.translatable("hayo.upgrades.crafting_speed", "+100%").withStyle(ChatFormatting.DARK_AQUA)
@@ -576,18 +567,16 @@ public class Hayo {
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
         public static final Item EXOTIC_MATTER_UPGRADE = registerItem("exotic_matter_upgrade",
-                props -> new ItemWithTooltip(
+                props -> new UpgradeItem(
                         props,
-                        Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.matter_generator")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.allows_creating_nether_star").withStyle(ChatFormatting.DARK_AQUA)
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16)
         );
         public static final Item OVERWORLD_LIFE_UPGRADE = registerItem("overworld_life_upgrade",
-                props -> new ItemWithTooltip(
+                props -> new UpgradeItem(
                         props,
-                        Component.empty(),
                         Component.translatable("hayo.upgrades.when_in_machine", Component.translatable("block.hayo.matter_generator")).withStyle(ChatFormatting.GRAY),
                         Component.translatable("hayo.upgrades.allows_creating_overworld_life").withStyle(ChatFormatting.DARK_AQUA)
                 ),

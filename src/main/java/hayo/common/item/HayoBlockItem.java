@@ -7,23 +7,15 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.Block;
 
-import java.util.List;
 import java.util.function.Consumer;
 
-public class BlockItemWithTooltip extends BlockItem {
-    protected final List<Component> tooltip;
-
-    public BlockItemWithTooltip(Block block, Properties properties, Component tooltip) {
-        this(block, properties, List.of(tooltip));
-    }
-
-    public BlockItemWithTooltip(Block block, Properties properties, Component... tooltip) {
-        this(block, properties, List.of(tooltip));
-    }
-
-    public BlockItemWithTooltip(Block block, Properties properties, List<Component> tooltip) {
+public class HayoBlockItem extends BlockItem {
+    public HayoBlockItem(Block block, Properties properties) {
         super(block, properties);
-        this.tooltip = tooltip;
+    }
+
+    public interface TooltipProvider {
+        void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag);
     }
 
     @SuppressWarnings("deprecation")
@@ -31,8 +23,8 @@ public class BlockItemWithTooltip extends BlockItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, display, builder, tooltipFlag);
 
-        for (var component : this.tooltip) {
-            builder.accept(component);
+        if (this.getBlock() instanceof TooltipProvider tooltipProvider) {
+            tooltipProvider.appendHoverText(stack, context, display, builder, tooltipFlag);
         }
     }
 }

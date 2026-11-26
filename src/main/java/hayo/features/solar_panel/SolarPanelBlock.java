@@ -1,14 +1,21 @@
 package hayo.features.solar_panel;
 
 import hayo.Hayo;
+import hayo.common.item.HayoBlockItem;
+import hayo.energy.EnergyTexts;
 import hayo.energy.block.EnergyCable;
 import hayo.energy.block.EnergyGrid;
 import hayo.energy.block.EnergySender;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -23,7 +30,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
-public class SolarPanelBlock extends BaseEntityBlock implements EnergySender, EnergyCable {
+import java.util.function.Consumer;
+
+public class SolarPanelBlock extends BaseEntityBlock implements EnergySender, EnergyCable, HayoBlockItem.TooltipProvider {
     public static final VoxelShape SHAPE = Block.column(16.0, 0.0, 6.0);
 
     public SolarPanelBlock(Properties properties) {
@@ -83,5 +92,12 @@ public class SolarPanelBlock extends BaseEntityBlock implements EnergySender, En
         if (state.getBlock() != oldState.getBlock() && level instanceof ServerLevel serverLevel) {
             EnergyGrid.addOrUpdate(serverLevel, pos);
         }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
+        // TODO: read from config
+        builder.accept(EnergyTexts.maxOutput(1).withStyle(ChatFormatting.GRAY));
+        builder.accept(EnergyTexts.maxTransfer(8).withStyle(ChatFormatting.GRAY));
     }
 }
