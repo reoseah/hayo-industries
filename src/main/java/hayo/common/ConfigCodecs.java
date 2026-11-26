@@ -1,4 +1,4 @@
-package io.github.reoseah.pricklycodecs;
+package hayo.common;
 
 import com.mojang.serialization.*;
 
@@ -10,17 +10,13 @@ public class ConfigCodecs {
 
     public record Meta<A>(
             String key,
-            Encoder<A> codec,
+            Encoder<A> encoder,
             A value
     ) {
         public Meta {
             Objects.requireNonNull(key);
-            Objects.requireNonNull(codec);
+            Objects.requireNonNull(encoder);
             Objects.requireNonNull(value);
-
-            if (key.isBlank()) {
-                throw new IllegalArgumentException("Metadata key cannot be blank");
-            }
 
             if (key.equals(VALUE_KEY)) {
                 throw new IllegalArgumentException("'value' is reserved for the actual config value");
@@ -107,7 +103,7 @@ public class ConfigCodecs {
                 for (Meta<?> meta : metadata) {
                     builder = builder.add(
                             meta.key(),
-                            ((Encoder<Object>) meta.codec).encodeStart(ops, (Object) meta.value)
+                            ((Encoder<Object>) meta.encoder).encodeStart(ops, (Object) meta.value)
                     );
                 }
 

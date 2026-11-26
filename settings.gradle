@@ -10,4 +10,3 @@ pluginManagement {
 }
 
 include('hayo-energy')
-include 'prickly-codecs'

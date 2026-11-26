@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 
-import static io.github.reoseah.pricklycodecs.ConfigCodecs.defaultValue;
-import static io.github.reoseah.pricklycodecs.ConfigCodecs.wrap;
+import static hayo.common.ConfigCodecs.defaultValue;
+import static hayo.common.ConfigCodecs.wrap;
 
 public record HayoConfig(EnergyStorageConfig energyStorage) {
     public static final Logger LOGGER = LoggerFactory.getLogger("HAYO/Config");

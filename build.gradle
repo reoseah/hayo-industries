@@ -85,9 +85,6 @@ dependencies {
 
     implementation project(':hayo-energy')
     include project(':hayo-energy')
-
-    implementation project(':prickly-codecs')
-    include project(':prickly-codecs')
 }
 
 loom {
