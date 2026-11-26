@@ -1,14 +1,12 @@
 package hayo.features.energy_storage;
 
 import hayo.Hayo;
+import hayo.HayoConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class MfeBlockEntity extends EnergyStorageBlockEntity {
-    public static final int CAPACITY = 400_000;
-    public static final int TRANSFER_LIMIT = 128;
-
     public MfeBlockEntity(BlockPos pos, BlockState state) {
         super(Hayo.BlockEntityTypes.MFE, pos, state);
     }
@@ -20,11 +18,11 @@ public class MfeBlockEntity extends EnergyStorageBlockEntity {
 
     @Override
     public int getEnergyCapacity() {
-        return CAPACITY;
+        return HayoConfig.instance().energyStorage().mfeCapacity();
     }
 
     @Override
     protected int getEnergyTransferLimit() {
-        return TRANSFER_LIMIT;
+        return HayoConfig.instance().energyStorage().mfeTransferRate();
     }
 }

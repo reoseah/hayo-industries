@@ -1,3 +1,5 @@
+version = rootProject.version
+
 loom {
     accessWidenerPath = file("src/main/resources/hayoenergy.classtweaker")
 }

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "prickly-codecs",
+  "name": "Prickly Codecs",
+  "description": "Minimal implementation of \"Prickle\" config format, originally by Darkhax, on top of Minecraft's Data Fixer Upper utilities.",
+  "version": "${version}",
+  "environment": "*",
+  "license": "CC0",
+  "entrypoints": {},
+  "mixins": []
+}

@@ -127,6 +127,8 @@ public class Hayo {
     public static final ResourceKey<LootTable> NETHER_STATION_CHEST = modKey(Registries.LOOT_TABLE, "chests/nether_station");
 
     public static void initialize() {
+        HayoConfig.createOrLoad();
+
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, modId("main"), TAB);
 
         Blocks.initialize();

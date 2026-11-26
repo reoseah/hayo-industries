@@ -37,6 +37,7 @@
     "minecraft": "26.3",
     "java": ">=25",
     "fabric-api": "*",
-    "hayo-energy": "*"
+    "hayo-energy": "*",
+    "prickly-codecs": "*"
   }
 }
