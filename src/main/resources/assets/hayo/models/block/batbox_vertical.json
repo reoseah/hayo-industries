@@ -1,0 +1,31 @@
+{
+  "parent": "block/block",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "elements": [
+    {
+      "from": [ 0, 0, 0 ],
+      "to": [ 16, 16, 16 ],
+      "faces": {
+        "down":  { "texture": "#side", "cullface": "down" },
+        "up":    { "texture": "#top", "cullface": "up" },
+        "north": { "texture": "#north", "cullface": "north" },
+        "south": { "texture": "#south", "cullface": "south" },
+        "west":  { "texture": "#side", "cullface": "west", "uv": [16, 0, 0, 16], "rotation": 270 },
+        "east":  { "texture": "#side", "cullface": "east", "uv": [16, 0, 0, 16], "rotation": 270 }
+      }
+    }
+  ],
+  "textures": {
+    "particle": "hayo:block/batbox_output",
+    "top": "hayo:block/batbox_output",
+    "side": "hayo:block/batbox_side",
+    "south": "hayo:block/batbox_side",
+    "north": "hayo:block/batbox_top"
+  }
+}

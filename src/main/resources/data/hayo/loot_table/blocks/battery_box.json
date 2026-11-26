@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hayo:battery_box"
+          "name": "hayo:batbox"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "hayo:blocks/battery_box"
+  "random_sequence": "hayo:blocks/batbox"
 }

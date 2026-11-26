@@ -93,3 +93,4 @@ dependencies {
 loom {
     accessWidenerPath = file("src/main/resources/hayo.classtweaker")
 }
+

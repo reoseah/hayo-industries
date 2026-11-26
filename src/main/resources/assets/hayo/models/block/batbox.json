@@ -1,0 +1,9 @@
+{
+  "parent": "block/orientable_with_bottom",
+  "textures": {
+    "bottom": "hayo:block/batbox_side",
+    "top": "hayo:block/batbox_top",
+    "front": "hayo:block/batbox_output",
+    "side": "hayo:block/batbox_side"
+  }
+}

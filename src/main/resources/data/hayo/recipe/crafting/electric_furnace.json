@@ -2,14 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    " C ",
-    "WFW",
-    " # "
+    "C",
+    "F",
+    "#"
   ],
   "key": {
     "#": "hayo:machine_block",
     "C": "hayo:circuit",
-    "W": "hayo:copper_wire",
     "F": "minecraft:furnace"
   },
   "result": {

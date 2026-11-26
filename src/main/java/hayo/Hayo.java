@@ -8,10 +8,6 @@ import hayo.energy.EnergyTexts;
 import hayo.energy.item.*;
 import hayo.features.ChemfuelFluid;
 import hayo.features.WrenchItem;
-import hayo.features.battery_box.BatteryBoxBlock;
-import hayo.features.battery_box.BatteryBoxBlockEntity;
-import hayo.features.battery_box.BatteryBoxMenu;
-import hayo.features.battery_box.BatteryBoxScreen;
 import hayo.features.cable.CableBlock;
 import hayo.features.energy_storage.*;
 import hayo.features.fluid_stack.FluidDrainingRecipe;
@@ -189,7 +185,7 @@ public class Hayo {
         public static final Block GEOTHERMAL_GENERATOR = register("geothermal_generator", GeothermalGeneratorBlock::new, LIT_MACHINE_PROPS);
         public static final Block SOLAR_PANEL = register("solar_panel", SolarPanelBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.METAL).mapColor(MapColor.COLOR_BLUE));
 
-        public static final Block BATTERY_BOX = register("battery_box", BatteryBoxBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
+        public static final Block BATBOX = register("batbox", BatboxBlock::new, BlockBehaviour.Properties.of().strength(5F).sound(SoundType.WOOD).mapColor(MapColor.WOOD));
         public static final Block MFE = register("mfe", MfeBlock::new, MACHINE_PROPS);
         public static final Block MFSU = register("mfsu", MfsuBlock::new, MACHINE_PROPS);
 
@@ -297,7 +293,7 @@ public class Hayo {
                 EnergyTexts.maxTransfer(8).withStyle(ChatFormatting.GRAY)
         ));
 
-        public static final Item BATTERY_BOX = registerBlock(Blocks.BATTERY_BOX);
+        public static final Item BATBOX = registerBlock(Blocks.BATBOX);
         public static final Item MFE = registerBlock(Blocks.MFE, new Item.Properties().rarity(Rarity.RARE));
         public static final Item MFSU = registerBlock(Blocks.MFSU, new Item.Properties().rarity(Rarity.RARE));
 
@@ -611,7 +607,7 @@ public class Hayo {
                 entries.accept(GEOTHERMAL_GENERATOR);
                 entries.accept(SOLAR_PANEL);
 
-                entries.accept(BATTERY_BOX);
+                entries.accept(BATBOX);
                 entries.accept(MFE);
                 entries.accept(MFSU);
 
@@ -806,7 +802,7 @@ public class Hayo {
         public static final BlockEntityType<ExtractorBlockEntity> EXTRACTOR = register("extractor", ExtractorBlockEntity::new, Blocks.EXTRACTOR);
         public static final BlockEntityType<SolidFluidReactorBlockEntity> SOLID_FLUID_REACTOR = register("solid_fluid_reactor", SolidFluidReactorBlockEntity::new, Blocks.SOLID_FLUID_REACTOR);
         public static final BlockEntityType<MatterGeneratorBlockEntity> MATTER_GENERATOR = register("matter_generator", MatterGeneratorBlockEntity::new, Blocks.MATTER_GENERATOR);
-        public static final BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX = register("battery_box", BatteryBoxBlockEntity::new, Blocks.BATTERY_BOX);
+        public static final BlockEntityType<BatboxBlockEntity> BATBOX = register("batbox", BatboxBlockEntity::new, Blocks.BATBOX);
         public static final BlockEntityType<MfeBlockEntity> MFE = register("mfe", MfeBlockEntity::new, Blocks.MFE);
         public static final BlockEntityType<MfsuBlockEntity> MFSU = register("mfsu", MfsuBlockEntity::new, Blocks.MFSU);
 
@@ -841,7 +837,6 @@ public class Hayo {
         public static final MenuType<SolidFluidReactorMenu> SOLID_FLUID_REACTOR = register("solid_fluid_reactor", SolidFluidReactorMenu::new);
         public static final MenuType<MatterGeneratorMenu> MATTER_GENERATOR = register("matter_generator", MatterGeneratorMenu::new);
         public static final MenuType<EnergyStorageMenu> ENERGY_STORAGE = register("energy_storage", EnergyStorageMenu::new);
-        public static final MenuType<BatteryBoxMenu> BATTERY_BOX = register("battery_box", BatteryBoxMenu::new);
 
         public static void initialize() {
         }
@@ -861,7 +856,6 @@ public class Hayo {
             MenuScreens.register(SOLID_FLUID_REACTOR, SolidFluidReactorScreen::new);
             MenuScreens.register(MATTER_GENERATOR, MatterGeneratorScreen::new);
             MenuScreens.register(ENERGY_STORAGE, EnergyStorageScreen::new);
-            MenuScreens.register(BATTERY_BOX, BatteryBoxScreen::new);
         }
     }
 

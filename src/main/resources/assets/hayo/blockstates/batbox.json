@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "hayo:block/batbox_vertical",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "hayo:block/batbox_vertical"
+    },
+    "facing=north": {
+      "model": "hayo:block/batbox"
+    },
+    "facing=east": {
+      "model": "hayo:block/batbox",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hayo:block/batbox",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hayo:block/batbox",
+      "y": 270
+    }
+  }
+}
