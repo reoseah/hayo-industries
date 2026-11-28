@@ -2,18 +2,25 @@ package hayo.features.processing_machine.classic;
 
 import hayo.Hayo;
 import hayo.common.HayoSprites;
+import hayo.common.IntRange;
 import hayo.energy.client.HayoEnergySprites;
 import hayo.features.processing_machine.MachineTexts;
+import hayo.features.processing_machine.SlotAccessComponent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+
+import static hayo.features.processing_machine.classic.ClassicMachineBlockEntity.UPGRADES;
+import static hayo.features.processing_machine.classic.ClassicMachineBlockEntity.UPGRADE_1;
 
 public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachineMenu> {
     protected final int baseEnergyUse;
@@ -21,12 +28,19 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
     protected final Identifier arrow;
     protected final Identifier arrowOverlay;
 
+    protected @Nullable SlotAccessComponent<?> slotAccess;
+
     public ClassicMachineScreen(ClassicMachineMenu menu, Inventory inventory, Component title, int baseEnergyUse, int defaultRecipeCost, Identifier arrow, Identifier arrowOverlay) {
         super(menu, inventory, title);
         this.baseEnergyUse = baseEnergyUse;
         this.defaultRecipeCost = defaultRecipeCost;
         this.arrow = arrow;
         this.arrowOverlay = arrowOverlay;
+
+        // FIXME: only enable when configuration upgrade is installed
+        this.slotAccess = new SlotAccessComponent<>(this, new IntRange(UPGRADE_1, UPGRADE_1 + UPGRADES)) {
+        };
+//        this.addWidget(this.slotAccess);
     }
 
     public static ClassicMachineScreen createElectricFurnace(ClassicMachineMenu menu, Inventory inventory, Component title) {
@@ -65,6 +79,17 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
     public void init() {
         super.init();
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
+
+        this.slotAccess.init(this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
+        this.addRenderableWidget(this.slotAccess);
+    }
+
+    @Override
+    public void containerTick() {
+        super.containerTick();
+        if (this.slotAccess != null) {
+            this.slotAccess.tick();
+        }
     }
 
     @Override
@@ -108,5 +133,10 @@ public class ClassicMachineScreen extends AbstractContainerScreen<ClassicMachine
         }
 
         return tooltip;
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        return super.mouseClicked(event, doubleClick);
     }
 }

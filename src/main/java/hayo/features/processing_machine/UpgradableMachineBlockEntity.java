@@ -2,9 +2,11 @@ package hayo.features.processing_machine;
 
 import hayo.Hayo;
 import hayo.common.IntRange;
+import hayo.common.block.DirectionalElectricalBlock;
 import hayo.common.blockentity.EnergyReceiverBlockEntity;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -30,10 +32,13 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
     protected float extraRecipeCost = 0;
     @Getter
     protected int extraCapacity = 0;
+
     @Getter
     protected boolean hasInductionUpgrade = false;
     @Getter
     protected int inductionHeat = 0;
+
+    protected SlotAccess[] configurationCache;
 
     protected UpgradableMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, NonNullList<ItemStack> stacks) {
         super(type, pos, state, stacks);
@@ -64,7 +69,6 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
     }
 
     protected abstract int getBaseEnergyCost(@Nullable R recipe);
-
 
     protected abstract IntRange getUpgradeSlots();
 
@@ -151,6 +155,7 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
         float extraRecipeCost = 0;
         int extraCapacity = 0;
         boolean hasInductionUpgrade = false;
+        SlotAccessState configuration = null;
 
         var upgradeSlots = this.getUpgradeSlots();
         for (int i = upgradeSlots.start(); i < upgradeSlots.end(); i++) {
@@ -165,6 +170,9 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
             if (stack.is(Hayo.Items.STREAMLINE_UPGRADE) && !hasInductionUpgrade) {
                 hasInductionUpgrade = true;
                 extraCraftingSpeed += 3;
+            }
+            if (stack.is(Hayo.Items.CONFIGURATION_UPGRADE) && configuration == null) {
+                configuration = stack.getOrDefault(Hayo.Components.SLOT_ACCESS, SlotAccessState.DEFAULT);
             }
         }
 
@@ -182,6 +190,16 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
         if (hasInductionUpgrade != this.hasInductionUpgrade) {
             this.hasInductionUpgrade = hasInductionUpgrade;
             this.inductionHeat = 0;
+        }
+        if (configuration != null) {
+            this.configurationCache = new SlotAccess[6];
+
+            var facing = this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+            for (var side : Direction.values()) {
+                this.configurationCache[side.get3DDataValue()] = configuration.getSide(facing, side);
+            }
+        } else if (this.configurationCache != null) {
+            this.configurationCache = null;
         }
     }
 }

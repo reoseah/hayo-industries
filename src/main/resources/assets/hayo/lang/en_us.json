@@ -100,6 +100,7 @@
   "item.hayo.nutrient_paste": "Nutrient Paste",
   "item.hayo.overclock_upgrade": "Overclock Upgrade",
   "item.hayo.capacitor_upgrade": "Capacitor Upgrade",
+  "item.hayo.configuration_upgrade": "Configuration Upgrade",
   "item.hayo.streamline_upgrade": "Streamline Overhaul Upgrade",
   "item.hayo.blasting_upgrade": "Blast Smelting Upgrade",
   "item.hayo.smoking_upgrade": "Artificial Smoking Upgrade",
@@ -181,5 +182,8 @@
   "hayo.accepts_fluids": "Accepts fluids:",
   "hayo.subscript_chance": "%s﹪",
   "hayo.extra_chance_tooltip": "%s%% chance of extra item",
-  "hayo.ticks": "%s ticks"
+  "hayo.ticks": "%s ticks",
+  "hayo.machine.configuration": "Configuration",
+  "hayo.upgrades.configuration1": " Allows to change what inventory slots",
+  "hayo.upgrades.configuration2": " correspond to what block sides"
 }

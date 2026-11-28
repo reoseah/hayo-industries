@@ -9,6 +9,7 @@ import net.minecraft.util.Mth;
 public class HayoSprites {
     public static final Identifier BACKGROUND = Hayo.modId("background");
     public static final Identifier RECIPE_VIEW_BACKGROUND = Hayo.modId("recipe_view_background");
+    public static final Identifier PANEL_RIGHT_BACKGROUND = Hayo.modId("panel_right_background");
 
     public static void blitBackground(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, x, y, width, height);

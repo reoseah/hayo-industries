@@ -2,8 +2,8 @@ package hayo;
 
 import com.mojang.serialization.MapCodec;
 import hayo.common.item.HayoBlockItem;
-import hayo.common.item.UpgradeItem;
 import hayo.common.item.SimpleElectricItem;
+import hayo.common.item.UpgradeItem;
 import hayo.energy.item.*;
 import hayo.features.ChemfuelFluid;
 import hayo.features.WrenchItem;
@@ -21,6 +21,7 @@ import hayo.features.geothermal_generator.GeothermalGeneratorMenu;
 import hayo.features.geothermal_generator.GeothermalGeneratorScreen;
 import hayo.features.nether_station.NetherStationPiece;
 import hayo.features.nether_station.NetherStationStructure;
+import hayo.features.processing_machine.SlotAccessState;
 import hayo.features.processing_machine.classic.*;
 import hayo.features.processing_machine.matter_generator.*;
 import hayo.features.processing_machine.solid_fluid_reactor.*;
@@ -106,6 +107,7 @@ import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.level.block.Blocks.leavesProperties;
 import static net.minecraft.world.level.block.Blocks.logProperties;
 
+// TODO: 26.3 port: make rubber logs/planks/etc a furnace fuel again
 public class Hayo {
     public static final String MOD_ID = "hayo";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -269,6 +271,11 @@ public class Hayo {
                 DataComponentType.<Integer>builder()
                         .persistent(ExtraCodecs.intRange(0, 100))
                         .networkSynchronized(ByteBufCodecs.VAR_INT));
+
+        public static final DataComponentType<SlotAccessState> SLOT_ACCESS = register("slot_access",
+                DataComponentType.<SlotAccessState>builder()
+                        .persistent(SlotAccessState.CODEC)
+                        .networkSynchronized(SlotAccessState.STREAM_CODEC));
 
         public static <T> DataComponentType<T> register(String name, DataComponentType.Builder<T> builder) {
             return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, modId(name), builder.build());
@@ -548,6 +555,15 @@ public class Hayo {
                 ),
                 new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
 
+        public static final Item CONFIGURATION_UPGRADE = registerItem("configuration_upgrade",
+                props -> new UpgradeItem(
+                        props,
+                        Component.translatable("hayo.upgrades.when_in_a_valid_machine").withStyle(ChatFormatting.GRAY),
+                        Component.translatable("hayo.upgrades.configuration1").withStyle(ChatFormatting.DARK_AQUA),
+                        Component.translatable("hayo.upgrades.configuration2").withStyle(ChatFormatting.DARK_AQUA)
+                ),
+                new Item.Properties().rarity(Rarity.RARE).stacksTo(16));
+
         public static final Item BLASTING_UPGRADE = registerItem("blasting_upgrade",
                 props -> new UpgradeItem(
                         props,
@@ -718,6 +734,7 @@ public class Hayo {
 
                 entries.accept(OVERCLOCK_UPGRADE);
                 entries.accept(CAPACITOR_UPGRADE);
+                entries.accept(CONFIGURATION_UPGRADE);
                 entries.accept(STREAMLINE_UPGRADE);
                 entries.accept(BLASTING_UPGRADE);
                 entries.accept(SMOKING_UPGRADE);
