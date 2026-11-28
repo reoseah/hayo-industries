@@ -2,7 +2,6 @@ package hayo.features.processing_machine;
 
 import hayo.Hayo;
 import hayo.common.IntRange;
-import hayo.common.block.DirectionalElectricalBlock;
 import hayo.common.blockentity.EnergyReceiverBlockEntity;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -196,7 +195,7 @@ public abstract class UpgradableMachineBlockEntity<R extends Recipe<I>, I extend
 
             var facing = this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
             for (var side : Direction.values()) {
-                this.configurationCache[side.get3DDataValue()] = configuration.getSide(facing, side);
+                this.configurationCache[side.get3DDataValue()] = configuration.resolve(facing, side);
             }
         } else if (this.configurationCache != null) {
             this.configurationCache = null;

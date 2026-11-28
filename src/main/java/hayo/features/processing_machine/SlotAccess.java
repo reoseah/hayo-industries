@@ -6,8 +6,9 @@ public enum SlotAccess implements StringRepresentable {
     NONE("none"),
     INPUT("input"),
     OUTPUT("output"),
-    BOTH("both"),
-    OTHER("other");
+    OTHER("other"),
+    INPUT_OUTPUT("input_output"),
+    ALL("all");
 
     public static final StringRepresentable.EnumCodec<SlotAccess> CODEC = StringRepresentable.fromEnum(SlotAccess::values);
 

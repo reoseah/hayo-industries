@@ -7,12 +7,14 @@ import hayo.common.SkipMixinsAtReturnException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.navigation.ScreenPosition;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -90,7 +92,7 @@ public abstract class SlotAccessComponent<T extends AbstractContainerMenu> imple
         if (this.visible != hasUpgrade) {
             this.visible = hasUpgrade;
             if (hasUpgrade) {
-                this.state = upgrade.get(Hayo.Components.SLOT_ACCESS);
+                this.state = upgrade.getOrDefault(Hayo.Components.SLOT_ACCESS, SlotAccessState.DEFAULT);
             } else {
                 this.open = false;
                 this.state = null;
@@ -119,7 +121,7 @@ public abstract class SlotAccessComponent<T extends AbstractContainerMenu> imple
         }
 
         int leftPos = this.screenLeft + this.screenWidth;
-        int topPos = this.screenTop + 4;
+        int topPos = this.screenTop + 5;
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HayoSprites.PANEL_RIGHT_BACKGROUND, leftPos, topPos, this.width, this.height, 0xFF228866);
         graphics.fakeItem(new ItemStack(Hayo.Items.CONFIGURATION_UPGRADE), leftPos + 4, topPos + 4);
@@ -127,21 +129,46 @@ public abstract class SlotAccessComponent<T extends AbstractContainerMenu> imple
         if (this.width == EXPANDED_WIDTH && this.height == EXPANDED_HEIGHT) {
             graphics.text(this.screen.getFont(), Component.translatable("hayo.machine.configuration"), leftPos + 23, topPos + 9, 0xFF0b2d22, false);
 
-            graphics.fill(leftPos + 19, topPos + 26, leftPos + 79, topPos + 86, 0xFF124a38);
-
-            // FIXME: change depending on the machine
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HayoSprites.PANEL_INSET, leftPos + 9, topPos + 26, 79, 60, 0xFF228866);
 
             var blockAtlas = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS);
+            // FIXME: change depending on the machine
             var frontSprite = blockAtlas.getSprite(Hayo.modId("block/electric_furnace_front"));
             var sideSprite = blockAtlas.getSprite(Hayo.modId("block/machine_side"));
             var topSprite = blockAtlas.getSprite(Hayo.modId("block/machine"));
             var bottomSprite = blockAtlas.getSprite(Hayo.modId("block/refined_iron_block"));
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, topSprite, leftPos + 41, topPos + 29, 16, 16);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sideSprite, leftPos + 60, topPos + 29, 16, 16);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sideSprite, leftPos + 22, topPos + 48, 16, 16);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, frontSprite, leftPos + 41, topPos + 48, 16, 16);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sideSprite, leftPos + 60, topPos + 48, 16, 16);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, bottomSprite, leftPos + 41, topPos + 67, 16, 16);
+
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, topSprite, leftPos + 31, topPos + 29, 16, 16);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sideSprite, leftPos + 12, topPos + 48, 16, 16);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, frontSprite, leftPos + 31, topPos + 48, 16, 16);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sideSprite, leftPos + 50, topPos + 48, 16, 16);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sideSprite, leftPos + 69, topPos + 48, 16, 16);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, bottomSprite, leftPos + 31, topPos + 67, 16, 16);
+
+            for (var side : Side.values()) {
+                var pos = this.getSidePos(side);
+                var access = this.state.get(side);
+
+                blitAccessTexture(access, graphics, pos.x(), pos.y());
+            }
+
+            var targettedSide = this.getTargetedSide(mouseX, mouseY);
+            if (targettedSide != null) {
+                var access = this.state.get(targettedSide);
+
+                graphics.tooltip(
+                        this.screen.getFont(),
+                        Stream.of(
+                                Component.translatable("hayo.machine.slot_access." + access.name),
+                                Component.translatable("hayo.machine.side." + targettedSide.name).withStyle(ChatFormatting.GRAY)
+                        ).map(Component::getVisualOrderText).map(ClientTooltipComponent::create).toList(),
+                        mouseX,
+                        mouseY,
+                        DefaultTooltipPositioner.INSTANCE,
+                        null,
+                        true
+                );
+            }
 
         } else if (this.width == COLLAPSED_WIDTH && this.height == COLLAPSED_HEIGHT) {
             if (this.isMouseOver(mouseX, mouseY)) {
@@ -156,6 +183,21 @@ public abstract class SlotAccessComponent<T extends AbstractContainerMenu> imple
                 );
             }
         }
+    }
+
+    public static void blitAccessTexture(SlotAccess access, GuiGraphicsExtractor graphics, int x, int y) {
+        var sprite = switch (access) {
+            case INPUT -> HayoSprites.SLOT_ACCESS_INPUT;
+            case OUTPUT -> HayoSprites.SLOT_ACCESS_OUTPUT;
+            case OTHER -> HayoSprites.SLOT_ACCESS_OTHER;
+            case INPUT_OUTPUT -> HayoSprites.SLOT_ACCESS_INPUT_OUTPUT;
+            case ALL -> HayoSprites.SLOT_ACCESS_ALL;
+            case NONE -> null;
+        };
+        if (sprite == null) {
+            return;
+        }
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, y, 16, 16);
     }
 
     @Override
@@ -180,12 +222,52 @@ public abstract class SlotAccessComponent<T extends AbstractContainerMenu> imple
 
     @Override
     public ScreenRectangle getRectangle() {
-        return this.visible ? new ScreenRectangle(this.screenLeft + this.screenWidth, this.screenTop + 4, this.width, this.height) : ScreenRectangle.empty();
+        return this.visible ? new ScreenRectangle(this.screenLeft + this.screenWidth, this.screenTop + 5, this.width, this.height) : ScreenRectangle.empty();
     }
+
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         return this.visible && this.getRectangle().containsPoint((int) mouseX, (int) mouseY);
+    }
+
+    public ScreenPosition getSidePos(Side side) {
+        int leftPos = this.screenLeft + this.screenWidth;
+        int topPos = this.screenTop + 5;
+
+        return switch (side) {
+            case TOP -> new ScreenPosition(leftPos + 31, topPos + 29);
+            case LEFT -> new ScreenPosition(leftPos + 12, topPos + 48);
+            case FRONT -> new ScreenPosition(leftPos + 31, topPos + 48);
+            case RIGHT -> new ScreenPosition(leftPos + 50, topPos + 48);
+            case BACK -> new ScreenPosition(leftPos + 69, topPos + 48);
+            case BOTTOM -> new ScreenPosition(leftPos + 31, topPos + 67);
+        };
+    }
+
+    public Side getTargetedSide(int mouseX, int mouseY) {
+        int leftPos = this.screenLeft + this.screenWidth;
+        int topPos = this.screenTop + 5;
+        if (topPos + 29 <= mouseY && mouseY <= topPos + 45) {
+            if (leftPos + 31 <= mouseX && mouseX < leftPos + 47) {
+                return Side.TOP;
+            }
+        } else if (topPos + 48 <= mouseY && mouseY < topPos + 64) {
+            if (leftPos + 12 <= mouseX && mouseX < leftPos + 28) {
+                return Side.LEFT;
+            } else if (leftPos + 31 <= mouseX && mouseX < leftPos + 47) {
+                return Side.FRONT;
+            } else if (leftPos + 50 <= mouseX && mouseX < leftPos + 66) {
+                return Side.FRONT;
+            } else if (leftPos + 69 <= mouseX && mouseX < leftPos + 85) {
+                return Side.BACK;
+            }
+        } else if (topPos + 64 <= mouseY && mouseY <= topPos + 80) {
+            if (leftPos + 31 <= mouseX && mouseX < leftPos + 47) {
+                return Side.BOTTOM;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -193,6 +275,12 @@ public abstract class SlotAccessComponent<T extends AbstractContainerMenu> imple
         if (!this.visible) {
             return false;
         }
+
+        var targettedSide = this.getTargetedSide((int) event.x(), (int) event.y());
+        if (targettedSide != null) {
+            throw new SkipMixinsAtReturnException();
+        }
+
         this.open = !this.open;
         // throw exception so the mouse click is not handled again by recipe viewers
         // (some of them ignore the return value of Screen#mouseClicked for some reason)

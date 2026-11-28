@@ -185,5 +185,17 @@
   "hayo.ticks": "%s ticks",
   "hayo.machine.configuration": "Configuration",
   "hayo.upgrades.configuration1": " Allows to change what inventory slots",
-  "hayo.upgrades.configuration2": " correspond to what block sides"
+  "hayo.upgrades.configuration2": " correspond to what block sides",
+  "hayo.machine.slot_access.none": "None",
+  "hayo.machine.slot_access.input": "Input",
+  "hayo.machine.slot_access.output": "Output",
+  "hayo.machine.slot_access.input_output": "Input-Output",
+  "hayo.machine.slot_access.other": "Other",
+  "hayo.machine.slot_access.all": "All",
+  "hayo.machine.side.front": "Front",
+  "hayo.machine.side.left": "Left",
+  "hayo.machine.side.right": "Right",
+  "hayo.machine.side.back": "Back",
+  "hayo.machine.side.top": "Top",
+  "hayo.machine.side.bottom": "Bottom"
 }

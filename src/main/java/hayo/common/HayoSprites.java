@@ -9,7 +9,7 @@ import net.minecraft.util.Mth;
 public class HayoSprites {
     public static final Identifier BACKGROUND = Hayo.modId("background");
     public static final Identifier RECIPE_VIEW_BACKGROUND = Hayo.modId("recipe_view_background");
-    public static final Identifier PANEL_RIGHT_BACKGROUND = Hayo.modId("panel_right_background");
+
 
     public static void blitBackground(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, x, y, width, height);
@@ -135,4 +135,13 @@ public class HayoSprites {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FILLING_ARROW_OVERLAY, 18, 14, 0, 0, x, y, length, 14);
         }
     }
+
+
+    public static final Identifier PANEL_RIGHT_BACKGROUND = Hayo.modId("panel_right_background");
+    public static final Identifier PANEL_INSET = Hayo.modId("panel_inset");
+    public static final Identifier SLOT_ACCESS_INPUT = Hayo.modId("slot_access/input");
+    public static final Identifier SLOT_ACCESS_OUTPUT = Hayo.modId("slot_access/output");
+    public static final Identifier SLOT_ACCESS_OTHER = Hayo.modId("slot_access/other");
+    public static final Identifier SLOT_ACCESS_INPUT_OUTPUT = Hayo.modId("slot_access/input_output");
+    public static final Identifier SLOT_ACCESS_ALL = Hayo.modId("slot_access/all");
 }
